@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">UMAE</span>
+                    <span class="logo-Lite text-sm">25<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // =========================================================
+        const questionsData = [
+            {
+                id: 1, 
+                question: "De acuerdo a la GPC, ¿cuál es la incidencia de las lesiones de la vía biliar reportada durante las colecistectomías laparoscópicas?", 
+                options: ["0.04 a 0.6%", "3 a 20%", "15 a 30%", "26 a 32%"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la incidencia de lesiones de la vía biliar mayor durante los abordajes laparoscópicos oscila entre el 0.04% y el 0.6%, lo que representa una complicación poco frecuente pero potencialmente devastadora si no se maneja de manera oportuna por personal calificado.<br><br>Perla ENARM: \"Las tasas de lesión durante la colecistectomía laparoscópica oscilan entre el 0.04 y el 0.6%.\"<br><br>Análisis de Distractores: La opción B corresponde a la tasa de mortalidad global. La opción C es el porcentaje de lesiones que se detectan de manera intraoperatoria. La opción D corresponde al porcentaje de pacientes que presentan una lesión vascular concomitante.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Introduction, Página 4." 
+            },
+            {
+                id: 2, 
+                question: "¿Qué porcentaje de pacientes con lesión iatrogénica de la vía biliar presenta una lesión vascular concomitante?", 
+                options: ["0.4 a 1.5%", "10 a 15%", "26 a 32%", "40 a 50%"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la alteración vascular simultánea es un factor determinante en el pronóstico y en la decisión del momento quirúrgico, presentándose en el 26 al 32% de los casos. Esta isquemia asociada empeora el riesgo de estenosis y dificulta la reparación inmediata.<br><br>Perla ENARM: \"La lesión vascular concomitante no está incluida en el sistema Strasberg y se reporta presente en el 26-32% de estos pacientes.\"<br><br>Análisis de Distractores: La opción A es la prevalencia reportada en algunos metaanálisis antiguos de lesiones biliares globales. La opción B y D no corresponden a datos epidemiológicos referidos en la GPC para esta complicación.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Introduction, Página 4." 
+            },
+            {
+                id: 3, 
+                question: "¿Cuál es la tasa de mortalidad asociada a las lesiones mayores de la vía biliar dependiente del diagnóstico y experiencia del centro?", 
+                options: ["0.4 a 1.5%", "26 a 32%", "3 a 20%", "40 a 50%"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, a pesar de los avances técnicos, la mortalidad secundaria a sepsis intraabdominal prolongada, falla hepática y disfunción multiorgánica por una lesión biliar grave alcanza cifras de entre el 3% y el 20%.<br><br>Perla ENARM: \"La muerte en estos pacientes se reporta en cualquier lugar del 3 al 20% dependiendo del tiempo, la experiencia y la selección de la cohorte.\"<br><br>Análisis de Distractores: La opción A refleja la tasa de incidencia de la lesión. La opción B refleja la tasa de lesión vascular concomitante. La opción D es un valor irrealmente alto para la mortalidad promedio actual.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Introduction, Página 4." 
+            },
+            {
+                id: 4, 
+                question: "¿Cuál es la incidencia de estenosis residual en pacientes que recibieron un tratamiento reconstructivo adecuado de la vía biliar?", 
+                options: ["2%", "26%", "32%", "10%"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, a pesar de un abordaje quirúrgico especializado y anastomosis bilioentérica exitosa, la fibrosis y el daño isquémico subyacente condicionan que hasta 1 de cada 10 pacientes desarrolle una estenosis residual a largo plazo.<br><br>Perla ENARM: \"Incluso con el tratamiento adecuado puede haber morbilidad a largo plazo secundaria a estenosis que a menudo requiere tratamiento adicional; esto ocurre en aproximadamente el 10% de los pacientes.\"<br><br>Análisis de Distractores: Las opciones B y C corresponden a la incidencia de lesión vascular. La opción A subestima el riesgo documentado de reestenosis.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Introduction, Página 5." 
+            },
+            {
+                id: 5, 
+                question: "¿Qué porcentaje de las lesiones de la vía biliar se logran identificar de manera intraoperatoria durante el procedimiento índice?", 
+                options: ["15 a 30%", "40 a 50%", "60 a 70%", "80 a 90%"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la inmensa mayoría de las lesiones biliares pasan desapercibidas por el cirujano primario durante el evento quirúrgico, detectándose tempranamente solo en el 15 a 30% de los casos. Esto condiciona que la mayoría de los pacientes debute con complicaciones postoperatorias (sepsis, peritonitis biliar).<br><br>Perla ENARM: \"El momento de la terapia depende del diagnóstico, con solo un 15-30% de las lesiones diagnosticadas intraoperatoriamente.\"<br><br>Análisis de Distractores: Las opciones B, C y D sobreestiman drásticamente la capacidad de detección transoperatoria real documentada.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Introduction, Página 5." 
+            },
+            {
+                id: 6, 
+                question: "De acuerdo a la GPC, ¿cuál es el tiempo mínimo recomendado para el seguimiento clínico e imagenológico en busca de complicaciones tardías tras la reparación biliar?", 
+                options: ["6 semanas", "12 meses", "5 años", "10 años"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la principal secuela tardía (estenosis biliar y colangitis esclerosante) puede manifestarse años después del evento reconstructivo. Por ello, el escrutinio debe mantenerse por un periodo muy prolongado.<br><br>Perla ENARM: \"Se recomienda el seguimiento postoperatorio continuo de estos pacientes durante al menos 10 años después del tratamiento quirúrgico.\"<br><br>Análisis de Distractores: La opción A es el punto de corte para definir una cirugía temprana o tardía. Las opciones B y C son insuficientes temporalmente para detectar la reestenosis isquémica tardía.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Introduction, Página 5." 
+            },
+            {
+                id: 7, 
+                question: "En la clasificación de Strasberg, ¿qué característica define anatómicamente a una lesión tipo A?", 
+                options: ["Transección del colédoco", "Estenosis biliar tardía", "Fuga del conducto cístico", "Lesión circunferencial mayor"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, las lesiones clase A son de menor severidad y típicamente se resuelven con manejos no operatorios (como CPRE), ya que la continuidad del árbol biliar principal se encuentra intacta.<br><br>Perla ENARM: \"La clase A es la menos severa y representa una fuga de bilis del conducto cístico o de pequeños conductos en el lecho hepático.\"<br><br>Análisis de Distractores: La opción A y D corresponden a la lesión tipo E de Strasberg (pérdida de continuidad). La opción B es una complicación, no una clasificación inicial de la lesión.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Introduction, Página 5." 
+            },
+            {
+                id: 8, 
+                question: "¿Cuál de las siguientes categorías de Strasberg indica una lesión circunferencial a un conducto biliar mayor con pérdida de continuidad anatómica?", 
+                options: ["Tipo A", "Tipo B", "Tipo C", "Tipo E"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la pérdida total de la continuidad del conducto hepático común o colédoco representa el escenario de mayor complejidad técnica para la reconstrucción (Strasberg E1 a E5) y mandata ineludiblemente intervención quirúrgica por expertos.<br><br>Perla ENARM: \"La clase E es generalmente considerada la más severa ya que es una lesión circunferencial a un conducto biliar mayor con pérdida de continuidad.\"<br><br>Análisis de Distractores: La opción A es fuga del cístico. Las opciones B y C implican oclusión o fuga de conductos aberrantes sin pérdida de continuidad del eje principal.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Introduction, Página 5." 
+            },
+            {
+                id: 9, 
+                question: "De acuerdo a la GPC, ¿a partir de qué tiempo cronológico se define una reparación quirúrgica tardía en el contexto de una lesión biliar?", 
+                options: ["> 72 horas", "> 6 semanas", "> 12 semanas", "> 6 meses"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, esperar un mínimo de 6 semanas confiere una caída drástica en la morbilidad y el fallo de anastomosis, ya que permite la resolución del proceso inflamatorio (peritonitis química/infecciosa) y la clara delimitación del tejido isquémico.<br><br>Perla ENARM: \"El panel sugiere la reparación tardía (mayor a 6 semanas) por un cirujano experimentado en patología HPB para el manejo de la lesión de la vía biliar.\"<br><br>Análisis de Distractores: La opción A es un límite usado en algunas series para definir intervenciones \"inmediatas\". Las opciones C y D son retrasos excesivos e innecesarios una vez alcanzadas las 6 semanas de enfriamiento inflamatorio.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations, Página 8." 
+            },
+            {
+                id: 10, 
+                question: "¿Cuál es una contraindicación absoluta para realizar una anastomosis bilioentérica directa de tipo hepaticoduodenostomía?", 
+                options: ["Colecciones periepáticas", "Fuga biliar residual", "Paciente con obesidad", "Lesión Strasberg E5"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la hepaticoduodenostomía requiere un conducto lo suficientemente largo para anastomosarse al duodeno sin tensión. En las lesiones E5 (involucro de conductos intrahepáticos separados), la movilización duodenal hasta el techo hepático es mecánicamente imposible o isquémica.<br><br>Perla ENARM: \"Las contraindicaciones para la reparación mediante hepaticoduodenostomía incluyen a los pacientes con lesiones E5 o pancreatitis severa.\"<br><br>Análisis de Distractores: La obesidad (opción C) favorece abordajes específicos (como MIS), pero no contraindica el tipo de anastomosis. Las opciones A y B son indicaciones para retrasar el procedimiento, no contraindicaciones de la técnica anatómica.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ4, Página 19." 
+            },
+            {
+                id: 11, 
+                question: "¿Qué complicación fisiopatológica a largo plazo es la principal responsable de precipitar la necesidad de un trasplante hepático tras una lesión severa de la vía biliar?", 
+                options: ["Colangitis esclerosante secundaria", "Síndrome de sumidero", "Estenosis intestinal", "Fuga biliar persistente"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la inflamación crónica, la estenosis repetitiva y los cuadros de colangitis subclínica terminan desarrollando una fibrosis irreversible del parénquima biliar intra y extrahepático (colangitis esclerosante secundaria), destruyendo la función del órgano.<br><br>Perla ENARM: \"En casos severos, puede ocurrir colangitis esclerosante secundaria, lo que requiere un trasplante de hígado y resulta en una tasa de mortalidad marcadamente incrementada.\"<br><br>Análisis de Distractores: La opción B (síndrome de sumidero) es una complicación anatómica local de la hepaticoduodenostomía. La opción C es falsa en este contexto. La opción D (fuga) es una complicación aguda/subaguda, no la causa final del trasplante a largo plazo.", 
+                source: "SAGES-AHPBA 2025: a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Introduction, Página 2." 
+            },
+            {
+                id: 12, 
+                question: "¿En qué escenario clínico o fenotípico se prefiere el abordaje de mínima invasión (MIS) para la reconstrucción definitiva de la vía biliar?", 
+                options: ["Presencia de incisión abierta", "Inflamación severa del lecho", "Índice de masa corporal alto", "Inestabilidad hemodinámica"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la obesidad dificulta drásticamente la exposición del hilio hepático en cirugía abierta. La cirugía robótica o laparoscópica brinda una visualización superior y ergonomía en estos pacientes de alto riesgo de complicaciones de pared abdominal.<br><br>Perla ENARM: \"La reparación MIS es preferida en aquellos pacientes que se encuentran estables, con anatomía favorable y en aquellos con alto índice de masa corporal u obesidad.\"<br><br>Análisis de Distractores: Las opciones A, B y D son indicaciones absolutas y explícitas de la guía para preferir el abordaje quirúrgico abierto convencional.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ2, Página 9." 
+            },
+            {
+                id: 13, 
+                question: "¿Qué complicación fisiopatológica tardía es propia y exclusiva de la técnica de reconstrucción anatómica mediante hepaticoduodenostomía?", 
+                options: ["Síndrome de sumidero", "Colangitis esclerosante", "Biloma infectado", "Cirrosis biliar primaria"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la anastomosis directa al duodeno permite que restos de alimento y material particulado refluyan y se alojen en el remanente biliar ciego (cuando existe), generando estasis, litiasis y colangitis crónica (Sump syndrome).<br><br>Perla ENARM: \"Uno debe también considerar las complicaciones potenciales a largo plazo con la reparación mediante hepaticoduodenostomía, incluyendo el síndrome de sumidero y el reflujo alcalino.\"<br><br>Análisis de Distractores: La opción B puede ocurrir tras cualquier fallo de reparación bilioentérica. La opción C es una complicación aguda pre-reparación. La opción D es una patología autoinmune no relacionada.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ4, Página 19." 
+            },
+            {
+                id: 14, 
+                question: "De acuerdo a la GPC, comparado con el manejo diferido, ¿qué desenlace deletéreo presenta un riesgo 7.4 veces mayor al realizar una reconstrucción temprana (< 6 semanas)?", 
+                options: ["Fuga biliar intencionada", "Formación de estenosis", "Reflujo alcalino biliar", "Íleo posoperatorio"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, operar en una fase de inflamación aguda y tejido friable con microtrombosis vascular no delimitada garantiza isquemia en la línea de anastomosis, elevando críticamente la incidencia de estrechamiento cicatricial.<br><br>Perla ENARM: \"El análisis agrupado de estudios observacionales demostró una tasa significativamente mayor de estenosis en la reparación temprana en comparación con la reparación tardía.\"<br><br>Análisis de Distractores: Las opciones A, C y D no demostraron significancia estadística como determinantes de fallo temprano versus tardío; el principal problema de operar antes de las 6 semanas es la reoperación, la mortalidad y la estenosis.", 
+                source: "SAGES-AHPBA 2025: a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Results KQ1, Página 6." 
+            },
+            {
+                id: 15, 
+                question: "¿Qué requisito anatómico debe cumplirse idealmente en la vía biliar para considerar la eficacia de un manejo no operatorio o endoscópico definitivo?", 
+                options: ["Sistema biliar dilatado", "Transección biliar total", "Conducto descompresionado", "Lesión vascular asociada"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, el éxito de la terapia con stents endoscópicos requiere que los conductos puedan ser canulados y mantenidos permeables. Un sistema colapsado o una pérdida total de continuidad imposibilitan el paso y anclaje de la prótesis.<br><br>Perla ENARM: \"Una anatomía favorable con un sistema biliar dilatado es típicamente necesaria en estos pacientes para la intervención endoscópica.\"<br><br>Análisis de Distractores: La opción B imposibilita el tratamiento endoscópico (requiere puenteo quirúrgico). La opción C dificulta drásticamente la canulación. La opción D agrava el pronóstico y mandata revisión quirúrgica amplia.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ3, Página 17." 
+            },
+            {
+                id: 16, 
+                question: "Al evaluar los riesgos frente al tratamiento endoscópico exclusivo en lesiones mayores, ¿qué beneficio estadístico absoluto ofrece la corrección quirúrgica?", 
+                options: ["Menor tasa de mortalidad", "Menor riesgo de colangitis", "Menor riesgo de reoperación", "Menor estancia hospitalaria"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, aunque la cirugía representa una agresión fisiológica mayor, proporciona una solución definitiva y anatómicamente estable. El tratamiento endoscópico para lesiones graves tiene un OR de 16.60 para requerir múltiples intervenciones futuras y recambio de stents repetitivo.<br><br>Perla ENARM: \"El tratamiento endoscópico se asoció con una tasa significativamente mayor de reoperación y estenosis en comparación con el tratamiento quirúrgico.\"<br><br>Análisis de Distractores: Paradójicamente, la mortalidad y la colangitis (opciones A y B) son menores en el abordaje endoscópico (al ser menos invasivo en agudo), pero a expensas de fallar a largo plazo y requerir reoperaciones continuas.", 
+                source: "SAGES-AHPBA 2025: a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Results KQ3, Página 11." 
+            },
+            {
+                id: 17, 
+                question: "¿Cuál es el estándar quirúrgico reconstructivo de elección (patrón oro) para las lesiones biliares mayores que involucran tractos muy proximales o altos?", 
+                options: ["Hepaticoyeyunostomía", "Hepaticoduodenostomía", "Reparación primaria", "Stent plástico biliar"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la anastomosis con un asa de yeyuno aislada permite alcanzar estructuras biliares retraídas hasta el hilio hepático sin generar tensión isquémica, a diferencia del duodeno que posee limitaciones anatómicas de tracción.<br><br>Perla ENARM: \"La hepaticoyeyunostomía es ampliamente realizada, tiene la mayor cantidad de datos de soporte a largo plazo y se realiza típicamente para lesiones más proximales y altas.\"<br><br>Análisis de Distractores: La opción B está indicada para lesiones más distales y de anatomía favorable. La opción C está proscrita en pérdida de tejido por el alto riesgo de tensión y estenosis. La opción D es un manejo puente o paliativo.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ4, Página 19." 
+            },
+            {
+                id: 18, 
+                question: "¿Cuál es la presentación clínica postoperatoria patognomónica que revela una lesión iatrogénica biliar severa no advertida durante la colecistectomía inicial?", 
+                options: ["Íleo paralítico persistente", "Sangrado de tubo digestivo", "Sepsis de instauración rápida", "Obstrucción intestinal baja"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, el derrame libre de bilis estéril o infectada a la cavidad peritoneal irrita masivamente el peritoneo y condiciona una rápida translocación bacteriana, manifestándose clásicamente como sepsis en los primeros días del posoperatorio.<br><br>Perla ENARM: \"La mayoría de las lesiones no se identifican durante la colecistectomía y se vuelven evidentes en el postoperatorio, a menudo cuando el paciente ya presenta sepsis.\"<br><br>Análisis de Distractores: Las opciones A, B y D no son manifestaciones primarias de fuga biliar a cavidad ni colecciones biliares.", 
+                source: "SAGES-AHPBA 2025: a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Introduction, Página 2." 
+            },
+            {
+                id: 19, 
+                question: "¿Cuántas anastomosis digestivas requiere realizar obligatoriamente la técnica reconstructiva de la hepaticoyeyunostomía para lograr el tránsito fisiológico?", 
+                options: ["Cero", "Una", "Tres", "Dos"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la técnica emplea un asa excluida en Y de Roux. Por tanto, se exige la creación de la anastomosis bilioentérica (hepaticoyeyunostomía) y una segunda restitución del tránsito intestinal (yeyunoyeyunostomía).<br><br>Perla ENARM: \"La hepaticoyeyunostomía requiere típicamente la realización de dos anastomosis (la HJ y la yeyunoyeyunostomía).\"<br><br>Análisis de Distractores: La opción B (Una) corresponde a la ventaja fisiológica de la hepaticoduodenostomía. Las opciones A y C no corresponden a ninguna técnica bilioentérica estándar.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ4, Página 19." 
+            },
+            {
+                id: 20, 
+                question: "De acuerdo a la GPC, en los pacientes seleccionados adecuadamente, ¿cómo resultan las tasas de morbilidad y estenosis del abordaje de mínima invasión frente al abordaje abierto?", 
+                options: ["Son estadísticamente comparables", "Son drásticamente menores", "Son drásticamente mayores", "Son dependientes de la edad"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la evidencia actual demuestra que los desenlaces críticos (mortalidad, estenosis, reintervención) no presentan una superioridad concluyente de un abordaje sobre el otro, por lo que la elección depende puramente de la anatomía, el paciente (IMC) y la maestría del cirujano.<br><br>Perla ENARM: \"La reparación MIS y abierta arrojan resultados comparables, por lo que la elección de la técnica debe adaptarse a la condición del paciente y la experiencia del cirujano.\"<br><br>Análisis de Distractores: Las opciones B y C son falsas; la mínima invasión no elimina las complicaciones intrínsecas de la lesión isquémica, solo mejora la recuperación de pared, y tampoco empeora los resultados si la realiza un experto.", 
+                source: "SAGES-AHPBA 2025: a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Abstract / Conclusion, Página 1." 
+            },
+            {
+                id: 21, 
+                question: "¿Qué impacto socioeconómico y funcional se asocia directamente a la instauración de una lesión iatrogénica de la vía biliar?", 
+                options: ["Incremento de hernias incisionales", "Aumento de costos hospitalarios", "Disminución de supervivencia global", "Estancia intrahospitalaria breve"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, además del deterioro fisiológico, estas complicaciones catastróficas imponen una carga económica severa para los sistemas de salud y afectan drásticamente la funcionalidad del individuo.<br><br>Perla ENARM: \"La lesión de la vía biliar está relacionada con costos de hospitalización significativamente mayores y una menor calidad de vida del paciente.\"<br><br>Análisis de Distractores: Las opciones A y C no son los impactos primarios directos mencionados en el rubro socioeconómico funcional inicial de la guía. La opción D es contraria a la realidad (la estancia se prolonga).", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury following cholecystectomy, 2025, Introduction, Página 3." 
+            },
+            {
+                id: 22, 
+                question: "De acuerdo a la GPC, ¿cuál de las siguientes es una indicación explícita para preferir el abordaje quirúrgico abierto sobre la mínima invasión en una reparación biliar?", 
+                options: ["Índice de masa corporal alto", "Anatomía biliar favorable", "Inflamación pélvica asociada", "Inestabilidad hemodinámica"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la cirugía abierta garantiza un acceso expedito y control rápido de daños en pacientes que se encuentran hemodinámicamente inestables por sepsis biliar o daño vascular agudo.<br><br>Perla ENARM: \"La cirugía abierta es preferida en aquellos pacientes que están inestables, tienen lesiones altas y/o complejas, tienen una incisión abierta previa, y aquellos en quienes se sospecha inflamación severa.\"<br><br>Análisis de Distractores: Las opciones A y B son indicaciones explícitas para preferir el abordaje de mínima invasión (MIS). La opción C no tiene relevancia anatómica directa con el área quirúrgica hepatobiliar.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, KQ2 Recommendations, Página 11." 
+            },
+            {
+                id: 23, 
+                question: "Si se detecta una lesión biliar mayor en las primeras 6 semanas y no se cuenta con un experto hepatobiliar en el centro, ¿cuál es la medida de temporalidad recomendada?", 
+                options: ["Drenaje quirúrgico amplio", "Reparación primaria inmediata", "Cierre primario de la vía", "Hepaticoduodenostomía de urgencia"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la contención del daño biliar (puente a la cirugía) prioriza el control del foco infeccioso para estabilizar al paciente y permitir su traslado a un centro de tercer nivel, evitando reparaciones deficientes.<br><br>Perla ENARM: \"La recomendación actual apoya medidas de temporalidad en un paciente que se presenta dentro de las 6 semanas de su operación índice... incluyendo drenaje quirúrgico amplio para el control de la sepsis si otras opciones no operatorias no están disponibles.\"<br><br>Análisis de Distractores: Las opciones B, C y D constituyen intervenciones reconstructivas directas, las cuales están estrictamente proscritas si no existe un cirujano experto en cirugía hepatopancreatobiliar (HPB) disponible.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, KQ1 Evidence discussion, Página 10." 
+            },
+            {
+                id: 24, 
+                question: "Históricamente, ¿qué acción transoperatoria inmediata se dictaba de manera rutinaria al identificar una lesión biliar durante una colecistectomía laparoscópica?", 
+                options: ["Colocación de endoprótesis", "Derivación bilioentérica laparoscópica", "Ligadura del conducto biliar", "Conversión a cirugía abierta"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, el paradigma clásico establecía que el descubrimiento intraoperatorio de una lesión obligaba al abandono del abordaje laparoscópico para reparar la vía por laparotomía, algo que la cirugía de mínima invasión actual ha comenzado a desafiar en manos expertas.<br><br>Perla ENARM: \"La detección intraoperatoria de la lesión de la vía biliar durante la colecistectomía laparoscópica ha provocado tradicionalmente la conversión rutinaria a cirugía abierta.\"<br><br>Análisis de Distractores: Las opciones A y B requieren habilidades avanzadas o intervencionistas no disponibles universalmente en el momento histórico descrito. La opción C es un error técnico que agrava la lesión y favorece estenosis.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury following cholecystectomy, 2025, Introduction, Página 6." 
+            },
+            {
+                id: 25, 
+                question: "Fisiopatológicamente, ¿qué beneficio tisular fundamenta el retrasar la reconstrucción biliar definitiva por más de 6 semanas?", 
+                options: ["Promueve la hipertrofia hepática", "Restituye la competencia inmunológica", "Evita el uso de antibióticos", "Previene la formación de adherencias"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, el diferir el procedimiento permite la maduración del tejido, el control microbiológico del biloma infectado y la restitución de las defensas y nutrición del huésped, lo que optimiza las condiciones biológicas para la cicatrización anastomótica.<br><br>Perla ENARM: \"La justificación para los resultados ventajosos de la reparación retrasada es disminuir los riesgos... aliviando la inflamación, mejorando el estado nutricional, restituyendo la competencia inmunológica adecuada y facilitando una evaluación precisa.\"<br><br>Análisis de Distractores: La opción A ocurre en resecciones hepáticas mayores, no en derivaciones biliares. Las opciones C y D son falsas; de hecho, esperar 6 semanas garantiza la consolidación de adherencias firmes en el lecho quirúrgico.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury following cholecystectomy, 2025, Discussion, Página 49." 
+            },
+            {
+                id: 26, 
+                question: "Al comparar el manejo no operatorio frente al abordaje quirúrgico, ¿qué complicación presenta un riesgo 2.44 veces mayor de ocurrir tras la terapia endoscópica?", 
+                options: ["Síndrome de sumidero", "Reflujo alcalino biliar", "Isquemia hepática aguda", "Formación de estenosis"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, el anclaje crónico de stents plásticos o metálicos y la dilatación mecánica repetitiva sobre una vía biliar iatrogénica condicionan fibrosis concéntrica a largo plazo con más frecuencia que una anastomosis mucoso-mucosa libre de tensión.<br><br>Perla ENARM: \"El tratamiento endoscópico de la lesión de la vía biliar se asoció con una tasa significativamente mayor de estenosis en comparación con el tratamiento quirúrgico (OR: 2.44).\"<br><br>Análisis de Distractores: Las opciones A y B son complicaciones morfológicas exclusivas de las reconstrucciones quirúrgicas (hepaticoduodenostomía). La opción C se debe a lesión vascular inadvertida primaria, no a la técnica endoscópica en sí.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury following cholecystectomy, 2025, Results KQ3, Página 37." 
+            },
+            {
+                id: 27, 
+                question: "Comparado con la hepaticoyeyunostomía, ¿qué ventaja técnica y funcional posoperatoria ofrece la restitución biliar mediante una hepaticoduodenostomía?", 
+                options: ["Ausencia de síndrome de sumidero", "Mayor longitud del conducto biliar", "Facilita acceso endoscópico postoperatorio", "Permite resección de conductos intrahepáticos"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, al conectar la vía biliar directamente al tracto digestivo superior (duodeno) sin el aislamiento de un asa en Y de Roux de 60 cm, el endoscopista puede alcanzar fácilmente la anastomosis con un endoscopio estándar si se requiere litotricia o dilatación futura.<br><br>Perla ENARM: \"La hepaticoduodenostomía es una cirugía técnicamente más sencilla, más fisiológica y facilita un acceso endoscópico posoperatorio más fácil en caso de que surjan complicaciones.\"<br><br>Análisis de Distractores: La opción A es falsa; la hepaticoduodenostomía es la principal causa del síndrome de sumidero. Las opciones B y D no son ventajas asociadas; de hecho, la limitación de la técnica es la incapacidad de alcanzar conductos muy cortos o intrahepáticos.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Introduction, Página 5." 
+            },
+            {
+                id: 28, 
+                question: "¿Qué condición anatómica intrínseca del paciente dificulta drásticamente la creación de una hepaticoyeyunostomía funcional y exenta de tensión?", 
+                options: ["Presencia de mesenterio corto", "Conducto biliar dilatado", "Inflamación leve del lecho", "Hernia hiatal concomitante"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la construcción de un asa en Y de Roux exige ascender el yeyuno hasta el techo hepático. En pacientes obesos o con un mesenterio corto o engrosado, el asa yeyunal no alcanza el hilio biliar, generando una anastomosis isquémica o a tensión.<br><br>Perla ENARM: \"La hepaticoyeyunostomía puede ser extremadamente desafiante en pacientes con obesidad, aquellos que tienen un mesenterio corto, anatomía aberrante congénita o cirugías abdominales previas.\"<br><br>Análisis de Distractores: La opción B favorece y facilita cualquier tipo de anastomosis biliar. La opción C es el escenario ideal de reparación tardía. La opción D no afecta la disección ni el ascenso de asas en el compartimento inframesocólico/supramesocólico bajo.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ4, Página 19." 
+            },
+            {
+                id: 29, 
+                question: "De acuerdo a la GPC, ¿qué impacto estadístico documentado tiene realizar una reparación biliar temprana (< 6 semanas) sobre el riesgo de mortalidad global?", 
+                options: ["Lo reduce en un 50%", "Lo incrementa 2.83 veces", "Lo mantiene sin cambios", "Lo incrementa 16.6 veces"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, intervenir una cavidad abdominal en la cúspide de la tormenta proinflamatoria y séptica no solo precipita fallos técnicos (fugas), sino que expone al paciente a disfunción multiorgánica acelerada, lo cual se traduce en un exceso medible de mortalidad.<br><br>Perla ENARM: \"En el análisis agrupado de estudios observacionales, el grupo de reparación temprana se asoció con una tasa significativamente mayor de mortalidad en comparación con la reparación tardía (OR: 2.83).\"<br><br>Análisis de Distractores: Las opciones A y C son falsas. La opción D corresponde al OR de riesgo de reoperación al elegir manejo endoscópico frente al quirúrgico, no a la mortalidad temprana.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury following cholecystectomy, 2025, Results KQ1, Página 30." 
+            },
+            {
+                id: 30, 
+                question: "En el análisis de fallos reconstructivos, ¿cuál es el riesgo de requerir una reoperación (Odds Ratio) al optar por una reparación temprana frente a una tardía?", 
+                options: ["Riesgo absoluto de 0.18", "Riesgo absoluto de 7.41", "Riesgo absoluto de 3.31", "Riesgo absoluto de 16.60"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, el fracaso de una anastomosis suturada sobre tejidos inflamados y friables condiciona frecuentemente su dehiscencia, lo cual requiere que el paciente regrese inminentemente a quirófano para revisión abdominal o nueva derivación.<br><br>Perla ENARM: \"La reparación temprana se asoció con una tasa significativamente mayor de reoperación en comparación con la reparación tardía (OR: 3.31).\"<br><br>Análisis de Distractores: La opción A es la mortalidad asociada a endoscopia frente a cirugía. La opción B es el riesgo de estenosis en reparación temprana. La opción D es el riesgo de reoperación al usar abordaje no operatorio exclusivo.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury following cholecystectomy, 2025, Results KQ1, Página 18." 
+            },
+            {
+                id: 31, 
+                question: "¿Qué factor local persistente en el hilio hepático limita de forma crítica la seguridad de movilizar el duodeno para confeccionar una hepaticoduodenostomía libre de tensión?", 
+                options: ["Pérdida de la vesícula biliar", "Ligadura del conducto cístico", "Ausencia de lesión vascular", "Presencia de inflamación sustancial"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la maniobra de Kocher (movilización duodenal) es indispensable para acercar el duodeno a la vía biliar. Si el lecho y el ligamento hepatoduodenal cursan con inflamación severa, la tracción genera desgarros vasculares o duodenales y tensión isquémica anastomótica.<br><br>Perla ENARM: \"La hepaticoduodenostomía puede ser desafiante si hay una inflamación sustancial en la porta hepatis, haciendo que la movilización del duodeno sea potencialmente insegura.\"<br><br>Análisis de Distractores: Las opciones A y B son hallazgos poscolecistectomía normales que no impiden la movilización. La opción C mejora el pronóstico y facilita la reparación vascular de los tejidos circundantes.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ4, Página 19." 
+            },
+            {
+                id: 32, 
+                question: "De acuerdo a la GPC, además de las lesiones grado D de Strasberg, ¿qué otros subtipos se consideran teóricamente susceptibles al manejo endoscópico exclusivo inicial?", 
+                options: ["Grados E4 y E5", "Grados E1 y E2", "Fuga biliar tipo A", "Lesión vascular aislada"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, aunque las lesiones tipo E conllevan pérdida de continuidad, las variantes más distales (E1 y E2) pueden, en centros sumamente especializados, ser franqueadas y repermeabilizadas por vía endoscópica (rendezvous), evitando cirugías mayores si las condiciones son favorables.<br><br>Perla ENARM: \"El manejo endoscópico de las lesiones biliares severas se presta para las lesiones Tipo D y lesiones E1, E2 inferiores, aunque técnicamente puede realizarse en todos los tipos en centros selectos.\"<br><br>Análisis de Distractores: La opción A representa transecciones proximales intrahepáticas, mecánicamente inalcanzables por vía endoscópica retrógrada pura. La opción C es de bajo grado y no requiere prótesis complejas definitivas. La opción D no se maneja endoscópicamente.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ3, Página 17." 
+            },
+            {
+                id: 33, 
+                question: "En un paciente con diagnóstico clínico posoperatorio de lesión biliar, cuya imagen comprueba exclusivamente fuga del lecho cístico (Strasberg A), ¿cuál es el abordaje definitivo recomendado?", 
+                options: ["Hepaticoyeyunostomía en Y de Roux", "Hepaticoduodenostomía abierta", "Tratamiento no operatorio", "Reconstrucción biliar laparoscópica"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, cuando la continuidad del conducto colédoco y hepático común se mantiene intacta, descomprimir el sistema mediante esfinterotomía o colocación de stent (CPRE) detiene el gradiente de presión de la fuga biliar, permitiendo que el conducto cístico cicatrice por sí solo sin necesidad de reoperación.<br><br>Perla ENARM: \"Cuando la continuidad del conducto biliar está preservada, como en las lesiones tipo A, el manejo no operatorio (endoscópico) es típicamente el apropiado.\"<br><br>Análisis de Distractores: Las opciones A, B y D exigen seccionar una vía biliar sana y permeable para crear derivaciones anatómicas que son totalmente innecesarias y deletéreas ante una lesión grado A.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury following cholecystectomy, 2025, Introduction, Página 5." 
+            },
+            {
+                id: 34, 
+                question: "En estudios observacionales, ¿qué factor metodológico documentado explica que el abordaje quirúrgico presente una tasa de mortalidad aparentemente mayor frente al endoscópico?", 
+                options: ["Sesgo de selección por severidad", "Alergia a los anestésicos", "Infección del sitio quirúrgico", "Mayor tasa de estenosis"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, los pacientes con peores pronósticos (fuga masiva, inestabilidad hemodinámica, lesión vascular extensa) son asignados rutinariamente al grupo quirúrgico abierto por urgencia. Esto crea una falsa estadística de mayor letalidad que no se debe puramente a la técnica quirúrgica, sino a las condiciones basales del paciente.<br><br>Perla ENARM: \"Hubo un sesgo de selección significativo y es probable que la severidad de la lesión desempeñara un papel principal en las tasas de mortalidad más altas observadas en el grupo quirúrgico.\"<br><br>Análisis de Distractores: Las opciones B y C pueden ser complicaciones, pero no explican la desviación masiva de la mortalidad poblacional. La opción D de hecho es peor en el grupo endoscópico, no en el quirúrgico.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ3, Página 18." 
+            },
+            {
+                id: 35, 
+                question: "¿Qué sistema de clasificación anatómica aconseja utilizar invariablemente el consenso internacional contemporáneo para evaluar y reportar la severidad de las lesiones de vía biliar?", 
+                options: ["Clasificación de Bismuth", "Clasificación de Strasberg", "Clasificación de Hinchey", "Clasificación de Clavien Dindo"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, dictaminar el tipo de daño topográfico es el pilar para la toma de decisiones reconstructivas. La clasificación modificada de Strasberg se reconoce globalmente como el sistema estandarizado más completo, abarcando desde fugas menores hasta transecciones hiliares complejas.<br><br>Perla ENARM: \"El consenso internacional más reciente aconseja el uso del sistema de clasificación de Strasberg para evaluar la severidad de las lesiones de la vía biliar.\"<br><br>Análisis de Distractores: La opción A (Bismuth) evalúa tradicionalmente estenosis biliares benignas puras o colangiocarcinomas. La opción C es para diverticulitis aguda. La opción D clasifica complicaciones postoperatorias generales, no el nivel anatómico de la lesión biliar.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury following cholecystectomy, 2025, Introduction, Página 5." 
+            },
+            {
+                id: 36, 
+                question: "Para garantizar la seguridad anatómica en la reconstrucción biliar de mínima invasión (MIS) y evitar complicaciones por falta de exposición, el cirujano debe poseer experiencia en:", 
+                options: ["Cirugía gastrointestinal y endoscopia", "Cirugía general y radiología", "Cirugía MIS y cirugía hepatopancreatobiliar", "Cirugía bariátrica y trasplante"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la anastomosis biliar intraabdominal exige disección fina y sutura intracorpórea milimétrica. Intentar esto sin habilidades de laparoscopia avanzada (MIS) sumadas a un desconocimiento de la anatomía vascular aberrante del hígado (cirujano HPB) eleva drásticamente el fallo de la reparación.<br><br>Perla ENARM: \"Esta reparación MIS debe ser realizada únicamente por cirujanos con experiencia tanto en MIS como en cirugía hepatopancreatobiliar (HPB).\"<br><br>Análisis de Distractores: Las opciones A, B y D incluyen especialidades ajenas al entrenamiento reconstructivo directo del hilio hepático mediante trocares (Radiología, endoscopia, bariatría).", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ2, Página 11." 
+            },
+            {
+                id: 37, 
+                question: "¿Cuál es el principal factor humano de riesgo que históricamente obscurece los beneficios clínicos de intentar una reparación quirúrgica intraoperatoria inmediata?", 
+                options: ["La ausencia de un colangiograma", "El uso de anestesia general", "La presión intraabdominal elevada", "La ejecución por cirujanos no HPB"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, al ocurrir la lesión durante la colecistectomía inicial, el instinto del cirujano general primario es repararla en el acto. Al carecer de destrezas para crear una anastomosis libre de isquemia en el hilio biliar superior, las tasas de estenosis y fuga son exorbitantes frente al envío diferido a un experto.<br><br>Perla ENARM: \"Las ventajas prospectivas de la reparación en la mesa quirúrgica pueden verse oscurecidas por el hecho de que las reparaciones tempranas son intentadas con mayor frecuencia por especialistas no HPB.\"<br><br>Análisis de Distractores: Las opciones A, B y C son variables transoperatorias comunes, pero la literatura demuestra estadísticamente que la experticia técnica del operador es el determinante predictivo de fallo anastomótico primario.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury following cholecystectomy, 2025, Discussion, Página 50." 
+            },
+            {
+                id: 38, 
+                question: "En presencia de una lesión vascular concomitante (Ej. sección de la arteria hepática derecha), ¿cuál es el propósito fisiopatológico principal de diferir la reconstrucción biliar?", 
+                options: ["Prevenir el síndrome de sumidero", "Disminuir el diámetro del conducto", "Evitar la migración de endoprótesis", "Promover la revascularización del colédoco"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la irrigación de los conductos biliares superiores depende críticamente del plexo arterial circundante. Diferir la cirugía 6 semanas permite que ocurra una neovascularización o clara delimitación del tejido necrosado, asegurando suturar sobre bordes viables y bien perfundidos.<br><br>Perla ENARM: \"Retrasar la reparación permitiría tiempo para la revascularización del colédoco (CBD), reduciendo el riesgo de estenosis postoperatoria... facilitando una evaluación precisa de la extensión de la lesión isquémica.\"<br><br>Análisis de Distractores: La opción A es una complicación mecánica. Las opciones B y C no tienen correlación fisiológica con la isquemia vascular inducida por transección arterial.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Evidence Discussion KQ1, Página 150." 
+            },
+            {
+                id: 39, 
+                question: "Además de esperar el mínimo cronológico de 6 semanas, ¿qué requisito clínico sistémico indispensable dictamina proceder con una reparación quirúrgica tardía segura?", 
+                options: ["Niveles de albúmina mayores a 4 g/dl", "Ausencia de colelitiasis residual", "Control total de la sepsis intraabdominal", "Dilatación biliar mayor a 10 mm"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, la existencia de peritonitis biliar activa o colecciones infectadas inhibe sistémicamente la cicatrización e induce un estado catabólico. Sin la previa erradicación microbiológica mediante drenajes intermedios y antibióticos, cualquier anastomosis entérica fallará.<br><br>Perla ENARM: \"Algunos cirujanos hepatobiliares recomiendan posponer la reparación quirúrgica hasta que la sepsis y las complicaciones relacionadas estén bajo control.\"<br><br>Análisis de Distractores: La opción A es ideal pero no es un punto de corte restrictivo absoluto mencionado. La opción B y D no condicionan el éxito metabólico general y anatómico primario comparado con la erradicación del choque séptico y la inflamación purulenta.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury following cholecystectomy, 2025, Introduction, Página 4." 
+            },
+            {
+                id: 40, 
+                question: "Desde la perspectiva del paciente reportada por la GPC, ¿cuáles son los dos desenlaces clínicos valorados como más importantes para dictar el éxito tras sufrir una lesión biliar?", 
+                options: ["Preservar calidad de vida y minimizar reintervenciones", "Disminuir la estancia hospitalaria y evitar transfusiones", "Evitar cicatrices grandes y reducir el dolor crónico", "Preservar la función hepática y evitar la ictericia"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo GPC de SAGES-AHPBA 2025, los reportes en grupos de pacientes confirman que la carga psicológica y física de múltiples cirugías o recambios endoscópicos es inaceptable para ellos; el objetivo primario de la medicina paliativa y reconstructiva debe centrarse en reintegrar prontamente al individuo a su rutina con la menor intervención posible.<br><br>Perla ENARM: \"Todos los pacientes apoyaron firmemente la preservación de la calidad de vida y la minimización de las reintervenciones, y por lo tanto el tiempo total de recuperación, como los resultados más importantes.\"<br><br>Análisis de Distractores: Aunque las opciones B, C y D representan eventos médicos lógicamente deseables para el cirujano general, no reflejan el consenso extraído textualmente del panel de discusión centrado en el paciente y la funcionalidad vital.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Values and Patient Perspective, Página 13." 
+            },
+            {
+                id: 61, 
+                question: "De acuerdo a la GPC, si se detecta una lesión biliar severa de forma intraoperatoria y no se cuenta con un cirujano experto, ¿qué medidas de contención transoperatorias están indicadas antes de referir al paciente?", 
+                options: ["Hepaticoyeyunostomía en Y de Roux", "Drenaje amplio y derivación biliar", "Cierre primario con sutura monofilamento", "Colocación de tubo en T de urgencia"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, intentar una reconstrucción anatómica sin la experiencia técnica en cirugía hepatobiliar garantiza el fracaso. La prioridad máxima es controlar la sepsis y evitar la acumulación de colecciones.<br><br>Perla ENARM: \"Si la lesión se detecta en la operación índice, las medidas de temporalidad seguras incluyen drenaje amplio para el control de la sepsis y derivación biliar si es posible.\"<br><br>Análisis de Distractores: La opción A es el tratamiento definitivo, el cual está proscrito si no hay un experto. Las opciones C y D aumentan el riesgo de isquemia y estenosis secundaria al no dominar la tensión anastomótica en un lecho friable.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ1, Página 149." 
+            },
+            {
+                id: 62, 
+                question: "En el contexto de reconstrucción de mínima invasión, ¿qué limitante técnica específica vuelve al abordaje laparoscópico considerablemente más complejo que la plataforma robótica?", 
+                options: ["Imposibilidad de insuflar dióxido de carbono", "Sutura fina intracorpórea en el hilio", "Incapacidad de realizar maniobra de Kocher", "Dificultad para visualizar el lóbulo hepático"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, la anastomosis bilioentérica requiere microdisección y puntos milimétricos en la placa hiliar (porta hepatis). Muy pocos cirujanos dominan la sutura laparoscópica pura en espacios tan reducidos, barrera que la robótica logra sortear con su articulación.<br><br>Perla ENARM: \"Muy pocos cirujanos tienen experiencia adecuada en sutura laparoscópica fina... la sutura robótica puede superar algunos de estos desafíos.\"<br><br>Análisis de Distractores: Las opciones A, C y D son falsas; la laparoscopia permite una adecuada insuflación, visualización hepática y disección del plano duodenal, pero carece de la ergonomía articular del robot para anudar sin tensión.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ2, Página 160." 
+            },
+            {
+                id: 63, 
+                question: "En la evaluación de la morbilidad global por complicaciones (Clavien Dindo ≥ 3), ¿cuál es el comportamiento estadístico de la reparación quirúrgica temprana frente a la tardía?", 
+                options: ["Es sustancialmente mayor en la temprana", "Es estadísticamente similar en ambas", "Es sustancialmente mayor en la tardía", "Depende del uso de profilaxis antibiótica"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, aunque la reparación temprana eleva marcadamente los riesgos de estenosis, reoperación y mortalidad específica, el análisis agrupado para complicaciones globales mayores (Clavien Dindo III-IV) no alcanzó diferencia estadística concluyente entre ambos grupos.<br><br>Perla ENARM: \"La tasa de morbilidad no fue significativamente diferente ni en el RCT (OR: 1.14) ni en el estudio observacional (OR: 0.87) entre la reparación temprana y tardía.\"<br><br>Análisis de Distractores: Las opciones A y C contradicen los resultados de los metaanálisis de este desenlace específico. La opción D es un factor general pero no dictamina la diferencia estadística basal intrínseca a la técnica y su temporalidad.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Results KQ1, Página 21." 
+            },
+            {
+                id: 64, 
+                question: "Fisiológicamente, ¿cuál es la principal ventaja biomecánica argumentada a favor de la reconstrucción biliar mediante hepaticoduodenostomía?", 
+                options: ["Excluye el tránsito de enzimas pancreáticas", "Aísla un asa intestinal en forma de Y", "Conecta la vía biliar directo al duodeno", "Previene la formación del síndrome de sumidero"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC, abocar el conducto directamente a la primera/segunda porción duodenal simula el vaciamiento anatómico natural, siendo una técnica de un solo paso que evita las exclusiones extensas del intestino medio.<br><br>Perla ENARM: \"En comparación, la hepaticoduodenostomía ofrece el beneficio de ser una cirugía técnicamente más fisiológica y proporciona un acceso más fácil a la reparación.\"<br><br>Análisis de Distractores: Las opciones A y B describen la técnica de hepaticoyeyunostomía en Y de Roux. La opción D es falsa, el síndrome de sumidero es precisamente la complicación insigne de la hepaticoduodenostomía.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ4, Página 182." 
+            },
+            {
+                id: 65, 
+                question: "Para garantizar una hepaticoduodenostomía libre de tensión en lesiones biliares proximales o altas, ¿qué maniobra quirúrgica es un requerimiento técnico obligatorio?", 
+                options: ["Desvascularización de la curvatura menor", "Movilización extensa del duodeno", "Resección del segmento hepático 4b", "Cierre de la papila de Vater"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, el duodeno es un órgano parcialmente retroperitoneal. Para lograr que alcance el hilio hepático superior sin traccionar la línea de sutura, se requiere despegar profundamente su fijación (maniobra de Kocher). Si hay inflamación, esto es sumamente riesgoso.<br><br>Perla ENARM: \"Mientras más alta sea la lesión, más movilización se requiere para la creación de una anastomosis hepaticoduodenal libre de tensión.\"<br><br>Análisis de Distractores: Las opciones A, C y D no son maniobras estándar para alargar el tracto digestivo hacia el retroperitoneo superior.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ4, Página 183." 
+            },
+            {
+                id: 66, 
+                question: "Históricamente, ¿qué condición estructural de la vía biliar era un requisito absoluto para plantear la eficacia de un abordaje puramente endoscópico?", 
+                options: ["Inflamación pélvica coexistente", "Conducto desfuncionalizado totalmente", "Isquemia de la arteria hepática", "Vía biliar en continuidad anatómica"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo a la GPC, la canulación retrógrada con guía hidrofilica a través de la papila solo es viable si existe un tracto anatómico, por mínimo que sea, que conecte el colédoco inferior con el muñón superior. Las transecciones completas requieren manejo percutáneo o quirúrgico.<br><br>Perla ENARM: \"Históricamente, el tratamiento endoscópico se empleaba a menudo en estos pacientes, pero solo cuando el conducto estaba en continuidad con el resto del árbol biliar.\"<br><br>Análisis de Distractores: La opción B imposibilita el paso del stent. La opción C disminuye el éxito de cicatrización a largo plazo independientemente del método. La opción A es irrelevante anatómicamente.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Introduction, Página 103." 
+            },
+            {
+                id: 67, 
+                question: "Desde la perspectiva del paciente, ¿cuál es el principal compromiso o carga inaceptable que disuade de elegir la terapia endoscópica frente a la cirugía definitiva?", 
+                options: ["Riesgo de cicatrices queloides abdominales", "Necesidad de reintervenciones por meses", "Desarrollo de hernias postincisionales", "Extirpación prolongada de ganglios linfáticos"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, los testimonios directos de los pacientes enfatizan su aversión a someterse a sedaciones repetidas y recambios de stents, prefiriendo la recuperación intensa de una sola cirugía definitiva.<br><br>Perla ENARM: \"El manejo endoscópico a menudo requiere múltiples reintervenciones durante meses seguidos para tratar completamente la lesión y por lo tanto es potencialmente menos deseable.\"<br><br>Análisis de Distractores: Las opciones A y C son morbilidades asociadas a la cirugía, no a la endoscopia. La opción D corresponde a cirugía oncológica, no reconstructiva benigna.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ3, Página 174." 
+            },
+            {
+                id: 68, 
+                question: "En el metaanálisis de técnicas de mínima invasión para la restitución biliar, ¿cuál fue el promedio de pérdida sanguínea intraoperatoria documentado?", 
+                options: ["135 ml", "400 ml", "850 ml", "50 ml"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo a la GPC, la magnificación óptica y el control hemostático fino inherente a las pinzas bipolares de laparoscopia y robótica mantienen el sangrado intraoperatorio en rangos sumamente bajos durante la confección anastomótica.<br><br>Perla ENARM: \"La revisión sistemática reveló que... el promedio de pérdida de sangre fue de 135.9 ml exhibiendo tasas de morbilidad comparables.\"<br><br>Análisis de Distractores: Las opciones B y C reflejan sangrados más comunes en cirugía abierta compleja o con desgarros hiliares. La opción D subestima el sangrado natural de la disección en la placa hepática.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Discussion, Página 51." 
+            },
+            {
+                id: 69, 
+                question: "Según las cohortes internacionales, ¿cuál es el rango de duración quirúrgica operativa promedio para efectuar una anastomosis biliar por mínima invasión?", 
+                options: ["60 a 90 minutos", "190 a 330 minutos", "40 a 50 minutos", "400 a 500 minutos"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, la disección de adherencias, la identificación anatómica de muñones retraídos isquémicos y la sutura laparoscópica o robótica exigen tiempos operatorios prolongados pero controlados.<br><br>Perla ENARM: \"El promedio de duración operativa osciló entre 190 y 330 minutos, con una estancia hospitalaria media postoperatoria de 6.3 días.\"<br><br>Análisis de Distractores: Las opciones A y C son rangos irreales para una reconstrucción intracorpórea mayor. La opción D indica tiempos excesivos de complicaciones transoperatorias severas, no los promedios reportados universalmente.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Discussion, Página 51." 
+            },
+            {
+                id: 70, 
+                question: "Al analizar metaanálisis previos clásicos, ¿en qué intervalo cronológico de reparación se observaba paradójicamente la morbilidad posoperatoria más catastrófica?", 
+                options: ["Menos de 72 horas", "Entre 2 y 6 semanas", "Más de 8 semanas", "Más de 6 meses"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, este periodo \"intermedio\" representa el clímax de la fase inflamatoria aguda intrabdominal. Los tejidos alcanzan su máxima fragilidad (fase exudativa y de tejido de granulación inmaduro), asegurando el fallo de las suturas.<br><br>Perla ENARM: \"Un metaanálisis previo mostró que la morbilidad posoperatoria fue significativamente mayor en el intervalo intermedio (2-6 semanas) en comparación con la reparación temprana y tardía.\"<br><br>Análisis de Distractores: Las opciones A, C y D representan estadios tisulares donde el tejido está biológicamente menos predispuesto al desgarro sutural inmediato (o pre-inflamación severa, o ya en fibrosis madura).", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Discussion, Página 43." 
+            },
+            {
+                id: 71, 
+                question: "Al evaluar intervenciones en centros de alta especialidad (HPB), ¿cómo resultó la tasa de fallo de la reparación inmediata (intraoperatoria) frente a la diferida posoperatoria?", 
+                options: ["Fue drásticamente mayor en intraoperatorias", "Fue idéntica en ambos abordajes", "Fue menor en las intraoperatorias", "Alcanzó el 100% en ambos casos"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC, cuando la lesión se identifica en el acto quirúrgico y es reparada por un cirujano verdaderamente especializado en cirugía hepática, se evita la progresión a sepsis peritonial y la retracción fibrótica. En este escenario estrictamente seleccionado, los fallos son numéricamente inferiores (18.9% vs 24.7%).<br><br>Perla ENARM: \"Se observó una tasa más baja de fallo de reparación para las reparaciones en la mesa quirúrgica en comparación con las reparaciones posoperatorias (18.9% vs 24.7%) en centros especializados HPB.\"<br><br>Análisis de Distractores: Las opciones A y B aplican cuando se incluyen en la estadística a cirujanos generales no entrenados, lo cual invierte los resultados. La opción D es biológicamente falsa.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Discussion, Página 50." 
+            },
+            {
+                id: 72, 
+                question: "Desde el análisis de la equidad en salud, ¿qué carencia estructural limita globalmente la adopción universal del manejo no operatorio (endoscópico/radiológico) para lesiones biliares severas?", 
+                options: ["Falta de disponibilidad de antibióticos empíricos", "Ausencia de especialistas en endoscopia e intervencionismo", "Escasez de hemoglobina en bancos de sangre", "Carencia de ventiladores mecánicos posquirúrgicos"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, la canulación de conductos biliares colapsados o disecados requiere pericia de tercer nivel (CPRE avanzada o radiología percutánea). Hospitales periféricos rurales carecen de estos operadores, restringiendo al paciente a opciones de derivación puramente quirúrgica abierta.<br><br>Perla ENARM: \"Los especialistas en endoscopia y radiología intervencionista pueden no existir o no estar bien versados en las terapias específicas, limitando las opciones disponibles en esas instituciones.\"<br><br>Análisis de Distractores: Las opciones A, C y D representan insumos y equipos de medicina general/crítica que no son exclusivos ni la limitante técnica cardinal para el abordaje de la vía biliar por orificios naturales o percutáneos.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Health Equity, Página 189." 
+            },
+            {
+                id: 73, 
+                question: "De acuerdo a la GPC, además de la obesidad, ¿qué factor anatómico adquirido del paciente contraindica o dificulta severamente la confección de una hepaticoyeyunostomía?", 
+                options: ["Adherencias por cirugía abdominal previa", "Hipertrofia del lóbulo caudado", "Diámetro biliar menor a 5 mm", "Arteria hepática derecha accesoria"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo a la GPC, para construir una Y de Roux se debe movilizar el intestino delgado desde el ángulo de Treitz, medir asas y subirlas al compartimento supramesocólico. Adherencias pélvicas o mesentéricas previas (síndrome adherencial) impiden esta excursión, favoreciendo el uso de hepaticoduodenostomía.<br><br>Perla ENARM: \"La hepaticoyeyunostomía puede ser extremadamente desafiante en pacientes con... cirugía abdominal previa con adherencias intraabdominales extensas.\"<br><br>Análisis de Distractores: Las opciones B, C y D son variaciones o características hiliares que exigen técnica fina, pero no anclan mecánicamente el ascenso de las asas yeyunales desde el piso inferior del abdomen.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ4, Página 181." 
+            },
+            {
+                id: 74, 
+                question: "¿Qué condición fenotípica anatómica en un paciente con detección temprana de la lesión biliar lo clasifica como un \"mal candidato\" para intervención endoscópica?", 
+                options: ["Sistema biliar colapsado o no dilatado", "Índice de masa corporal mayor a 35", "Edad avanzada mayor de 70 años", "Colecciones periepáticas purulentas"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo a la GPC, la fuga biliar activa aguda vacía los conductos, dejándolos de un calibre ínfimo. El endoscopista requiere conductos tensos y dilatados (generalmente por estenosis crónica) para guiar la prótesis adecuadamente sin crear falsas vías o perforaciones coledocianas.<br><br>Perla ENARM: \"Típicamente se necesita una anatomía favorable con un sistema biliar dilatado... aquellos con descubrimiento pronto de la lesión pueden no ser tan buenos candidatos por esta razón.\"<br><br>Análisis de Distractores: Las opciones B y C no interfieren con el acceso transgástrico endoscópico. La opción D mandata control infeccioso, pero no imposibilita mecánicamente la expansión de un stent si la vía estuviera adecuadamente calibrada.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ3, Página 171." 
+            },
+            {
+                id: 75, 
+                question: "¿En qué patología obstructiva no relacionada al trauma iatrogénico se evidenció en estudios previos que la hepaticoduodenostomía genera más estenosis que el asa yeyunal?", 
+                options: ["Colangiocarcinoma perihiliar", "Enfermedades biliares benignas", "Cáncer de cabeza de páncreas", "Quistes de colédoco tipo I"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, al explorar literatura indirecta (cohorte extraída de indicaciones por litiasis recurrente o disfunción benigna del esfínter), conectar el duodeno al colédoco demostró una propensión intrínseca a estenosis superior a la del yeyuno, posiblemente mediado por el ambiente hostil del flujo pilórico.<br><br>Perla ENARM: \"En un estudio previo sobre pacientes con enfermedades biliares benignas, se demostró que... experimentaron una mayor incidencia de estenosis anastomóticas en comparación con la hepaticoyeyunostomía.\"<br><br>Análisis de Distractores: Las opciones A y C cursan habitualmente con resecciones oncológicas que obligan derivación a yeyuno (Whipple/Hepatectomías). La opción D corresponde a patología congénita pediátrica, no abordada como comparador primario adulto.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Discussion, Página 53." 
+            },
+            {
+                id: 76, 
+                question: "En el protocolo riguroso de seguimiento clínico para la monitorización e investigación a largo plazo de esta catástrofe, ¿qué métricas deben registrarse obligatoriamente a los 5-10 años?", 
+                options: ["Tasa de estenosis y reintervención", "Necesidad de nutrición parenteral", "Incidencia de fístula pancreática", "Marcadores tumorales CA 19-9"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo a la GPC, la cicatriz isquémica avascular responsable de ocluir la anastomosis puede tardar una década completa en manifestar un compromiso luminal crítico o cirrosis biliar focal, por lo que el éxito del cirujano no puede dictaminarse en el primer año.<br><br>Perla ENARM: \"Los datos de 5 a 10 años con respecto a la tasa de estenosis, la calidad de vida, la mortalidad y la reintervención... serían de una importancia sustancial.\"<br><br>Análisis de Distractores: Las opciones B y C evalúan morbilidades agudas/subagudas propias de resecciones de páncreas o intestino corto. La opción D monitoriza recidiva neoplásica maligna.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Monitoring and evaluation, Página 188." 
+            },
+            {
+                id: 77, 
+                question: "Para la generación de recomendaciones en el marco GRADE, ¿qué rango numérico en la escala de valores de utilidad se asignó para representar el peor desenlace clínico posible (Muerte)?", 
+                options: ["Valor de 1", "Valor de 100", "Valor de 0", "Valor de -1"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC, la metodología de toma de decisiones empleó valores umbrales cuantitativos precisos. A la muerte se le designó una utilidad absoluta de 0, y al mejor estado de salud vital 1. Las intervenciones se puntuaron matemáticamente en base a este coeficiente de riesgo.<br><br>Perla ENARM: \"Se pidió a los miembros del panel que calificaran la utilidad de cada resultado... en una escala cardinal de 0 a 1... siendo 0 la muerte y 1 el mejor estado de salud posible.\"<br><br>Análisis de Distractores: Las opciones A, B y D son escalas numéricas ficticias no correspondientes al coeficiente de utilidad estandarizado (Quality-Adjusted Life Year / Utility weight) usado formalmente por el panel.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Determining utility values, Página 118." 
+            },
+            {
+                id: 78, 
+                question: "Con la finalidad de garantizar una visualización ergonómica e ingreso laparoscópico seguro en pacientes reoperados por lesión biliar, ¿qué técnica de acceso instruye el consenso?", 
+                options: ["Entrada abdominal lejos de incisiones previas", "Uso rutinario de técnica de Hasson umbilical", "Insuflación hepática directa transcostal", "Acceso exclusivo con puerto único umbilical"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo a la GPC, la presencia de cicatrices quirúrgicas augura adherencias de epiplón e intestino al peritoneo parietal. Ingresar los trócares en cuadrantes vírgenes previene perforaciones inadvertidas que contaminarían la cavidad o fugarían el neumoperitoneo.<br><br>Perla ENARM: \"La inquietud puede rodear las reparaciones MIS debido al ingreso en un abdomen reoperado... pero entrar en el abdomen lejos de los sitios de incisión índice es típicamente seguro.\"<br><br>Análisis de Distractores: La opción B suele estar comprometida por la extracción de la vesícula en el procedimiento primario. Las opciones C y D aumentan drásticamente el riesgo de colisión instrumental y falla de exposición.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Evidence discussion KQ2, Página 160." 
+            },
+            {
+                id: 79, 
+                question: "Como herramienta tecnológica prioritaria a desarrollar en futuras investigaciones, ¿qué propone el consenso para estandarizar la decisión entre efectuar una cirugía temprana versus tardía?", 
+                options: ["Calculadora de riesgo con nomograma", "Algoritmo de inteligencia artificial robótico", "Inmunofluorescencia con verde de indocianina", "Pruebas genómicas de cicatrización"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo a la GPC, dado que la decisión depende de múltiples variables intrincadas (tiempo, sepsis, nivel de lesión, vascularidad), proveer al cirujano general de una ecuación clínica estructurada mitigará la morbilidad de intervenciones precipitadas y sesgos humanos.<br><br>Perla ENARM: \"Una herramienta de calculadora de riesgo tipo nomograma para facilitar la toma de decisiones entre la reparación temprana y tardía basada en factores del paciente... sería de gran beneficio.\"<br><br>Análisis de Distractores: Las opciones B, C y D representan avances biomédicos costosos y experimentales, ajenos a la estratificación y análisis epidemiológico multivariable solicitado explícitamente en el documento.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Future research, Página 153." 
+            },
+            {
+                id: 80, 
+                question: "Dentro del análisis sistemático, ¿qué porcentaje de exclusión máximo se aceptó para pacientes que ya presentaban un intento previo de reparación biliar definitiva fallida?", 
+                options: ["Menos del 50%", "Menos del 30%", "Menos del 10%", "Cero absoluto por protocolo"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC, incluir un volumen alto de pacientes reintervenidos ensucia la pureza de la estadística, ya que una segunda o tercera reconstrucción enfrenta una vía biliar densamente necrótica o fibrótica, distorsionando las tasas de éxito de la técnica quirúrgica original en estudio.<br><br>Perla ENARM: \"Las reparaciones debían ser definitivas sin intentos previos de reparación definitiva (se permitía la excepción si representaban menos del 10% de los casos).\"<br><br>Análisis de Distractores: Las opciones A y B diluirían la validación primaria de los desenlaces. La opción D (cero absoluto) fue flexibilizada para no desechar series retrospectivas de vida real enteras que incluyeran casos aislados.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Literature search and eligibility, Página 9." 
+            },
+            {
+                id: 61, 
+                question: "De acuerdo a la GPC, si se detecta una lesión biliar severa de forma intraoperatoria y no se cuenta con un cirujano experto, ¿qué medidas de contención transoperatorias están indicadas antes de referir al paciente?", 
+                options: ["Hepaticoyeyunostomía en Y de Roux", "Drenaje amplio y derivación biliar", "Cierre primario con sutura monofilamento", "Colocación de tubo en T de urgencia"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, intentar una reconstrucción anatómica sin la experiencia técnica en cirugía hepatobiliar garantiza el fracaso. La prioridad máxima es controlar la sepsis y evitar la acumulación de colecciones.<br><br>Perla ENARM: \"Si la lesión se detecta en la operación índice, las medidas de temporalidad seguras incluyen drenaje amplio para el control de la sepsis y derivación biliar si es posible.\"<br><br>Análisis de Distractores: La opción A es el tratamiento definitivo, el cual está proscrito si no hay un experto. Las opciones C y D aumentan el riesgo de isquemia y estenosis secundaria al no dominar la tensión anastomótica en un lecho friable.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ1, Página 149." 
+            },
+            {
+                id: 62, 
+                question: "En el contexto de reconstrucción de mínima invasión, ¿qué limitante técnica específica vuelve al abordaje laparoscópico considerablemente más complejo que la plataforma robótica?", 
+                options: ["Imposibilidad de insuflar dióxido de carbono", "Sutura fina intracorpórea en el hilio", "Incapacidad de realizar maniobra de Kocher", "Dificultad para visualizar el lóbulo hepático"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, la anastomosis bilioentérica requiere microdisección y puntos milimétricos en la placa hiliar (porta hepatis). Muy pocos cirujanos dominan la sutura laparoscópica pura en espacios tan reducidos, barrera que la robótica logra sortear con su articulación.<br><br>Perla ENARM: \"Muy pocos cirujanos tienen experiencia adecuada en sutura laparoscópica fina... la sutura robótica puede superar algunos de estos desafíos.\"<br><br>Análisis de Distractores: Las opciones A, C y D son falsas; la laparoscopia permite una adecuada insuflación, visualización hepática y disección del plano duodenal, pero carece de la ergonomía articular del robot para anudar sin tensión.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ2, Página 160." 
+            },
+            {
+                id: 63, 
+                question: "En la evaluación de la morbilidad global por complicaciones (Clavien Dindo ≥ 3), ¿cuál es el comportamiento estadístico de la reparación quirúrgica temprana frente a la tardía?", 
+                options: ["Es sustancialmente mayor en la temprana", "Es estadísticamente similar en ambas", "Es sustancialmente mayor en la tardía", "Depende del uso de profilaxis antibiótica"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, aunque la reparación temprana eleva marcadamente los riesgos de estenosis, reoperación y mortalidad específica, el análisis agrupado para complicaciones globales mayores (Clavien Dindo III-IV) no alcanzó diferencia estadística concluyente entre ambos grupos.<br><br>Perla ENARM: \"La tasa de morbilidad no fue significativamente diferente ni en el RCT (OR: 1.14) ni en el estudio observacional (OR: 0.87) entre la reparación temprana y tardía.\"<br><br>Análisis de Distractores: Las opciones A y C contradicen los resultados de los metaanálisis de este desenlace específico. La opción D es un factor general pero no dictamina la diferencia estadística basal intrínseca a la técnica y su temporalidad.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Results KQ1, Página 21." 
+            },
+            {
+                id: 64, 
+                question: "Fisiológicamente, ¿cuál es la principal ventaja biomecánica argumentada a favor de la reconstrucción biliar mediante hepaticoduodenostomía?", 
+                options: ["Excluye el tránsito de enzimas pancreáticas", "Aísla un asa intestinal en forma de Y", "Conecta la vía biliar directo al duodeno", "Previene la formación del síndrome de sumidero"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC, abocar el conducto directamente a la primera/segunda porción duodenal simula el vaciamiento anatómico natural, siendo una técnica de un solo paso que evita las exclusiones extensas del intestino medio.<br><br>Perla ENARM: \"En comparación, la hepaticoduodenostomía ofrece el beneficio de ser una cirugía técnicamente más fisiológica y proporciona un acceso más fácil a la reparación.\"<br><br>Análisis de Distractores: Las opciones A y B describen la técnica de hepaticoyeyunostomía en Y de Roux. La opción D es falsa, el síndrome de sumidero es precisamente la complicación insigne de la hepaticoduodenostomía.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ4, Página 182." 
+            },
+            {
+                id: 65, 
+                question: "Para garantizar una hepaticoduodenostomía libre de tensión en lesiones biliares proximales o altas, ¿qué maniobra quirúrgica es un requerimiento técnico obligatorio?", 
+                options: ["Desvascularización de la curvatura menor", "Movilización extensa del duodeno", "Resección del segmento hepático 4b", "Cierre de la papila de Vater"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, el duodeno es un órgano parcialmente retroperitoneal. Para lograr que alcance el hilio hepático superior sin traccionar la línea de sutura, se requiere despegar profundamente su fijación (maniobra de Kocher). Si hay inflamación, esto es sumamente riesgoso.<br><br>Perla ENARM: \"Mientras más alta sea la lesión, más movilización se requiere para la creación de una anastomosis hepaticoduodenal libre de tensión.\"<br><br>Análisis de Distractores: Las opciones A, C y D no son maniobras estándar para alargar el tracto digestivo hacia el retroperitoneo superior.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ4, Página 183." 
+            },
+            {
+                id: 66, 
+                question: "Históricamente, ¿qué condición estructural de la vía biliar era un requisito absoluto para plantear la eficacia de un abordaje puramente endoscópico?", 
+                options: ["Inflamación pélvica coexistente", "Conducto desfuncionalizado totalmente", "Isquemia de la arteria hepática", "Vía biliar en continuidad anatómica"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo a la GPC, la canulación retrógrada con guía hidrofilica a través de la papila solo es viable si existe un tracto anatómico, por mínimo que sea, que conecte el colédoco inferior con el muñón superior. Las transecciones completas requieren manejo percutáneo o quirúrgico.<br><br>Perla ENARM: \"Históricamente, el tratamiento endoscópico se empleaba a menudo en estos pacientes, pero solo cuando el conducto estaba en continuidad con el resto del árbol biliar.\"<br><br>Análisis de Distractores: La opción B imposibilita el paso del stent. La opción C disminuye el éxito de cicatrización a largo plazo independientemente del método. La opción A es irrelevante anatómicamente.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Introduction, Página 103." 
+            },
+            {
+                id: 67, 
+                question: "Desde la perspectiva del paciente, ¿cuál es el principal compromiso o carga inaceptable que disuade de elegir la terapia endoscópica frente a la cirugía definitiva?", 
+                options: ["Riesgo de cicatrices queloides abdominales", "Necesidad de reintervenciones por meses", "Desarrollo de hernias postincisionales", "Extirpación prolongada de ganglios linfáticos"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, los testimonios directos de los pacientes enfatizan su aversión a someterse a sedaciones repetidas y recambios de stents, prefiriendo la recuperación intensa de una sola cirugía definitiva.<br><br>Perla ENARM: \"El manejo endoscópico a menudo requiere múltiples reintervenciones durante meses seguidos para tratar completamente la lesión y por lo tanto es potencialmente menos deseable.\"<br><br>Análisis de Distractores: Las opciones A y C son morbilidades asociadas a la cirugía, no a la endoscopia. La opción D corresponde a cirugía oncológica, no reconstructiva benigna.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ3, Página 174." 
+            },
+            {
+                id: 68, 
+                question: "En el metaanálisis de técnicas de mínima invasión para la restitución biliar, ¿cuál fue el promedio de pérdida sanguínea intraoperatoria documentado?", 
+                options: ["135 ml", "400 ml", "850 ml", "50 ml"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo a la GPC, la magnificación óptica y el control hemostático fino inherente a las pinzas bipolares de laparoscopia y robótica mantienen el sangrado intraoperatorio en rangos sumamente bajos durante la confección anastomótica.<br><br>Perla ENARM: \"La revisión sistemática reveló que... el promedio de pérdida de sangre fue de 135.9 ml exhibiendo tasas de morbilidad comparables.\"<br><br>Análisis de Distractores: Las opciones B y C reflejan sangrados más comunes en cirugía abierta compleja o con desgarros hiliares. La opción D subestima el sangrado natural de la disección en la placa hepática.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Discussion, Página 51." 
+            },
+            {
+                id: 69, 
+                question: "Según las cohortes internacionales, ¿cuál es el rango de duración quirúrgica operativa promedio para efectuar una anastomosis biliar por mínima invasión?", 
+                options: ["60 a 90 minutos", "190 a 330 minutos", "40 a 50 minutos", "400 a 500 minutos"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, la disección de adherencias, la identificación anatómica de muñones retraídos isquémicos y la sutura laparoscópica o robótica exigen tiempos operatorios prolongados pero controlados.<br><br>Perla ENARM: \"El promedio de duración operativa osciló entre 190 y 330 minutos, con una estancia hospitalaria media postoperatoria de 6.3 días.\"<br><br>Análisis de Distractores: Las opciones A y C son rangos irreales para una reconstrucción intracorpórea mayor. La opción D indica tiempos excesivos de complicaciones transoperatorias severas, no los promedios reportados universalmente.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Discussion, Página 51." 
+            },
+            {
+                id: 70, 
+                question: "Al analizar metaanálisis previos clásicos, ¿en qué intervalo cronológico de reparación se observaba paradójicamente la morbilidad posoperatoria más catastrófica?", 
+                options: ["Menos de 72 horas", "Entre 2 y 6 semanas", "Más de 8 semanas", "Más de 6 meses"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, este periodo \"intermedio\" representa el clímax de la fase inflamatoria aguda intrabdominal. Los tejidos alcanzan su máxima fragilidad (fase exudativa y de tejido de granulación inmaduro), asegurando el fallo de las suturas.<br><br>Perla ENARM: \"Un metaanálisis previo mostró que la morbilidad posoperatoria fue significativamente mayor en el intervalo intermedio (2-6 semanas) en comparación con la reparación temprana y tardía.\"<br><br>Análisis de Distractores: Las opciones A, C y D representan estadios tisulares donde el tejido está biológicamente menos predispuesto al desgarro sutural inmediato (o pre-inflamación severa, o ya en fibrosis madura).", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Discussion, Página 43." 
+            },
+            {
+                id: 71, 
+                question: "Al evaluar intervenciones en centros de alta especialidad (HPB), ¿cómo resultó la tasa de fallo de la reparación inmediata (intraoperatoria) frente a la diferida posoperatoria?", 
+                options: ["Fue drásticamente mayor en intraoperatorias", "Fue idéntica en ambos abordajes", "Fue menor en las intraoperatorias", "Alcanzó el 100% en ambos casos"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC, cuando la lesión se identifica en el acto quirúrgico y es reparada por un cirujano verdaderamente especializado en cirugía hepática, se evita la progresión a sepsis peritonial y la retracción fibrótica. En este escenario estrictamente seleccionado, los fallos son numéricamente inferiores (18.9% vs 24.7%).<br><br>Perla ENARM: \"Se observó una tasa más baja de fallo de reparación para las reparaciones en la mesa quirúrgica en comparación con las reparaciones posoperatorias (18.9% vs 24.7%) en centros especializados HPB.\"<br><br>Análisis de Distractores: Las opciones A y B aplican cuando se incluyen en la estadística a cirujanos generales no entrenados, lo cual invierte los resultados. La opción D es biológicamente falsa.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Discussion, Página 50." 
+            },
+            {
+                id: 72, 
+                question: "Desde el análisis de la equidad en salud, ¿qué carencia estructural limita globalmente la adopción universal del manejo no operatorio (endoscópico/radiológico) para lesiones biliares severas?", 
+                options: ["Falta de disponibilidad de antibióticos empíricos", "Ausencia de especialistas en endoscopia e intervencionismo", "Escasez de hemoglobina en bancos de sangre", "Carencia de ventiladores mecánicos posquirúrgicos"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, la canulación de conductos biliares colapsados o disecados requiere pericia de tercer nivel (CPRE avanzada o radiología percutánea). Hospitales periféricos rurales carecen de estos operadores, restringiendo al paciente a opciones de derivación puramente quirúrgica abierta.<br><br>Perla ENARM: \"Los especialistas en endoscopia y radiología intervencionista pueden no existir o no estar bien versados en las terapias específicas, limitando las opciones disponibles en esas instituciones.\"<br><br>Análisis de Distractores: Las opciones A, C y D representan insumos y equipos de medicina general/crítica que no son exclusivos ni la limitante técnica cardinal para el abordaje de la vía biliar por orificios naturales o percutáneos.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Health Equity, Página 189." 
+            },
+            {
+                id: 73, 
+                question: "De acuerdo a la GPC, además de la obesidad, ¿qué factor anatómico adquirido del paciente contraindica o dificulta severamente la confección de una hepaticoyeyunostomía?", 
+                options: ["Adherencias por cirugía abdominal previa", "Hipertrofia del lóbulo caudado", "Diámetro biliar menor a 5 mm", "Arteria hepática derecha accesoria"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo a la GPC, para construir una Y de Roux se debe movilizar el intestino delgado desde el ángulo de Treitz, medir asas y subirlas al compartimento supramesocólico. Adherencias pélvicas o mesentéricas previas (síndrome adherencial) impiden esta excursión, favoreciendo el uso de hepaticoduodenostomía.<br><br>Perla ENARM: \"La hepaticoyeyunostomía puede ser extremadamente desafiante en pacientes con... cirugía abdominal previa con adherencias intraabdominales extensas.\"<br><br>Análisis de Distractores: Las opciones B, C y D son variaciones o características hiliares que exigen técnica fina, pero no anclan mecánicamente el ascenso de las asas yeyunales desde el piso inferior del abdomen.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ4, Página 181." 
+            },
+            {
+                id: 74, 
+                question: "¿Qué condición fenotípica anatómica en un paciente con detección temprana de la lesión biliar lo clasifica como un \"mal candidato\" para intervención endoscópica?", 
+                options: ["Sistema biliar colapsado o no dilatado", "Índice de masa corporal mayor a 35", "Edad avanzada mayor de 70 años", "Colecciones periepáticas purulentas"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo a la GPC, la fuga biliar activa aguda vacía los conductos, dejándolos de un calibre ínfimo. El endoscopista requiere conductos tensos y dilatados (generalmente por estenosis crónica) para guiar la prótesis adecuadamente sin crear falsas vías o perforaciones coledocianas.<br><br>Perla ENARM: \"Típicamente se necesita una anatomía favorable con un sistema biliar dilatado... aquellos con descubrimiento pronto de la lesión pueden no ser tan buenos candidatos por esta razón.\"<br><br>Análisis de Distractores: Las opciones B y C no interfieren con el acceso transgástrico endoscópico. La opción D mandata control infeccioso, pero no imposibilita mecánicamente la expansión de un stent si la vía estuviera adecuadamente calibrada.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Recommendations KQ3, Página 171." 
+            },
+            {
+                id: 75, 
+                question: "¿En qué patología obstructiva no relacionada al trauma iatrogénico se evidenció en estudios previos que la hepaticoduodenostomía genera más estenosis que el asa yeyunal?", 
+                options: ["Colangiocarcinoma perihiliar", "Enfermedades biliares benignas", "Cáncer de cabeza de páncreas", "Quistes de colédoco tipo I"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC, al explorar literatura indirecta (cohorte extraída de indicaciones por litiasis recurrente o disfunción benigna del esfínter), conectar el duodeno al colédoco demostró una propensión intrínseca a estenosis superior a la del yeyuno, posiblemente mediado por el ambiente hostil del flujo pilórico.<br><br>Perla ENARM: \"En un estudio previo sobre pacientes con enfermedades biliares benignas, se demostró que... experimentaron una mayor incidencia de estenosis anastomóticas en comparación con la hepaticoyeyunostomía.\"<br><br>Análisis de Distractores: Las opciones A y C cursan habitualmente con resecciones oncológicas que obligan derivación a yeyuno (Whipple/Hepatectomías). La opción D corresponde a patología congénita pediátrica, no abordada como comparador primario adulto.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Discussion, Página 53." 
+            },
+            {
+                id: 76, 
+                question: "En el protocolo riguroso de seguimiento clínico para la monitorización e investigación a largo plazo de esta catástrofe, ¿qué métricas deben registrarse obligatoriamente a los 5-10 años?", 
+                options: ["Tasa de estenosis y reintervención", "Necesidad de nutrición parenteral", "Incidencia de fístula pancreática", "Marcadores tumorales CA 19-9"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo a la GPC, la cicatriz isquémica avascular responsable de ocluir la anastomosis puede tardar una década completa en manifestar un compromiso luminal crítico o cirrosis biliar focal, por lo que el éxito del cirujano no puede dictaminarse en el primer año.<br><br>Perla ENARM: \"Los datos de 5 a 10 años con respecto a la tasa de estenosis, la calidad de vida, la mortalidad y la reintervención... serían de una importancia sustancial.\"<br><br>Análisis de Distractores: Las opciones B y C evalúan morbilidades agudas/subagudas propias de resecciones de páncreas o intestino corto. La opción D monitoriza recidiva neoplásica maligna.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Monitoring and evaluation, Página 188." 
+            },
+            {
+                id: 77, 
+                question: "Para la generación de recomendaciones en el marco GRADE, ¿qué rango numérico en la escala de valores de utilidad se asignó para representar el peor desenlace clínico posible (Muerte)?", 
+                options: ["Valor de 1", "Valor de 100", "Valor de 0", "Valor de -1"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC, la metodología de toma de decisiones empleó valores umbrales cuantitativos precisos. A la muerte se le designó una utilidad absoluta de 0, y al mejor estado de salud vital 1. Las intervenciones se puntuaron matemáticamente en base a este coeficiente de riesgo.<br><br>Perla ENARM: \"Se pidió a los miembros del panel que calificaran la utilidad de cada resultado... en una escala cardinal de 0 a 1... siendo 0 la muerte y 1 el mejor estado de salud posible.\"<br><br>Análisis de Distractores: Las opciones A, B y D son escalas numéricas ficticias no correspondientes al coeficiente de utilidad estandarizado (Quality-Adjusted Life Year / Utility weight) usado formalmente por el panel.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Determining utility values, Página 118." 
+            },
+            {
+                id: 78, 
+                question: "Con la finalidad de garantizar una visualización ergonómica e ingreso laparoscópico seguro en pacientes reoperados por lesión biliar, ¿qué técnica de acceso instruye el consenso?", 
+                options: ["Entrada abdominal lejos de incisiones previas", "Uso rutinario de técnica de Hasson umbilical", "Insuflación hepática directa transcostal", "Acceso exclusivo con puerto único umbilical"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo a la GPC, la presencia de cicatrices quirúrgicas augura adherencias de epiplón e intestino al peritoneo parietal. Ingresar los trócares en cuadrantes vírgenes previene perforaciones inadvertidas que contaminarían la cavidad o fugarían el neumoperitoneo.<br><br>Perla ENARM: \"La inquietud puede rodear las reparaciones MIS debido al ingreso en un abdomen reoperado... pero entrar en el abdomen lejos de los sitios de incisión índice es típicamente seguro.\"<br><br>Análisis de Distractores: La opción B suele estar comprometida por la extracción de la vesícula en el procedimiento primario. Las opciones C y D aumentan drásticamente el riesgo de colisión instrumental y falla de exposición.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Evidence discussion KQ2, Página 160." 
+            },
+            {
+                id: 79, 
+                question: "Como herramienta tecnológica prioritaria a desarrollar en futuras investigaciones, ¿qué propone el consenso para estandarizar la decisión entre efectuar una cirugía temprana versus tardía?", 
+                options: ["Calculadora de riesgo con nomograma", "Algoritmo de inteligencia artificial robótico", "Inmunofluorescencia con verde de indocianina", "Pruebas genómicas de cicatrización"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo a la GPC, dado que la decisión depende de múltiples variables intrincadas (tiempo, sepsis, nivel de lesión, vascularidad), proveer al cirujano general de una ecuación clínica estructurada mitigará la morbilidad de intervenciones precipitadas y sesgos humanos.<br><br>Perla ENARM: \"Una herramienta de calculadora de riesgo tipo nomograma para facilitar la toma de decisiones entre la reparación temprana y tardía basada en factores del paciente... sería de gran beneficio.\"<br><br>Análisis de Distractores: Las opciones B, C y D representan avances biomédicos costosos y experimentales, ajenos a la estratificación y análisis epidemiológico multivariable solicitado explícitamente en el documento.", 
+                source: "SAGES-AHPBA 2025 Guideline for the Surgical Management of Bile Duct Injury Following Cholecystectomy, 2025, Future research, Página 153." 
+            },
+            {
+                id: 80, 
+                question: "Dentro del análisis sistemático, ¿qué porcentaje de exclusión máximo se aceptó para pacientes que ya presentaban un intento previo de reparación biliar definitiva fallida?", 
+                options: ["Menos del 50%", "Menos del 30%", "Menos del 10%", "Cero absoluto por protocolo"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC, incluir un volumen alto de pacientes reintervenidos ensucia la pureza de la estadística, ya que una segunda o tercera reconstrucción enfrenta una vía biliar densamente necrótica o fibrótica, distorsionando las tasas de éxito de la técnica quirúrgica original en estudio.<br><br>Perla ENARM: \"Las reparaciones debían ser definitivas sin intentos previos de reparación definitiva (se permitía la excepción si representaban menos del 10% de los casos).\"<br><br>Análisis de Distractores: Las opciones A y B diluirían la validación primaria de los desenlaces. La opción D (cero absoluto) fue flexibilizada para no desechar series retrospectivas de vida real enteras que incluyeran casos aislados.", 
+                source: "SAGES-AHPBA 2025 a systematic review and meta-analysis on the surgical management of bile duct injury, 2025, Literature search and eligibility, Página 9." 
+            }
+
+
+        ];
+
+        // ==========================================
+        // ==========================================
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('SAGESBILIARLastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('SAGESBILIARProgress');
+                localStorage.removeItem('SAGESBILIARLastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-pink-500 shadow-md z-10 border-pink-500 dark:border-pink-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-pink-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-rose-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! UMAE 25 - 2026" : "R4 - UMAE 25 - 2026";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "UMAE 25 - R4";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus las respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="BS06308GYOE.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-pink-100 dark:border-pink-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-pink-50 has-[:checked]:border-pink-400 dark:has-[:checked]:bg-pink-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-pink-600 focus:ring-pink-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-600 dark:hover:bg-pink-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('SAGESBILIARProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('SAGESBILIARLastQId', currentQuestionId);
+                else localStorage.removeItem('SAGESBILIARLastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('SAGESBILIARProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB26PT8kuB-0fxyUYgGk51yC1rAsW0dYj0",
+        authDomain: "enarm-lite.firebaseapp.com",
+        projectId: "enarm-lite",
+        storageBucket: "enarm-lite.firebasestorage.app",
+        messagingSenderId: "767032952477",
+        appId: "1:767032952477:web:84347320ed3d376f7e7674",
+        measurementId: "G-PVR3RBVNSV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    //document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "usuarios_autorizados", user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            
+            if(userDocSnap.exists()) {
+                document.body.style.opacity = '1';
+            } else {
+                //window.location.href = "index.html"; 
+            }
+        } else {
+            //window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>

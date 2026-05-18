@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Inicio</title>
+    <style>
+        /* Centrar el contenido en la pantalla */
+        body {
+            margin: 0;
+            height: 100vh; /* Ocupa toda la altura de la pantalla */
+            display: flex;
+            justify-content: center; /* Centra horizontalmente */
+            align-items: center; /* Centra verticalmente */
+            background-color: #242424; /* Fondo oscuro para que el botón resalte más */
+            font-family: Arial, sans-serif;
+        }
+
+        /* Diseño del botón grande y colorido */
+        .boton-colorido {
+            padding: 20px 60px; /* Tamaño: alto y ancho interno */
+            font-size: 28px; /* Tamaño de la letra grande */
+            font-weight: bold;
+            text-transform: uppercase; /* Letras en mayúscula */
+            color: white;
+            border: none;
+            border-radius: 50px; /* Bordes muy redondeados */
+            cursor: pointer;
+            
+            /* Colores degradados (Gradient) */
+            background: linear-gradient(90deg, #ff007f, #7f00ff, #00d4ff);
+            background-size: 200% auto; /* Permite animar el fondo */
+            
+            /* Sombra para darle profundidad */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            
+            /* Suaviza las animaciones */
+            transition: all 0.3s ease;
+        }
+
+        /* Efecto cuando el ratón (mouse) pasa por encima */
+        .boton-colorido:hover {
+            background-position: right center; /* Cambia los colores de posición */
+            transform: translateY(-5px) scale(1.05); /* El botón crece un poquito y sube */
+            box-shadow: 0 15px 25px rgba(0, 212, 255, 0.5); /* La sombra brilla y se hace más grande */
+        }
+
+        /* Efecto cuando haces clic */
+        .boton-colorido:active {
+            transform: translateY(2px) scale(0.95); /* El botón se hunde un poco */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tu botón con el enlace -->
+    <button class="boton-colorido" onclick="window.location.href='login.html'">iniciar</button>
+
+</body>
+</html>
