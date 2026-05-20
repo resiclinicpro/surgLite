@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">UMAE</span>
+                    <span class="logo-Lite text-sm">25<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // =========================================================
+        const questionsData = [
+            {
+                id: 1, 
+                question: "¿Cuál es el tiempo mínimo de ayuno recomendado antes de realizar una manometría de alta resolución?", 
+                options: ["2 horas", "4 horas", "8 horas", "12 horas"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], el protocolo estándar exige un periodo de ayuno para garantizar la seguridad del paciente y la calidad del estudio, permitiendo únicamente el consumo de cantidades mínimas de líquidos claros.<br><br>Perla ENARM: \"Prior to the procedure, patients should fast for at least 4 hours (small amounts of clear fluid allowed) and informed consent should be obtained.\"<br><br>Análisis de Distractores: La opción A es un tiempo insuficiente para asegurar el vaciamiento gástrico; las opciones C y D son tiempos habituales para procedimientos quirúrgicos bajo anestesia general, pero exceden el requerimiento mínimo de esta prueba funcional.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.1, Página 4." 
+            },
+            {
+                id: 2, 
+                question: "¿Cuál es el umbral diagnóstico de la mediana de presión de relajación integrada en posición supina con sistemas Medtronic?", 
+                options: ["≥ 12 mmHg", "≥ 15 mmHg", "≥ 22 mmHg", "≥ 25 mmHg"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], los umbrales de la presión de relajación integrada (IRP) varían según el equipo y la posición; para el sistema Medtronic en decúbito, el corte patológico es de 15 mmHg.<br><br>Perla ENARM: \"Threshold for median IRP in the supine position is 15 mmHg for Medtronic systems and 22 mmHg for Laborie/Diversatek systems.\"<br><br>Análisis de Distractores: La opción A corresponde al umbral en posición vertical; la C es el umbral para equipos Laborie; la D es el valor de corte utilizado durante los tragos de alimento sólido.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.1, Página 6." 
+            },
+            {
+                id: 3, 
+                question: "¿Qué métrica manométrica evalúa el vigor de la contracción del cuerpo esofágico?", 
+                options: ["Latencia distal", "Presión de relajación integrada", "Integral contráctil distal", "Punto de desaceleración contráctil"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la integral contráctil distal (DCI) es la medida que integra la amplitud, duración y longitud de la contracción para determinar su fuerza o vigor.<br><br>Perla ENARM: \"Distal Contractile Integral (DCI) – Contractile Vigor: Amplitude × duration × length (mmHg•s•cm) of the distal esophageal contraction exceeding 20 mmHg.\"<br><br>Análisis de Distractores: La opción A evalúa el tiempo de inhibición; la B evalúa la relajación de la unión esofagogástrica; la D es un punto de referencia temporal para medir la latencia.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 1, Página 6." 
+            },
+            {
+                id: 4, 
+                question: "¿A partir de qué valor de la integral contráctil distal se define un trago como hipercontráctil?", 
+                options: ["> 450 mmHg•s•cm", "> 5,000 mmHg•s•cm", "> 8,000 mmHg•s•cm", "> 10,000 mmHg•s•cm"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], un trago se clasifica como hipercontráctil cuando su DCI supera los 8,000 mmHg•s•cm, valor que es consistente a través de diferentes sistemas de manometría.<br><br>Perla ENARM: \"Hypercontractile Swallow: DCI greater than 8,000 mmHg•s•cm.\"<br><br>Análisis de Distractores: La opción A es el límite inferior de una contracción normal; la B es un valor obsoleto de clasificaciones previas; la D se asocia frecuentemente a casos graves de esófago en martillo neumático pero no es el umbral mínimo diagnóstico.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.2, Página 6." 
+            },
+            {
+                id: 5, 
+                question: "¿Cuál es el umbral de tiempo para definir una contracción como prematura mediante la latencia distal?", 
+                options: ["< 3.0 s", "< 4.5 s", "< 5.0 s", "< 6.2 s"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la latencia distal (DL) inferior a 4.5 segundos en presencia de una contracción vigorosa (DCI ≥ 450) define la prematuridad característica del espasmo.<br><br>Perla ENARM: \"Premature/spastic contraction: DL <4.5 seconds in setting of a DCI ≥450 mmHg•s•cm.\"<br><br>Análisis de Distractores: La opción A es un valor arbitrario sin relevancia diagnóstica; la C y D se relacionan con las medidas de brechas peristálticas en la motilidad inefectiva.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 1, Página 6." 
+            },
+            {
+                id: 6, 
+                question: "¿Cuál es el valor del contorno isobárico para definir la presencia de presurización panesofágica?", 
+                options: ["≥ 15 mmHg", "≥ 20 mmHg", "≥ 30 mmHg", "≥ 70 mmHg"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la presurización panesofágica se identifica como un aumento de presión uniforme en todo el cuerpo esofágico que alcanza o supera los 30 mmHg.<br><br>Perla ENARM: \"Panesophageal pressurization: isobaric contour of ≥30 mmHg.\"<br><br>Análisis de Distractores: La opción A es el umbral de IRP; la B es el umbral para presurización intrabolo; la D es un valor mencionado como guía para sospechar espasmo embebido en casos de acalasia.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.4, Página 7." 
+            },
+            {
+                id: 7, 
+                question: "¿Qué porcentaje mínimo de tragos con presurización panesofágica se requiere para el diagnóstico de Acalasia tipo II?", 
+                options: ["≥ 10%", "≥ 20%", "≥ 50%", "100%"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la acalasia tipo II se define por la falla peristáltica total y la presencia de presurización panesofágica en al menos una quinta parte de las degluciones.<br><br>Perla ENARM: \"Type II Achalasia: Abnormal median IRP, 100% failed peristalsis, & ≥20% swallows with panesophageal pressurization.\"<br><br>Análisis de Distractores: La opción A es insuficiente para el criterio; la C es el umbral de falla para IEM; la D es el requisito de la falla peristáltica, pero no de la presurización concomitante.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 3, Página 10." 
+            },
+            {
+                id: 8, 
+                question: "¿Cuál es el número estándar de tragos húmedos realizados en la posición vertical durante el protocolo de Chicago v4.0?", 
+                options: ["3 tragos", "5 tragos", "10 tragos", "15 tragos"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], el protocolo riguroso incluye una fase en bipedestación o posición sentada donde se deben registrar cinco degluciones de agua.<br><br>Perla ENARM: \"Next, at least five 5 ml wet swallows are performed [in the upright position].\"<br><br>Análisis de Distractores: La opción A es el número de inspiraciones profundas para documentar posición; la C es el estándar para la posición supina inicial; la D es la suma de los tragos basales en ambas posiciones.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.1, Página 4." 
+            },
+            {
+                id: 9, 
+                question: "¿Qué volumen de agua se utiliza para realizar el reto de bebida rápida en posición vertical?", 
+                options: ["50 ml", "100 ml", "200 ml", "500 ml"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], esta maniobra de provocación evalúa la reserva peristáltica y la obstrucción mediante la ingesta veloz de 200 ml de agua.<br><br>Perla ENARM: \"Finally, one rapid drink challenge (RDC) with 200 ml water, ingested as fast as possible through a straw, is performed.\"<br><br>Análisis de Distractores: Las opciones A y B son volúmenes insuficientes para estresar adecuadamente la unión esofagogástrica; la D es un volumen excesivo que podría comprometer la tolerancia del paciente al estudio.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.1, Página 4." 
+            },
+            {
+                id: 10, 
+                question: "¿Cuál es el criterio para el diagnóstico de motilidad esofágica inefectiva en cuanto a tragos fallidos?", 
+                options: ["≥ 20%", "≥ 30%", "≥ 50%", "> 70%"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], se ha vuelto más estricto el diagnóstico de IEM, requiriendo que al menos la mitad de los tragos sean completamente fallidos (DCI < 100).<br><br>Perla ENARM: \"Ineffective Esophageal Motility: Normal median IRP, with >70% ineffective swallows or ≥50% failed peristalsis.\"<br><br>Análisis de Distractores: La opción A es el umbral para espasmo; la B no tiene base normativa; la D es el umbral requerido si se incluyen tragos débiles o fragmentados dentro de la cuenta.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 12.1, Página 16." 
+            },
+            {
+                id: 11, 
+                question: "¿Qué porcentaje de contracciones prematuras define un diagnóstico manométrico conclusivo de espasmo esofágico distal?", 
+                options: ["≥ 10%", "≥ 20%", "≥ 50%", "≥ 80%"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], el hallazgo de espasmo debe ser recurrente en al menos el 20% de las degluciones para ser considerado un diagnóstico sólido.<br><br>Perla ENARM: \"A conclusive manometric diagnosis of DES is defined as presence of at least 20% of premature contractions.\"<br><br>Análisis de Distractores: La opción A es insuficiente; las opciones C y D indican mayor severidad pero el umbral mínimo establecido es el 20%.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 10.1, Página 14." 
+            },
+            {
+                id: 12, 
+                question: "¿Qué hallazgo en el IRP es indispensable para el diagnóstico de contractilidad ausente?", 
+                options: ["IRP anormal supino", "IRP anormal vertical", "IRP normal en ambas posiciones", "IRP limítrofe (10-15 mmHg)"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la contractilidad ausente se diferencia de la acalasia por la capacidad de la unión esofagogástrica de relajarse normalmente en ambas posiciones de prueba.<br><br>Perla ENARM: \"A conclusive diagnosis for absent contractility is defined as normal median IRP in the supine and upright position and 100% failed peristalsis.\"<br><br>Análisis de Distractores: Las opciones A y B clasificarían el trastorno como acalasia o EGJOO; la D se considera un valor inconcluso que obliga a descartar acalasia tipo I con pruebas de apoyo.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 9, Página 14." 
+            },
+            {
+                id: 13, 
+                question: "¿Cuál es el hallazgo adicional necesario en posición supina para el diagnóstico manométrico de obstrucción del tracto de salida de la unión esofagogástrica?", 
+                options: ["Presurización panesofágica", "Contracción hipercontráctil", "Presión intrabolo elevada", "Latencia distal reducida"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la EGJOO manométrica se caracteriza por la resistencia al flujo que genera presurización por delante del bolo en el esófago distal.<br><br>Perla ENARM: \"EGJ Outflow Obstruction: Abnormal median IRP (supine and upright), ≥20% elevated intrabolus pressure (supine), and not meeting criteria for achalasia.\"<br><br>Análisis de Distractores: La opción A define la acalasia tipo II; la B es un patrón de peristalsis que puede o no estar presente; la D define el componente espástico.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 3, Página 10." 
+            },
+            {
+                id: 14, 
+                question: "¿Cuáles son los síntomas cardinales para considerar clínicamente relevante un diagnóstico de esófago hipercontráctil?", 
+                options: ["Disfagia y regurgitación", "Disfagia y dolor torácico", "Odinofagia y pirosis", "Regurgitación y eructos"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], este trastorno requiere correlación clínica estricta, pues hallazgos aislados en pacientes asintomáticos carecen de relevancia terapéutica.<br><br>Perla ENARM: \"Clinically relevant symptoms of hypercontractile esophagus include dysphagia and non-cardiac chest pain.\"<br><br>Análisis de Distractores: La regurgitación (A) es más típica de la acalasia; la odinofagia y pirosis (C) sugieren esofagitis o reflujo; los eructos (D) orientan a trastornos funcionales gástricos.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 11.1, Página 15." 
+            },
+            {
+                id: 15, 
+                question: "¿Qué valor de la integral contráctil distal define operativamente una peristalsis fallida?", 
+                options: ["< 100 mmHg•s•cm", "< 450 mmHg•s•cm", "100-450 mmHg•s•cm", "< 1000 mmHg•s•cm"], 
+                answer: 0, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], se considera que no hay actividad contráctil efectiva en el músculo liso cuando el vigor es prácticamente nulo, por debajo de este umbral.<br><br>Perla ENARM: \"Failed Peristalsis: DCI <100 mmHg•s•cm.\"<br><br>Análisis de Distractores: La opción B incluye contracciones débiles; la C es el rango exclusivo para contracciones débiles; la D es el umbral de efectividad tras la ingesta de sólidos.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.2, Página 6." 
+            },
+            {
+                id: 16, 
+                question: "¿Cuál es la longitud mínima del defecto en la zona de transición para clasificar un trago como fragmentado?", 
+                options: ["> 2 cm", "> 3 cm", "> 5 cm", "> 8 cm"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la fragmentación se define por una pérdida de continuidad importante en el frente contráctil, a pesar de mantener un vigor adecuado.<br><br>Perla ENARM: \"Fragmented Swallow: Transition zone defect of peristalsis greater than 5 cm under an isobaric contour of 20 mmHg in the setting of a DCI of 450 mmHg•s•cm or greater.\"<br><br>Análisis de Distractores: La opción A es el espaciado máximo entre sensores; la B es la distancia para localizar el punto de desaceleración; la D no es un parámetro reconocido en la clasificación.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.2, Página 6." 
+            },
+            {
+                id: 17, 
+                question: "¿Qué porcentaje de ausencia de peristalsis normal se requiere para diagnosticar acalasia en la versión 4.0?", 
+                options: ["≥ 20%", "≥ 50%", "≥ 80%", "100%"], 
+                answer: 3, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la presencia de cualquier trago con peristalsis normal (incluso si es inefectiva) descarta el diagnóstico de acalasia y obliga a buscar otras causas de obstrucción.<br><br>Perla ENARM: \"a definition of achalasia requires 100% absent peristalsis, defined as all swallows with either failed peristalsis or premature contraction.\"<br><br>Análisis de Distractores: La opción A es para espasmo; la B es para IEM; la C no es un umbral diagnóstico en esta patología.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 6, Página 11." 
+            },
+            {
+                id: 18, 
+                question: "¿Con qué patrón manométrico específico se asocia el uso crónico de medicamentos opioides?", 
+                options: ["Acalasia tipo I", "Acalasia tipo III", "Contractilidad ausente", "Motilidad esofágica inefectiva"], 
+                answer: 1, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], los opioides pueden mimetizar o exacerbar trastornos espásticos, por lo que deben suspenderse antes del estudio para evitar falsos positivos.<br><br>Perla ENARM: \"Opioids are associated with type III achalasia and patients should be studied off opioid medication if possible.\"<br><br>Análisis de Distractores: Las opciones A, C y D no presentan el componente de hipertonía o espasmo muscular liso característico del efecto opioide en el esófago.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 6.3, Página 13." 
+            },
+            {
+                id: 19, 
+                question: "¿Cuál es el tiempo mínimo de espera recomendado entre cada trago húmedo para evitar la inhibición deglutitiva?", 
+                options: ["10 segundos", "20 segundos", "30 segundos", "60 segundos"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], realizar tragos demasiado seguidos impide la visualización de la peristalsis secundaria y altera las métricas de vigor y latencia.<br><br>Perla ENARM: \"There should be at least 30 seconds between wet swallows to avoid effects of deglutitive inhibition.\"<br><br>Análisis de Distractores: La opción A es el tiempo aproximado para una secuencia de tragos rápidos (provocación); las opciones B y D no son los tiempos estandarizados para los tragos húmedos simples.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.1, Página 4." 
+            },
+            {
+                id: 20, 
+                question: "¿Qué estudio de apoyo se recomienda para confirmar una obstrucción funcional ante un diagnóstico manométrico de EGJOO?", 
+                options: ["pH-metría con impedancia", "Manometría de 24 horas", "Esofagrama baritado cronometrado", "Tomografía computarizada esofágica"], 
+                answer: 2, 
+                justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], dada la alta tasa de falsos positivos manométricos de la EGJOO, se requiere evidencia objetiva de retención del bolo para proceder a tratamiento.<br><br>Perla ENARM: \"A conclusive manometric diagnosis of EGJOO requires an abnormal median IRP in both primary and secondary positions, as well as complimentary testing to confirm the diagnosis [TBE or FLIP].\"<br><br>Análisis de Distractores: La opción A evalúa el reflujo ácido; la B no aporta información sobre obstrucción mecánica o funcional; la D es útil para descartar tumores pero no evalúa la dinámica de vaciamiento.", 
+                source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 7.1, Página 13." 
+            },
+    {
+        id: 21, 
+        question: "¿Cuál es el umbral de la mediana de la presión de relajación integrada en posición supina utilizando sistemas Laborie o Diversatek?", 
+        options: ["≥ 15 mmHg", "≥ 18 mmHg", "≥ 22 mmHg", "≥ 28 mmHg"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], los valores de referencia para la relajación de la unión esofagogástrica dependen directamente del fabricante del hardware; para los sistemas Laborie, el punto de corte en decúbito es significativamente más alto que en los sistemas Medtronic.<br><br>Perla ENARM: \"Threshold for median IRP in the supine position is 15 mmHg for Medtronic systems and 22 mmHg for Laborie/Diversatek systems.\"<br><br>Análisis de Distractores: La opción A es el corte para sistemas Medtronic en decúbito; la B y D son valores no validados por la normativa actual para estos sistemas específicos.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.1, Página 6." 
+    },
+    {
+        id: 22, 
+        question: "¿Cómo se define el punto de inversión respiratoria durante el análisis de la unión esofagogástrica?", 
+        options: ["Transición donde la presión aumenta en la inspiración", "Punto donde la presión disminuye en la espiración", "Lugar de transición de aumento a disminución inspiratoria de presión", "Área de máxima presión basal del esfínter esofágico inferior"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], este punto es un hito anatómico-fisiológico que marca el cambio entre la influencia de la presión intraabdominal y la intratorácica.<br><br>Perla ENARM: \"The RIP is the axial location at which the inspiratory change in pressure transitions from an inspiratory increase, characteristic of intra-abdominal recordings, to an inspiratory decrease, characteristic of intrathoracic recordings.\"<br><br>Análisis de Distractores: Las opciones A y B son descripciones parciales o inversas del fenómeno respiratorio; la D define la zona de alta presión, pero no necesariamente el punto de inversión.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 13, Página 20." 
+    },
+    {
+        id: 23, 
+        question: "¿Cuál es el criterio para considerar una respuesta de aumento contráctil intacta tras la maniobra de múltiples tragos rápidos?", 
+        options: ["Integral contráctil distal menor al promedio de tragos simples", "Presencia de una contracción vigorosa con integral contráctil distal < 450 mmHg•s•cm", "Integral contráctil distal post-maniobra mayor al promedio de los tragos simples", "Ausencia de inhibición del esfínter esofágico inferior durante los tragos"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], esta respuesta demuestra la reserva peristáltica del cuerpo esofágico tras un periodo de inhibición deglutitiva.<br><br>Perla ENARM: \"An intact response to MRS is defined as... presence of post-MRS contraction augmentation (DCI post-MRS greater than single swallow mean DCI).\"<br><br>Análisis de Distractores: La opción A describe una falla en la reserva; la B utiliza un valor de corte para contracción débil; la D es un hallazgo patológico, ya que debe haber inhibición completa durante la secuencia de tragos.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.5, Página 7." 
+    },
+    {
+        id: 24, 
+        question: "¿Qué hallazgo define a un trago como fragmentado en la evaluación de la integridad del frente contráctil?", 
+        options: ["Defecto en la zona de transición mayor a 2 cm", "Defecto en la zona de transición mayor a 5 cm con integral contráctil distal ≥ 450 mmHg•s•cm", "Ruptura del frente contráctil con integral contráctil distal < 100 mmHg•s•cm", "Contracción con latencia distal menor a 4.5 segundos"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], la fragmentación implica una pérdida de continuidad mecánica en un trago que, por su vigor (DCI), debería ser efectivo.<br><br>Perla ENARM: \"Fragmented Swallow: Transition zone defect of peristalsis greater than 5 cm under an isobaric contour of 20 mmHg in the setting of a DCI of 450 mmHg•s•cm or greater.\"<br><br>Análisis de Distractores: La opción A utiliza un valor de corte insuficiente; la C describe un trago fallido, no fragmentado; la D es el criterio de prematuridad.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.2, Página 6." 
+    },
+    {
+        id: 25, 
+        question: "¿Cuál es el rango de valores de la integral contráctil distal que define una contracción esofágica normal?", 
+        options: ["100 a 450 mmHg•s•cm", "450 a 5,000 mmHg•s•cm", "450 a 8,000 mmHg•s•cm", "1,000 a 8,000 mmHg•s•cm"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], este rango establece los límites de vigor esperados para una función motora adecuada en adultos.<br><br>Perla ENARM: \"Normal Contraction: DCI of 450 mmHg•s•cm to 8,000 mmHg•s•cm.\"<br><br>Análisis de Distractores: La opción A define contracción débil; la B utiliza un límite superior obsoleto; la D es el valor de corte para efectividad en tragos sólidos, no líquidos.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.2, Página 6." 
+    },
+    {
+        id: 26, 
+        question: "Durante un reto de bebida rápida con software Medtronic, ¿qué valor de la mediana de presión de relajación integrada apoya el diagnóstico de obstrucción del tracto de salida?", 
+        options: ["> 10 mmHg", "> 12 mmHg", "> 15 mmHg", "> 20 mmHg"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], durante el reto de volumen (200 ml), se utilizan umbrales de presión de relajación más sensibles para identificar la resistencia al flujo.<br><br>Perla ENARM: \"When assessing response to RDC, IRP >12 mmHg (using Medtronic software) over the first 30 seconds of the RDC challenge... are criteria for outflow obstruction.\"<br><br>Análisis de Distractores: La opción A es el umbral para posición vertical en tragos simples; la C es el umbral para posición supina; la D es el valor de corte para la presurización panesofágica durante esta misma maniobra.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.5, Página 7." 
+    },
+    {
+        id: 27, 
+        question: "¿Cuál es la característica principal del subgrupo de esófago hipercontráctil conocido como \"martillo neumático\" (jackhammer)?", 
+        options: ["Contracción con pico único de gran amplitud", "Contracciones repetitivas y prolongadas, especialmente post-pico", "Contracciones vigorosas confinadas exclusivamente al esfínter inferior", "Falla total de la relajación del esfínter esofágico superior"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], el patrón de jackhammer es el fenotipo más severo y sintomático de la hipercontractilidad, con una morfología multiclonal característica.<br><br>Perla ENARM: \"...jackhammer with repetitive prolonged contractions (especially in the post-peak phase)... is typically associated with higher DCI values and worse symptom severity.\"<br><br>Análisis de Distractores: La opción A define el subgrupo de pico único; la C define la hipercontractilidad aislada del esfínter esofágico inferior; la D no forma parte de los criterios de este trastorno del cuerpo esofágico.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 11.2, Página 16." 
+    },
+    {
+        id: 28, 
+        question: "¿Cómo se debe medir la separación entre el esfínter esofágico inferior y el diafragma crural durante la inspiración?", 
+        options: ["Desde el borde superior del esfínter hasta el borde inferior del diafragma", "Entre los centros de las señales del diafragma crural y del esfínter", "Durante la espiración exclusivamente para evitar artefactos", "Únicamente en posición vertical para maximizar la distancia"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], esta métrica es vital para caracterizar la morfología de la unión y detectar hernias hiatales pequeñas.<br><br>Perla ENARM: \"LES-CD separation should be scored as the distance between the center of the CD and LES signal during inspiration.\"<br><br>Análisis de Distractores: La opción A utiliza puntos de referencia incorrectos; la C solo se recomienda si la señal está oscurecida; la D no es un requisito técnico para la medición estándar.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 13, Página 20." 
+    },
+    {
+        id: 29, 
+        question: "¿Cuál es el requisito de vigor para definir una contracción efectiva tras un trago de alimento sólido?", 
+        options: ["Integral contráctil distal > 450 mmHg•s•cm", "Integral contráctil distal > 1,000 mmHg•s•cm", "Integral contráctil distal > 2,500 mmHg•s•cm", "Integral contráctil distal > 8,000 mmHg•s•cm"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], la carga mecánica del sólido requiere un umbral de vigor más alto para ser considerada funcionalmente útil.<br><br>Perla ENARM: \"An intact esophageal body contractile response to solid swallows requires... an effective esophageal contraction defined by DCI > 1000 mmHg•s•cm.\"<br><br>Análisis de Distractores: La opción A es el umbral para líquidos; la C es un valor sin relevancia normativa; la D define hipercontractilidad.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.5, Página 7." 
+    },
+    {
+        id: 30, 
+        question: "¿Qué porcentaje mínimo de tragos con contracción prematura se requiere para diagnosticar Acalasia tipo III?", 
+        options: ["≥ 10%", "≥ 20%", "≥ 50%", "100%"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], la acalasia tipo III se distingue por el componente espástico recurrente en ausencia total de peristalsis normal.<br><br>Perla ENARM: \"Type III Achalasia: A conclusive diagnosis of type III achalasia is defined as an abnormal IRP and evidence of spasm (20% or more swallows with premature contraction) with no evidence of peristalsis.\"<br><br>Análisis de Distractores: La opción A es insuficiente; la C es un umbral para otros trastornos; la D es el requisito de la ausencia de peristalsis normal, pero no el porcentaje de espasmo necesario.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 6.1, Página 11." 
+    },
+    {
+        id: 31, 
+        question: "En el contexto de contractilidad ausente, ¿qué valores de la mediana de presión de relajación integrada en posición supina (sistema Medtronic) deben sugerir el diagnóstico diferencial de Acalasia tipo I?", 
+        options: ["0 a 5 mmHg", "5 a 10 mmHg", "10 a 15 mmHg", "15 a 20 mmHg"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], estos valores \"fronterizos\" pueden enmascarar una acalasia inicial donde el esfínter aún no muestra presiones claramente patológicas.<br><br>Perla ENARM: \"In the context of absent contractility, borderline median IRP values, particularly supine median IRP of 10 mmHg to 15 mmHg using the Medtronic system, should prompt consideration of type I achalasia.\"<br><br>Análisis de Distractores: Las opciones A y B son valores claramente normales que apoyan la contractilidad ausente pura; la D es un valor ya considerado anormal para sistemas Medtronic.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 9, Página 14." 
+    },
+    {
+        id: 32, 
+        question: "¿Qué hallazgo en la sonda de imagen de luz funcional (FLIP) apoya un diagnóstico de obstrucción del tracto de salida?", 
+        options: ["Aumento de la distensibilidad de la unión", "Índice de distensibilidad de la unión esofagogástrica reducido", "Presencia de respuesta contráctil anterógrada normal", "Diámetro máximo de la unión mayor a 20 mm"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], la FLIP evalúa la apertura funcional de la unión ante la distensión, siendo una prueba de apoyo crucial en casos inconclusos.<br><br>Perla ENARM: \"On FLIP, the esophagogastric junction (EGJ) distensibility index (EGJ-DI) is reduced... supporting obstruction.\"<br><br>Análisis de Distractores: La opción A es lo opuesto a la obstrucción; la C indica motilidad normal; la D es un diámetro de apertura normal.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Figura 5, Página 12." 
+    },
+    {
+        id: 33, 
+        question: "¿Cuál de las siguientes es una contraindicación anatómica para la aplicación de la Clasificación de Chicago v4.0?", 
+        options: ["Hernia hiatal menor a 2 cm", "Antecedente de colecistectomía laparoscópica", "Presencia de una hernia paraesofágica grande", "Divertículo de Zenker pequeño"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], las alteraciones anatómicas severas del intestino anterior distorsionan las métricas manométricas y generan artefactos por el doblamiento del catéter.<br><br>Perla ENARM: \"The classification scheme applies to patients with normal foregut anatomy... and without large hiatal hernias and/or paraesophageal hernias, as these anatomical changes can alter measurement.\"<br><br>Análisis de Distractores: Las opciones A, B y D no impiden la aplicación de la clasificación siempre que los puntos de referencia sean identificables y no haya obstrucción mecánica.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 4, Página 10." 
+    },
+    {
+        id: 34, 
+        question: "¿Qué valor de presurización panesofágica durante el reto de bebida rápida apoya un proceso obstructivo?", 
+        options: ["> 10 mmHg", "> 15 mmHg", "> 20 mmHg", "> 30 mmHg"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], el umbral para considerar patológica la presurización es menor durante las maniobras de provocación con gran volumen que en los tragos simples.<br><br>Perla ENARM: \"...panesophageal pressurization >20 mmHg [on RDC] are criteria for outflow obstruction.\"<br><br>Análisis de Distractores: Las opciones A y B son insuficientes; la D es el umbral para tragos húmedos estándar (5 ml).", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.5, Página 7." 
+    },
+    {
+        id: 35, 
+        question: "¿Cómo se define operativamente una \"contracción débil\" dentro del espectro de la motilidad inefectiva?", 
+        options: ["Integral contráctil distal < 100 mmHg•s•cm", "Integral contráctil distal entre 100 y 450 mmHg•s•cm", "Integral contráctil distal entre 450 y 1,000 mmHg•s•cm", "Defecto en el frente contráctil mayor a 5 cm"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], estas contracciones tienen presencia de vigor pero es insuficiente para asegurar un transporte adecuado del bolo.<br><br>Perla ENARM: \"Weak Contraction: DCI between 100 mmHg•s•cm and less than 450 mmHg•s•cm.\"<br><br>Análisis de Distractores: La opción A define trago fallido; la C es un trago normal pero inefectivo si se asocia a sólidos; la D define fragmentación.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.2, Página 6." 
+    },
+    {
+        id: 36, 
+        question: "¿Qué categoría diagnóstica se asigna a un paciente con obstrucción del tracto de salida de la unión esofagogástrica que presenta ≥ 20% de tragos con contracción prematura?", 
+        options: ["Acalasia tipo III", "Obstrucción del tracto de salida con características espásticas", "Espasmo esofágico distal primario", "Motilidad esofágica inefectiva obstructiva"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], si existe evidencia de cualquier peristalsis normal, no se puede diagnosticar acalasia, debiendo clasificarse como una variante de obstrucción de salida.<br><br>Perla ENARM: \"EGJOO with spastic features [presence of ≥20% premature swallows]... may represent an achalasia variant.\"<br><br>Análisis de Distractores: La opción A se excluye por la presencia de peristalsis; la C requiere IRP normal; la D no describe el componente de prematuridad.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 7.3, Página 14." 
+    },
+    {
+        id: 37, 
+        question: "¿A qué distancia del aspecto proximal de la zona de alta presión de la unión esofagogástrica se localiza habitualmente el punto de desaceleración contráctil?", 
+        options: ["Menos de 1 cm", "Dentro de los 3 cm proximales", "Exactamente a 5 cm", "A nivel del esfínter esofágico superior"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], identificar este punto es crítico para medir correctamente la latencia distal y evaluar el tiempo de inhibición.<br><br>Perla ENARM: \"The CDP is... located within 3 cm of the proximal aspect of the pre-swallow EGJ high-pressure zone.\"<br><br>Análisis de Distractores: La opción A es demasiado cercana; la C corresponde a la distancia para dibujar una línea alterna si el punto es difícil de hallar; la D es el punto de inicio de la medición, no de localización del punto de desaceleración.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.3, Página 7." 
+    },
+    {
+        id: 38, 
+        question: "¿Cuál es el cambio esperado en la presión de la unión tras la inhalación de nitrito de amilo en un paciente con obstrucción funcional verdadera?", 
+        options: ["Caída de presión < 10 mmHg", "Caída de presión ≥ 10 mmHg", "Aumento paradójico de la presión > 50 mmHg", "Ausencia total de cambio en la presión basal"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], el nitrito de amilo provoca una relajación profunda del músculo liso, lo que permite distinguir obstrucciones funcionales de mecánicas.<br><br>Perla ENARM: \"In patients with a disorder of EGJ obstruction... amyl nitrite-induced EGJ pressure drop is markedly lower (≥10 mmHg) than compromised deglutitive IRP.\"<br><br>Análisis de Distractores: La opción A sugiere que la obstrucción no es por falla del músculo liso (posible causa mecánica); la C es la respuesta esperada pero con colecistocinina; la D sugiere artefacto técnico.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 2, Página 8." 
+    },
+    {
+        id: 39, 
+        question: "¿Qué respuesta motora se considera paradójica y diagnóstica de acalasia tras la administración de colecistocinina?", 
+        options: ["Relajación completa del esfínter inferior", "Acortamiento esofágico menor a 2 cm", "Contracción de la unión esofagogástrica mayor a 50 mmHg", "Inhibición profunda de la musculatura lisa distal"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], en el esófago denervado de la acalasia, la colecistocinina actúa directamente sobre los receptores musculares provocando contracción en lugar de la relajación mediada por óxido nítrico.<br><br>Perla ENARM: \"In contrast, CCK in patients with inhibitory dysfunction such as achalasia induces a paradoxical EGJ contraction of more than 50 mmHg.\"<br><br>Análisis de Distractores: Las opciones A y D son respuestas normales o esperadas en controles sanos; la B es el hallazgo morfológico normal tras la inyección.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 2, Página 8." 
+    },
+    {
+        id: 40, 
+        question: "¿Qué sospecha diagnóstica debe plantearse ante presiones de presurización panesofágica superiores a 70 mmHg?", 
+        options: ["Esófago de Barrett concomitante", "Presencia de espasmo embebido", "Hernia hiatal por deslizamiento tipo IV", "Falla técnica en la calibración del sensor"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], presiones extremadamente altas de presurización sugieren un componente muscular activo adicional a la mera retención de bolo.<br><br>Perla ENARM: \"Patients with panesophageal pressurization values above 70 mmHg may have embedded spasm, which may impact clinical outcome.\"<br><br>Análisis de Distractores: La opción A no tiene relación manométrica directa; la C es una clasificación anatómica no deducible por esta métrica; la D es una posibilidad pero el documento lo señala específicamente como un marcador de espasmo.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 6.3, Página 13." 
+    },
+    {
+        id: 41, 
+        question: "¿Cuál es el tiempo mínimo de adaptación que se debe permitir tras la colocación del catéter antes de iniciar las mediciones?", 
+        options: ["30 segundos", "60 segundos", "120 segundos", "300 segundos"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], el protocolo estandarizado requiere un periodo de estabilización inicial para minimizar artefactos por irritación o movimiento del catéter.<br><br>Perla ENARM: \"Tras la colocación del catéter, un mínimo de 60 segundos de reposo permite un periodo de adaptación, después del cual se confirma la posición del catéter.\"<br><br>Análisis de Distractores: La opción A es el tiempo requerido para el registro basal; las opciones C y D son tiempos prolongados que no forman parte del requerimiento mínimo de adaptación en el protocolo de Chicago.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.1, Página 4." 
+    },
+    {
+        id: 42, 
+        question: "¿Cuántas inspiraciones profundas se deben solicitar al paciente para documentar la posición correcta del catéter?", 
+        options: ["1 inspiración", "2 inspiraciones", "3 inspiraciones", "5 inspiraciones"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], las maniobras respiratorias permiten visualizar el punto de inversión respiratoria y asegurar que los sensores están correctamente posicionados en relación con la unión.<br><br>Perla ENARM: \"La posición del catéter se confirma utilizando un mínimo de tres inspiraciones profundas.\"<br><br>Análisis de Distractores: Las opciones A y B proporcionan datos insuficientes para una visualización dinámica confiable; la opción D es el número de tragos requeridos en posición vertical, no de respiraciones.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.1, Página 4." 
+    },
+    {
+        id: 43, 
+        question: "¿Cuál es la duración recomendada del periodo basal para identificar los hitos anatómicos antes de iniciar los tragos?", 
+        options: ["10 segundos", "30 segundos", "60 segundos", "90 segundos"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], este periodo de quietud es esencial para medir la presión basal de los esfínteres y localizar el punto de inversión respiratoria.<br><br>Perla ENARM: \"Se captura un periodo basal de al menos 30 segundos para permitir la identificación de hitos anatómicos, incluyendo el esfínter esofágico superior, el esfínter esofágico inferior, el punto de inversión respiratoria y la presión basal de la unión esofagogástrica.\"<br><br>Análisis de Distractores: La opción A es demasiado breve para promediar presiones; la C es el tiempo de adaptación; la D no está contemplada en los intervalos del protocolo estándar.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.1, Página 4." 
+    },
+    {
+        id: 44, 
+        question: "¿Cuál es la secuencia de administración de agua para la maniobra de múltiples tragos rápidos?", 
+        options: ["Diez tragos de 5 ml cada 30 segundos", "Cinco tragos de 2 ml cada 2 a 3 segundos", "Tres tragos de 10 ml cada 10 segundos", "Cinco tragos de 5 ml cada 5 segundos"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], esta secuencia rápida induce una inhibición deglutitiva prolongada seguida de una contracción vigorosa (reserva peristáltica).<br><br>Perla ENARM: \"Se realiza una secuencia de múltiples tragos rápidos (cinco tragos húmedos de 2 ml administrados con una jeringa de 10 ml a intervalos de 2 a 3 segundos).\"<br><br>Análisis de Distractores: La opción A describe el protocolo de tragos húmedos estándar; la C y D contienen volúmenes o intervalos incorrectos para evaluar la inhibición deglutitiva según la norma actual.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.1, Página 4." 
+    },
+    {
+        id: 45, 
+        question: "¿Cuál es la inclinación mínima requerida del paciente para realizar la fase del protocolo en posición vertical?", 
+        options: ["30 grados", "45 grados", "80 grados", "90 grados"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], la posición vertical debe ser lo más fisiológica posible para evaluar el efecto de la gravedad sobre el vaciamiento.<br><br>Perla ENARM: \"La posición del paciente se cambia a la posición vertical (sentado a 80 grados o más con las piernas colgando al lado de la cama, pero no encorvado ni inclinado).\"<br><br>Análisis de Distractores: Las opciones A y B corresponden a posiciones de Fowler o semi-Fowler que no cumplen el criterio de bipedestación o sentado estricto; la D es deseable pero el mínimo aceptado son 80 grados.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.1, Página 4." 
+    },
+    {
+        id: 46, 
+        question: "¿Qué peso tiene la comida de prueba sólida (STM) recomendada para evaluar obstrucciones ocultas?", 
+        options: ["100 g", "200 g", "300 g", "500 g"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], este volumen de alimento estresa la capacidad de transporte esofágico y permite detectar disfunciones que los líquidos no revelan.<br><br>Perla ENARM: \"Prueba de comida sólida: 200 g de una comida sólida blanda (por ejemplo, arroz hervido suave, pan) ingerida al ritmo normal del paciente.\"<br><br>Análisis de Distractores: La opción A es insuficiente para una prueba de comida completa; las opciones C y D exceden el protocolo estandarizado de la clasificación.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 2, Página 8." 
+    },
+    {
+        id: 47, 
+        question: "¿Cuál es el tiempo límite para completar la comida de prueba sólida antes de considerar el estudio como anormal?", 
+        options: ["5 minutos", "8 minutos", "10 minutos", "15 minutos"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], el retraso en la ingesta por síntomas o dificultad motora es un indicador indirecto de disfunción.<br><br>Perla ENARM: \"El estudio se detiene si la comida de prueba sólida no se completa en 8 minutos; comer lentamente con menos de 200 g ingeridos en este tiempo también se considera anormal.\"<br><br>Análisis de Distractores: La opción A es demasiado corta para un paciente promedio; las opciones C y D son laxas y podrían pasar por alto disfunciones moderadas.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 2, Página 8." 
+    },
+    {
+        id: 48, 
+        question: "¿Cuál es el tiempo mínimo de monitoreo recomendado durante la observación post-prandial para evaluar trastornos de eructos o rumiación?", 
+        options: ["5 minutos", "10 minutos", "30 minutos", "60 minutos"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], los eventos de rumiación o eructos supragástricos suelen ocurrir poco después de la ingesta.<br><br>Perla ENARM: \"Administración de una comida sólida o una comida identificada por el paciente que induzca síntomas, seguida de un monitoreo extendido (mínimo de 10 minutos y ocurrencia de actividad anormal).\"<br><br>Análisis de Distractores: La opción A es un periodo muy breve para capturar eventos repetitivos; las opciones C y D son útiles en investigación pero no son el requisito mínimo clínico inicial.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 2, Página 8." 
+    },
+    {
+        id: 49, 
+        question: "¿Cuántas relajaciones transitorias del esfínter esofágico inferior con eructos se permiten como máximo en los primeros 10 minutos post-prandiales?", 
+        options: ["1 relajación", "2 relajaciones", "4 relajaciones", "10 relajaciones"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], rebasar este número sugiere una frecuencia anormal de relajaciones que podría estar vinculada a enfermedad por reflujo o eructos excesivos.<br><br>Perla ENARM: \"Respuesta normal: Máximo 4 relajaciones transitorias del esfínter esofágico inferior con eructos durante los primeros 10 minutos post-prandiales.\"<br><br>Análisis de Distractores: Las opciones A y B son valores muy restrictivos para un periodo post-comida; la D es francamente patológica.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 2, Página 8." 
+    },
+    {
+        id: 50, 
+        question: "Según el esquema jerárquico, ¿cuál es el orden de prioridad diagnóstica cuando existen características superpuestas de trastornos de la peristalsis?", 
+        options: ["Inefectiva > Espasmo > Hipercontráctil", "Espasmo > Hipercontráctil > Inefectiva", "Hipercontráctil > Espasmo > Inefectiva", "Contractilidad ausente > Inefectiva > Espasmo"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], la clasificación sigue una lógica donde los trastornos de mayor vigor o espasticidad priman sobre la debilidad motora.<br><br>Perla ENARM: \"En estos escenarios, se debe utilizar un enfoque jerárquico para la clasificación diagnóstica en el orden de espasmo esofágico distal primero, luego esófago hipercontráctil y, por último, motilidad esofágica inefectiva.\"<br><br>Análisis de Distractores: Las opciones A, C y D invierten o mezclan el orden jerárquico establecido por el consenso internacional de Chicago.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 8, Página 14." 
+    },
+    {
+        id: 51, 
+        question: "¿Qué rango de porcentaje de tragos inefectivos se clasifica como un diagnóstico \"inconclusivo\" de motilidad esofágica inefectiva?", 
+        options: ["20% a 50%", "50% a 70%", "70% a 100%", "Menos del 20%"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], si el paciente no cumple el criterio estricto del 70%, el diagnóstico queda en duda y requiere mayor investigación.<br><br>Perla ENARM: \"La presencia de 50% a 70% de tragos inefectivos es inconclusiva para un diagnóstico de motilidad esofágica inefectiva; las pruebas de apoyo fortalecerán la confianza en el diagnóstico.\"<br><br>Análisis de Distractores: La opción A es insuficiente para sospechar el trastorno; la C define el diagnóstico concluyente; la D se considera normal.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 12.2, Página 16." 
+    },
+    {
+        id: 52, 
+        question: "¿Qué valor de la integral contráctil de la unión esofagogástrica se ha sugerido para definir un esfínter hipotenso?", 
+        options: ["< 10 mmHg•cm", "< 15 mmHg•cm", "< 25 mmHg•cm", "< 35 mmHg•cm"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], aunque no hubo consenso absoluto, este valor sirve como guía clínica para evaluar la barrera antirreflujo.<br><br>Perla ENARM: \"Se sugirió que un valor de integral contráctil de la unión esofagogástrica inferior a 25 mmHg•cm sea considerado una unión hipotensa.\"<br><br>Análisis de Distractores: Las opciones A y B son valores extremadamente bajos; la D es un valor normal para la mayoría de los adultos sanos.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 13, Página 20." 
+    },
+    {
+        id: 53, 
+        question: "¿Cuál es el espaciado máximo recomendado entre los sensores de un catéter de manometría de alta resolución para cumplir con los estándares de Chicago?", 
+        options: ["1 cm", "2 cm", "3 cm", "5 cm"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], un espaciado mayor impide la reconstrucción precisa de la topografía de presión y podría omitir defectos cortos.<br><br>Perla ENARM: \"El Grupo de Trabajo recomienda utilizar un catéter de manometría de alta resolución de estado sólido con un espaciado de sensores de menos de 2 cm.\"<br><br>Análisis de Distractores: La opción A es ideal pero no es el requisito máximo; las opciones C y D corresponden a sistemas de manometría convencional que ya no se consideran de alta resolución.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.1, Página 4." 
+    },
+    {
+        id: 54, 
+        question: "¿Cuál es la duración de la ventana de tiempo utilizada para calcular la presión de relajación integrada?", 
+        options: ["1 segundo", "2 segundos", "4 segundos", "10 segundos"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], se miden los 4 segundos de relajación máxima (continuos o no) para asegurar que el bolo pueda pasar.<br><br>Perla ENARM: \"Presión de relajación integrada: Promedio de los 4 segundos de relajación deglutitiva máxima en la ventana de 10 segundos que comienza en la relajación del esfínter esofágico superior.\"<br><br>Análisis de Distractores: Las opciones A y B son demasiado cortas y capturarían relajaciones transitorias; la D es el tamaño total de la ventana de evaluación, no del tiempo de medición efectiva.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 1, Página 6." 
+    },
+    {
+        id: 55, 
+        question: "En la morfología tipo 1 de la unión esofagogástrica, ¿dónde se localiza el punto de inversión respiratoria en relación con el complejo?", 
+        options: ["Distal al complejo", "En el centro del esfínter", "Proximal al complejo", "No es identificable"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], en sujetos normales sin hernia, la transición de presiones ocurre por encima de la zona de alta presión.<br><br>Perla ENARM: \"Morfología de la unión: El tipo 1 es normal, con el diafragma crural superpuesto al esfínter esofágico inferior y el punto de inversión respiratoria localizándose proximal al complejo.\"<br><br>Análisis de Distractores: La opción A es fisiológicamente imposible en una anatomía normal; la B es característica de hernias pequeñas; la D sugiere una falla técnica del sensor.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 13, Página 21." 
+    },
+    {
+        id: 56, 
+        question: "¿Qué estudio es obligatorio realizar antes de la manometría para descartar causas mecánicas de los hallazgos?", 
+        options: ["Tomografía computarizada", "Endoscopia índice cuidadosa", "pH-metría de 24 horas", "Ultrasonido endoscópico"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], la manometría evalúa función, pero la presencia de cáncer o estenosis invalida la interpretación motora pura.<br><br>Perla ENARM: \"Una endoscopia índice cuidadosa es crucial antes de la prueba de manometría, ya que la evidencia endoscópica de obstrucción mecánica excluye el uso de la Clasificación de Chicago 4.0.\"<br><br>Análisis de Distractores: La opción A no es obligatoria si la endoscopia es normal; la C evalúa reflujo pero no descarta obstrucción; la D se reserva para casos seleccionados de sospecha de acalasia submucosa.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 4, Página 10." 
+    },
+    {
+        id: 57, 
+        question: "¿Cuál es el umbral de la mediana de presión de relajación integrada en posición vertical para sistemas Medtronic?", 
+        options: ["≥ 10 mmHg", "≥ 12 mmHg", "≥ 15 mmHg", "≥ 22 mmHg"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], la presión necesaria para vencer la unión es menor cuando el paciente está de pie debido a la gravedad.<br><br>Perla ENARM: \"El umbral para la mediana de presión de relajación integrada en la posición vertical es de 12 mmHg para sistemas Medtronic.\"<br><br>Análisis de Distractores: La opción A es un valor de corte para el reto de bebida rápida; la C es el umbral para posición supina; la D es el umbral supino para equipos Laborie.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.1, Página 6." 
+    },
+    {
+        id: 58, 
+        question: "¿Cuál es el umbral de la mediana de presión de relajación integrada en posición vertical para sistemas Laborie o Diversatek?", 
+        options: ["≥ 12 mmHg", "≥ 15 mmHg", "≥ 22 mmHg", "≥ 25 mmHg"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], estos sistemas registran presiones basales ligeramente más altas que Medtronic en todas las posiciones.<br><br>Perla ENARM: \"El umbral para la mediana de presión de relajación integrada en la posición vertical es de 15 mmHg para sistemas Laborie/Diversatek.\"<br><br>Análisis de Distractores: La opción A es el umbral vertical para Medtronic; la C es el umbral supino para Laborie; la D es el umbral para pruebas de alimento sólido.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.1, Página 6." 
+    },
+    {
+        id: 59, 
+        question: "¿Cuál es el límite superior normal de la presión de relajación integrada durante la realización de tragos sólidos con sistema Medtronic?", 
+        options: ["15 mmHg", "20 mmHg", "25 mmHg", "30 mmHg"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], se permite una presión mayor con sólidos debido al mayor esfuerzo muscular y resistencia del bolo.<br><br>Perla ENARM: \"El límite superior de la presión de relajación integrada normal con tragos sólidos (utilizando software Medtronic) es de 25 mmHg.\"<br><br>Análisis de Distractores: La opción A es el umbral supino de líquidos; la B es el umbral para presurización intrabolo; la D es el umbral para presurización panesofágica.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.5, Página 7." 
+    },
+    {
+        id: 60, 
+        question: "¿A qué temperatura deben administrarse los tragos de agua en el protocolo estándar?", 
+        options: ["4 °C (Fria)", "Ambiente", "37 °C (Corporal)", "50 °C (Caliente)"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Chicago Classification v4.0], los cambios extremos de temperatura pueden alterar la motilidad muscular lisa de forma transitoria.<br><br>Perla ENARM: \"Se realizan diez tragos húmedos de 5 ml de agua a temperatura ambiente o solución salina.\"<br><br>Análisis de Distractores: La opción A puede inducir espasmo (prueba de frío); las opciones C y D no están validadas para las métricas de referencia de Chicago.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.1, Página 4." 
+    },
+    {
+        id: 61, 
+        question: "¿Qué tipos de tragos se incluyen bajo la definición de trago inefectivo?", 
+        options: ["Solo contracciones débiles", "Solo peristalsis fallida", "Débil, fallida o fragmentada", "Solo contracciones prematuras"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la definición de un trago inefectivo se ha expandido para integrar diversas fallas en el vigor o la integridad de la contracción.<br><br>Perla ENARM: \"Un trago inefectivo incluye una contracción débil (DCI entre 100 y 450 mmHg•s•cm), peristalsis fallida (DCI < 100 mmHg•s•cm) o un trago fragmentado.\"<br><br>Análisis de Distractores: Las opciones A y B son componentes individuales pero incompletos de la definición; la opción D define el componente espástico, que es jerárquicamente superior y no se clasifica como inefectivo.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 12.1, Página 16." 
+    },
+    {
+        id: 62, 
+        question: "¿Cuál es el hallazgo manométrico que distingue a la Acalasia tipo I de la Acalasia tipo II?", 
+        options: ["Valor de la presión basal", "Presurización panesofágica", "Presencia de espasmos", "Latencia distal reducida"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], ambos tipos presentan falla peristáltica total e IRP elevado, pero solo el tipo II muestra el patrón de presurización por compresión del bolo.<br><br>Perla ENARM: \"La acalasia tipo II se diferencia por la presencia de presurización panesofágica en el 20% o más de los tragos, mientras que el tipo I carece de esta presurización.\"<br><br>Análisis de Distractores: La opción A no es un criterio discriminatorio entre subtipos; la C y D son características definitorias de la acalasia tipo III (espástica).", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 6, Página 11." 
+    },
+    {
+        id: 63, 
+        question: "¿Qué hallazgos definen un diagnóstico manométrico inconclusivo de acalasia tipo I o II?", 
+        options: ["IRP normal con peristalsis normal", "IRP en el límite superior con 100% de falla peristáltica", "IRP elevado con 50% de tragos fallidos", "IRP bajo con contracciones hipercontráctiles"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], cuando la relajación de la unión está en el límite de la normalidad pero el cuerpo esofágico no tiene actividad, no se puede confirmar acalasia sin pruebas extra.<br><br>Perla ENARM: \"Un diagnóstico inconclusivo de acalasia tipo I o II incluye contractilidad ausente sin peristalsis apreciable en el contexto de valores de IRP en el límite superior de lo normal en ambas posiciones.\"<br><br>Análisis de Distractores: La opción A es un estudio normal; la C sugiere una motilidad esofágica inefectiva severa; la D orienta hacia un esófago hipercontráctil.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 6.2, Página 12." 
+    },
+    {
+        id: 64, 
+        question: "¿Qué combinación de factores es necesaria para establecer un diagnóstico clínico concluyente de obstrucción del tracto de salida?", 
+        options: ["Manometría anormal y pirosis", "IRP elevado y regurgitación ácida", "Manometría anormal, síntomas relevantes y prueba de apoyo positiva", "Solo una mediana de IRP > 15 mmHg en posición supina"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la EGJOO manométrica suele ser un hallazgo incidental o artefacto, por lo que requiere corroboración objetiva de obstrucción.<br><br>Perla ENARM: \"Un diagnóstico clínico de EGJOO concluyente requiere un diagnóstico manométrico de EGJOO, síntomas clínicamente relevantes y al menos una investigación complementaria que apoye la obstrucción (Esofagrama baritado cronometrado o FLIP).\"<br><br>Análisis de Distractores: Las opciones A y B incluyen síntomas no específicos de obstrucción; la D es un criterio puramente manométrico que la GPC define como inconcluso por sí solo.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 7.1, Página 13." 
+    },
+    {
+        id: 65, 
+        question: "¿Qué parámetros de la sonda de imagen de luz funcional (FLIP) apoyan un diagnóstico de obstrucción?", 
+        options: ["EGJ-DI aumentado y gran diámetro", "EGJ-DI reducido y diámetro máximo reducido", "Respuesta contráctil anterógrada vigorosa", "Presión intraesofágica menor a 10 mmHg"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la FLIP mide la distensibilidad dinámica; una unión rígida que no abre ante el volumen confirma la sospecha manométrica.<br><br>Perla ENARM: \"En la FLIP, el índice de distensibilidad de la unión esofagogástrica (EGJ-DI) está reducido, el diámetro máximo de la EGJ está reducido y hay una ausencia de respuesta contráctil a la distensión.\"<br><br>Análisis de Distractores: La opción A describe una unión normal o incompetente; la C es un hallazgo de motilidad preservada; la D no es una métrica estándar de la FLIP para obstrucción.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Figura 5, Página 12." 
+    },
+    {
+        id: 66, 
+        question: "Si el punto de desaceleración contráctil es difícil de identificar, ¿cómo recomienda la GPC medir la latencia distal?", 
+        options: ["Usar el punto medio del cuerpo esofágico", "Trazar una línea horizontal 2 a 3 cm sobre la unión esofagogástrica", "Medir hasta el inicio del esfínter esofágico superior", "Utilizar el punto de máxima amplitud de la contracción"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], esta metodología alternativa permite estandarizar la medición de la latencia cuando la morfología de la contracción es atípica.<br><br>Perla ENARM: \"Si el CDP es difícil de determinar, se puede trazar una línea horizontal 2-3 cm por encima del aspecto proximal de la zona de alta presión de la unión previa al trago y determinar la latencia distal por la duración del tiempo desde el inicio de la relajación del esfínter superior hasta la intersección en el frente contráctil.\"<br><br>Análisis de Distractores: Las opciones A, C y D son métodos no validados que llevarían a errores en el diagnóstico de espasmo.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.3, Página 7." 
+    },
+    {
+        id: 67, 
+        question: "¿Cuál es el umbral de presión mínima por encima de la cual se calcula la Integral Contráctil Distal (DCI)?", 
+        options: ["0 mmHg", "10 mmHg", "20 mmHg", "30 mmHg"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], para evitar incluir el ruido basal o la presión intrabolo en el cálculo del vigor muscular, se utiliza este filtro de presión.<br><br>Perla ENARM: \"Integral Contráctil Distal (DCI): Amplitud × duración × longitud de la contracción esofágica distal que excede los 20 mmHg.\"<br><br>Análisis de Distractores: La opción A mediría toda la presión luminal; la B es el umbral para presurización intrabolo; la D es el umbral para presurización panesofágica.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 1, Página 6." 
+    },
+    {
+        id: 68, 
+        question: "¿Cuál fue el cambio principal en los criterios para Motilidad Esofágica Inefectiva (IEM) en la versión 4.0?", 
+        options: ["Se incluyó la peristalsis fragmentada y se volvió más estricta", "Se eliminó la categoría de tragos fallidos", "Se redujo el umbral de diagnóstico al 20% de los tragos", "Se dejó de considerar como un trastorno de la peristalsis"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], para mejorar la correlación clínica se aumentaron los porcentajes de falla necesarios para el diagnóstico.<br><br>Perla ENARM: \"En la CCv4.0, la peristalsis fragmentada se elimina como trastorno separado y se incorpora al diagnóstico de IEM; además, los criterios diagnósticos se han vuelto más estrictos.\"<br><br>Análisis de Distractores: La opción B es incorrecta pues los tragos fallidos son clave en IEM; la C es un umbral para espasmo; la D es falsa ya que sigue siendo un trastorno de la peristalsis.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 7 y 12, Páginas 14-16." 
+    },
+    {
+        id: 69, 
+        question: "¿Cuántas veces se puede repetir la secuencia de múltiples tragos rápidos (MRS) si la respuesta es anormal o el intento falla?", 
+        options: ["No se debe repetir", "Hasta 2 veces", "Hasta 3 veces", "Indefinidamente hasta lograr una respuesta normal"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], se permite la repetición para asegurar que la falla en la reserva sea real y no debida a una técnica de administración deficiente.<br><br>Perla ENARM: \"Una secuencia de múltiples tragos rápidos puede repetirse hasta 3 veces si hay un intento fallido o una respuesta contráctil anormal.\"<br><br>Análisis de Distractores: Las opciones A y B limitan excesivamente la evaluación de la reserva; la D aumentaría el riesgo de fatiga muscular y malestar del paciente.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.1, Página 4." 
+    },
+    {
+        id: 70, 
+        question: "¿En qué condición debe medirse el complejo de la unión esofagogástrica durante el registro basal?", 
+        options: ["Durante una inspiración profunda sostenida", "Durante la deglución de saliva", "Durante la respiración tranquila", "Únicamente durante la maniobra de Valsalva"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], el objetivo es evaluar el tono en reposo y la relación anatómica LES-Diafragma sin influencias externas.<br><br>Perla ENARM: \"El complejo de la unión debe medirse durante la respiración tranquila en el registro basal en un segmento relativamente libre de degluciones o artefactos de registro.\"<br><br>Análisis de Distractores: La opción A altera la presión por contracción diafragmática; la B activa la inhibición deglutitiva; la D evalúa la integridad de la barrera pero no las métricas basales de Chicago.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 13, Página 20." 
+    },
+    {
+        id: 71, 
+        question: "¿En qué sitio anatómico específico debe realizarse la medición de la presión intragástrica de referencia?", 
+        options: ["Inmediatamente por encima del diafragma crural", "Debajo del diafragma crural sobre tres ciclos respiratorios", "En el centro del esfínter esofágico inferior", "10 cm por debajo del esfínter esofágico superior"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], se requiere promediar la presión para estabilizar la referencia frente a las oscilaciones respiratorias.<br><br>Perla ENARM: \"La presión intragástrica debe medirse por debajo del diafragma crural a lo largo de tres ciclos respiratorios completos.\"<br><br>Análisis de Distractores: La opción A mediría presión intratorácica; la C mediría la presión del esfínter; la D mediría presión intraesofágica.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 13, Página 20." 
+    },
+    {
+        id: 72, 
+        question: "¿Cuál es el criterio de exclusión fundamental para el diagnóstico de Acalasia tipo III?", 
+        options: ["IRP normal", "Presencia de cualquier evidencia de peristalsis normal", "Presurización panesofágica presente", "Uso de medicamentos procinéticos"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la acalasia por definición implica una denervación que impide la peristalsis organizada; si esta existe, el trastorno es obstructivo pero no acalasia.<br><br>Perla ENARM: \"La acalasia tipo III se define por un IRP anormal y evidencia de espasmo en el 20% o más de los tragos, sin evidencia de peristalsis (los tragos normales o inefectivos excluyen este diagnóstico).\"<br><br>Análisis de Distractores: La opción A es un criterio para espasmo esofágico distal; la C define el tipo II; la D no es un criterio diagnóstico sino una interferencia farmacológica.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 6.1, Página 11." 
+    },
+    {
+        id: 73, 
+        question: "¿Qué umbral de contorno isobárico se utiliza para evaluar la integridad y continuidad del frente contráctil?", 
+        options: ["10 mmHg", "15 mmHg", "20 mmHg", "30 mmHg"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], este nivel de presión permite visualizar si la onda peristáltica es continua o tiene brechas (fragmentación).<br><br>Perla ENARM: \"Integridad del frente contráctil: Continuidad de la peristalsis en un contorno isobárico de 20 mmHg.\"<br><br>Análisis de Distractores: La opción A es demasiado sensible y mostraría continuidad falsa; la D es el umbral para presurización y ocultaría defectos en la contracción muscular.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 1, Página 6." 
+    },
+    {
+        id: 74, 
+        question: "¿Cuál es el subgrupo de esófago hipercontráctil que típicamente presenta valores de DCI más altos y mayor severidad de síntomas?", 
+        options: ["Tragos de pico único", "Esófago en martillo neumático (Jackhammer)", "Hipercontractilidad aislada del esfínter inferior", "Espasmo esofágico distal vigoroso"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la contracción multiclonal y repetitiva de este patrón genera las presiones más elevadas y el mayor malestar clínico.<br><br>Perla ENARM: \"El subgrupo jackhammer del esófago hipercontráctil se asocia típicamente con valores de DCI más altos y una mayor gravedad de los síntomas.\"<br><br>Análisis de Distractores: Las opciones A y C son variantes del mismo trastorno pero suelen ser menos sintomáticas; la D es una entidad diagnóstica diferente basada en la latencia, no solo en el vigor.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 11.2, Página 16." 
+    },
+    {
+        id: 75, 
+        question: "¿Cómo debe medirse la separación entre el diafragma crural y el esfínter esofágico inferior?", 
+        options: ["Del borde superior al borde inferior", "Entre los centros de ambas señales durante la inspiración", "Únicamente durante la espiración máxima", "En el punto de inversión respiratoria"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], esta medición centraliza el error y proporciona la distancia axial más fidedigna entre los dos componentes del esfínter.<br><br>Perla ENARM: \"La separación LES-CD debe calificarse como la distancia entre el centro de la señal del diafragma crural y la del esfínter esofágico inferior durante la inspiración.\"<br><br>Análisis de Distractores: La opción A sobreestima la distancia; la C solo se usa si la señal está oscurecida; la D es un punto de referencia para la posición, no la medida de la separación.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 13, Página 20." 
+    },
+    {
+        id: 76, 
+        question: "Según Chicago v4.0, ¿cuántos tragos húmedos se deben realizar en la posición primaria para clasificar un trastorno?", 
+        options: ["5 tragos", "10 tragos", "15 tragos", "20 tragos"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la clasificación jerárquica se basa estrictamente en la serie inicial de degluciones en la posición de inicio (usualmente supina).<br><br>Perla ENARM: \"La clasificación utilizando CCv4.0 se basa en 10 tragos húmedos en la posición de prueba primaria, ya sea supina o vertical.\"<br><br>Análisis de Distractores: La opción A es el número de tragos para la posición secundaria; las opciones C y D exceden los requerimientos del protocolo estandarizado.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.3, Página 8." 
+    },
+    {
+        id: 77, 
+        question: "¿Qué hallazgo en la maniobra de múltiples tragos rápidos (MRS) se considera evidencia de apoyo para el diagnóstico de motilidad inefectiva?", 
+        options: ["Aumento vigoroso de la contracción post-MRS", "Falta de reserva contráctil en la fase post-MRS", "Inhibición incompleta del esfínter durante los tragos", "Presurización panesofágica durante la secuencia"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], un esófago con IEM a menudo no puede responder al estímulo potente del MRS, lo que confirma la debilidad muscular.<br><br>Perla ENARM: \"La evidencia de apoyo para un diagnóstico de IEM incluye la falta de reserva contráctil en la secuencia de múltiples tragos rápidos.\"<br><br>Análisis de Distractores: La opción A es la respuesta normal; la C sugiere un trastorno obstructivo; la D es un hallazgo de acalasia o EGJOO.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 12.3, Página 16." 
+    },
+    {
+        id: 78, 
+        question: "¿Cuál es la respuesta normal esperada tras completar el reto de bebida rápida (RDC)?", 
+        options: ["Presurización panesofágica de 15 mmHg", "Ausencia de evidencia de un trastorno de motilidad mayor", "Una contracción vigorosa con DCI > 8,000 mmHg•s•cm", "Relajación del esfínter esofágico superior por 30 segundos"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la prueba se considera normal si no hay signos de obstrucción o falla peristáltica tras el volumen ingerido.<br><br>Perla ENARM: \"Una respuesta intacta al RDC se define como la ausencia de contractilidad del cuerpo esofágico con inhibición deglutitiva completa del esfínter inferior durante la ingesta y sin evidencia de un trastorno de motilidad mayor posterior al RDC.\"<br><br>Análisis de Distractores: La opción A describe una obstrucción leve; la C define hipercontractilidad; la D no es un parámetro evaluado en esta maniobra.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 2, Página 8." 
+    },
+    {
+        id: 79, 
+        question: "¿Cómo se clasifica un hallazgo de 20% de contracciones prematuras si la integral contráctil distal es < 450 mmHg•s•cm?", 
+        options: ["Espasmo esofágico distal concluyente", "Motilidad esofágica inefectiva espástica", "Inconclusivo para espasmo esofágico distal", "Variante normal de la peristalsis"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], el diagnóstico de espasmo requiere que la contracción prematura tenga también un vigor mínimo para ser patológica.<br><br>Perla ENARM: \"La presencia de al menos un 20% de contracciones con una latencia distal reducida (DL < 4.5 s) pero con un DCI < 450 mmHg•s•cm es inconclusiva para un diagnóstico manométrico de DES.\"<br><br>Análisis de Distractores: La opción A requiere el DCI mínimo; la B no es una categoría de la clasificación; la D ignora el riesgo de que sea un trastorno motor real en evolución.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 10.2, Página 15." 
+    },
+    {
+        id: 80, 
+        question: "¿Qué situación clínica invalida formalmente la aplicación de la Clasificación de Chicago v4.0?", 
+        options: ["Edad mayor a 80 años", "Uso ocasional de antiácidos", "Antecedente de intervención quirúrgica del intestino anterior", "Presencia de síntomas de reflujo gastroesofágico"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], las métricas fueron validadas en sujetos con anatomía preservada; las cirugías alteran la dinámica de presiones de forma impredecible.<br><br>Perla ENARM: \"El esquema de clasificación se aplica a pacientes con anatomía normal del intestino anterior, sin intervenciones quirúrgicas o invasivas previas y sin hernias hiatales grandes.\"<br><br>Análisis de Distractores: Las opciones A, B y D son condiciones comunes en las que la manometría y la clasificación de Chicago se aplican con regularidad.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 4, Página 10." 
+    },
+    {
+        id: 81, 
+        question: "¿A qué presión de referencia debe ajustarse la medición de la presión de relajación integrada según el protocolo estándar?", 
+        options: ["Presión atmosférica", "Presión intraesofágica media", "Presión intragástrica", "Presión del esfínter superior"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la métrica de relajación de la unión debe estar referenciada a la presión del estómago para evaluar con precisión el gradiente necesario para el paso del bolo.<br><br>Perla ENARM: \"Integrated relaxation pressure (IRP): Mean of the 4 s of maximal deglutitive relaxation... referenced to gastric pressure.\"<br><br>Análisis de Distractores: La opción A no considera la fisiología del paciente; la B es la presión que se busca vencer, no la referencia; la D es un punto de inicio temporal pero no de presión.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 1, Página 6." 
+    },
+    {
+        id: 82, 
+        question: "Durante la medición de la presión de relajación integrada, ¿cómo se seleccionan los 4 segundos de relajación máxima dentro de la ventana de análisis?", 
+        options: ["Deben ser estrictamente continuos", "Deben ser los primeros 4 segundos", "Pueden ser contiguos o no contiguos", "Se promedian solo durante la espiración"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], el algoritmo busca los momentos de menor presión en la unión esofagogástrica, sin importar si hay interrupciones por contracción diafragmática.<br><br>Perla ENARM: \"Mean of the 4 s of maximal deglutitive relaxation in the 10-s window... contiguous or non-contiguous.\"<br><br>Análisis de Distractores: La opción A es una restricción innecesaria que omitiría datos; la B es arbitraria; la D se aplica a la presión basal, no a la relajación deglutitiva.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 1, Página 6." 
+    },
+    {
+        id: 83, 
+        question: "¿Cuál es el paso diagnóstico obligatorio antes de confirmar un esófago hipercontráctil para evitar errores por obstrucción secundaria?", 
+        options: ["Realizar una pH-metría con impedancia", "Descartar estrictamente una obstrucción mecánica", "Administrar nitrito de amilo sistemáticamente", "Evaluar la respuesta a inhibidores de bomba"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], el cuerpo esofágico puede reaccionar con hipercontractilidad ante una resistencia distal, lo que invalidaría el diagnóstico como trastorno motor primario.<br><br>Perla ENARM: \"A diagnosis of hypercontractile esophagus can only be made when... a mechanical obstruction has been carefully ruled out.\"<br><br>Análisis de Distractores: La opción A evalúa reflujo; la C es una maniobra de apoyo para obstrucción funcional; la D es un manejo clínico pero no un paso diagnóstico confirmatorio.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 11.2, Página 16." 
+    },
+    {
+        id: 84, 
+        question: "¿Cuál es la unidad de medida estándar para reportar la integral contráctil de la unión esofagogástrica?", 
+        options: ["mmHg•s", "mmHg•cm", "mmHg•s•cm", "mmHg"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], a diferencia de la integral del cuerpo, la de la unión integra presión y longitud pero no tiempo, evaluando la barrera en un momento dado.<br><br>Perla ENARM: \"The EGJ-CI should be referenced to intragastric pressure and expressed in units of mmHg•cm.\"<br><br>Análisis de Distractores: La opción A mide solo presión-tiempo; la C es la unidad de la integral contráctil distal; la D es una medida de presión simple.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 13, Página 20." 
+    },
+    {
+        id: 85, 
+        question: "¿Qué porcentaje de tragos faríngeos debe ser seguido por una contracción esofágica efectiva para considerar intacta la respuesta a sólidos?", 
+        options: ["> 10%", "> 20%", "> 50%", "> 80%"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], se requiere una respuesta motora mínima recurrente ante el estímulo sólido para descartar falla en el transporte.<br><br>Perla ENARM: \"An intact esophageal body contractile response to solid swallows requires presence of >20% pharyngeal swallows, followed by an effective esophageal contraction.\"<br><br>Análisis de Distractores: Las opciones A, C y D no corresponden a los umbrales de efectividad validados para esta prueba de provocación.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.5, Página 7." 
+    },
+    {
+        id: 86, 
+        question: "¿En qué patología se espera una caída de presión por nitrito de amilo marcadamente menor a la presión de relajación integrada deglutitiva?", 
+        options: ["Obstrucción mecánica por estenosis", "Acalasia y obstrucción funcional verdadera", "Esófago hipercontráctil aislado", "Motilidad esofágica inefectiva severa"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], el nitrito de amilo revela la incapacidad de relajación del músculo liso propia de estos trastornos neurogénicos.<br><br>Perla ENARM: \"In patients with a disorder of EGJ obstruction, such as achalasia and true functional EGJOO, amyl nitrite-induced EGJ pressure drop is markedly lower (≥10 mmHg) than compromised deglutitive IRP.\"<br><br>Análisis de Distractores: La opción A mostraría nula respuesta; la C y D no se caracterizan primordialmente por falla en la relajación del músculo liso de la unión.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 2, Página 8." 
+    },
+    {
+        id: 87, 
+        question: "¿Cuál es la respuesta motora normal del esófago distal tras la administración de colecistocinina en sujetos sanos?", 
+        options: ["Relajación total de la unión", "Acortamiento esofágico ≤ 2 cm", "Presurización panesofágica transitoria", "Contracciones repetitivas de gran amplitud"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], en individuos sin denervación inhibitoria, la hormona produce una respuesta motora leve y predecible.<br><br>Perla ENARM: \"In healthy controls, CCK induces a mild esophageal shortening (2 cm or less) associated with incomplete EGJ relaxation.\"<br><br>Análisis de Distractores: La opción A es una respuesta incompleta; la C y D son hallazgos patológicos o paradójicos en casos de acalasia.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Tabla 2, Página 8." 
+    },
+    {
+        id: 88, 
+        question: "¿Dónde se localiza el punto de inversión respiratoria en la morfología tipo 2 de la unión esofagogástrica?", 
+        options: ["Proximal al complejo completo", "Proximal al diafragma crural exclusivamente", "Distal al esfínter esofágico inferior", "No se identifica debido a la hernia"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], en el tipo 2 existe una separación axial donde el punto de inversión queda entre el esfínter y el diafragma.<br><br>Perla ENARM: \"Morfología de la unión: Tipo 2) separación del esfínter y diafragma con el punto de inversión respiratoria localizado proximal al diafragma crural.\"<br><br>Análisis de Distractores: La opción A define el tipo 1 (normal); la C no es anatómicamente posible; la D es incorrecta ya que el hito sigue siendo medible.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 13, Página 21." 
+    },
+    {
+        id: 89, 
+        question: "¿Cuál es el requisito de vigor para que una contracción con defecto mayor a 5 cm sea clasificada como trago fragmentado?", 
+        options: ["Integral contráctil distal < 100 mmHg•s•cm", "Integral contráctil distal < 450 mmHg•s•cm", "Integral contráctil distal ≥ 450 mmHg•s•cm", "Integral contráctil distal > 8,000 mmHg•s•cm"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la fragmentación se define como una ruptura en una contracción que tiene un vigor normal pero carece de integridad.<br><br>Perla ENARM: \"Fragmented Swallow: Transition zone defect of peristalsis greater than 5 cm... in the setting of a DCI of 450 mmHg•s•cm or greater.\"<br><br>Análisis de Distractores: Las opciones A y B clasificarían el trago como fallido o débil respectivamente; la D define un trago hipercontráctil que no suele presentar fragmentación.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.2, Página 6." 
+    },
+    {
+        id: 90, 
+        question: "¿Cómo se clasifica el hallazgo manométrico de una presión intrabolo elevada de forma aislada en la posición supina?", 
+        options: ["Obstrucción del tracto de salida concluyente", "Variante normal de la unión", "Inconclusivo para obstrucción del tracto de salida", "Sugestivo de acalasia tipo II"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], una sola métrica anormal no es suficiente para diagnosticar obstrucción debido a la variabilidad técnica y posicional.<br><br>Perla ENARM: \"Isolated elevated abnormal findings are inconclusive for a manometric diagnosis of EGJOO... including isolated elevated supine intrabolus pressure.\"<br><br>Análisis de Distractores: La opción A requiere IRP elevado en ambas posiciones; la B ignora el hallazgo; la D requiere presurización panesofágica y falla peristáltica.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 7.2, Página 13." 
+    },
+    {
+        id: 91, 
+        question: "¿Cuál es la recomendación inicial de manejo para el esófago hipercontráctil ante la falta de evidencia de obstrucción?", 
+        options: ["Miotomía endoscópica inmediata", "Dilatación neumática de la unión", "Terapia médica conservadora", "Inyección de toxina botulínica"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], dada la heterogeneidad de este trastorno y su posible resolución espontánea, no se deben apresurar intervenciones invasivas.<br><br>Perla ENARM: \"The group advocated for a cautious approach... and advocated for conservative medical therapy before endoscopic or surgical interventions are considered.\"<br><br>Análisis de Distractores: Las opciones A, B y D son tratamientos invasivos que solo se consideran ante falla del manejo médico y síntomas severos persistentes.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 11.2, Página 16." 
+    },
+    {
+        id: 92, 
+        question: "¿Cuál es el volumen de agua administrado en cada uno de los tragos durante la secuencia de múltiples tragos rápidos?", 
+        options: ["2 ml", "5 ml", "10 ml", "20 ml"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], tragos pequeños y frecuentes son ideales para inducir la inhibición deglutitiva central sin saturar el esófago.<br><br>Perla ENARM: \"Multiple rapid swallow (MRS) sequence... five 2 ml wet swallows administered using a 10 ml syringe.\"<br><br>Análisis de Distractores: La opción B es el volumen de los tragos húmedos estándar; las opciones C y D son volúmenes excesivos para una maniobra de inhibición rápida.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.1, Página 4." 
+    },
+    {
+        id: 93, 
+        question: "¿Cómo se define la contractilidad del cuerpo esofágico en un diagnóstico de acalasia tipo I?", 
+        options: ["100% de peristalsis débil", "100% de peristalsis fallida", "20% de presurización panesofágica", "≥ 20% de contracciones prematuras"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la acalasia clásica se caracteriza por la ausencia total de actividad muscular liso efectiva.<br><br>Perla ENARM: \"Type I Achalasia is defined as an abnormal median IRP and absent contractility (100% failed peristalsis).\"<br><br>Análisis de Distractores: La opción A describe una debilidad masiva pero no acalasia; la C define el tipo II; la D define el tipo III.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 6.1, Página 11." 
+    },
+    {
+        id: 94, 
+        question: "¿Sobre cuántos ciclos respiratorios completos se debe realizar la medición de la presión intragástrica basal?", 
+        options: ["Un ciclo respiratorio", "Dos ciclos respiratorios", "Tres ciclos respiratorios", "Cinco ciclos respiratorios"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], promediar sobre tres ciclos asegura una referencia estable ante las variaciones de presión abdominal.<br><br>Perla ENARM: \"Intragastric pressure should be measured below the diafragma crural over three complete respiratory cycles.\"<br><br>Análisis de Distractores: Las opciones A y B ofrecen una muestra insuficiente; la D es innecesariamente prolongada para una medida basal.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 13, Página 20." 
+    },
+    {
+        id: 95, 
+        question: "¿Qué hallazgo en el esfínter esofágico inferior es característico de una respuesta intacta durante el reto de bebida rápida?", 
+        options: ["Inhibición deglutitiva completa", "Aumento de presión > 12 mmHg", "Presurización intrabolo focal", "Relajaciones transitorias repetitivas"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], el esfínter debe mantenerse abierto y relajado durante toda la ingesta para permitir el flujo continuo.<br><br>Perla ENARM: \"An intact response to RDC is defined as... complete deglutitive inhibition of the LES during the RDC.\"<br><br>Análisis de Distractores: La opción B es un criterio de obstrucción; la C sugiere una obstrucción funcional; la D es un fenómeno post-prandial no relacionado con esta maniobra.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.5, Página 7." 
+    },
+    {
+        id: 96, 
+        question: "Además de la manometría, ¿qué hallazgo se considera evidencia de apoyo diagnóstica para la motilidad esofágica inefectiva?", 
+        options: ["Presencia de hernia hiatal > 5 cm", "Pobre aclaramiento del bolo en impedancia", "Respuesta vigorosa post-MRS", "Latencia distal > 6 segundos"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la inefectividad manométrica debe tener un impacto funcional demostrable para ganar peso clínico.<br><br>Perla ENARM: \"Supportive evidence for a diagnosis of IEM includes poor bolus transit on impedance or barium esophagram.\"<br><br>Análisis de Distractores: La opción A es un hallazgo anatómico independiente; la C es la respuesta normal; la D no es un criterio para este trastorno.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 12.3, Página 16." 
+    },
+    {
+        id: 97, 
+        question: "¿Qué característica clínica diferencia usualmente al subgrupo de esófago en martillo neumático de otros patrones hipercontráctiles?", 
+        options: ["Frecuente resolución espontánea", "Mayor gravedad de los síntomas", "Asociación exclusiva con reflujo", "Ausencia de dolor torácico"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la naturaleza multiclonal y de alta presión de estas contracciones impacta severamente la calidad de vida del paciente.<br><br>Perla ENARM: \"The jackhammer subgroup of hypercontractile esophagus is typically associated with higher DCI values and worse symptom severity.\"<br><br>Análisis de Distractores: La opción A es menos común en este subgrupo; la C no es exclusiva; la D es falsa ya que el dolor es un síntoma cardinal.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 11.2, Página 16." 
+    },
+    {
+        id: 98, 
+        question: "¿Qué factor incrementa sustancialmente la sospecha de relevancia clínica ante un hallazgo de motilidad inefectiva durante la prueba de comida sólida?", 
+        options: ["Presurización intragástrica elevada", "Asociación temporal con disfagia", "Aumento de la frecuencia de eructos", "Presencia de contracciones débiles aisladas"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la provocación con sólidos busca reproducir el síntoma del paciente bajo visión manométrica directa.<br><br>Perla ENARM: \"Temporal association of ineffective contractions with patient symptoms (e.g. dysphagia) supports diagnosis of clinically relevant, abnormal peristaltic function.\"<br><br>Análisis de Distractores: Las opciones A y C son hallazgos no específicos; la D es un hallazgo manométrico que requiere el síntoma para ser concluyente.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 3.2.5, Página 7." 
+    },
+    {
+        id: 99, 
+        question: "En presencia de características de espasmo y de hipercontractilidad en un mismo estudio, ¿cuál diagnóstico debe priorizarse jerárquicamente?", 
+        options: ["Esófago hipercontráctil", "Espasmo esofágico distal", "Motilidad esofágica inefectiva vigorosa", "Obstrucción del tracto de salida espástica"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], la alteración de la latencia (inhibición) se considera un defecto motor más fundamental que el exceso de vigor.<br><br>Perla ENARM: \"Hierarchical approach to diagnostic classification should be used in the order of DES first, hypercontractile esophagus next, and last IEM.\"<br><br>Análisis de Distractores: La opción A es jerárquicamente inferior; la C no existe como categoría; la D solo se aplica si el IRP está elevado.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 8, Página 14." 
+    },
+    {
+        id: 100, 
+        question: "¿Cuál es el cambio conceptual central de la versión 4.0 de Chicago respecto a la interpretación de los patrones manométricos?", 
+        options: ["Los patrones manométricos siempre igualan a una enfermedad", "Solo la manometría en posición supina es diagnóstica", "Los patrones pueden no ser diagnósticos sin síntomas compatibles", "Se eliminan todas las categorías de trastornos menores"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la GPC [Chicago Classification v4.0], para evitar sobretratamientos, se enfatiza que la manometría debe integrarse en el contexto clínico del paciente (\"patología accionable\").<br><br>Perla ENARM: \"CCv4.0 separates patterns that do provide a conclusive diagnosis (eg achalasia) from other patterns that are suggestive but inconclusive... where additional clinical information and supportive testing may either confirm or refute the diagnosis.\"<br><br>Análisis de Distractores: La opción A es el error que la versión 4.0 busca corregir; la B es falsa ya que incluye la posición vertical; la D es una consecuencia de la reestructuración pero no el eje conceptual principal.", 
+        source: "Yadlapati R, et al. Esophageal motility disorders on high-resolution manometry: Chicago classification version 4.0. Neurogastroenterol Motil, 2021, Sección 14, Página 21." 
+    }
+
+        ];
+
+        // ==========================================
+        // ==========================================
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('chicago4LastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('chicago4Progress');
+                localStorage.removeItem('chicago4LastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-pink-500 shadow-md z-10 border-pink-500 dark:border-pink-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-pink-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-rose-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! UMAE 25 - 2026" : "R4 - UMAE 25 - 2026";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "UMAE 25 - R4";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus las respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="Chicago4.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Resumen 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-pink-100 dark:border-pink-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-pink-50 has-[:checked]:border-pink-400 dark:has-[:checked]:bg-pink-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-pink-600 focus:ring-pink-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-600 dark:hover:bg-pink-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('chicago4Progress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('chicago4LastQId', currentQuestionId);
+                else localStorage.removeItem('chicago4LastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('chicago4Progress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB26PT8kuB-0fxyUYgGk51yC1rAsW0dYj0",
+        authDomain: "enarm-lite.firebaseapp.com",
+        projectId: "enarm-lite",
+        storageBucket: "enarm-lite.firebasestorage.app",
+        messagingSenderId: "767032952477",
+        appId: "1:767032952477:web:84347320ed3d376f7e7674",
+        measurementId: "G-PVR3RBVNSV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    //document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "usuarios_autorizados", user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            
+            if(userDocSnap.exists()) {
+                document.body.style.opacity = '1';
+            } else {
+                //window.location.href = "index.html"; 
+            }
+        } else {
+            //window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>

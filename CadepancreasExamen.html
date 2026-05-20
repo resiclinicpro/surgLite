@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">UMAE</span>
+                    <span class="logo-Lite text-sm">25<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // =========================================================
+        const questionsData = [
+    {
+        id: 1, 
+        question: "¿Cuál es el mecanismo embriológico subyacente que origina el páncreas anular, patología frecuentemente asociada a obstrucción duodenal y síndrome de Down?", 
+        options: ["Fusión prematura de conductos", "Fallo en rotación del brote ventral", "Regresión incompleta del brote dorsal", "Persistencia de la vena umbilical"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [SAGES Anatomy], el páncreas anular resulta de una falla del brote pancreático ventral para rotar adecuadamente junto con la segunda porción del duodeno durante el desarrollo embriológico, lo que resulta en una envoltura total o parcial del duodeno por tejido pancreático.<br><br>Perla ENARM: \"The prevalence rate of annular pancreas is thought to be 0.01% and results from a failure of the ventral bud to properly rotate with the second portion of the duodenum during embryologic development.\"<br><br>Análisis de Distractores: La fusión prematura o regresión incompleta explican variantes como el páncreas divisum, no el anular. La persistencia de la vena umbilical es un defecto vascular sin relación a la rotación del parénquima glandular pancreático.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Anatomy and Physiology, Página 9." 
+    },
+    {
+        id: 2, 
+        question: "¿Qué mutación genética confiere el mayor riesgo para desarrollar adenocarcinoma de páncreas en un paciente con diagnóstico de poliposis hamartomatosa gastrointestinal y máculas melanocíticas?", 
+        options: ["Mutación en STK11", "Mutación en BRCA2", "Mutación en PRSS1", "Mutación en CDKN2A"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento [Screening and Diagnosis], la mutación del gen STK11 es la alteración genética responsable del síndrome de Peutz-Jeghers, el cual es uno de los síndromes hereditarios con mayor riesgo documentado para el desarrollo de adenocarcinoma pancreático a lo largo de la vida.<br><br>Perla ENARM: \"The inherited cancer syndromes with the highest risk of developing PDAC include Peutz-jeghers (STK11 gene), Familial Atypical Multiple Mole Melanoma syndrome (CDKN2A gene), and Hereditary pancreatitis (PRSS1, SPINK1 genes).\"<br><br>Análisis de Distractores: BRCA2 se asocia a cáncer de mama/ovario y páncreas familiar, pero no al fenotipo descrito. PRSS1 causa pancreatitis hereditaria. CDKN2A causa el síndrome de melanoma múltiple atípico familiar (FAMMM), no Peutz-Jeghers.", 
+        source: "Pancreatic Cancer, 2023, Screening and Early Detection, Página 154." 
+    },
+    {
+        id: 3, 
+        question: "En el abordaje de una masa sólida en la cabeza del páncreas, ¿cuál es la causa fenotípica biológica que condiciona niveles indetectables de antígeno carbohidrato 19-9 (≤2 U/ml) a pesar de existir una carga tumoral avanzada?", 
+        options: ["Falla en secreción de bilirrubina", "Mutación intrínseca del gen KRAS", "Inactivación de la enzima telomerasa", "Fenotipo antígeno Lewis negativo"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], el antígeno carbohidrato 19-9 no será detectable en pacientes que carecen del antígeno Lewis (fenotipo Lewis negativo), representando aproximadamente el 8% de la población, lo que genera falsos negativos en la evaluación bioquímica de la enfermedad.<br><br>Perla ENARM: \"CA 19-9 will be undetectable in individuals who are Lewis antigen-negative (consider obtaining CEA and CA-125 in patients who are nonsecreting or those with normal CA 19-9 levels).\"<br><br>Análisis de Distractores: La hiperbilirrubinemia eleva falsamente el CA 19-9, no lo suprime. La mutación en KRAS es el motor genético del tumor, independiente de la expresión del marcador de superficie. La inactivación de telomerasa no regula la secreción glucoproteica del antígeno 19-9.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Clinical Presentation and Workup, Página PANC-1A." 
+    },
+    {
+        id: 4, 
+        question: "En la estadificación tomográfica del adenocarcinoma de páncreas, ¿qué hallazgo anatómico define a la enfermedad como resecable limítrofe respecto al eje de la arteria mesentérica superior?", 
+        options: ["Contacto tumoral sólido ≤180 grados", "Contacto tumoral sólido >180 grados", "Invasión vascular con trombosis blanda", "Ausencia total de contacto perivascular"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], la enfermedad limítrofe (borderline resectable) se define por la presencia de contacto tumoral sólido con la arteria mesentérica superior menor o igual a 180 grados de su circunferencia, lo cual permite una resección quirúrgica técnicamente factible pero con alto riesgo de márgenes positivos si no se emplea terapia previa.<br><br>Perla ENARM: \"Borderline resectable: Solid tumor contact with superior mesenteric artery (SMA) ≤180°.\"<br><br>Análisis de Distractores: El contacto >180 grados define a la enfermedad como localmente avanzada (irresecable). La trombosis blanda se evalúa en el eje venoso portomesentérico, no en el arterial. La ausencia de contacto clasifica al tumor como francamente resecable.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Criteria Defining Resectability Status, Página PANC-C." 
+    },
+    {
+        id: 5, 
+        question: "En un paciente con adenocarcinoma de páncreas clasificado radiológicamente como resecable limítrofe, ¿cuál es la directriz terapéutica inicial de elección recomendada antes de la cirugía?", 
+        options: ["Exploración quirúrgica inmediata", "Terapia sistémica neoadyuvante", "Radioterapia ablativa estereotáctica", "Derivación paliativa biliodigestiva"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], los pacientes con enfermedad limítrofe (borderline) deben recibir terapia sistémica neoadyuvante (con o sin quimiorradiación consolidativa) para maximizar la probabilidad de una resección con márgenes negativos (R0) y tratar la enfermedad micrometastásica precoz.<br><br>Perla ENARM: \"Neoadjuvant Therapy (Resectable/Borderline Resectable Disease). If neoadjuvant therapy is considered or recommended, treatment at or coordinated through a high-volume center is preferred.\"<br><br>Análisis de Distractores: La cirugía inmediata (upfront) está contraindicada por el alto riesgo de resección R1. La radioterapia exclusiva se reserva para paliación o adyuvancia, no es primera línea aislada. Las derivaciones paliativas se usan solo en enfermedad irresecable con obstrucción intratable.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Borderline Resectable Disease, Página PANC-3 y PANC-G." 
+    },
+    {
+        id: 6, 
+        question: "Durante la evaluación transoperatoria de una duodenopancreatectomía cefálica, ¿cuál es la distancia mínima exigida de tejido sano entre el tumor y el margen de sección del cuello pancreático para evitar la ampliación del corte?", 
+        options: ["1 mm", "2 mm", "5 mm", "10 mm"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], el análisis por sección congelada del margen del cuello pancreático y del conducto biliar es crítico; si el tumor se encuentra a 5 mm o menos del margen, se requiere excisión adicional para asegurar una distancia segura y evitar el artefacto por electrocauterio.<br><br>Perla ENARM: \"If tumor is located within 5 mm of margins, consider further excision of the pancreas and bile duct to ensure at least 5 mm of clearance.\"<br><br>Análisis de Distractores: Un margen de 1 mm tradicionalmente define una resección R1 en los protocolos de patología británicos, por lo que es inaceptable transoperatoriamente. Distancias de 2 mm son insuficientes. Los 10 mm son ideales pero la directriz quirúrgica estricta para ampliar es ≤5 mm.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Principles of Surgical Technique, Página PANC-E 1 of 3." 
+    },
+    {
+        id: 7, 
+        question: "Para el diagnóstico de una fístula pancreática posoperatoria a partir del tercer día, ¿cuál es el umbral de elevación de amilasa en el líquido de drenaje respecto al límite superior normal del suero institucional?", 
+        options: ["Mayor a 1.5 veces", "Mayor a 2 veces", "Mayor a 3 veces", "Mayor a 5 veces"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [POPF ISGPS], el diagnóstico bioquímico de una fístula pancreática se define por un nivel de amilasa en el líquido de drenaje superior a tres veces el límite superior de la normalidad institucional, medido en o después del tercer día posoperatorio.<br><br>Perla ENARM: \"Any volume of drain fluid with amylase level >3 times higher than the upper limit of normal (according to the local, institutional thresholds) defines a POPF.\"<br><br>Análisis de Distractores: Valores de 1.5 o 2 veces no alcanzan el umbral de diagnóstico consensuado internacionalmente. Un umbral de 5 veces es excesivo y retrasaría el diagnóstico de una fuga bioquímica asintomática.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Postoperative Pancreatic Fistula, Página 592." 
+    },
+    {
+        id: 8, 
+        question: "¿Cuál es el hallazgo histopatológico patognomónico que define a una neoplasia quística mucinosa del páncreas frente a otros tumores quísticos premalignos?", 
+        options: ["Epitelio plano rico en glucógeno", "Displasia glandular tipo foveolar", "Estroma subepitelial tipo ovárico", "Infiltración linfoplasmocítica densa"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Pathobiology Precursors], la neoplasia quística mucinosa (MCN) es un tumor caracterizado casi exclusivamente en mujeres, compuesto por células productoras de mucina apoyadas directamente sobre un estroma subepitelial de tipo ovárico.<br><br>Perla ENARM: \"MCN is a non-invasive mainly solitary cystic neoplasm composed of mucin-producing cells associated with typical subepithelial ovarian type stroma.\"<br><br>Análisis de Distractores: El epitelio rico en glucógeno define al cistadenoma seroso (tumor benigno). La diferenciación foveolar gástrica se ve en las PanINs y algunos IPMNs. La infiltración linfoplasmocítica IgG4 positiva es clásica de la pancreatitis autoinmune.", 
+        source: "Textbook of Pancreatic Cancer, 2021, Pathobiology of Precursors to Pancreatic Cancer, Página 211." 
+    },
+    {
+        id: 9, 
+        question: "Durante la disección del ligamento hepatoduodenal en una pancreatectomía, se identifica una arteria hepática derecha reemplazada. ¿De qué vaso principal se origina esta variante anatómica en la mayoría de los casos?", 
+        options: ["Arteria gástrica izquierda", "Tronco celíaco directamente", "Arteria mesentérica superior", "Arteria gastroduodenal distal"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Open Whipple], una arteria hepática derecha reemplazada o accesoria discurre característicamente posterolateral a la cabeza del páncreas y se origina a partir de la arteria mesentérica superior, exigiendo una disección cuidadosa para evitar isquemia hepática o biliar.<br><br>Perla ENARM: \"The aberrant right hepatic artery usually arises from the superior mesenteric artery and courses posterolateral to the pancreatic head.\"<br><br>Análisis de Distractores: La arteria gástrica izquierda da origen típicamente a la arteria hepática izquierda reemplazada, no a la derecha. El tronco celíaco da origen a la anatomía clásica normal. La arteria gastroduodenal emite ramas pancreatoduodenales, rara vez el flujo hepático principal.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Open Whipple, Página 334." 
+    },
+    {
+        id: 10, 
+        question: "De acuerdo con la clasificación internacional, ¿cuál es la etiología predominante de una hemorragia pospancreatectomía clasificada como temprana (menor a 24 horas)?", 
+        options: ["Pseudoaneurisma esplénico roto", "Falla técnica en la hemostasia", "Fuga de la anastomosis biliar", "Úlcera en la gastroyeyunostomía"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [PPH Management], la hemorragia pospancreatectomía temprana (<24 horas) se debe comúnmente a un error técnica en la hemostasia quirúrgica intraoperatoria o a coagulopatía subyacente del paciente, mientras que los sangrados tardíos se asocian a complicaciones como fístulas y pseudoaneurismas.<br><br>Perla ENARM: \"Early PPH is often due to a technical error in intraoperative hemostasis or a coagulopathy (inherent or acquired) present in the patient.\"<br><br>Análisis de Distractores: La rotura de pseudoaneurismas, fístulas biliares/pancreáticas y úlceras en el sitio de anastomosis son causas características de la hemorragia pospancreatectomía tardía (>24 horas), condicionada por la erosión vascular de los jugos digestivos.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Post-Pancreatectomy Hemorrhage, Página 610." 
+    },
+    {
+        id: 11, 
+        question: "Tras la confirmación histológica de adenocarcinoma ductal de páncreas en una pieza de resección quirúrgica, ¿qué evaluación complementaria es obligatoria en el posoperatorio sistemático de todos los pacientes independientemente del historial familiar?", 
+        options: ["Prueba genética para mutaciones hereditarias", "Perfil de metilación de ADN libre circulante", "Cuantificación de catecolaminas en orina", "Determinación de la mutación BRAF V600E"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], las guías establecen como pauta universal la realización de pruebas genéticas para mutaciones hereditarias en cualquier paciente con confirmación de cáncer de páncreas, para detectar alteraciones en genes de alto riesgo (BRCA1/2, PALB2, STK11).<br><br>Perla ENARM: \"Genetic testing for inherited mutations is recommended for any patient with confirmed pancreatic cancer, using comprehensive gene panels for hereditary cancer syndromes.\"<br><br>Análisis de Distractores: El ADN libre circulante (ctDNA) aún no tiene recomendación de consenso universal para toma de decisiones. Las catecolaminas evalúan tumores neuroendocrinos. BRAF V600E es infrecuente en páncreas y no se realiza como única prueba genómica prioritaria sin perfil molecular completo.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Postoperative Adjuvant Treatment, Página PANC-5." 
+    },
+    {
+        id: 12, 
+        question: "En la linfadenectomía estandarizada durante una duodenopancreatectomía cefálica con intención curativa, ¿cuál estación ganglionar debe excluirse de la resección en bloque ya que su positividad indica enfermedad metastásica a distancia?", 
+        options: ["Estación 8a (hepática común)", "Estación 12c (hilio biliar)", "Estación 13a (retropancreática)", "Estación 16 (paraaórtica)"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento [Pancreatic Cancer], la disección estándar de ganglios linfáticos (según ISGPS) incluye las estaciones 5, 6, 8a, 12b/c, 13a/b, 14a/b, y 17a/b. La presencia de tumor en los ganglios de la estación 16 (paraaórticos) se considera metástasis a distancia (M1) y no forma parte del bloque de resección curativa rutinaria.<br><br>Perla ENARM: \"Pancreaticoduodenectomy lymphadenectomy includes stations 5, 6, 8a, 12b1, 12b2, 12c, 13a, 13b, 14a right lateral side, 14b right lateral side, 17a, and 17b.\"<br><br>Análisis de Distractores: Las estaciones 8a, 12c y 13a son relevos ganglionares regionales peripancreáticos y del ligamento hepatoduodenal obligatorios en la estadificación quirúrgica adecuada de una resección curativa.", 
+        source: "Complex General Surgical Oncology, 2025, Pancreatic Cancer, Página 231." 
+    },
+    {
+        id: 13, 
+        question: "En un paciente con adenocarcinoma de páncreas irresecable localmente avanzado que debuta con ictericia obstructiva severa, ¿cuál es el método de primera línea para la descompresión biliar paliativa?", 
+        options: ["Derivación biliodigestiva en Y de Roux", "Stent metálico autoexpandible endoscópico", "Drenaje biliar transhepático percutáneo", "Esfinterotomía endoscópica aislada"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], el abordaje preferido para aliviar la obstrucción biliar en pacientes con enfermedad irresecable es la colocación de un stent metálico autoexpandible (SEMS) preferiblemente mediante colangiopancreatografía retrógrada endoscópica (CPRE).<br><br>Perla ENARM: \"Symptom Therapy: Biliary obstruction. Endoscopic biliary metal stent (preferred method).\"<br><br>Análisis de Distractores: La derivación quirúrgica se reserva para pacientes sometidos a laparotomía exploradora en los que se descubre irresecabilidad transoperatoria. El drenaje percutáneo es de rescate ante fracaso endoscópico. La esfinterotomía aislada no resuelve la estenosis tumoral ductal.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Principles of Palliation and Supportive Care, Página PANC-I." 
+    },
+    {
+        id: 14, 
+        question: "Dentro de un programa de recuperación acelerada (ERAS) para cirugía oncológica pancreática, ¿qué estrategia ha demostrado proteger específicamente a los pacientes contra el desacondicionamiento físico inducido por la quimioterapia neoadyuvante?", 
+        options: ["Nutrición parenteral preoperatoria", "Profilaxis con heparina subcutánea", "Prehabilitación multimodal estructurada", "Descompresión nasogástrica temprana"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Prehabilitation], el periodo entre el diagnóstico y la cirugía, especialmente durante el tratamiento neoadyuvante, ofrece una ventana crítica para implementar protocolos de prehabilitación que contrarresten la toxicidad de la quimioterapia y optimicen el estado funcional del paciente antes del estrés quirúrgico.<br><br>Perla ENARM: \"Early evidence suggests that prehabilitation could protect patients from chemotherapy-associated deconditioning.\"<br><br>Análisis de Distractores: La nutrición parenteral profiláctica incrementa morbilidad infecciosa sin beneficio. La heparina previene tromboembolismo, no desacondicionamiento físico. La sonda nasogástrica temprana retrasa la recuperación y está proscrita en los protocolos ERAS.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Preoperative Optimization, Página 513." 
+    },
+    {
+        id: 15, 
+        question: "¿Cuál es el estudio de imagen inicial de elección para la estadificación y la determinación precisa de resecabilidad vascular del adenocarcinoma de páncreas?", 
+        options: ["Tomografía por emisión de positrones", "Resonancia magnética simple de abdomen", "Ultrasonido endoscópico con aguja fina", "Tomografía computarizada multidetector"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], la tomografía computarizada multidetector (MDCT) con protocolo pancreático (fases arterial y venosa) es la modalidad preferida y el estándar de oro para el diagnóstico, la estadificación y la evaluación minuciosa de la resecabilidad vascular tumoral.<br><br>Perla ENARM: \"Multi-detector CT (MDCT) angiography is the preferred imaging tool for dedicated pancreatic imaging.\"<br><br>Análisis de Distractores: El PET-CT es un complemento para evaluar enfermedad metastásica oculta en alto riesgo, no para mapeo vascular primario. El ultrasonido endoscópico no sustituye a la tomografía volumétrica para el plan quirúrgico vascular completo. La resonancia magnética es la segunda opción ante alergia al yodo.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Principles of Diagnosis, Imaging, and Staging, Página PANC-A." 
+    },
+    {
+        id: 16, 
+        question: "En el modelo de progresión molecular de la neoplasia intraepitelial pancreática (PanIN) hacia el adenocarcinoma infiltrante, ¿cuál es la alteración somática documentada más temprano y con mayor prevalencia en las lesiones precursoras?", 
+        options: ["Acortamiento de telómeros y mutación KRAS", "Inactivación homocigota de SMAD4", "Pérdida de heterocigocidad de TP53", "Activación del gen inhibidor CDKN2A"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento [Pathobiology Precursors], las anomalías moleculares más precoces en la vía clásica del cáncer pancreático ocurren desde los grados más bajos de PanIN, caracterizándose por el acortamiento telomérico y las mutaciones puntuales de activación en el oncogén KRAS (>90% de prevalencia).<br><br>Perla ENARM: \"In PanIN, telomere shortening... and somatic point mutation of KRAS are among the first to occur. KRAS mutations have a prevalence of greater than 90% (even in low-grade PanIN lesions).\"<br><br>Análisis de Distractores: La inactivación de SMAD4 y TP53 son eventos tardíos que ocurren en lesiones PanIN de alto grado que transicionan a carcinoma invasivo. CDKN2A se inactiva (no se activa) en estadios intermedios.", 
+        source: "Textbook of Pancreatic Cancer, 2021, Pathobiology of Precursors to Pancreatic Cancer, Página 204." 
+    },
+    {
+        id: 17, 
+        question: "Tras una pancreatoduodenectomía cefálica, el paciente cursa con intolerancia prolongada a la vía oral y requiere mantener la sonda nasogástrica más de tres días, sin evidencia de fuga perianastomótica. ¿Cómo clasifica el Grupo Internacional (ISGPS) esta entidad clínica?", 
+        options: ["Fístula pancreática posoperatoria", "Vaciamiento gástrico retrasado", "Síndrome de asa aferente aguda", "Hemorragia pospancreatectomía intraluminal"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [DGE ISGPS], la necesidad de mantener el soporte nasogástrico por más de tres días, o la intolerancia para reintroducir la dieta sólida después del día 7 posoperatorio define al vaciamiento gástrico retrasado (Delayed Gastric Emptying), una complicación frecuente posterior a reseciones pancreáticas.<br><br>Perla ENARM: \"Evaluation of the international study group of pancreatic surgery definition of delayed gastric emptying after pancreatoduodenectomy...\"<br><br>Análisis de Distractores: La fístula pancreática se asocia a la salida de amilasa por los drenajes, no primariamente a éstasis gástrica aislada. El síndrome del asa aferente es por obstrucción mecánica biliar/intestinal, detectable por imagen. No hay clínica de hemorragia.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Delayed Gastric Emptying, Página 634." 
+    },
+    {
+        id: 18, 
+        question: "En pacientes con poliposis adenomatosa familiar, el escrutinio revela múltiples adenomas en la región duodenal con riesgo de degeneración maligna. Según su diferenciación epitelial, ¿cuál es el subtipo histológico que predomina en casi el 90% de los casos?", 
+        options: ["Pólipo de tipo gástrico foveolar", "Neoplasia tubular de glándulas pilóricas", "Adenoma velloso de tipo intestinal", "Adenoma aserrado tradicional duodenal"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Duodenal Neoplasms], la histología de los adenomas duodenales se clasifica por su fenotipo de mucina, siendo el subtipo de diferenciación intestinal (tubular y velloso) el absolutamente predominante, representando el 89% de todos los pólipos diagnosticados.<br><br>Perla ENARM: \"The histology of duodenal adenomas is classified based on the mucin phenotype, with intestinal type polyps representing 89% of cases and gastric type composing 11%.\"<br><br>Análisis de Distractores: El fenotipo gástrico (foveolar y de glándulas pilóricas) representa sólo el 11% de los casos. Los adenomas aserrados tradicionales son lesiones colónicas sumamente infrecuentes en el duodeno.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Benign, Premalignant, and Malignant Duodenal Neoplasms, Página 174." 
+    },
+    {
+        id: 19, 
+        question: "Para la vigilancia sistemática de un paciente en remisión sometido a resección curativa de adenocarcinoma de páncreas, ¿qué herramientas deben solicitarse de forma protocolaria durante las consultas de seguimiento oncológico?", 
+        options: ["Resonancia magnética hepática y antígeno carcinoembrionario", "Tomografía toracoabdominopélvica contrastada y CA 19-9", "PET-CT con fluorodesoxiglucosa y niveles de CA-125", "Ultrasonido endoscópico de muñón y perfil hepático"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], el seguimiento protocolario (surveillance) de pacientes con páncreas resecado incluye el interrogatorio clínico, cuantificación de CA 19-9 y la realización rutinaria de tomografías de tórax, abdomen y pelvis con contraste para descartar recaída pulmonar, hepática o local.<br><br>Perla ENARM: \"Postoperative Adjuvant Treatment surveillance: Baseline postoperative CT (chest, abdomen, and pelvis) with contrast (unless contraindicated) and CA 19-9.\"<br><br>Análisis de Distractores: La resonancia y el CEA no son el estándar inicial combinado de seguimiento. El PET-CT no se usa de rutina sin sospecha de recaída documentada en TC. El ultrasonido endoscópico no forma parte del protocolo de vigilancia sistémica del muñón.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Postoperative Adjuvant Treatment, Página PANC-5." 
+    },
+    {
+        id: 20, 
+        question: "En un paciente posoperado de duodenopancreatectomía que presenta insuficiencia exocrina caracterizada por esteatorrea severa y deficiencia nutricional refractaria, ¿qué intervención dietética coadyuva al reemplazo enzimático para la absorción de lípidos?", 
+        options: ["Ingesta exclusiva de carbohidratos complejos", "Sustitución con triglicéridos de cadena media", "Proscripción total de grasas de la dieta", "Administración de nutrición parenteral nocturna"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Supportive Care], en pacientes con esteatorrea severa e insuficiencia pancreática posterior a la cirugía, el manejo nutricional incluye el uso de triglicéridos de cadena media (TCM), ya que estos pueden absorberse directamente en la circulación portal sin requerir hidrólisis por enzimas pancreáticas.<br><br>Perla ENARM: \"Pancreatic enzyme replacement therapy (PERT)... Medium chain triglyceride (MCT) oil substituted for other fats.\"<br><br>Análisis de Distractores: La proscripción total de grasas empeora el riesgo de deficiencia de vitaminas liposolubles y desnutrición. Los carbohidratos complejos no resuelven la malabsorción calórica por pérdida de lípidos. La nutrición parenteral es el último recurso ante la falla intestinal, no la línea inicial de control sintomático.", 
+        source: "Pancreatic Cancer, 2023, Palliative, Rehabilitation, and Integrative Medicine, Página 170." 
+    },
+    {
+        id: 21, 
+        question: "¿A qué estructura anatómica se refiere el término \"mesopáncreas\", cuya disección completa es crítica para reducir el riesgo de una resección R1?", 
+        options: ["Tejido areolar y plexos retropancreáticos", "Ligamento pancreático-duodenal anterior", "Cápsula de Gerota renal izquierda", "Meso de la cuarta porción duodenal"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento [SAGES Mesopancreas], el término mesopáncreas se refiere al tejido retropancreático compuesto microscópicamente por tejido areolar y adiposo, nervios periféricos, plexos, vasos sanguíneos y linfáticos, así como ganglios. Su importancia radica en ser el sitio más frecuente de márgenes positivos.<br><br>Perla ENARM: \"The term ‘mesopancreas’ refers to retropancreatic tissue, microscopically consisting of areolar and adipose tissue, peripheral nerves and plexuses, blood and lymphatic vessels or capillaries, and lymph nodes.\"<br><br>Análisis de Distractores: El ligamento pancreático-duodenal es un término propuesto (P-A ligament) pero no es el sinónimo clásico de mesopáncreas. La cápsula de Gerota y el meso duodenal son estructuras adyacentes pero no forman parte del bloque de tejido neurovascular retropancreático primario.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, The Mesopancreas, Página 24." 
+    },
+    {
+        id: 22, 
+        question: "¿Cuál es el factor de riesgo modificable más importante para el desarrollo de adenocarcinoma de páncreas, duplicando aproximadamente el riesgo basal de la población general?", 
+        options: ["Consumo de carnes rojas", "Tabaquismo activo", "Infección por Helicobacter pylori", "Sedentarismo extremo"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [The Lancet 2026], el tabaquismo es el principal factor de riesgo modificable para el cáncer de páncreas, con un riesgo relativo de 1.8. Se estima que el 21% de las muertes por esta patología son atribuibles al tabaco.<br><br>Perla ENARM: \"Cigarette smoking is the leading modifiable risk factor of pancreatic cancer with a relative risk (RR) of 1·8 (95% CI 1·7–1·9%) compared with individuals who have never smoked.\"<br><br>Análisis de Distractores: El consumo de carnes y el sedentarismo tienen asociaciones modestas (RR <1.2). La infección por H. pylori es un factor relacionado pero con un impacto epidemiológico significativamente menor que el tabaquismo.", 
+        source: "Cancer de páncreas SEMINAR, The Lancet, 2026, Risk Factors, Página 2." 
+    },
+    {
+        id: 23, 
+        question: "Según la octava edición de la clasificación AJCC, ¿qué hallazgo define a un tumor como estadio T4 independientemente de su tamaño en centímetros?", 
+        options: ["Invasión de la vena porta", "Invasión de la aorta abdominal", "Involucro del tronco celíaco", "Metástasis en ganglios paraaórticos"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], la categoría T4 se define por el involucro del tronco celíaco, la arteria mesentérica superior y/o la arteria hepática común, sin importar las dimensiones del tumor primario.<br><br>Perla ENARM: \"T4: Tumor involves the celiac axis, superior mesenteric artery, and/or common hepatic artery, regardless of size.\"<br><br>Análisis de Distractores: La invasión de la vena porta no cambia el estadio T por sí sola (se basa en tamaño). El involucro de la aorta se menciona como criterio de irresecabilidad pero no define la categoría T4 en la tabla TNM. La positividad ganglionar define el estadio N, no T.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, AJCC TNM Staging, Página ST-1." 
+    },
+    {
+        id: 24, 
+        question: "En el proceso de adquisición de tejido para el diagnóstico de adenocarcinoma de páncreas, ¿cuál es la técnica de biopsia preferida para asegurar material suficiente para perfiles moleculares?", 
+        options: ["Aspiración con aguja fina (FNA)", "Biopsia con aguja de corte (Core)", "Cepillado ductal por CPRE", "Citología por lavado peritoneal"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], se recomienda la biopsia con aguja de corte (core biopsy) siempre que sea posible, ya que permite obtener una arquitectura tisular adecuada para realizar perfiles moleculares y estudios auxiliares que guían la terapia personalizada.<br><br>Perla ENARM: \"Core biopsy is recommended, if possible, to obtain adequate tissue for molecular profiling or other ancillary studies.\"<br><br>Análisis de Distractores: La FNA (aspiración) es útil para diagnóstico citológico pero a menudo insuficiente para perfiles genómicos complejos. El cepillado por CPRE tiene baja sensibilidad. El lavado peritoneal se usa para estadificación (M1), no para diagnóstico del tumor primario.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Principles of Systemic Therapy, Página PANC-G 1 of 13." 
+    },
+    {
+        id: 25, 
+        question: "En un procedimiento de Appleby (pancreatectomía distal con resección del tronco celíaco), ¿qué vaso asegura la perfusión retrógrada del hígado y el estómago?", 
+        options: ["Arteria gástrica izquierda", "Arteria mesentérica inferior", "Arteria gastroduodenal", "Arteria esplénica proximal"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [SAGES Open Whipple], el procedimiento de Appleby modificado implica la resección en bloque del tronco celíaco; la viabilidad del hígado se mantiene mediante el flujo sanguíneo retrógrado desde la arteria mesentérica superior a través de la arteria gastroduodenal hacia la arteria hepática propia.<br><br>Perla ENARM: \"Operation involves division of celiac artery – common hepatic artery flow maintained by retrograde flow-through GDA.\"<br><br>Análisis de Distractores: La gástrica izquierda y la esplénica se resecan junto con el tronco celíaco. La mesentérica inferior no tiene comunicación directa con el eje hepático superior para compensar este flujo.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Pancreatic Cancer, Página 233." 
+    },
+    {
+        id: 26, 
+        question: "¿Cuál es la complicación más frecuente asociada a la hemorragia pospancreatectomía tardía (más de 24 horas) y que presenta el mayor riesgo de mortalidad?", 
+        options: ["Dehiscencia de la gastroyeyunostomía", "Pseudoaneurisma de la arteria gastroduodenal", "Erosión de la vena mesentérica superior", "Ruptura traumática del bazo remanente"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [SAGES PPH], la causa más preocupante de hemorragia tardía es el sangrado del muñón de la arteria gastroduodenal o la formación de un pseudoaneurisma, generalmente secundario a una fístula pancreática que erosiona el vaso.<br><br>Perla ENARM: \"Most worrisome cause is gastroduodenal artery bleed or pseudoaneurysm, most often in setting of pancreatic leak.\"<br><br>Análisis de Distractores: La dehiscencia de anastomosis entéricas causa peritonitis más que hemorragia masiva. La erosión venosa es menos común que la arterial por jugos pancreáticos. La ruptura esplénica no es una complicación típica del lecho quirúrgico cefálico.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Pancreatic Cancer, Página 242." 
+    },
+    {
+        id: 27, 
+        question: "Según el estudio ESPAC-4, ¿cuál es el régimen de quimioterapia adyuvante que demostró superioridad en supervivencia global frente a la monoterapia con gemcitabina?", 
+        options: ["Gemcitabina más cisplatino", "Gemcitabina más capecitabina", "Gemcitabina más nab-paclitaxel", "Gemcitabina más erlotinib"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], los datos del estudio ESPAC-4 demostraron que la combinación de gemcitabina con capecitabina es superior a la monoterapia con gemcitabina en el entorno adyuvante tras la resección R0 o R1.<br><br>Perla ENARM: \"Data from ESPAC-4 support the use of Gemcitabine combined with Capecitabine... with superiority demonstrated compared to Gemcitabine alone (hazard ratio [HR], 0.82; 95% CI, 0.68, 0.98; P = .032).\"<br><br>Análisis de Distractores: El cisplatino se reserva para mutaciones BRCA. El nab-paclitaxel en adyuvancia (estudio APACT) no alcanzó su objetivo primario de supervivencia libre de enfermedad. El erlotinib (estudio CONKO-005) no mostró beneficio significativo en supervivencia global adyuvante.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Postoperative Adjuvant Treatment, Página PANC-G 2 of 13." 
+    },
+    {
+        id: 28, 
+        question: "De acuerdo con la clasificación de la Organización Mundial de la Salud (WHO), ¿qué valor del índice de proliferación Ki-67 define a un tumor neuroendocrino pancreático como grado 2 (intermedio)?", 
+        options: ["Menor al 3%", "Entre 3% y 20%", "Mayor al 20%", "Mayor al 50%"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [SAGES Duodenal Neoplasms], la clasificación de la WHO para tumores neuroendocrinos utiliza el índice Ki-67 para estratificar el riesgo; el grado 2 se define por un índice de entre 3% y 20% o una tasa mitótica de 2 a 20 por 10 campos de alto poder.<br><br>Perla ENARM: \"WHO classification of neuroendocrine tumor grades: G2, Intermediate; Ki-67 index 3–20%.\"<br><br>Análisis de Distractores: Menor al 3% es Grado 1 (bajo). Mayor al 20% es Grado 3 (alto). El valor de 50% no es un punto de corte en la clasificación estándar de grados NET.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Benign, Premalignant, and Malignant Duodenal Neoplasms, Página 186." 
+    },
+    {
+        id: 29, 
+        question: "Durante el primer paso de la duodenopancreatectomía de seis pasos (técnica MD Anderson), ¿cuál es el hito vascular para la identificación de la vena mesentérica superior?", 
+        options: ["Vena cólica media", "Vena gástrica derecha", "Arteria hepática común", "Vena renal izquierda"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento [SAGES Borderline], el primer paso de la técnica quirúrgica implica la entrada al saco menor y la movilización del colon derecho, siguiendo la vena cólica media hasta su confluencia con la vena mesentérica superior (VMS).<br><br>Perla ENARM: \"Step 1: Lesser sac entry and right colon mobilization. Key maneuver: Follow middle colic vein to SMV.\"<br><br>Análisis de Distractores: La vena gástrica derecha y la arteria hepática se identifican en pasos superiores (ligamento hepatoduodenal). La vena renal izquierda se visualiza tras la maniobra de Kocher (paso 2), no en el abordaje inicial del colon.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Borderline Resectable and Locally Advanced Pancreatic Cancer, Página 27." 
+    },
+    {
+        id: 30, 
+        question: "Dentro de los indicadores de calidad (benchmarks) internacionales para la duodenopancreatectomía, ¿cuál es la meta establecida para la estancia hospitalaria total en pacientes de bajo riesgo?", 
+        options: ["Menor a 7 días", "Menor o igual a 10 días", "Menor o igual a 15 días", "Menor a 21 días"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [SAGES Outcomes], se han establecido valores de referencia (benchmarks) tras el análisis de centros de alto volumen; para la estancia hospitalaria (Length of stay), el valor óptimo es menor o igual a 15 días.<br><br>Perla ENARM: \"Outcome Benchmark value: Length of stay ≤15 days.\"<br><br>Análisis de Distractores: 7 o 10 días son cifras ambiciosas pero no el estándar benchmark internacional. 21 días se considera una estancia prolongada fuera de los parámetros de excelencia quirúrgica.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, How to Measure Postoperative Outcomes, Página 648." 
+    },
+    {
+        id: 31, 
+        question: "En un paciente con adenocarcinoma de páncreas avanzado que presenta una mutación germinal confirmada en el gen BRCA1 o BRCA2, ¿qué terapia dirigida ha demostrado beneficio como mantenimiento tras la respuesta a platino?", 
+        options: ["Olaparib", "Pembrolizumab", "Larotrectinib", "Trastuzumab"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], el olaparib es un inhibidor de PARP que ha demostrado eficacia como terapia de mantenimiento en pacientes con cáncer de páncreas metastásico y mutación de BRCA1/2 que no han progresado tras quimioterapia de primera línea basada en platino.<br><br>Perla ENARM: \"BRCA genes encode for proteins involved in homologous recombination repair and cells with BRCA mutations are sensitive to PARP inhibitors; the efficacy of olaparib... was investigated.\"<br><br>Análisis de Distractores: Pembrolizumab se usa en tumores con inestabilidad de microsatélites (MSI-H). Larotrectinib es específico para fisiones de NTRK. Trastuzumab se usa en sobreexpresión de HER2, muy infrecuente en páncreas.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Maintenance Therapy in Advanced Disease, Página MS-34." 
+    },
+    {
+        id: 32, 
+        question: "En la fisiopatología de la enfermedad, ¿cuál es el intervalo de tiempo en el que un diagnóstico de diabetes de reciente inicio debe ser considerado un síntoma prodrómico del cáncer de páncreas (diabetes tipo 3c)?", 
+        options: ["Menor a 6 meses", "Menor o igual a 3 años", "Entre 5 y 10 años", "Mayor a 10 años"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [The Lancet 2026], la diabetes puede ser tanto un factor de riesgo como un síntoma temprano (prodrómico) del cáncer. La asociación es más fuerte cuando el diagnóstico de diabetes es reciente, definido como menor a 3 o 4 años previos al diagnóstico del tumor.<br><br>Perla ENARM: \"Possibly stronger association of new-onset diabetes (ie, ≤3–4 years) with pancreatic cancer compared with long-standing diabetes.\"<br><br>Análisis de Distractores: 6 meses es demasiado corto. La diabetes de 5 a 10 años se considera un factor de riesgo establecido (diabetes de larga data), no un síntoma de la enfermedad actual.", 
+        source: "Cancer de páncreas SEMINAR, The Lancet, 2026, Risk Factors, Página 2." 
+    },
+    {
+        id: 33, 
+        question: "Durante la realización de una pancreatoyeyunostomía tipo Blumgart, ¿a qué distancia aproximada de la superficie de corte pancreática deben colocarse los puntos transpancreáticos de colchonero horizontal?", 
+        options: ["1 mm", "5 mm", "1 cm", "2 cm"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento [SAGES Reconstruction], la técnica de Blumgart inicia con una capa de suturas transpancreáticas en colchonero horizontal colocadas aproximadamente a 2 cm de la superficie de corte del páncreas para asegurar el parénquima.<br><br>Perla ENARM: \"In the Blumgart technique, the first layer consists of transpancreatic horizontal mattress-style sutures approximately 2 cm from the cut surface of the pancreas.\"<br><br>Análisis de Distractores: Distancias de 1 o 5 mm son insuficientes y desgarrarían el parénquima al tensar. 1 cm es una distancia común para otras técnicas pero no la específica descrita para el Blumgart original.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Minimally Invasive Pancreatoduodenectomy, Página 362." 
+    },
+    {
+        id: 34, 
+        question: "Para pacientes con pancreatitis hereditaria por mutación en el gen PRSS1, ¿a qué edad recomiendan las guías internacionales iniciar el tamizaje anual para cáncer de páncreas?", 
+        options: ["25 años", "40 años", "50 años", "65 años"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [The Lancet 2026], en individuos con pancreatitis hereditaria (PRSS1), el tamizaje debe iniciarse a los 40 años de edad o 20 años después del inicio de los síntomas de pancreatitis, lo que ocurra primero.<br><br>Perla ENARM: \"PRSS1 (hereditary pancreatitis)... Initiate surveillance at the age of 40 years or 20 years after the onset of pancreatitis, whichever is earlier.\"<br><br>Análisis de Distractores: 25 años es la edad para el gen STK11 (Peutz-Jeghers). 50 años es el estándar para cáncer familiar sin mutaciones específicas. 65 años es tardío dada la historia natural de la pancreatitis hereditaria.", 
+        source: "Cancer de páncreas SEMINAR, The Lancet, 2026, Surveillance, Página 2." 
+    },
+    {
+        id: 35, 
+        question: "¿Qué hallazgo tomográfico en el eje venoso porta-mesentérico clasifica al adenocarcinoma de páncreas como enfermedad localmente avanzada (irresecable) de forma inicial?", 
+        options: ["Contacto tumoral de 90 grados", "Estrechamiento focal sin deformidad", "Oclusión completa sin vasos reconstruibles", "Trombosis de la vena esplénica aislada"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], la enfermedad localmente avanzada (irresecable) se define, en su componente venoso, por la oclusión completa de la vena mesentérica superior o la vena porta cuando no existen opciones técnicas para una reconstrucción segura.<br><br>Perla ENARM: \"Locally Advanced: Not currently amenable to resection and primary reconstruction due to complete occlusion of SMV/PV.\"<br><br>Análisis de Distractores: El contacto de 90 grados es enfermedad resecable. El estrechamiento focal es limítrofe (borderline). La trombosis de la esplénica aislada no determina irresecabilidad del tumor cefálico o de cuerpo.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Criteria Defining Resectability Status, Página PANC-C." 
+    },
+    {
+        id: 36, 
+        question: "¿Cuál fue el beneficio más significativo reportado por el estudio PRODIGE 24 al utilizar mFOLFIRINOX adyuvante en comparación con gemcitabina?", 
+        options: ["Menor tasa de toxicidad hematológica", "Mejora de la supervivencia global a 54 meses", "Reducción de la fístula pancreática", "Aumento de la tasa de resecciones R0"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], el régimen mFOLFIRINOX demostró ser superior a la gemcitabina en pacientes con buen estado funcional, logrando una supervivencia global media de 54.4 meses frente a 35 meses.<br><br>Perla ENARM: \"Adjuvant mFOLFIRINOX was associated with a superior median OS of 54.4 months versus 35.0 months with gemcitabine (HR 0.64; P < .001).\"<br><br>Análisis de Distractores: El mFOLFIRINOX es significativamente más tóxico que la gemcitabina. La fístula pancreática es una complicación quirúrgica, no dependiente de la quimioterapia adyuvante (posquirúrgica). La tasa R0 se define antes de la adyuvancia.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Postoperative Adjuvant Treatment, Página MS-27." 
+    },
+    {
+        id: 37, 
+        question: "En la técnica quirúrgica para prevenir la hemorragia pospancreatectomía, ¿qué estructura se utiliza frecuentemente para envolver (wrapping) el muñón de la arteria gastroduodenal?", 
+        options: ["Ligamento falciforme", "Peritoneo parietal posterior", "Parénquima esplénico", "Parche de Dacron sintético"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento [SAGES GDA Management], el uso de un colgajo de ligamento falciforme para envolver el muñón de la arteria gastroduodenal es una técnica efectiva para proteger el vaso de la corrosión por fugas pancreáticas y reducir pseudoaneurismas.<br><br>Perla ENARM: \"The development of the falciform wrap is one successful example of an operative technique that can help to decrease this risk [PPH].\"<br><br>Análisis de Distractores: El peritoneo posterior no tiene la movilidad o grosor del falciforme. El bazo no se usa para envolver arterias. El material sintético incrementa el riesgo de infección en presencia de fístula.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Intraoperative Management of the Gastroduodenal Artery, Página 79." 
+    },
+    {
+        id: 38, 
+        question: "¿Qué característica biológica del sistema de grupos sanguíneos se ha identificado como un factor de riesgo independiente para el desarrollo de adenocarcinoma de páncreas?", 
+        options: ["Grupo sanguíneo O positivo", "Grupo sanguíneo no-O (A, B, AB)", "Ausencia de factor Rh", "Presencia de antígeno Kell"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [Hepatobiliopancreatic Unit], el poseer un grupo sanguíneo diferente al O (grupos A, B o AB) se asocia con un mayor riesgo de desarrollar adenocarcinoma pancreático en comparación con los individuos del grupo O.<br><br>Perla ENARM: \"In addition, there are other related factors, such as... non-O blood group.\"<br><br>Análisis de Distractores: El grupo O es el que presenta el menor riesgo relativo (factor protector relativo). El factor Rh y el antígeno Kell no tienen una asociación epidemiológica demostrada con esta patología.", 
+        source: "Adenocarcinoma de páncreas, estado actual de los métodos de diagnóstico, técnicas quirúrgicas, 2023, Etiología, Página 56." 
+    },
+    {
+        id: 39, 
+        question: "De acuerdo con los estudios de Benchmarking, ¿cuánto aumenta el valor del Índice de Complicaciones Integrales (CCI) desde el alta hospitalaria hasta los 6 meses posoperatorios?", 
+        options: ["No aumenta significativamente", "Se duplica (de 5 a 10)", "Aumenta 2.4 veces (de 8.6 a 20.9)", "Disminuye por recuperación funcional"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [SAGES Benchmarks], la morbilidad acumulada del paciente, medida por el CCI, aumenta drásticamente tras el alta debido a complicaciones tardías y reingresos, estabilizándose a los 6 meses.<br><br>Perla ENARM: \"Overall median cumulative patient morbidity... is known to increase up to 2.4 times from the initial hospital discharge (20.9 vs. 8.6).\"<br><br>Análisis de Distractores: La morbilidad no se detiene al salir del hospital; los eventos como fístulas grado B y reingresos elevan el índice en el primer semestre. Una disminución es fisiológicamente imposible bajo la métrica de complicaciones acumuladas.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, How to Measure Postoperative Outcomes, Página 647." 
+    },
+    {
+        id: 40, 
+        question: "En el contexto de una estadificación quirúrgica, ¿cómo se clasifica sistemáticamente el hallazgo de una citología positiva en el líquido de lavado peritoneal?", 
+        options: ["Estadio IIB (N1)", "Estadio III (T4)", "Enfermedad metastásica (M1)", "Carcinoma in situ (Tis)"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], la presencia de células tumorales en el lavado peritoneal obtenida durante la laparoscopia o laparotomía se considera equivalente a metástasis a distancia, contraindicando la resección curativa.<br><br>Perla ENARM: \"Positive cytology from washings obtained at laparoscopy or laparotomy is equivalent to M1 disease.\"<br><br>Análisis de Distractores: Los estadios II y III se refieren a enfermedad local o regional con ganglios positivos, pero sin siembra peritoneal. Tis se limita al epitelio ductal sin invasión de la membrana basal.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Principles of Diagnosis, Imaging, and Staging, Página PANC-A 2 of 8." 
+    },
+    {
+        id: 41, 
+        question: "En la evaluación histopatológica de una pieza de duodenopancreatectomía, ¿cuál es el procesamiento estandarizado exigido para el margen del proceso uncinado (margen de la arteria mesentérica superior) a fin de documentar con precisión la invasión tumoral?", 
+        options: ["Corte tangencial en un solo bloque", "Sección perpendicular a la tinta", "Inclusión total sin tintar", "Raspado superficial exclusivo"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], el margen retroperitoneal o del proceso uncinado no debe ser analizado simplemente de frente (en face) mediante raspado, sino que requiere ser entintado, amputado y seccionado de forma perpendicular a la tinta para evaluar con exactitud milimétrica la distancia microscópica de las células tumorales hacia el margen de resección real.<br><br>Perla ENARM: \"The uncinate margin should be inked. Rather than being submitted en face, the uncinate margin tissue should be inked, shaved/amputated, then the portion of tissue sectioned perpendicular to the ink and submitted entirely for histologic examination.\"<br><br>Análisis de Distractores: El corte tangencial (en face) o raspado superficial infraestima la profundidad de la invasión y la distancia real del tumor al margen. La inclusión sin tintar impide al patólogo definir dónde se encontraba exactamente el límite quirúrgico.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Pathologic Analysis: Specimen Orientation, Página PANC-F 1 of 5." 
+    },
+    {
+        id: 42, 
+        question: "En un paciente con adenocarcinoma de páncreas irresecable y progresión metastásica que presenta un buen estado funcional (ECOG 1), el perfil molecular del tumor reporta fusión positiva del gen NTRK. ¿Cuál es el tratamiento sistémico dirigido de elección recomendado en las guías internacionales?", 
+        options: ["Olaparib de mantenimiento", "Erlotinib con gemcitabina", "Pembrolizumab intravenoso", "Larotrectinib como monoterapia"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], las terapias dirigidas contra el gen de fusión NTRK, como larotrectinib, entrectinib o repotrectinib, están formalmente indicadas como una opción de tratamiento de primera línea o líneas subsecuentes en pacientes con cáncer de páncreas localmente avanzado o metastásico que presenten dicha alteración genómica.<br><br>Perla ENARM: \"Targeted Therapy: Entrectinib or Larotrectinib or Repotrectinib (if NTRK gene fusion-positive).\"<br><br>Análisis de Distractores: Olaparib está reservado para pacientes con mutaciones germinales BRCA1/2. Erlotinib tiene un beneficio marginal (estudio PA.3) y no es terapia dirigida para NTRK. Pembrolizumab es la terapia de elección para tumores con inestabilidad de microsatélites (MSI-H) o deficiencia de reparación de errores de emparejamiento (dMMR).", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Principles of Systemic Therapy, Página PANC-G 1 of 13." 
+    },
+    {
+        id: 43, 
+        question: "En el cálculo transoperatorio de la Escala de Riesgo de Fístula (Fistula Risk Score - FRS) durante una pancreatoduodenectomía, ¿qué diámetro del conducto pancreático principal otorga la puntuación máxima (4 puntos) por conferir el mayor riesgo anastomótico?", 
+        options: ["Diámetro ≤ 1 mm", "Diámetro de 2 mm", "Diámetro de 3 mm", "Diámetro ≥ 5 mm"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento [SAGES POPF Mitigation], el FRS estratifica el riesgo sumando puntos de textura glandular, pérdida de sangre, patología y diámetro ductal de manera inversamente proporcional; un conducto pancreático diminuto de 1 mm o menos representa el escenario técnico más adverso y otorga la máxima puntuación (4 puntos).<br><br>Perla ENARM: \"Pancreatic duct diameter (mm): ≥5 (0 points), 4 (1 point), 3 (2 points), 2 (3 points), ≤1 (4 points).\"<br><br>Análisis de Distractores: Un diámetro de 2 mm confiere 3 puntos. Un conducto de 3 mm aporta 2 puntos. Un conducto dilatado ≥5 mm es el escenario de menor riesgo técnico y no suma puntos (0) a la escala predictiva.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Prevention, Prediction, and Mitigation of Pancreatic Fistula, Página 594." 
+    },
+    {
+        id: 44, 
+        question: "En un paciente programado para pancreatoduodenectomía por un adenocarcinoma de cabeza de páncreas resecable, que presenta ictericia asintomática con bilirrubina total de 10 mg/dl, ¿cuál es la recomendación del protocolo de recuperación acelerada (ERAS) respecto al drenaje biliar preoperatorio?", 
+        options: ["Drenaje biliar transhepático percutáneo", "Endoprótesis plástica por colangiopancreatografía", "Omisión del drenaje biliar preoperatorio", "Derivación biliodigestiva quirúrgica abierta"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [SAGES ERAS], el drenaje biliar sistemático antes de la resección en pacientes asintomáticos con bilirrubina menor a 250 μmol/L (~14.6 mg/dl) incrementa innecesariamente las complicaciones infecciosas posoperatorias y retrasa la cirugía, por lo que las guías ERAS recomiendan omitirlo si el paciente irá a cirugía directa (upfront) y no requiere neoadyuvancia.<br><br>Perla ENARM: \"Biliary drainage: Avoidance of preoperative drainage unless decompression is needed (bilirubin >250 μmol/L, preoperative cholangitis, neoadjuvant treatment).\"<br><br>Análisis de Distractores: Tanto el drenaje percutáneo como el endoscópico se asocian a un aumento de la morbilidad sin mejorar la mortalidad en pacientes asintomáticos con ictericia moderada. La derivación quirúrgica abierta como puente a resección está obsoleta debido a sus altas tasas de complicaciones e inducción de adherencias.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Enhanced Recovery Pathways: What’s the Evidence?, Página 525." 
+    },
+    {
+        id: 45, 
+        question: "Tras una pancreatectomía distal, un paciente desarrolla ascitis quilosa (fuga quilosa). Según las directrices del Grupo Internacional (ISGPS), ¿cuál es la intervención nutricional inicial obligatoria para clasificar y manejar esta entidad como Grado A?", 
+        options: ["Nutrición parenteral total exclusiva", "Dieta enteral con triglicéridos largos", "Restricción de triglicéridos de cadena larga", "Ayuno absoluto con octreotida subcutánea"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [SAGES Short-Term Morbidity], el manejo inicial y conservador (Step-up approach) para una fuga quilosa posoperatoria (Grado A) se basa en intervenciones dietéticas que eliminen los triglicéridos de cadena larga para frenar el flujo linfático mesentérico, empleando una dieta libre de grasas o suplementada exclusivamente con triglicéridos de cadena media (MCT).<br><br>Perla ENARM: \"Grade A: None or oral dietary restrictions (No-fat diet with/without medium-chain-triglyceride).\"<br><br>Análisis de Distractores: La nutrición parenteral total (TPN) y el uso de octreotida definen un fracaso al manejo dietético simple y categorizan la fuga como Grado B. Los triglicéridos de cadena larga son los responsables de estimular la producción de quilo a través de los conductos linfáticos, por lo que su administración agravaría severamente la ascitis.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Short-Term Morbidity After Pancreatectomy, Página 580 y 581." 
+    },
+    {
+        id: 46, 
+        question: "En la secuencia biológica progresiva desde una neoplasia intraepitelial pancreática (PanIN) hacia un adenocarcinoma invasivo, ¿cuál de las siguientes alteraciones somáticas se considera un evento genético tardío que confiere el potencial de invasividad?", 
+        options: ["Activación puntual del oncogén KRAS", "Acortamiento progresivo de los telómeros", "Inactivación homocigota de SMAD4", "Inactivación del gen supresor CDKN2A"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Pathobiology Precursors], las mutaciones en los genes TP53 y SMAD4 (DPC4) ocurren de forma tardía en el espectro de la progresión de la lesión precancerosa y son los eventos biológicos críticos que impulsan la transición desde PanIN de alto grado hacia el carcinoma francamente invasor.<br><br>Perla ENARM: \"Mutations in TP53 and SMAD4/DPC occur late and are considered to drive invasiveness.\"<br><br>Análisis de Distractores: La mutación de KRAS y el acortamiento telomérico son las anomalías más tempranas observadas desde las PanIN de bajo grado. La pérdida de p16/CDKN2A ocurre en etapas intermedias, antes de la pérdida de SMAD4.", 
+        source: "Textbook of Pancreatic Cancer, 2021, Pathobiology of Precursors to Pancreatic Cancer, Página 207." 
+    },
+    {
+        id: 47, 
+        question: "Para mitigar el desarrollo del vaciamiento gástrico retrasado (DGE) tras una duodenopancreatectomía con preservación pilórica, ¿qué modificación técnica en la reconstrucción del tracto digestivo ha demostrado disminuir significativamente su incidencia y severidad?", 
+        options: ["Entero-enterostomía de Braun", "Reconstrucción tipo Billroth I", "Anastomosis gastroyeyunal retrocólica", "Pancreatogastrostomía primaria anatómica"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento [SAGES Delayed Gastric Emptying], la adición de una anastomosis de Braun (entero-enterostomía entre las asas aferente y eferente) ha demostrado, en metaanálisis con más de 1600 pacientes, desviar la bilis y estabilizar el asa yeyunal, reduciendo efectivamente la torsión y la incidencia de DGE (OR 0.32).<br><br>Perla ENARM: \"Braun entero-enterostomy decreases the incidence (OR 0.32, 95% CI 0.24–0.43) and severity (OR 0.27, 95% CI 0.15–0.51) of DGE following PD.\"<br><br>Análisis de Distractores: La reconstrucción tipo Billroth I presenta tasas más altas de DGE que Billroth II o Roux-en-Y. La reconstrucción retrocólica se asocia clásicamente a mayor congestión venosa y DGE en comparación con la vía antecólica. La pancreatogastrostomía altera la distensibilidad gástrica y se asocia a tasas más altas de DGE y hemorragia respecto a la pancreatoyeyunostomía.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Delayed Gastric Emptying, Página 626." 
+    },
+    {
+        id: 48, 
+        question: "En el planeamiento de la radioterapia neoadyuvante o adyuvante para cáncer de páncreas, los consensos recientes recomiendan extender el volumen de irradiación electiva para abarcar vías neurales extrapancreáticas en riesgo. ¿Con qué término anatómico-radiológico se conoce este territorio?", 
+        options: ["Volumen del tronco celíaco", "Volumen del mesopáncreas", "Volumen del triángulo", "Volumen retropancreático posterior"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], los datos emergentes apoyan de forma creciente el beneficio de dirigir la irradiación electiva a sitios anatómicos de alto riesgo definidos por la anatomía del tracto neural extrapancreático, descritos formalmente en oncología radioterápica como el \"Volumen del Triángulo\" (Triangle Volume).<br><br>Perla ENARM: \"Emerging data has increasingly suggested value to elective targeting of at-risk anatomic sites defined by extra-pancreatic neural tract anatomy (ie, the 'Triangle Volume') and/or regional nodal basins.\"<br><br>Análisis de Distractores: El mesopáncreas es el tejido retropancreático disecado en cirugía (sitio primario de márgenes R1), no el término radioterápico estandarizado para la infiltración neural perineural vascular. Tronco celíaco y retroperitoneo posterior son puntos focales, pero \"Triangle Volume\" es el concepto integrador dosimétrico.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Principles of Radiation Therapy, Página PANC-H 2 of 7." 
+    },
+    {
+        id: 49, 
+        question: "En un paciente con diagnóstico de adenocarcinoma de páncreas localmente avanzado irresecable que experimenta dolor abdominal severo incapacitante y refractario al manejo con altas dosis de opioides, ¿cuál es la intervención paliativa recomendada para controlar los síntomas?", 
+        options: ["Esfinterotomía endoscópica biliar", "Neurólisis del plexo celíaco", "Derivación gastroyeyunal laparoscópica", "Ablación por radiofrecuencia hepática"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], la neurólisis del plexo celíaco (típicamente guiada por ultrasonido endoscópico o realizada quirúrgicamente) es la técnica de elección en los algoritmos de cuidados de soporte para la paliación del dolor severo relacionado con la infiltración neural en cáncer de páncreas, reduciendo la dependencia a narcóticos.<br><br>Perla ENARM: \"Celiac plexus neurolysis can also be performed, especially when indicated by pain in a patient with jaundice (category 2B if no pain).\"<br><br>Análisis de Distractores: La esfinterotomía biliar palia la ictericia obstructiva, no el dolor somático/visceral neural. La derivación gastroyeyunal palia la obstrucción del tracto de salida gástrico. La ablación hepática se reserva para focos metastásicos muy seleccionados, no para el dolor primario pancreático retroperitoneal.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Principles of Palliation and Supportive Care, Página MS-57 (Discussion)." 
+    },
+    {
+        id: 50, 
+        question: "Según el Grupo Internacional de Cirugía Pancreática (ISGPS), ¿qué parámetro clínico define obligatoriamente a un vaciamiento gástrico retrasado (DGE) como severidad Grado C después de una duodenopancreatectomía?", 
+        options: ["Intolerancia a dieta sólida al día 7", "Requerimiento de procinéticos en el día 5", "Incapacidad para tolerar dieta oral al día 21", "Necesidad de sonda nasogástrica al día 10"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [SAGES Delayed Gastric Emptying], la clasificación ISGPS gradúa la gravedad del DGE basándose en la necesidad de la sonda nasogástrica y la tolerancia a la dieta. El Grado C se caracteriza por requerir intubación nasogástrica más de 14 días o la incapacidad absoluta de tolerar una dieta sólida más allá del día 21 posoperatorio.<br><br>Perla ENARM: \"Grade C DGE is present if the NGT cannot be removed after POD 14, if the NGT has been replaced after POD 14, or if the patient is unable to tolerate a regular diet by POD 21.\"<br><br>Análisis de Distractores: Intolerancia en el día 7 corresponde a DGE Grado A. Sonda nasogástrica hasta el día 10 corresponde a DGE Grado B. El uso de procinéticos puede iniciar en cualquier momento y se ve en grados A, B y C.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Delayed Gastric Emptying, Página 620 y Tabla 36.1." 
+    },
+    {
+        id: 51, 
+        question: "En un paciente con adenocarcinoma invasor del cuerpo pancreático, se considera realizar una pancreatectomía distal con resección del tronco celíaco (Procedimiento de Appleby). Para garantizar la viabilidad arterial hepática por flujo retrógrado, ¿qué condición tumoral es una contraindicación absoluta para esta cirugía?", 
+        options: ["Invasión de la arteria esplénica proximal", "Involucro directo del tronco celíaco", "Invasión de la arteria gastroduodenal", "Trombosis de la vena esplénica secundaria"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [Complex Surgical Oncology], el procedimiento de Appleby modificado asume la resección del tronco celíaco, pero depende crucialmente del flujo retrógrado desde la arteria mesentérica superior, pasando por la arteria gastroduodenal hacia la arteria hepática propia. Si el tumor infiltra la arteria gastroduodenal o la base del celíaco en la aorta, se pierde esta vía colateral obligatoria, contraindicando la operación.<br><br>Perla ENARM: \"Contraindications include tumor involvement of GDA or base of celiac at aorta.\"<br><br>Análisis de Distractores: La invasión de la arteria esplénica proximal y el involucro del tronco celíaco son, por definición, las indicaciones clásicas para plantear este procedimiento, ya que se extirpan en bloque. La trombosis de la vena esplénica es común por contigüidad y no prohíbe la reconstrucción arterial.", 
+        source: "Complex General Surgical Oncology, 2025, Pancreatic Cancer, Página 233." 
+    },
+    {
+        id: 52, 
+        question: "Durante el manejo posoperatorio de una duodenopancreatectomía, se evidencia salida de líquido biliar por los drenajes. Según la clasificación del Grupo Internacional de Cirugía de Hígado (ISGLS), ¿qué escenario clínico define formalmente a una fístula biliar como severidad Grado C?", 
+        options: ["Mantenimiento prolongado de los drenajes quirúrgicos", "Requerimiento de drenaje transhepático percutáneo", "Relaparotomía necesaria para controlar la fuga", "Administración de nutrición parenteral total"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [SAGES Short-Term Morbidity], la clasificación de fístulas biliares posoperatorias (ISGLS) evalúa el impacto clínico de la fuga. El Grado C representa el escenario de mayor gravedad, asociado a sepsis o peritonitis, y está definido operativamente por la necesidad estricta de una reintervención quirúrgica (relaparotomía) para el control del defecto.<br><br>Perla ENARM: \"Grade C bile leaks are the most severe and require re-laparotomy to control the leak. Patients often have signs of sepsis, severe abdominal pain, or biliary peritonitis.\"<br><br>Análisis de Distractores: El mantenimiento de los drenajes perfila a una fuga Grado A. El requerimiento de procedimientos diagnósticos/intervencionistas sin laparotomía (como drenaje percutáneo o antibióticos escalados) define al Grado B.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Short-Term Morbidity After Pancreatectomy, Página 576 y Tabla 33.3." 
+    },
+    {
+        id: 53, 
+        question: "Durante la disección del ligamento hepatoduodenal en una pancreatoduodenectomía cefálica, ¿qué relevo linfático específico debe ser resecado rutinariamente para permitir la exposición adecuada de la adventicia de la arteria hepática común?", 
+        options: ["Estación 8a", "Estación 12p", "Estación 16b1", "Estación 14v"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento [SAGES Borderline], en el paso crítico de la disección portal y del hilio biliar, la extirpación del ganglio linfático de la arteria hepática común (estación 8a, también conocido como \"el ganglio de importancia\") es necesaria para exponer de manera segura la adventicia de esta arteria, localizar la hepática propia y el origen de la arteria gastroduodenal.<br><br>Perla ENARM: \"Removing the station 8a lymph node, known as the common hepatic artery (CHA) node, exposes the CHA adventitia to then find the proper hepatic artery (PHA).\"<br><br>Análisis de Distractores: La estación 12p son los ganglios portocavos en la parte derecha del ligamento. La 16b1 pertenece a los ganglios paraaórticos fuera del lecho estándar (su positividad indica enfermedad M1). La 14v acompaña a la vena mesentérica superior, no a la arteria hepática común en el pedículo superior.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Borderline Resectable and Locally Advanced Pancreatic Cancer, Página 24." 
+    },
+    {
+        id: 54, 
+        question: "En el algoritmo terapéutico de un adenocarcinoma de páncreas irresecable o metastásico con buena clase funcional, la inmunoterapia puede considerarse excepcionalmente. ¿Cuál es el punto de corte genómico para la carga mutacional tumoral alta (TMB-H) que justifica el uso de Pembrolizumab?", 
+        options: ["≥ 5 mutaciones por megabase", "≥ 10 mutaciones por megabase", "≥ 20 mutaciones por megabase", "≥ 50 mutaciones por megabase"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], el anticuerpo anti-PD-1 Pembrolizumab está aprobado e indicado como terapia en cáncer de páncreas avanzado únicamente si el tumor demuestra inestabilidad de microsatélites alta (MSI-H), deficiencia en proteínas de reparación (dMMR), o una carga mutacional tumoral alta (TMB-H), la cual se define universalmente como mayor o igual a 10 mutaciones por megabase (mut/Mb).<br><br>Perla ENARM: \"Pembrolizumab (if MSI-H, dMMR, or TMB-H [≥10 mut/Mb]).\"<br><br>Análisis de Distractores: Cifras de 5, 20 o 50 mut/Mb no representan el punto de corte clínico aprobado por agencias regulatorias para prescribir bloqueo de puntos de control inmunitario (checkpoint inhibitors) independientes del tipo histológico del tumor sólido.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Principles of Systemic Therapy, Página PANC-G 1 of 13." 
+    },
+    {
+        id: 55, 
+        question: "En el contexto del tamizaje y vigilancia de neoplasias quísticas del páncreas, ¿cuál de las siguientes características radiológicas en una neoplasia mucinosa papilar intraductal (IPMN) representa una indicación absoluta para resección quirúrgica por alto riesgo de transformación maligna?", 
+        options: ["Localización aislada en el proceso uncinado", "Tamaño estático del quiste de 2.5 cm", "Ausencia de nódulos murales captantes", "Dilatación del conducto principal mayor a 10 mm"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento [Adenocarcinoma de páncreas 2023], el riesgo de que una IPMN albergue o desarrolle un carcinoma invasor se correlaciona con la presencia de \"características de alto riesgo\" (high-risk stigmata), siendo las más determinantes la dilatación del conducto pancreático principal por encima de los 10 mm, la presencia de nódulos murales captantes y el engrosamiento de la pared superior a 5 mm.<br><br>Perla ENARM: \"The risk of PIMN developing a carcinoma depends on the presence or risk characteristics such as dilation of the main duct greater than 10 mm, wall thickening of more than 5 mm...\"<br><br>Análisis de Distractores: Los quistes de rama lateral menores de 3 cm sin características sospechosas se vigilan (worrisome features inician >3 cm). Los nódulos murales elevan el riesgo solo si captan contraste (vascularización sólida). La localización en cabeza confiere riesgo si causa ictericia, no la ubicación aislada en cuerpo o proceso uncinado per se.", 
+        source: "Adenocarcinoma de páncreas, estado actual de los métodos de diagnóstico, técnicas quirúrgicas, 2023, Early Diagnosis, Página 58." 
+    },
+    {
+        id: 56, 
+        question: "Dentro del marco de un protocolo de recuperación acelerada (ERAS) para cirugía de páncreas, ¿cuál es la recomendación sustentada por la evidencia respecto a la administración profiláctica de análogos de somatostatina (como octreotida) para prevenir la fístula pancreática?", 
+        options: ["Recomendado rutinariamente en todos los casos", "No está recomendado su uso sistemático", "Obligatorio si el conducto mide más de 5 mm", "Indicado exclusivamente en pancreatogastrostomía"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [SAGES ERAS], las guías ERAS no recomiendan el uso sistemático de análogos de la somatostatina, basándose en múltiples metaanálisis y estudios aleatorizados doble ciego que han demostrado repetidamente que estos fármacos no reducen la mortalidad ni la incidencia general de fístulas pancreáticas posoperatorias clínicamente relevantes tras resecciones pancreáticas estándar.<br><br>Perla ENARM: \"Somatostatin analogs: Systematic use not recommended.\"<br><br>Análisis de Distractores: La administración rutinaria fue una práctica común en el pasado pero está proscrita por falta de evidencia de beneficio clínico neto. Conductos dilatados (>5 mm) representan glándulas firmes con muy bajo riesgo de fuga, escenario donde el uso profiláctico tiene aún menor utilidad.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Enhanced Recovery Pathways: What’s the Evidence?, Página 527." 
+    },
+    {
+        id: 57, 
+        question: "Ante el desarrollo de una fístula pancreática posoperatoria clínicamente relevante (CR-POPF) Grado B, caracterizada por una colección infectada peripancreática e incremento de reactantes de fase aguda, ¿cuál es la intervención de rescate inicial preferida siguiendo la doctrina escalonada (step-up approach)?", 
+        options: ["Pancreatectomía total de emergencia", "Drenaje percutáneo guiado por imagen", "Revisión abierta de la pancreatoyeyunostomía", "Embolización esplácnica arterial profiláctica"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento [SAGES POPF Management], el abordaje estandarizado para la fístula pancreática es el manejo escalonado (step-up approach). La intervención inicial de elección en presencia de colecciones intraabdominales o sospecha de infección, logrando altas tasas de éxito y evitando la elevada mortalidad de una laparotomía temprana, es el drenaje con catéter percutáneo guiado radiológicamente o el drenaje guiado por ultrasonido endoscópico.<br><br>Perla ENARM: \"Requisites for optimal treatment are... when necessary, percutaneous catheter placement to externally drain purulent fluid, therefore obtaining source control.\"<br><br>Análisis de Distractores: La reoperación primaria o pancreatectomía total se asocia a tasas de mortalidad inaceptablemente altas (hasta 60%) y queda estrictamente reservada para el fallo al manejo intervencionista o pacientes con choque refractario/hemorragia masiva incontrolable. La revisión de la anastomosis es fútil por la inflamación aguda de los tejidos.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Management of Clinically Relevant Pancreatic Fistula, Página 603 y 604." 
+    },
+    {
+        id: 58, 
+        question: "Tras completar terapia neoadyuvante en un paciente con adenocarcinoma limítrofe (borderline resectable), el re-estadiaje tomográfico demuestra una \"respuesta radiológica mínima\" (enfermedad estable según RECIST). Para proceder a la resección quirúrgica en este escenario, ¿qué condición clínica avala continuar con la cirugía?", 
+        options: ["Ausencia de mutaciones hereditarias germinales", "Disminución del tamaño tumoral en más del 50%", "Factibilidad técnica de una resección oncológica R0", "Evidencia de necrosis vascular completa en el PET"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [NCCN 2026], el objetivo fundamental de la terapia neoadyuvante es maximizar la probabilidad de bordes negativos. Aunque la respuesta radiológica sea mínima (estabilización de la enfermedad), si no existe progresión metastásica y la resección R0 es anatómicamente viable sin incrementar desproporcionadamente el riesgo quirúrgico, la recomendación es proceder con la exploración y resección curativa.<br><br>Perla ENARM: \"Minimal: Stable or minimal reduction (RECIST)... Surgical resection considered in select cases in tumors without or with limited vascular involvement... if R0 resection is technically feasible.\"<br><br>Análisis de Distractores: La tomografía infraestima severamente la respuesta patológica (es común ver engrosamiento fibrótico indistinguible del tumor) por lo que no se exige una reducción del 50%. La ausencia de mutaciones genéticas no rige la factibilidad mecánica. La evaluación de necrosis en PET complementa pero no define la conducta quirúrgica anatómica.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Criteria for Resection Following Neoadjuvant Therapy, Página PANC-D 2 of 4." 
+    },
+    {
+        id: 59, 
+        question: "En el curso clínico de un paciente posoperado de resección pancreática con exteriorización de líquido rico en amilasa por los drenajes, ¿qué parámetro transforma automáticamente una fístula pancreática de Grado B a la categoría de máxima gravedad Grado C, según la actualización 2016 del ISGPS?", 
+        options: ["Mantenimiento de catéteres percutáneos por 4 semanas", "Necesidad de reposicionamiento endoscópico", "Desarrollo de fallo orgánico atribuible a la fístula", "Persistencia de signos de infección local localizada"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [SAGES POPF Definition], la clasificación del 2016 redefinió severamente los grados de la fístula pancreática. Una CR-POPF escala a Grado C únicamente cuando el impacto fisiológico de la fuga exige una reoperación de urgencia, resulta en una admisión prolongada a cuidados intensivos debido a fallo orgánico (multiorgánico), o desencadena la muerte del paciente.<br><br>Perla ENARM: \"Grade C events include reoperation, intensive care transfer for multiorgan failure or death directly attributable to the fistula.\"<br><br>Análisis de Distractores: El drenaje persistente prolongado (>3 semanas), el soporte nutricional total, los signos de infección aislados o los procedimientos mínimamente invasivos (percutáneos o endoscópicos) representan intervenciones que catalogan a la fístula como un manejo intervencionista Grado B.", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Prevention, Prediction, and Mitigation of Pancreatic Fistula, Página 592 y Figura 34.1." 
+    },
+    {
+        id: 60, 
+        question: "Durante una pancreatoduodenectomía en un paciente con textura glandular blanda y un conducto principal de 1 mm (Escala FRS alta 7-10), ¿qué estrategia de mitigación forma parte del protocolo intraoperatorio óptimo comprobado para atenuar la severidad de la fístula?", 
+        options: ["Sustitución del drenaje abdominal por terapia de vacío", "Reconstrucción mediante pancreatogastrostomía aislada", "Empleo de un stent transanastomótico exteriorizado", "Administración intravenosa rutinaria de somatostatina"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento [SAGES POPF Mitigation], en los escenarios quirúrgicos de mayor riesgo (Escala FRS 7-10) el \"bundle\" (paquete) óptimo de estrategias de mitigación incluye el abordaje con pancreatoyeyunostomía, la omisión de octreotida profiláctica, la colocación rutinaria de drenajes abdominales, y específicamente el uso de un stent o tutor transanastomótico externalizado para desviar la secreción y salvaguardar la anastomosis.<br><br>Perla ENARM: \"...for those residing in the high-risk zone (FRS 7–10... a mitigation strategy bundle including pancreatico-jejunostomy reconstruction with an externalized stent, intra-abdominal drain placement and octreotide omission represents the most effective approach...\"<br><br>Análisis de Distractores: La pancreatogastrostomía presenta mayores tasas de complicaciones graves comparada con la yeyunostomía en ensayos aleatorizados recientes. La octreotida (somatostatina) debe omitirse pues no aporta beneficios y puede alterar la cicatrización. La omisión de drenajes es peligrosa y solo se reserva para riesgo nulo (FRS 0).", 
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Prevention, Prediction, and Mitigation of Pancreatic Fistula, Página 597 y 600." 
+    }
+
+
+
+        ];
+
+        // ==========================================
+        // ==========================================
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('CAPANCREASLastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('CAPANCREASProgress');
+                localStorage.removeItem('CAPANCREASLastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-pink-500 shadow-md z-10 border-pink-500 dark:border-pink-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-pink-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-rose-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! UMAE 25 - 2026" : "R4 - UMAE 25 - 2026";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "UMAE 25 - R4";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus las respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="BS06308GYOE.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-pink-100 dark:border-pink-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-pink-50 has-[:checked]:border-pink-400 dark:has-[:checked]:bg-pink-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-pink-600 focus:ring-pink-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-600 dark:hover:bg-pink-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('CAPANCREASProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('CAPANCREASLastQId', currentQuestionId);
+                else localStorage.removeItem('CAPANCREASLastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('CAPANCREASProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB26PT8kuB-0fxyUYgGk51yC1rAsW0dYj0",
+        authDomain: "enarm-lite.firebaseapp.com",
+        projectId: "enarm-lite",
+        storageBucket: "enarm-lite.firebasestorage.app",
+        messagingSenderId: "767032952477",
+        appId: "1:767032952477:web:84347320ed3d376f7e7674",
+        measurementId: "G-PVR3RBVNSV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    //document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "usuarios_autorizados", user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            
+            if(userDocSnap.exists()) {
+                document.body.style.opacity = '1';
+            } else {
+                //window.location.href = "index.html"; 
+            }
+        } else {
+            //window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>
