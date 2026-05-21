@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen</title>
+    
+    <!-- Tailwind CSS (Framework de diseño) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Tipografía limpia y amigable) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- KaTeX (Para renderizar las fórmulas matemáticas de LaTeX) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Configuración personalizada de Tailwind y CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            blue: '#e0f2fe',    // light blue 100
+                            green: '#dcfce7',   // green 100
+                            yellow: '#fef08a',  // yellow 200
+                            red: '#ffe4e6',     // rose 100
+                            purple: '#f3e8ff',  // purple 100
+                            orange: '#ffedd5',  // orange 100
+                            teal: '#ccfbf1',    // teal 100
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc; /* Fondo gris muy suave */
+            color: #334155;
+        }
+
+        /* Estilos base para listas */
+        ul { list-style-type: none; padding-left: 0; }
+        ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; line-height: 1.6; }
+        ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            line-height: 1;
+            top: -2px;
+        }
+
+        /* ----- CLASES DINÁMICAS PARA SUBRAYADOS (HIGHLIGHTS) ----- */
+        /* Úsalas en cualquier parte del texto envolviéndolo en <mark class="hl-color">Texto</mark> */
+        mark {
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-weight: 700;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .hl-yellow { background-color: #fef08a; color: #854d0e; } /* Advertencias, conceptos */
+        .hl-red    { background-color: #fecdd3; color: #9f1239; } /* Peligro, Contraindicaciones, Severidad */
+        .hl-green  { background-color: #bbf7d0; color: #166534; } /* Tratamientos, Metas */
+        .hl-blue   { background-color: #bae6fd; color: #075985; } /* Tiempos, Definiciones clave */
+        .hl-purple { background-color: #e9d5ff; color: #581c87; } /* Epidemiología, Estadísticas */
+
+        /* ----- EFECTOS DE TARJETAS ----- */
+        .medical-card {
+            transition: all 0.3s ease;
+            border-top-width: 5px;
+            height: 100%;
+        }
+        .medical-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Estilo para las Perlas GPC */
+        .gpc-pearl {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 4px solid #f59e0b;
+            position: relative;
+        }
+        .gpc-pearl::before {
+            content: '\f0eb'; /* Lightbulb icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #f59e0b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-12">
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            
+            <!-- Izquierda: Botón Home y Título App -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <a href="index.html" class="text-slate-400 hover:text-indigo-600 transition-colors flex-shrink-0 bg-slate-50 hover:bg-indigo-50 p-2 sm:p-2.5 rounded-full" title="Ir al inicio">
+                    <i class="fa-solid fa-house text-lg sm:text-xl"></i>
+                </a>
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-100 text-indigo-600 p-2 sm:p-3 rounded-lg hidden sm:flex items-center justify-center">
+                        <i class="fa-solid fa-stethoscope text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-heading font-bold text-lg sm:text-2xl text-slate-800 leading-tight line-clamp-1">Resumen</h1>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Derecha: Tag y Logo ENARM Lite (Recreado con CSS para máxima velocidad/calidad) -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <span class="hidden md:inline-block bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">CDYE</span>
+                
+                <!-- Logo ENARM Lite® -->
+                <div class="border-2 border-slate-200/80 bg-slate-50/50 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 flex items-baseline gap-1 shadow-sm select-none">
+                    <span class="font-sans font-extrabold text-[#004f8f] text-sm sm:text-lg tracking-tight">Surgy</span>
+                    <span class="font-sans font-semibold text-[#64b036] text-sm sm:text-lg">Lite<sup class="text-[9px] sm:text-[11px] font-bold">®</sup></span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+     <!-- aqui -->
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="text-center mb-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-gradient-to-br from-indigo-100 to-emerald-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -mb-8 -ml-8 w-32 h-32 bg-gradient-to-tr from-cyan-100 to-teal-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        
+        <h2 class="relative font-heading font-extrabold text-3xl sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-teal-800 via-emerald-600 to-cyan-600 mb-3 tracking-tight leading-tight py-1">
+            Abordaje Quirúrgico Pancreático
+        </h2>
+        <p class="relative text-base text-slate-600 font-medium mb-3 max-w-3xl mx-auto">
+            Técnicas, Indicaciones y Mitigación de Complicaciones en Adenocarcinoma.
+        </p>
+        <div class="inline-block bg-teal-50 border border-teal-200 text-teal-800 px-4 py-1.5 rounded-full text-sm font-bold mt-1 shadow-sm">
+            <i class="fa-solid fa-scalpel mr-1"></i> Consenso SAGES 2025, NCCN 2.2026 y Complejo Quirúrgico Oncológico
+        </div>
+        <div class="w-24 h-1.5 bg-gradient-to-r from-emerald-500 to-cyan-400 mx-auto rounded-full mt-5"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Criterio de Resecabilidad</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-emerald-500 leading-relaxed">
+                    <strong class="text-slate-900 block mb-1">Cirugía Primaria (Upfront):</strong>
+                    Indicada <u class="decoration-emerald-400 decoration-2 underline-offset-2">exclusivamente</u> en enfermedad resecable (sin contacto arterial y contacto venoso &le; 180&deg; sin irregularidad).
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-200 leading-relaxed text-indigo-950">
+                    <strong class="block mb-1">Enfermedad Limítrofe o Avanzada:</strong>
+                    Terapia neoadyuvante <mark class="bg-indigo-200 px-1 rounded font-bold">obligatoria</mark> para maximizar la probabilidad de R0.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Estadificación Previa</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <p class="text-slate-600 leading-relaxed">Laparoscopia recomendada antes de la laparotomía en:</p>
+                <div class="space-y-2">
+                    <div class="flex items-start bg-white p-2.5 rounded border"><i class="fa-solid fa-check text-indigo-500 mt-1 mr-2"></i><span>Tumores localizados en <strong class="text-slate-900">cuerpo/cola</strong>.</span></div>
+                    <div class="flex items-start bg-white p-2.5 rounded border"><i class="fa-solid fa-check text-indigo-500 mt-1 mr-2"></i><span>Pacientes con características de alto riesgo clínico.</span></div>
+                    <div class="bg-red-50 p-2.5 rounded border border-red-200 text-red-900 font-bold text-center mt-2">
+                        Objetivo: Descartar metástasis peritoneales o hepáticas milimétricas no vistas en imagen.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-bullseye"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Objetivo Quirúrgico R0</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-4 rounded-xl border shadow-sm flex-1 flex flex-col justify-center">
+                    <strong class="text-slate-900 block mb-2 text-base text-center">Factor Pronóstico Fundamental:</strong>
+                    <p class="leading-relaxed text-center">La obtención de una resección quirúrgica <mark class="bg-emerald-100 px-2 py-1 rounded text-emerald-900 font-bold">R0</mark> es el elemento técnico más importante.</p>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border text-center font-bold text-slate-800">
+                    Distancia microscópica &gt; 1 mm entre el tumor celular y el margen entintado patológico.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-scissors"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Procedimiento Whipple</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-purple-50 p-3 rounded-lg border border-purple-200">
+                    <strong class="text-purple-900 block mb-1">Indicación Anatómica:</strong>
+                    <p class="leading-relaxed">Tumores localizados en la <strong class="text-slate-900">cabeza y el proceso uncinado</strong> de la glándula.</p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong>PPPD vs Clásica:</strong> La preservación pilórica se diseñó para mejorar estado nutricional y reducir "dumping". Tienen <u class="decoration-slate-400 decoration-2 underline-offset-2">resultados oncológicos idénticos</u>. PPPD asocia mayor riesgo de retraso gástrico (DGE).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-list-ol"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Extirpación: Pasos 1 a 4</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-2 text-sm text-slate-700 font-medium">
+                <div class="flex items-start bg-slate-50 p-2.5 rounded border"><span class="text-purple-600 font-bold mr-2 text-base">1.</span><span>Entrada transcavidad y exposición de VMS infrapancreática.</span></div>
+                <div class="flex items-start bg-slate-50 p-2.5 rounded border"><span class="text-purple-600 font-bold mr-2 text-base">2.</span><span>Maniobra de Kocher extendida.</span></div>
+                <div class="flex items-start bg-slate-50 p-2.5 rounded border"><span class="text-purple-600 font-bold mr-2 text-base">3.</span><span>Transección de estómago/duodeno e hilio hepático (Ligar arteria gastroduodenal).</span></div>
+                <div class="flex items-start bg-slate-50 p-2.5 rounded border"><span class="text-purple-600 font-bold mr-2 text-base">4.</span><span>Transección del cuello creando un túnel sobre confluencia VMS/VP.</span></div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Margen AMS (Pasos 5-6)</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="flex items-start bg-slate-50 p-2.5 rounded border"><span class="text-purple-600 font-bold mr-2 text-base">5.</span><span>División del yeyuno en el ligamento de Treitz.</span></div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200">
+                    <div class="flex items-start"><span class="text-red-600 font-bold mr-2 text-base">6.</span><strong class="text-red-900 block mb-1">Disección del Margen Crítico:</strong></div>
+                    <p class="leading-relaxed">Lámina de tejido entre proceso uncinado y arteria mesentérica superior (AMS).</p>
+                    <p class="text-center font-bold text-red-800 border-t border-red-200 pt-2 mt-2">Margen de la AMS es el sitio más frecuente de resección microscópica R1.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-diamond"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Resección Distal (RAMPS)</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong>Indicación:</strong> Tumores de cuerpo/cola. <mark class="bg-amber-100 px-1 rounded font-bold">Siempre con esplenectomía</mark> (preservación esplénica contraindicada en adenocarcinoma).
+                </div>
+                <div class="bg-cyan-50 p-3 rounded-lg border border-cyan-200 leading-relaxed text-cyan-950">
+                    <strong class="block mb-1">Técnica RAMPS (Elección):</strong> Transección del cuello y abordaje anterógrado de vasos. Diseca plano posterior hasta fascia de Gerota o suprarrenal, <u class="decoration-cyan-400 decoration-2">incrementando significativamente</u> márgenes R0 y ganglios.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-code-branch"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Appleby Modificada</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong class="text-slate-900 block mb-1">DP-CAR:</strong> Pancreatectomía distal con resección del tronco celíaco en bloque. Para tumores corporocaudales que infiltran eje celíaco.
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-900 leading-relaxed">
+                    <strong>Requisito Fisiológico Estricto:</strong> Exige obligatoriamente <mark class="bg-red-200 px-1 rounded font-bold">flujo retrógrado desde la AMS</mark> vía arteria gastroduodenal (GDA) intacta para perfundir el hígado. <u>Contraindicado si el tumor infiltra GDA</u>.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-battery-empty"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Pancreatectomía Total</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-2">
+                <p class="text-slate-500 font-bold border-b pb-1">Indicaciones muy precisas por alta morbilidad (Diabetes frágil e Insuficiencia exocrina):</p>
+                <div class="space-y-2">
+                    <div class="flex items-start bg-slate-50 p-2 rounded border"><i class="fa-solid fa-check text-cyan-500 mt-1 mr-2"></i><span>Enfermedad tumoral multifocal.</span></div>
+                    <div class="flex items-start bg-slate-50 p-2 rounded border"><i class="fa-solid fa-check text-cyan-500 mt-1 mr-2"></i><span>Imposibilidad de margen de sección del cuello negativo tras ampliaciones.</span></div>
+                    <div class="flex items-start bg-slate-50 p-2 rounded border"><i class="fa-solid fa-check text-cyan-500 mt-1 mr-2"></i><span>Riesgo de fístula (FRS) 7 a 10 (Glándula blanda/conducto &le; 1 mm).</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Abordaje MIS y Robótico</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong>Consensos (Miami / Brescia):</strong> Avalan laparoscopia y robótica en centros de alto volumen. Reducen pérdida sanguínea y estancia hospitalaria (&le; 15 días).
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-200 text-emerald-950 font-bold text-center">
+                    Las tasas oncológicas de resección R0, recolección de ganglios linfáticos y morbilidad global son totalmente comparables al abordaje abierto tradicional.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-droplet"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Resección Venosa (VMS)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong>Rutinaria Oncológica:</strong> Indicada siempre que permita alcanzar margen R0. <mark class="bg-emerald-100 px-1 rounded font-bold">Supervivencia equivalente</mark> a pacientes sin infiltración y sin incremento en morbilidad.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border text-slate-800">
+                    <strong class="block mb-1">Reconstrucción:</strong> Parche lateral o término-terminal (Elección para flujo laminar). <u>Si defecto &gt; 5 cm, exige injerto de interposición</u> (ej. yugular interna).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-truck-medical"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Resección Arterial</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-center space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-red-50 p-4 rounded-xl border border-red-200 text-red-950 leading-relaxed shadow-sm">
+                    <strong class="block mb-2 text-base"><i class="fa-solid fa-triangle-exclamation mr-1 text-red-600"></i> AMS o Arteria Hepática:</strong>
+                    Presenta tasas significativamente mayores de morbilidad y mortalidad posoperatoria. 
+                    <p class="border-t border-red-200 pt-2 mt-2 font-bold">Se reserva exclusivamente para pacientes altamente seleccionados que han demostrado respuesta sostenida a neoadyuvancia, y solo en centros de referencia.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-teal-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-teal-100 text-teal-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-bezier-curve"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Reconstrucción Digestiva</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-slate-50 p-3 rounded-lg border text-slate-800 leading-relaxed">
+                    <strong>PJ vs. PG:</strong> Múltiples ensayos clínicos no han demostrado superioridad de una sobre otra para prevenir fístula pancreática.
+                </div>
+                <div class="bg-teal-50 p-3 rounded-lg border border-teal-200 text-teal-950 font-bold text-center">
+                    Técnica Estándar: La Pancreatoyeyunostomía término-lateral (ducto-mucosa) es la preferida por la mayoría de cirujanos.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-teal-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-teal-100 text-teal-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-pen-ruler"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Técnica Blumgart y V-Loc</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong>Blumgart Modificada:</strong> Suturas transpancreáticas en colchonero que abrazan el yeyuno. <u class="decoration-teal-400 decoration-2">Reduce tensión y desgarro (shear stress)</u> del parénquima, bajando isquemia anastomótica.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border text-slate-800 leading-relaxed">
+                    <strong>Suturas Barbadas (V-Loc/PDS):</strong> En robótica compensan la ausencia de retroalimentación táctil, distribuyen tensión uniformemente y eliminan necesidad de nudos intracorpóreos complejos.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-teal-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-teal-100 text-teal-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-glass-water-droplet"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Fístula: Drenajes / Stents</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-teal-50 p-3 rounded-lg border border-teal-200 text-teal-950 leading-relaxed">
+                    <strong>Drenaje y Amilasa:</strong> Medir días 1 y 3. Si amilasa es baja y volumen &lt; 200 mL, <mark class="bg-teal-200 px-1 rounded font-bold">retiro temprano (día 3)</mark> para evitar infección ascendente.
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong>Tutores (Stents) Pancreáticos:</strong> En pacientes de alto riesgo (FRS elevado), el stent externalizado mitiga fístula al desviar secreción fuera de la anastomosis ducto-mucosa.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">GDA Wrap y Fármacos</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong>Envoltura GDA (GDA Wrap):</strong> Uso rutinario de colgajo de ligamento falciforme para cubrir muñón de la arteria gastroduodenal. Previene hemorragia tardía PPH Grado C por corrosión de jugo pancreático.
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-900 font-bold text-center">
+                    <i class="fa-solid fa-ban mr-1"></i> Fármacos: El uso sistemático de análogos de somatostatina (octreotida) no se recomienda (Directrices ERAS).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-stomach"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Prevención del DGE</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong>Reconstrucción Quirúrgica:</strong> La ruta antecólica de la gastroyeyunostomía reduce torsión. La adición de entero-enterostomía de <strong>Braun</strong> desvía bilis y reduce DGE.
+                </div>
+                <div class="bg-fuchsia-50 p-3 rounded-lg border border-fuchsia-200 leading-relaxed text-fuchsia-950">
+                    <strong class="block mb-1">Restricción Hídrica:</strong> La terapia de fluidos restrictiva intraoperatoria previene el edema esplácnico y anastomótico (factor patogénico directo del DGE).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Conteo Ganglionar D1</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="space-y-2">
+                    <div class="bg-slate-50 p-2.5 rounded border"><strong class="text-slate-900 block">Cirugía Directa:</strong> Mínimo 15 ganglios linfáticos.</div>
+                    <div class="bg-slate-50 p-2.5 rounded border"><strong class="text-slate-900 block">Post-Neoadyuvancia:</strong> Mínimo 12 ganglios (atrofia).</div>
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 font-bold leading-relaxed text-center shadow-inner">
+                    La Linfadenectomía Extendida (retroperitoneal / paraaórtica) está proscrita: incrementa morbilidad sin beneficio en supervivencia global.
+                </div>
+            </div>
+        </div>
+
+    </div> 
+</main>
+
+      <!-- aqui -->
+
+        <!-- BOTÓN DE SIGUIENTE RESUMEN -->
+        <div class="mt-10 sm:mt-12 mb-4 flex justify-center">
+            <a href="index.html" class="group relative inline-flex items-center justify-center gap-3 px-8 py-3 sm:py-4 font-bold text-white bg-gradient-to-r from-indigo-600 to-teal-500 rounded-full shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-teal-600 transition-all duration-300 transform hover:-translate-y-1">
+                <span class="text-base sm:text-lg tracking-wide">Siguiente Resumen</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform duration-300"></i>
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Script de Inicialización de KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // Configuramos los delimitadores para que acepte el signo $ nativo de tu texto
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false,
+                output: 'html' // para mejor adaptación con fuentes web
+            });
+        });
+    </script>
+</body>
+</html>
