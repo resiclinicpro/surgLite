@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen</title>
+    
+    <!-- Tailwind CSS (Framework de diseño) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Tipografía limpia y amigable) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- KaTeX (Para renderizar las fórmulas matemáticas de LaTeX) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Configuración personalizada de Tailwind y CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            blue: '#e0f2fe',    // light blue 100
+                            green: '#dcfce7',   // green 100
+                            yellow: '#fef08a',  // yellow 200
+                            red: '#ffe4e6',     // rose 100
+                            purple: '#f3e8ff',  // purple 100
+                            orange: '#ffedd5',  // orange 100
+                            teal: '#ccfbf1',    // teal 100
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc; /* Fondo gris muy suave */
+            color: #334155;
+        }
+
+        /* Estilos base para listas */
+        ul { list-style-type: none; padding-left: 0; }
+        ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; line-height: 1.6; }
+        ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            line-height: 1;
+            top: -2px;
+        }
+
+        /* ----- CLASES DINÁMICAS PARA SUBRAYADOS (HIGHLIGHTS) ----- */
+        /* Úsalas en cualquier parte del texto envolviéndolo en <mark class="hl-color">Texto</mark> */
+        mark {
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-weight: 700;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .hl-yellow { background-color: #fef08a; color: #854d0e; } /* Advertencias, conceptos */
+        .hl-red    { background-color: #fecdd3; color: #9f1239; } /* Peligro, Contraindicaciones, Severidad */
+        .hl-green  { background-color: #bbf7d0; color: #166534; } /* Tratamientos, Metas */
+        .hl-blue   { background-color: #bae6fd; color: #075985; } /* Tiempos, Definiciones clave */
+        .hl-purple { background-color: #e9d5ff; color: #581c87; } /* Epidemiología, Estadísticas */
+
+        /* ----- EFECTOS DE TARJETAS ----- */
+        .medical-card {
+            transition: all 0.3s ease;
+            border-top-width: 5px;
+            height: 100%;
+        }
+        .medical-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Estilo para las Perlas GPC */
+        .gpc-pearl {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 4px solid #f59e0b;
+            position: relative;
+        }
+        .gpc-pearl::before {
+            content: '\f0eb'; /* Lightbulb icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #f59e0b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-12">
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            
+            <!-- Izquierda: Botón Home y Título App -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <a href="index.html" class="text-slate-400 hover:text-indigo-600 transition-colors flex-shrink-0 bg-slate-50 hover:bg-indigo-50 p-2 sm:p-2.5 rounded-full" title="Ir al inicio">
+                    <i class="fa-solid fa-house text-lg sm:text-xl"></i>
+                </a>
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-100 text-indigo-600 p-2 sm:p-3 rounded-lg hidden sm:flex items-center justify-center">
+                        <i class="fa-solid fa-stethoscope text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-heading font-bold text-lg sm:text-2xl text-slate-800 leading-tight line-clamp-1">Resumen</h1>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Derecha: Tag y Logo ENARM Lite (Recreado con CSS para máxima velocidad/calidad) -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <span class="hidden md:inline-block bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">CDYE</span>
+                
+                <!-- Logo ENARM Lite® -->
+                <div class="border-2 border-slate-200/80 bg-slate-50/50 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 flex items-baseline gap-1 shadow-sm select-none">
+                    <span class="font-sans font-extrabold text-[#004f8f] text-sm sm:text-lg tracking-tight">Surgy</span>
+                    <span class="font-sans font-semibold text-[#64b036] text-sm sm:text-lg">Lite<sup class="text-[9px] sm:text-[11px] font-bold">®</sup></span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+     <!-- aqui -->
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="text-center mb-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-gradient-to-br from-indigo-100 to-emerald-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -mb-8 -ml-8 w-32 h-32 bg-gradient-to-tr from-cyan-100 to-teal-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        
+        <h2 class="relative font-heading font-extrabold text-3xl sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-teal-800 via-emerald-600 to-cyan-600 mb-3 tracking-tight leading-tight py-1">
+            Manejo Sistémico y Radioterapia
+        </h2>
+        <p class="relative text-base text-slate-600 font-medium mb-3 max-w-3xl mx-auto">
+            Adenocarcinoma de Páncreas: Tratamiento Neoadyuvante y Adyuvante.
+        </p>
+        <div class="inline-block bg-teal-50 border border-teal-200 text-teal-800 px-4 py-1.5 rounded-full text-sm font-bold mt-1 shadow-sm">
+            <i class="fa-solid fa-book-medical mr-1"></i> Basado en NCCN 2.2026 y The Lancet Seminar 2026
+        </div>
+        <div class="w-24 h-1.5 bg-gradient-to-r from-emerald-500 to-cyan-400 mx-auto rounded-full mt-5"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-hospital-user"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Principios Oncológicos</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    El abordaje exige una evaluación multidisciplinaria en <u class="decoration-indigo-400 decoration-2 underline-offset-2">centros de alto volumen</u>.
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200 text-indigo-950">
+                    <strong class="block mb-2"><i class="fa-solid fa-microscope mr-1 text-indigo-500"></i> Variantes Histológicas:</strong>
+                    <p class="leading-relaxed">Los carcinomas escamosos, adenoescamosos o histologías mixtas deben tratarse <mark class="bg-indigo-200 px-1 rounded font-bold">bajo los mismos regímenes</mark> que el adenocarcinoma ductal clásico, guiando el manejo hacia el componente más agresivo.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-bullseye"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Objetivos Neoadyuvantes</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <p class="text-slate-600">La terapia de inducción y preoperatoria persigue tres objetivos cardinales:</p>
+                <div class="space-y-2">
+                    <div class="flex items-start bg-white p-2.5 rounded shadow-sm border border-l-4 border-emerald-500">
+                        <i class="fa-solid fa-circle-check text-emerald-500 mt-1 mr-2"></i>
+                        <span>Aumentar la probabilidad de una <strong>resección con márgenes negativos (R0)</strong>.</span>
+                    </div>
+                    <div class="flex items-start bg-white p-2.5 rounded shadow-sm border border-l-4 border-emerald-500">
+                        <i class="fa-solid fa-circle-check text-emerald-500 mt-1 mr-2"></i>
+                        <span>Seleccionar biológicamente pacientes con <strong>enfermedad estable</strong> aptos para cirugía.</span>
+                    </div>
+                    <div class="flex items-start bg-white p-2.5 rounded shadow-sm border border-l-4 border-emerald-500">
+                        <i class="fa-solid fa-circle-check text-emerald-500 mt-1 mr-2"></i>
+                        <span>Tratar <strong>micrometástasis sistémicas</strong> de forma temprana.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Indicaciones Estrictas I</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-red-50 p-3 rounded-xl border border-red-200">
+                    <strong class="text-red-900 block mb-1"><i class="fa-solid fa-ban text-red-600 mr-1"></i> Enf. Limítrofe (Borderline):</strong>
+                    <p>La neoadyuvancia es el estándar de cuidado. <mark class="bg-red-200 px-1 rounded text-red-950 font-bold">La resección inicial (upfront) está proscrita</mark> en este grupo poblacional.</p>
+                </div>
+                <div class="bg-purple-50 p-3 rounded-xl border border-purple-200 text-purple-950">
+                    <strong class="block mb-1"><i class="fa-solid fa-arrows-to-circle text-purple-600 mr-1"></i> Localmente Avanzada:</strong>
+                    <p>Se utiliza de manera obligada como <u>terapia de inducción</u> para buscar respuesta.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-star-of-life"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Indicaciones Estrictas II</h3>
+            </div>
+            <div class="flex-1 flex flex-col text-sm text-slate-700 font-medium">
+                <p class="mb-3">Se considera también en <u class="decoration-purple-400 decoration-2 underline-offset-2">Enfermedad Resecable con Factores de Alto Riesgo</u>, definido por:</p>
+                <div class="space-y-2">
+                    <div class="flex items-start"><i class="fa-solid fa-caret-right text-purple-500 mt-1 mr-2"></i><span>Hallazgos radiológicos atípicos.</span></div>
+                    <div class="flex items-start"><i class="fa-solid fa-caret-right text-purple-500 mt-1 mr-2"></i><span>Elevación marcada del marcador CA 19-9.</span></div>
+                    <div class="flex items-start"><i class="fa-solid fa-caret-right text-purple-500 mt-1 mr-2"></i><span>Tumores primarios de gran tamaño.</span></div>
+                    <div class="flex items-start"><i class="fa-solid fa-caret-right text-purple-500 mt-1 mr-2"></i><span>Ganglios linfáticos regionales aumentados.</span></div>
+                    <div class="flex items-start"><i class="fa-solid fa-caret-right text-purple-500 mt-1 mr-2"></i><span>Pérdida de peso excesiva o dolor extremo.</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Ventana Quirúrgica</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong>Duración Máxima:</strong> La terapia sistémica en resecable o limítrofe dura <strong>hasta 6 meses</strong> en el periodo perioperatorio.
+                </div>
+                <div class="bg-cyan-50 p-3 rounded-xl border border-cyan-200">
+                    <strong class="text-cyan-900 block mb-1"><i class="fa-solid fa-calendar-day text-cyan-600 mr-1"></i> Programación Quirúrgica:</strong>
+                    <p>Planear de <mark class="bg-cyan-200 px-1 rounded font-bold text-cyan-900">4 a 8 semanas</mark> tras finalizar la neoadyuvancia. <u>Tiempos &gt; 8 semanas dificultan la resección</u> por fibrosis inducida por radiación.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Evaluación Pre-Laparotomía</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="space-y-2">
+                    <div class="flex items-start bg-white p-2 rounded shadow-sm border"><i class="fa-solid fa-check text-cyan-500 mt-1 mr-2"></i><span>Tomografía o Resonancia Magnética.</span></div>
+                    <div class="flex items-start bg-white p-2 rounded shadow-sm border"><i class="fa-solid fa-check text-cyan-500 mt-1 mr-2"></i><span>Medición de control de CA 19-9.</span></div>
+                    <div class="flex items-start bg-white p-2 rounded shadow-sm border"><i class="fa-solid fa-check text-cyan-500 mt-1 mr-2"></i><span>Laparoscopia diagnóstica de revisión.</span></div>
+                </div>
+                <div class="bg-amber-50 p-3 rounded border border-amber-200 text-amber-950 font-bold leading-relaxed">
+                    Una respuesta radiológica mínima no contraindica la cirugía si la resección R0 es técnicamente factible.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-vial-virus"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Quimio Neoadyuvante I</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <p class="text-slate-500">Administración general por vía intravenosa (IV).</p>
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-emerald-500">
+                    <strong class="text-slate-900 block mb-1">FOLFIRINOX o mFOLFIRINOX:</strong>
+                    <p class="leading-relaxed">5-FU, Leucovorina, Irinotecán y Oxaliplatino. Es el <mark class="bg-emerald-100 px-1 rounded font-bold">recomendado para buen estado funcional (ECOG 0-1)</mark>.</p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-teal-500">
+                    <strong class="text-slate-900 block">Gemcitabina + Nab-paclitaxel:</strong>
+                    <p class="leading-relaxed">(Paclitaxel unido a albúmina). Alternativa de alta eficacia.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-dna"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Quimio Neoadyuvante II</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+                    <strong class="text-emerald-900 block mb-1"><i class="fa-solid fa-microscope text-emerald-600 mr-1"></i> Gemcitabina + Cisplatino:</strong>
+                    <p class="leading-relaxed">Indicación específica para pacientes con mutaciones germinales o somáticas confirmadas en <u class="font-bold">BRCA1/2 o PALB2</u>.</p>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <strong class="text-slate-900 block mb-1">Esquema PAXG:</strong>
+                    <p class="leading-relaxed text-xs">Cisplatino, Nab-paclitaxel, Capecitabina, Gemcitabina. Útil en circunstancias selectas por beneficio en supervivencia libre de eventos, aunque <mark class="bg-red-100 px-1 rounded text-red-900 font-bold">cursa con mayor toxicidad</mark>.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-orange-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-orange-100 text-orange-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-radiation"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Radioterapia Clásica</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium">
+                <p class="mb-2"><strong>Objetivo:</strong> Esterilizar los márgenes vasculares y aumentar la probabilidad R0. Se administra tras la quimioterapia neoadyuvante.</p>
+                <div class="bg-orange-50 p-3 rounded-xl border border-orange-200 space-y-2">
+                    <strong class="text-orange-950 block">Dosis y Fraccionamiento:</strong>
+                    <div class="flex items-start"><i class="fa-solid fa-bolt text-orange-500 mt-1 mr-2"></i><span><strong>36 Gy</strong> en fracciones de 2.4 Gy.</span></div>
+                    <div class="flex items-start"><i class="fa-solid fa-bolt text-orange-500 mt-1 mr-2"></i><span>De <strong>45 a 54 Gy</strong> en fracciones de 1.8 a 2.0 Gy.</span></div>
+                    <div class="flex items-start"><i class="fa-solid fa-bolt text-orange-500 mt-1 mr-2"></i><span>Hasta <strong>56 Gy</strong> en enf. localmente avanzada. Dosis &gt; 54 Gy solo en ensayos.</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-orange-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-orange-100 text-orange-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-crosshairs"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">SBRT Neoadyuvante</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded border shadow-sm">
+                    <strong>Esquema:</strong> Se administra de <strong>3 a 5 fracciones</strong> (dosis total de 25 a 50 Gy).
+                </div>
+                <div class="bg-green-50 p-3 rounded border border-green-200 text-green-900">
+                    <i class="fa-solid fa-thumbs-up mr-1 text-green-600"></i> Reduce la toxicidad tisular y la linfopenia inducida vs la terapia convencional.
+                </div>
+                <div class="bg-red-50 p-3 rounded border border-red-200 text-red-900 font-bold">
+                    <i class="fa-solid fa-triangle-exclamation mr-1 text-red-600"></i> Contraindicado: Exige estricto control de movimiento y no se debe usar si existe invasión directa a estómago o intestino.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-blue-600 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-blue-100 text-blue-700 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-file-medical"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Adyuvancia: Indicaciones</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium">
+                <p class="mb-3">Indicada estrictamente en el entorno posoperatorio para pacientes que cumplan la siguiente tríada:</p>
+                <div class="space-y-2">
+                    <div class="flex items-start bg-white p-2.5 rounded shadow-sm border"><i class="fa-solid fa-check text-blue-500 mt-1 mr-2"></i><span>No recibieron terapia neoadyuvante previa.</span></div>
+                    <div class="flex items-start bg-white p-2.5 rounded shadow-sm border"><i class="fa-solid fa-check text-blue-500 mt-1 mr-2"></i><span>Demostraron recuperación quirúrgica adecuada.</span></div>
+                    <div class="flex items-start bg-white p-2.5 rounded shadow-sm border"><i class="fa-solid fa-check text-blue-500 mt-1 mr-2"></i><span>Sin evidencia metastásica por TC posoperatoria y niveles serológicos de CA 19-9.</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-blue-600 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-blue-100 text-blue-700 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-hourglass-start"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Tiempos Posoperatorios</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-blue-50 p-3 rounded-xl border border-blue-200">
+                    <strong class="text-blue-900 block mb-1">Inicio Crítico:</strong>
+                    <p class="leading-relaxed">El inicio del tratamiento debe realizarse dentro de las <strong>primeras 12 semanas</strong> posteriores a la cirugía.</p>
+                </div>
+                <div class="bg-white p-3 rounded-xl border shadow-sm">
+                    <strong>Duración:</strong> La duración total estándar (sumando cualquier tratamiento neoadyuvante) es de <mark class="bg-blue-100 px-1 rounded font-bold text-blue-900">6 meses</mark>. Retrasos o ciclos incompletos impactan negativamente.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-teal-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-teal-100 text-teal-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-medal"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Adyuvancia: mFOLFIRINOX</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium">
+                <div class="bg-teal-50 p-3 rounded border border-teal-200 text-teal-950 font-bold mb-2 text-center">
+                    Categoría 1, Preferido. Estándar actual para pacientes con buen estado funcional.
+                </div>
+                <div class="bg-white p-3 rounded border shadow-sm leading-relaxed flex-1">
+                    <strong>Ensayo PRODIGE 24 / CCTG PA.6:</strong> Demostró una supervivencia global (OS) media de <mark class="bg-teal-100 px-1 rounded text-teal-900 font-bold">53.5 meses</mark> frente a los 35.5 meses obtenidos con monoterapia de gemcitabina.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-teal-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-teal-100 text-teal-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-capsules"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Gem/Cape (Categoría 1)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-2">
+                <div class="bg-white p-2.5 rounded border shadow-sm">
+                    <strong>Ensayo ESPAC-4:</strong> Superioridad en supervivencia (28.0 vs 25.5 meses) vs monoterapia.
+                </div>
+                <div class="bg-amber-50 p-2.5 rounded border border-amber-200">
+                    <strong class="text-amber-900 block mb-1">Ajuste de Dosis NCCN:</strong>
+                    <p class="leading-relaxed">Dosis original fue 1660 mg/m&sup2;/día. NCCN recomienda un ajuste a <strong>1000 mg/m&sup2; dos veces al día (BID)</strong> por vía oral para limitar la toxicidad (síndrome mano-pie / diarrea).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-teal-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-teal-100 text-teal-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-prescription-bottle-medical"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Monoterapias y S-1</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-2">
+                <div class="bg-white p-2.5 rounded border shadow-sm">
+                    <strong>Gemcitabina o 5-FU+LV (Cat 1):</strong> Reservado primariamente para pacientes no candidatos a terapia múltiple por comorbilidades. Beneficio histórico avalado por <u>ensayo CONKO-001</u>.
+                </div>
+                <div class="bg-slate-50 p-2.5 rounded border border-slate-200">
+                    <strong>Régimen S-1:</strong> Régimen de primera elección preferido y superior a la gemcitabina exclusivamente en <strong>pacientes de origen asiático</strong> (Ensayo JASPAC 01).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-tower-observation"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">RT Adyuvante (N0)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium">
+                <div class="bg-fuchsia-50 p-3 rounded-lg border border-fuchsia-200 text-fuchsia-950 mb-2">
+                    <strong>Ensayo RTOG 0848:</strong> La RT posoperatoria ofrece beneficio en supervivencia únicamente en el subgrupo de <strong>pacientes con ganglios negativos (N0)</strong> para control microscópico.
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="block mb-1 text-slate-900">Secuencia Estandarizada:</strong>
+                    <div class="flex justify-center items-center font-bold text-slate-800 space-x-2">
+                        <span>Quimio</span> <i class="fa-solid fa-arrow-right text-fuchsia-500"></i> 
+                        <span>Re-estadio</span> <i class="fa-solid fa-arrow-right text-fuchsia-500"></i> 
+                        <span>RT</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-stomach"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Dosis y OAR Digestivo</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-2">
+                <div class="bg-white p-2 rounded border shadow-sm">
+                    <strong>Dosis Estándar Adyuvante:</strong> 45 a 50.4 Gy en fracciones de 1.8 a 2.0 Gy dirigidos al lecho, anastomosis y ganglios.
+                </div>
+                <div class="bg-amber-50 p-2 rounded border border-amber-200">
+                    <strong class="text-amber-900 block">Límites Estómago / Duodeno / Yeyuno:</strong>
+                    Dosis máxima <strong>&le; 54 Gy</strong>. Menos del 10% del volumen debe recibir entre 50 y 53.99 Gy.
+                </div>
+                <div class="bg-slate-50 p-2 rounded border">
+                    <strong class="block">Hígado:</strong> Dosis media hepática <strong>&le; 25 Gy</strong>.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-kidney"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Límites Renal y Espinal</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-fuchsia-500">
+                    <strong class="text-slate-900 block mb-1">Riñones:</strong>
+                    <div class="flex items-start"><i class="fa-solid fa-circle-dot text-fuchsia-500 mt-1 mr-2"></i><span>Bilateral: Dosis media &lt; 18 Gy.</span></div>
+                    <div class="flex items-start"><i class="fa-solid fa-circle-dot text-fuchsia-500 mt-1 mr-2"></i><span>Único: No más del 15% del volumen puede recibir &ge; 18 Gy.</span></div>
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200">
+                    <strong class="text-red-900 block mb-1">Médula Espinal:</strong>
+                    <p class="font-bold text-center text-red-950 text-base">Dosis Máxima &le; 45 Gy</p>
+                </div>
+            </div>
+        </div>
+
+    </div> 
+</main>
+
+      <!-- aqui -->
+
+        <!-- BOTÓN DE SIGUIENTE RESUMEN -->
+        <div class="mt-10 sm:mt-12 mb-4 flex justify-center">
+            <a href="index.html" class="group relative inline-flex items-center justify-center gap-3 px-8 py-3 sm:py-4 font-bold text-white bg-gradient-to-r from-indigo-600 to-teal-500 rounded-full shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-teal-600 transition-all duration-300 transform hover:-translate-y-1">
+                <span class="text-base sm:text-lg tracking-wide">Siguiente Resumen</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform duration-300"></i>
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Script de Inicialización de KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // Configuramos los delimitadores para que acepte el signo $ nativo de tu texto
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false,
+                output: 'html' // para mejor adaptación con fuentes web
+            });
+        });
+    </script>
+</body>
+</html>
