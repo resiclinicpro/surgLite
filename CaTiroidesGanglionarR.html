@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen</title>
+    
+    <!-- Tailwind CSS (Framework de diseño) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Tipografía limpia y amigable) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- KaTeX (Para renderizar las fórmulas matemáticas de LaTeX) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Configuración personalizada de Tailwind y CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            blue: '#e0f2fe',    // light blue 100
+                            green: '#dcfce7',   // green 100
+                            yellow: '#fef08a',  // yellow 200
+                            red: '#ffe4e6',     // rose 100
+                            purple: '#f3e8ff',  // purple 100
+                            orange: '#ffedd5',  // orange 100
+                            teal: '#ccfbf1',    // teal 100
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc; /* Fondo gris muy suave */
+            color: #334155;
+        }
+
+        /* Estilos base para listas */
+        ul { list-style-type: none; padding-left: 0; }
+        ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; line-height: 1.6; }
+        ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            line-height: 1;
+            top: -2px;
+        }
+
+        /* ----- CLASES DINÁMICAS PARA SUBRAYADOS (HIGHLIGHTS) ----- */
+        /* Úsalas en cualquier parte del texto envolviéndolo en <mark class="hl-color">Texto</mark> */
+        mark {
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-weight: 700;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .hl-yellow { background-color: #fef08a; color: #854d0e; } /* Advertencias, conceptos */
+        .hl-red    { background-color: #fecdd3; color: #9f1239; } /* Peligro, Contraindicaciones, Severidad */
+        .hl-green  { background-color: #bbf7d0; color: #166534; } /* Tratamientos, Metas */
+        .hl-blue   { background-color: #bae6fd; color: #075985; } /* Tiempos, Definiciones clave */
+        .hl-purple { background-color: #e9d5ff; color: #581c87; } /* Epidemiología, Estadísticas */
+
+        /* ----- EFECTOS DE TARJETAS ----- */
+        .medical-card {
+            transition: all 0.3s ease;
+            border-top-width: 5px;
+            height: 100%;
+        }
+        .medical-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Estilo para las Perlas GPC */
+        .gpc-pearl {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 4px solid #f59e0b;
+            position: relative;
+        }
+        .gpc-pearl::before {
+            content: '\f0eb'; /* Lightbulb icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #f59e0b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-12">
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            
+            <!-- Izquierda: Botón Home y Título App -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <a href="index.html" class="text-slate-400 hover:text-indigo-600 transition-colors flex-shrink-0 bg-slate-50 hover:bg-indigo-50 p-2 sm:p-2.5 rounded-full" title="Ir al inicio">
+                    <i class="fa-solid fa-house text-lg sm:text-xl"></i>
+                </a>
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-100 text-indigo-600 p-2 sm:p-3 rounded-lg hidden sm:flex items-center justify-center">
+                        <i class="fa-solid fa-stethoscope text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-heading font-bold text-lg sm:text-2xl text-slate-800 leading-tight line-clamp-1">Resumen</h1>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Derecha: Tag y Logo ENARM Lite (Recreado con CSS para máxima velocidad/calidad) -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <span class="hidden md:inline-block bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">CDYE</span>
+                
+                <!-- Logo ENARM Lite® -->
+                <div class="border-2 border-slate-200/80 bg-slate-50/50 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 flex items-baseline gap-1 shadow-sm select-none">
+                    <span class="font-sans font-extrabold text-[#004f8f] text-sm sm:text-lg tracking-tight">Surgy</span>
+                    <span class="font-sans font-semibold text-[#64b036] text-sm sm:text-lg">Lite<sup class="text-[9px] sm:text-[11px] font-bold">®</sup></span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+     <!-- aqui -->
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="text-center mb-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-gradient-to-br from-indigo-100 to-emerald-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -mb-8 -ml-8 w-32 h-32 bg-gradient-to-tr from-cyan-100 to-teal-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        
+        <h2 class="relative font-heading font-extrabold text-3xl sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-teal-800 via-emerald-600 to-cyan-600 mb-3 tracking-tight leading-tight py-1">
+            Cáncer Diferenciado de Tiroides
+        </h2>
+        <p class="relative text-base text-slate-600 font-medium mb-3 max-w-3xl mx-auto">
+            Directrices Anatómicas, Disección Ganglionar y Toma de Decisiones Quirúrgicas.
+        </p>
+        <div class="inline-block bg-teal-50 border border-teal-200 text-teal-800 px-4 py-1.5 rounded-full text-sm font-bold mt-1 shadow-sm">
+            <i class="fa-solid fa-scalpel mr-1"></i> ATA Management Guidelines 2025 & NCCN v1.2026
+        </div>
+        <div class="w-24 h-1.5 bg-gradient-to-r from-emerald-500 to-cyan-400 mx-auto rounded-full mt-5"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-microscope"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Cáncer Papilar (CPT)</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-3 rounded-r-xl">
+                    <strong class="text-indigo-900 block mb-1">Neoplasia Maligna Epitelial:</strong>
+                    <p class="leading-relaxed">Derivada estructuralmente de las <strong class="text-slate-900">células foliculares</strong>.</p>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-slate-700 leading-relaxed">
+                    Es el subtipo anatómico más común de cáncer diferenciado. Posee un pronóstico generalmente excelente, aunque con alta propensión y afinidad a la <u class="decoration-slate-400 decoration-2">diseminación linfática locorregional</u> cervical.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Microcarcinoma (PTMC)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong>Definición Volumétrica:</strong> Tumor de detección incidental o por escrutinio <mark class="bg-indigo-100 px-1 rounded font-bold text-indigo-900">&le; 1 cm en su diámetro mayor</mark>.
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 text-emerald-950 flex-1 flex flex-col justify-center text-center">
+                    <strong class="block mb-1"><i class="fa-solid fa-eye text-emerald-600 mr-1"></i> Vigilancia Activa:</strong>
+                    Frecuentemente susceptible a monitoreo clínico si no presenta invasión ganglionar o invasión extratiroidea macroscópica.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-dna"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Etiología y Genética</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-purple-50 p-3 rounded-lg border border-purple-200 text-purple-950">
+                    <strong class="block mb-1">Riesgo por Radiación:</strong> Exposición a radiación ionizante (especialmente en la infancia) incrementa drásticamente mutaciones somáticas y desarrollo de CPT.
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-900">
+                    <strong class="block mb-1"><i class="fa-solid fa-bacterium text-red-600 mr-1"></i> Mutación Somática BRAF V600E:</strong>
+                    Es la alteración más prevalente. Su coexistencia patológica con mutaciones del <strong class="text-red-950">promotor TERT</strong> se asocia a pérdida de avidez por yodo y alta mortalidad.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-orange-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-orange-100 text-orange-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Ganglios: Nivel Central</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-orange-500">
+                    <strong class="text-slate-900 block mb-1">Nivel VI (Compartimento Central):</strong>
+                    <p class="leading-relaxed">Sitio primario y preferente de metástasis inicial. Su disección abarca los componentes:</p>
+                    <ul class="mt-2 space-y-1">
+                        <li class="flex items-start"><i class="fa-solid fa-caret-right text-orange-500 mt-1 mr-2"></i><span>Ganglios prelaringeos (ganglio de Delphian).</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-caret-right text-orange-500 mt-1 mr-2"></i><span>Ganglios pretraqueales y paratraqueales bilaterales.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-orange-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-orange-100 text-orange-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-route"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Ganglios: Nivel Lateral</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong>Niveles IIA, III, IV y VB (Lateral):</strong> Compartimentos de drenaje secundario disecados en bloque ante evidencia clínica (cN1b).
+                </div>
+                <div class="bg-orange-50 p-3 rounded-xl border border-orange-200 text-orange-950">
+                    <strong class="block mb-1">Metástasis Saltatorias ("Skip Metastasis"):</strong>
+                    <p>Apenas el 5% presenta diseminación lateral aislada. <mark class="bg-orange-200 px-1 rounded font-bold">Regla:</mark> Ante ganglios laterales positivos (cN1b), se debe incluir de forma obligatoria una disección del compartimento central ipsilateral.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-orange-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-orange-100 text-orange-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Estructuras de Riesgo</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950">
+                    <strong class="block mb-1">Nervio Laríngeo Recurrente (NLR):</strong>
+                    <p>En cirugías bilaterales, la <u>pérdida de señal en el monitoreo intraoperatorio</u> del primer lado obliga a posponer la resección contralateral para evitar parálisis bilateral y traqueostomía.</p>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border text-slate-800">
+                    <strong class="block mb-1">Glándulas Paratiroides:</strong> Su desvascularización causa hipoparatiroidismo posquirúrgico. Apoyar su identificación con autofluorescencia o verde de indocianina.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-sitemap"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Estadificación AJCC</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium">
+                <div class="bg-cyan-50 p-4 rounded-xl border border-cyan-200 text-cyan-950 leading-relaxed shadow-sm">
+                    <strong class="text-cyan-900 block mb-2 text-base">Corte Pronóstico de Edad:</strong>
+                    La 8va Edición emplea el corte de edad a los <mark class="bg-cyan-200 px-1 rounded font-bold">55 años</mark>.
+                    <p class="mt-2 border-t border-cyan-300 pt-2 font-semibold">Regla: Un paciente menor de 55 años solo puede ser clasificado como estadio I o II (incluso con ganglios positivos o tumores grandes), a menos que existan metástasis a distancia evidentes (M1).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-network-wired"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Estatus Nodal (N)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium">
+                <div class="space-y-3">
+                    <div class="bg-white p-2.5 rounded shadow-sm border border-l-4 border-green-500">
+                        <strong class="text-slate-900 block mb-0.5">cN0 / pN0:</strong>
+                        <span class="text-slate-600">Ausencia de metástasis ganglionares.</span>
+                    </div>
+                    <div class="bg-white p-2.5 rounded shadow-sm border border-l-4 border-amber-500">
+                        <strong class="text-slate-900 block mb-0.5">cN1a / pN1a:</strong>
+                        <span class="text-slate-600">Metástasis confinadas exclusivamente al compartimento central (Nivel VI).</span>
+                    </div>
+                    <div class="bg-white p-2.5 rounded shadow-sm border border-l-4 border-red-500">
+                        <strong class="text-slate-900 block mb-0.5">cN1b / pN1b:</strong>
+                        <span class="text-slate-600">Metástasis que involucran compartimentos laterales del cuello (Niveles I a V) o ganglios retrofaríngeos.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-stethoscope"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Clínica y Laringoscopia</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong>Cuadro Local:</strong> Típicamente nódulo asintomático. La invasión extratiroidea a estructuras adyacentes se sospecha clásicamente por <u class="decoration-red-400 decoration-2">disfonía secundaria a paresia o parálisis</u> de cuerdas vocales (involucro del NLR).
+                </div>
+                <div class="bg-cyan-50 p-3 rounded-lg border border-cyan-200 text-cyan-950 font-bold">
+                    <i class="fa-solid fa-camera mr-1 text-cyan-600"></i> Clínica Preoperatoria:
+                    <p class="font-medium mt-1">Evaluación obligatoria de movilidad de cuerdas vocales (laringoscopia/USG) en pacientes con voz anormal, cirugía cervical previa o sospecha de invasión masiva.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-blue-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-images"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Imagen Quirúrgica</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                    <strong class="text-blue-900 block mb-1">Ultrasonido de Cuello (Elección Inicial):</strong>
+                    <p>Obligatorio el rastreo preoperatorio bilateral minucioso de compartimentos centrales y laterales para mapeo ganglionar quirúrgico.</p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">TC/RM de Cuello con Contraste:</strong>
+                    <p>Indicadas para estadificación quirúrgica volumétrica si se sospecha invasión a la vía aerodigestiva, parálisis de cuerdas vocales o adenopatías laterales voluminosas.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-hand-holding-medical"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Lobectomía Tiroidea</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 shadow-sm flex-1 flex flex-col justify-center">
+                    <strong class="text-emerald-950 block mb-2 text-base">Tratamiento de Elección en Bajo Riesgo:</strong>
+                    <p class="leading-relaxed">Tratamiento suficiente y resolutivo para tumores de <mark class="bg-emerald-200 px-1 rounded font-bold text-emerald-900">1 cm a 4 cm</mark> (cT1b-cT2) con estatus nodal cN0, siempre y cuando presenten <u>unifocalidad</u> y estén confinados estrictamente al parénquima.</p>
+                    <p class="text-emerald-800 font-bold border-t border-emerald-300 pt-2 mt-2 text-center">Beneficio: Evita el reemplazo hormonal vitalicio y reduce el riesgo de hipoparatiroidismo bilateral.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-scissors"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Tiroidectomía Total</h3>
+            </div>
+            <div class="flex-1 flex flex-col text-sm text-slate-700 font-medium">
+                <p class="text-slate-500 mb-2 font-semibold">Indicaciones Absolutas Normadas:</p>
+                <div class="space-y-1">
+                    <div class="flex items-start bg-slate-50 p-2 rounded border"><i class="fa-solid fa-check text-emerald-500 mt-1 mr-2"></i><span>Tumor primario <strong>&gt; 4 cm</strong> en diámetro mayor.</span></div>
+                    <div class="flex items-start bg-slate-50 p-2 rounded border"><i class="fa-solid fa-check text-emerald-500 mt-1 mr-2"></i><span>Invasión extratiroidea macroscópica (cT3b, cT4).</span></div>
+                    <div class="flex items-start bg-slate-50 p-2 rounded border"><i class="fa-solid fa-check text-emerald-500 mt-1 mr-2"></i><span>Enfermedad ganglionar metastásica demostrada (cN1).</span></div>
+                    <div class="flex items-start bg-slate-50 p-2 rounded border"><i class="fa-solid fa-check text-emerald-500 mt-1 mr-2"></i><span>Metástasis a distancia establecidas (cM1).</span></div>
+                    <div class="flex items-start bg-slate-50 p-2 rounded border"><i class="fa-solid fa-check text-emerald-500 mt-1 mr-2"></i><span>Histología de alto grado o pobremente diferenciado.</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-network-wired"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Manejo Ganglionar Central</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200">
+                    <strong class="text-red-900 block mb-1">Central Profiláctica (cN0):</strong>
+                    <p class="leading-relaxed">No se recomienda de rutina en estadios tempranos; no mejora supervivencia global e incrementa morbilidad nerviosa/paratiroidea.</p>
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
+                    <strong class="text-emerald-950 block mb-1">Central Terapéutica (cN1a):</strong>
+                    <p class="leading-relaxed">Realizada en bloque ante evidencia clínica (USG/biopsia) de metástasis en el Nivel VI.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-code-branch"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Manejo Ganglionar Lateral</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong>Disección Lateral Terapéutica (cN1b):</strong> Implica remoción compartimental reglada ipsilateral de los niveles IIA, III, IV y VB ante afección tumoral.
+                </div>
+                <div class="bg-red-50 p-4 rounded-xl border border-red-200 text-red-950 shadow-sm flex-1 flex flex-col justify-center">
+                    <strong class="block mb-2 text-center text-base"><i class="fa-solid fa-ban text-red-600 mr-1"></i> "Cherry-picking"</strong>
+                    <p class="text-center font-bold">La extirpación aislada exclusiva de un ganglio visible constituye una mala práctica oncológica y está formalmente contraindicada.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-amber-50 rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-amber-200 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-amber-900">Perlas Quirúrgicas NCCN</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-center text-sm text-amber-950 font-medium space-y-3">
+                <div class="bg-white/80 p-3 rounded border border-amber-100 italic leading-relaxed">
+                    "Completion of thyroidectomy is not required for incidental small-volume pathologic N1a metastases (&lt; 5 involved nodes with no metastasis &gt; 2 mm)."
+                </div>
+                <div class="bg-white/80 p-3 rounded border border-amber-100 italic leading-relaxed font-bold">
+                    "Microscopic ETE alone likely does not warrant RAI. This is seen by the surgeon during thyroid resection."
+                </div>
+                <div class="bg-white/80 p-3 rounded border border-amber-100 italic leading-relaxed text-slate-800">
+                    "Due to lower complication rates... patients with thyroid cancer should be offered referral to a high-volume surgeon (&gt; 25–50 thyroidectomies/year)."
+                </div>
+            </div>
+        </div>
+
+    </div> 
+</main>
+
+      <!-- aqui -->
+
+        <!-- BOTÓN DE SIGUIENTE RESUMEN -->
+        <div class="mt-10 sm:mt-12 mb-4 flex justify-center">
+            <a href="index.html" class="group relative inline-flex items-center justify-center gap-3 px-8 py-3 sm:py-4 font-bold text-white bg-gradient-to-r from-indigo-600 to-teal-500 rounded-full shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-teal-600 transition-all duration-300 transform hover:-translate-y-1">
+                <span class="text-base sm:text-lg tracking-wide">Siguiente Resumen</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform duration-300"></i>
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Script de Inicialización de KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // Configuramos los delimitadores para que acepte el signo $ nativo de tu texto
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false,
+                output: 'html' // para mejor adaptación con fuentes web
+            });
+        });
+    </script>
+</body>
+</html>

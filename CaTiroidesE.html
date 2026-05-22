@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">UMAE</span>
+                    <span class="logo-Lite text-sm">25<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // =========================================================
+        const questionsData = [
+    {
+        id: 1, 
+        question: "Estructuras anatómicas que delimitan el nivel ganglionar VI en una evaluación preoperatoria.", 
+        options: ["Borde inferior del cricoides a clavícula", "Base del cráneo a hueso hioides", "Hueso hioides a borde superior esternal", "Sínfisis mandibular a hueso hioides"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Niveles ganglionares por TAC, el nivel VI o compartimento anterior está confinado superiormente por el hueso hioides, inferiormente por el borde superior del esternón y lateralmente por las arterias carótidas comunes. Esta topografía es el sitio primario de metástasis para los carcinomas tiroideos, por lo que su dominio anatómico es vital durante la linfadenectomía terapéutica.<br><br>Perla ENARM: \"Se encuentra delimitado hacia superior por el hueso hioides, hacia inferior por el borde superior del esternón y hacia ambos lados por las arterias carótidas comunes. Incluye a los ganglios linfáticos del compartimento anterior.\"<br><br>Análisis de Distractores: La opción A describe los límites del nivel IV y Vb. La opción B corresponde a los niveles IIa y IIb. La opción D delimita el nivel Ia submentoniano. Todas estas son áreas de disección oncológica reales pero ajenas al compartimento central primario.", 
+        source: "Niveles ganglionares por TAC, 2018, Tabla I, Página 119." 
+    },
+    {
+        id: 2, 
+        question: "Paciente presenta un carcinoma unifocal de 3 cm sin evidencia clínica de metástasis ganglionares ni invasión extratiroidea. Tratamiento quirúrgico inicial de elección.", 
+        options: ["Tiroidectomía total sistemática", "Resección endoscópica transoral", "Lobectomía tiroidea ipsilateral", "Disección radical tipo III"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, la lobectomía es el tratamiento de elección para tumores de 1 cm a 4 cm (cT1b-cT2) cN0 confinados al parénquima. Evitar la tiroidectomía total reduce morbilidades significativas como el hipoparatiroidismo definitivo y la lesión bilateral del nervio laríngeo recurrente, además de que puede eximir al paciente del reemplazo hormonal vitalicio.<br><br>Perla ENARM: \"For patients with low risk, unilateral thyroid cancer >2 and ≤4 cm (cT2N0M0), thyroid lobectomy may be the preferred initial surgical treatment due to significantly lower risk and side effects.\"<br><br>Análisis de Distractores: La opción A somete al paciente a un riesgo quirúrgico bilateral innecesario y dependencia absoluta de levotiroxina. La opción B y D no son los estándares oncológicos de primera línea descritos en las guías normativas para el control locorregional de un estadio bajo y unifocal.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 861." 
+    },
+    {
+        id: 3, 
+        question: "Niveles ganglionares que deben incluirse obligatoriamente durante una disección cervical lateral terapéutica por metástasis confirmada en este compartimento.", 
+        options: ["Niveles I, II, III y VI", "Únicamente el ganglio metastásico", "Niveles IIb, Va, Vb y VI", "Niveles IIa, III, IV y Vb"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, cuando existe enfermedad metastásica lateral comprobada (cN1b), el estándar oncológico dicta realizar una linfadenectomía compartimental sistemática. La extirpación exclusiva del ganglio visible (práctica de \"cherry-picking\") está proscrita por altas tasas de recurrencia locorregional.<br><br>Perla ENARM: \"Therapeutic lateral neck compartmental lymph node dissection, typically including Levels IIa, III, IV and Vb, should be performed as part of initial surgical therapy for patients with biopsy-proven or clinically obvious metastatic lateral compartment cervical lymph-adenopathy.\"<br><br>Análisis de Distractores: La opción B representa una práctica quirúrgica oncológicamente inaceptable (\"cherry-picking\"). Las opciones A y C incluyen combinaciones incorrectas o insuficientes de niveles ganglionares que no garantizan un barrido compartimental lateral estándar y seguro para evitar recurrencias en zonas vírgenes.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 867." 
+    },
+    {
+        id: 4, 
+        question: "Criterio histopatológico obligatorio que define formalmente a un carcinoma diferenciado de tiroides de alto grado.", 
+        options: ["Conteo mitótico ≥ 5/2 mm2", "Presencia de cuerpos de psamoma", "Invasión linfovascular macroscópica focal", "Núcleos con pseudoinclusiones prominentes"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, la quinta edición de la clasificación de la OMS cataloga como carcinoma diferenciado de alto grado a aquel tumor folicular que preserva su arquitectura, pero desarrolla características agresivas mediante un elevado conteo de mitosis y/o necrosis tumoral extensa.<br><br>Perla ENARM: \"Differentiated high-grade thyroid carcinoma: Differentiated cytological and architectural features, at least one the following two histomorphologic features, Mitotic count ≥5/2 mm2 and/or tumor necrosis.\"<br><br>Análisis de Distractores: La opción B y D son hallazgos citológicos nucleares clásicos del carcinoma papilar convencional de bajo riesgo. La opción C eleva el riesgo de recurrencia estructural sistémica, pero el criterio diagnóstico puro y patológico de \"alto grado\" recae estrictamente en la mitosis y necrosis.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Thyroid Cancer Pathology, Página 849." 
+    },
+    {
+        id: 5, 
+        question: "Conducta quirúrgica intraoperatoria recomendada si se documenta pérdida de la señal electromiográfica del nervio laríngeo recurrente en el abordaje inicial bilateral.", 
+        options: ["Completar la resección contralateral", "Posponer la resección contralateral", "Realizar traqueostomía profiláctica", "Seccionar intencionalmente el nervio"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, si durante el monitoreo intraoperatorio (NIM) se evidencia pérdida de la señal del primer nervio laríngeo recurrente (lesión funcional o estructural), el cirujano debe posponer la hemitiroidectomía contralateral para evitar el riesgo inminente de una parálisis bilateral de cuerdas vocales, lo cual condicionaría el compromiso agudo de la vía aérea.<br><br>Perla ENARM: \"In bilateral surgeries, if a loss of EMG signal of the RLN is documented on the first resected side, consider postponing the contralateral resection to avoid bilateral vocal cord paralysis and the consequent need for tracheostomy.\"<br><br>Análisis de Distractores: La opción A desencadenaría inevitablemente una insuficiencia respiratoria severa extubación. La opción C es una morbilidad innecesaria impuesta al paciente si el problema puede prevenirse estadificando la cirugía. La opción D viola los principios básicos de disección anatómica conservadora.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 869." 
+    },
+    {
+        id: 6, 
+        question: "Escenario oncológico en el cual se desaconseja categóricamente realizar la disección ganglionar cervical central profiláctica de rutina.", 
+        options: ["Carcinomas cT3-cT4 cN0", "Carcinomas cT1-cT2 cN0", "Metástasis paratraqueales evidentes", "Tumores de histología agresiva"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, la remoción rutinaria de ganglios del nivel VI en ausencia de enfermedad clínica (cN0) para estadios tempranos intracapsulares (T1-T2) expone al paciente a tasas inaceptables de hipoparatiroidismo permanente y lesión neurológica sin impactar la supervivencia a largo plazo.<br><br>Perla ENARM: \"Prophylactic central-compartment lymph node dissection should not be performed for most small, noninvasive, clinically node-negative PTC (cT1-T2, cN0) and for most FTCs.\"<br><br>Análisis de Distractores: La opción A permite considerar la disección debido al alto riesgo de invasión de estructuras adyacentes en tumores primarios T3/T4. La opción C es una indicación terapéutica y no profiláctica. La opción D amerita intervenciones más amplias ante su biología destructiva comprobada.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 866." 
+    },
+    {
+        id: 7, 
+        question: "Procedimiento quirúrgico mandatorio al realizar una disección terapéutica en el nivel lateral (cN1b) secundario a la presencia de metástasis saltatorias aisladas.", 
+        options: ["Disección del compartimento central ipsilateral", "Observación del compartimento central ipsilateral", "Extirpación ganglionar retrofaríngea", "Radioterapia locorregional exclusiva"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, el concepto anatómico dictamina que solamente un 5% de las metástasis se presentan en el cuello lateral (cN1b) sin involucrar el nivel VI subyacente. Por ello, si se diseca el compartimento lateral terapéuticamente, es mandatorio extraer en bloque el compartimento central homolateral por el riesgo microscópico altísimo.<br><br>Perla ENARM: \"Therapeutic CLND with dissection of the ipsilateral central compartment lymph nodes is recommended to accompany lateral-compartment neck dissection and thyroidectomy for patients with clinically involved lateral neck lymph nodes (cN1b).\"<br><br>Análisis de Distractores: Las opciones B y D omiten la excisión del tejido nodal del Nivel VI el cual funge como paso intermedio de la linfa; propiciando enfermedad residual persistente. La opción C abarca una zona anatómica que no conforma el primer ni el segundo nivel habitual de relevo.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 867." 
+    },
+    {
+        id: 8, 
+        question: "Herramienta de neuromonitorización intraoperatoria asociada a una tasa inferior de lesión neural y preservación temprana de la calidad fonatoria.", 
+        options: ["Palpación manual neural directa", "Visualización anatómica visual exclusiva", "Dispositivo ultrasónico de alta energía", "Estimulación electromiográfica NIM"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, el uso de monitoreo de integridad neural (NIM) respecto a la ligadura tradicional y la simple visualización anatómica ha demostrado mejorar los parámetros acústicos tempranos (frecuencia, tiempo fonatorio) y reducir el riesgo de injuria estructural permanente del nervio laríngeo recurrente.<br><br>Perla ENARM: \"...randomized controlled trial of NIM versus visualization alone with higher rates of EBSLN identification in the NIM group; lower rates of EBSLN injury; and lower early postoperative rates of diminished mean phonation time, voice level, and fundamental frequency.\"<br><br>Análisis de Distractores: La opción B (solo mirar) posee mayores fallas técnicas ante un mapeo linfático inflamado. La opción C es una fuente común de lesión térmica accidental al nervio durante su aislamiento. La opción A es traumática y carece de sensibilidad de integridad axonal intrínseca.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 869." 
+    },
+    {
+        id: 9, 
+        question: "Referencia anatómica tomográfica transversal que delimita exactamente el piso del subnivel ganglionar II e inicio del subnivel III en la valoración del cuello.", 
+        options: ["Borde inferior del hueso hioides", "Borde inferior del cartílago cricoides", "Vientre posterior del músculo digástrico", "Borde superior de la clavícula"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Niveles ganglionares por TAC, la topografía en la imagen axial determina el límite inferior de la región ganglionar yugular superior (Nivel II) proyectando un plano horizontal sobre el borde inferior del hueso hioides, siendo el punto donde nace el nivel III.<br><br>Perla ENARM: \"Comprende a los subniveles IIA y IIB, ambos se encuentran delimitados hacia superior por la base del cráneo y hacia inferior por un plano horizontal que pasa por el borde inferior del cuerpo del hueso hioides.\"<br><br>Análisis de Distractores: La opción B separa el nivel III del IV yugular inferior. La opción C es el límite superior anatómico real del cuello para la base del cráneo (digástrico). La opción D marca la frontera distal final del compartimento IV respecto al mediastino.", 
+        source: "Niveles ganglionares por TAC, 2018, Tabla I, Página 119." 
+    },
+    {
+        id: 10, 
+        question: "Criterio microscópico linfático que avala la seguridad oncológica de no completar la tiroidectomía contralateral (totalización) si el hallazgo ocurre tras una lobectomía.", 
+        options: ["<5 ganglios afectados y metástasis <2 mm", ">5 ganglios afectados y metástasis >2 mm", "Extensión extraganglionar microscópica", "Invasión capsular folicular evidente"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, la positividad patológica incidental en el nivel central o hallazgos N1a de bajo volumen micrometastásico post-resección parcial conllevan una excelente supervivencia. Someter a estos cuellos cN0 al completamiento quirúrgico para dar ablación incrementa morbilidad sin beneficios netos.<br><br>Perla ENARM: \"Completion of thyroidectomy is not required for incidental small-volume pathologic N1a metastases (<5 involved nodes with no metastasis >2 mm).\"<br><br>Análisis de Distractores: La opción B implica una carga tumoral estructural maciza incompatible con observación simple. La opción C es el principal factor de recurrencia locorregional exigiendo exéresis radical e yodo radiactivo. La opción D cambia la clasificación de benigno a maligno folicular, exigiendo protocolos individualizados para T grande.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 864." 
+    },
+    {
+        id: 11, 
+        question: "Límite de edad específico establecido en el actual sistema de estadificación AJCC (8va Edición) que define el cambio drástico en pronóstico de supervivencia y estadio final TNM.", 
+        options: ["≥ 45 años", "≥ 50 años", "≥ 55 años", "≥ 65 años"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid, en el carcinoma diferenciado de tiroides, cualquier paciente menor a la edad umbral, sin metástasis sistémicas comprobadas (M0), clasifica en estadio clínico I o a lo mucho II independientemente del tamaño T o la carga ganglionar masiva N.<br><br>Perla ENARM: \"Age cutoff used for staging was increased from 45 to 55 years at diagnosis.\"<br><br>Análisis de Distractores: La opción A fue el obsoleto parámetro regente por décadas hasta la séptima edición del AJCC. Las opciones B y D carecen de peso predictivo pronóstico formal estandarizado en la estratificación global oncológica del comportamiento de la supervivencia libre de enfermedad en la glándula tiroides.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Staging, Página ST-1." 
+    },
+    {
+        id: 12, 
+        question: "Estructura vascular axial empleada tomográficamente para distinguir la ubicación de la adenopatía entre los subniveles espinales IIa y IIb en la parte alta del cuello.", 
+        options: ["Arteria carótida común", "Vena yugular interna", "Arteria tiroidea superior", "Vena yugular externa"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Niveles ganglionares por TAC, el subnivel IIb reside detrás del plano del nervio accesorio, que clásicamente en un escáner se traza localizando la vena yugular interna. Si la masa toca o rodea la vena es IIa; si se localiza íntegramente detrás con un plano de separación graso, es IIb.<br><br>Perla ENARM: \"Para identificar si los ganglios del nivel II pertenecen al subnivel a o b, se deberá localizar a la vena yugular interna. Si el ganglio se encuentra anterior, medial, lateral o posterior y toma contacto con la vena yugular interna, es el nivel IIa.\"<br><br>Análisis de Distractores: La opción A permite dividir en niveles medios e inferiores (compartimentos III/IV respecto al VI mediano). Las opciones C y D son vasos de calibre secundario que no ofrecen planos longitudinales anatómicos consistentes para definir divisiones linfáticas oncológicas por imagen axial.", 
+        source: "Niveles ganglionares por TAC, 2018, Región superior, Página 120." 
+    },
+    {
+        id: 13, 
+        question: "Fracción del Índice de Ganglios Positivos (LNR) que determina un incremento categórico en el riesgo de recurrencia estructural en el análisis anatomopatológico cervical.", 
+        options: [">0.1", ">0.3", "≤0.1", "≤0.2"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, no solo la presencia nodal positiva es un factor adverso, sino que un volumen de más de 3 a 5 ganglios metastásicos de tamaño mayor a 2 mm con una tasa de ganglios resecados superior al 30% es un indicador independiente para indicar completamiento quirúrgico y radioterapia.<br><br>Perla ENARM: \"A larger number of nodes (more than three to five nodes), higher lymph node ratio (LNR, >0.3), or presence of extranodal extension suggests possible higher risk of recurrence and therefore potential benefit from completion thyroidectomy.\"<br><br>Análisis de Distractores: Las opciones A, C y D señalan la presencia de menor densidad de nódulos linfáticos verdaderamente afectados y resecados, ubicando al paciente en riesgo muy bajo de persistencia que no justifica someterlo a segundas cirugías ablativas ni toxicidad por radiación de forma forzosa.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 864." 
+    },
+    {
+        id: 14, 
+        question: "Subnivel topográfico ganglionar exacto de riesgo para los carcinomas papilares que nacen exclusivamente dentro de la proyección del istmo o lóbulo piramidal.", 
+        options: ["Nivel IIa", "Nivel III", "Nivel VI", "Nivel IV"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, las masas que asientan en la parte medial istmica comprometen tempranamente los ganglios prelaringeos, típicamente conocidos como de \"Delphian\". Dichos nodos linfáticos asientan delante de la membrana cricotiroidea e integran formalmente el bloque quirúrgico del nivel VI o central.<br><br>Perla ENARM: \"The Delphian or prelaryngeal lymph node(s) is/are located anterior to the cricothyroid membrane and superior to the isthmus. This is a common site for nodal metastasis from PTCs arising in the isthmus.\"<br><br>Análisis de Distractores: Las opciones A, B y D conforman las barreras ganglionares secundarias de tipo lateral. Su vaciamiento no aplica inicialmente si no existe confirmación clínica previa ni linfadenopatía aparente locorregional confirmada durante una exéresis puramente istmica de microcarcinoma.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 866." 
+    },
+    {
+        id: 15, 
+        question: "Marcador tumoral o tamaño anatómico absoluto exigido para rechazar la lobectomía e indicar irrefutablemente la tiroidectomía total en patología diferenciada no invasiva.", 
+        options: ["Tumor >2 cm", "Microcarcinoma agresivo", "Invasión linfovascular escasa", "Tumor >4 cm"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid, en presencia de tumores mayores a 4 centímetros (T3a clínico) confinados enteramente en la glándula y sin metástasis a distancia asociadas (N0M0), el tratamiento dictaminado universalmente y obligado para evitar recurrencia masiva consiste en totalizar la extirpación para poder ofertar yodo.<br><br>Perla ENARM: \"Consider total thyroidectomy for bilateral nodularity or tumors >4 cm in diameter.\"<br><br>Análisis de Distractores: La opción A (tumores menores a 4 cm, como aquellos de 2 cm sin factores adversos macroscópicos) representan la pauta clásica mundial para conservar un lóbulo tiroideo en vigilancia estrecha. Las opciones B y C engloban variantes que obligan a evaluar morbilidad individualizada pero sin proscribir totalmente el abordaje hemicervical.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Follicular Carcinoma, Página FOLL-1." 
+    },
+    {
+        id: 16, 
+        question: "Modificación clínica en la estadificación al reportar una extensión extratiroidea (ETE) exclusivamente de tipo microscópico en la pieza quirúrgica final.", 
+        options: ["Incrementa a estadio clínico avanzado IVb", "Requiere categorización forzosa cT4", "No modifica la categoría T actual", "Exige disección radical profunda profiláctica"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, la octava edición del manual AJCC eliminó al grado patológico de extensión extratiroidea microscópica pT3 del grupo primario por su reducida implicación letal real. Actualmente el tamaño absoluto intraparenquimatoso es lo único que dictamina la letra T, sin verse alterada por los márgenes milimétricos.<br><br>Perla ENARM: \"Minimal extrathyroidal extension detected only on histological examination was removed from the definition of T3 disease and therefore has no impact on either T category or overall stage.\"<br><br>Análisis de Distractores: Las opciones A y B describen la estadificación previa (séptima edición) en la que microscópicamente el paciente sufría un sobrediagnóstico dramático. La opción D no corresponde a la táctica mesurada actual para frenar el daño local paratiroideo asintomático mediante linfadenectomías agresivas por hallazgos subcentimétricos.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Staging, Página 876." 
+    },
+    {
+        id: 17, 
+        question: "Planteamiento quirúrgico idóneo y resolutivo a ejecutar frente a un carcinoma de conducto tirogloso (TGDCa) con extensión comprobada hacia la glándula.", 
+        options: ["Procedimiento de Sistrunk aislado", "Resección quística conservadora", "Lobectomía anterior preventiva", "Procedimiento Sistrunk y tiroidectomía total"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, en aquellos casos atípicos donde la malignidad del conducto exhibe rasgos histológicos invasivos macizos a los lechos paratraqueales, metástasis gangliónares diseminadas, o involucro real a los lóbulos tiroideos, se ejecuta la amputación sistémica en bloque sumada a una extracción tiroidea bicapsular para erradicar el lecho originario.<br><br>Perla ENARM: \"A Sistrunk procedure and total thyroidectomy should be performed for TGDCa with evidence of more advanced disease (e.g., gross extension of tumor into surrounding tissues, nodal or distant metastasis).\"<br><br>Análisis de Distractores: Las opciones A y B aplican para los quistes y neoplasias pequeñas incidentales focales de un individuo joven, sin impacto diseminativo que ponga en riesgo de muerte estructural o exija radioterapia de rescate a los lechos contiguos asintomáticos, como plantea la opción C.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 865." 
+    },
+    {
+        id: 18, 
+        question: "Límites musculares tangenciales que encierran el compartimento ganglionar cervical lateral de bajo relieve perteneciente al Nivel V.", 
+        options: ["Músculo esternohioideo y músculo tirohioideo", "Músculo omohioideo y vena subclavia", "Borde posterior esternocleidomastoideo y anterior del trapecio", "Borde inferior esplenio del cuello y base craneal"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Niveles ganglionares por TAC, el triángulo anatómico lateral espinal engloba los subniveles Va (craneal al cricoides) y Vb (caudal hasta la clavícula). Su cúpula aponeurótica está encajada en el plano graso posterior del esternocleidomastoideo y se desliza resecando hasta topar con la pared anterolateral muscular del trapecio.<br><br>Perla ENARM: \"Limitado hacia anterior por el borde posterior del músculo esternocleidomastoideo o los ramos sensitivos del plexo cervical y hacia posterior por el borde anterior del músculo trapecio. Incluye a los ganglios linfáticos del triángulo posterior del cuello.\"<br><br>Análisis de Distractores: La opción A refiere a la anatomía visceral de la subglotis y nivel VI central. La opción B son puntos de reparo de un bloque ganglionar transversal infrahioideo profundo, no percutáneo. La opción D delimita el plano nucal posterior de extrema profundidad, que carece de relevancia diseminativa yugular.", 
+        source: "Niveles ganglionares por TAC, 2018, Tabla I, Página 119." 
+    },
+    {
+        id: 19, 
+        question: "Modalidad clínica preoperatoria indispensable en un cáncer tiroideo invasor para descartar o confirmar parálisis unilateral funcional de la vía aerodigestiva.", 
+        options: ["Tomografía por emisión de positrones", "Gammagrafía yodada diagnóstica focal", "Evaluación ecográfica ganglionar lateral", "Evaluación de movilidad de cuerdas vocales"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, el laringoscopio o ecógrafo en consultorio debe ser el paso inicial inquebrantable si existe invasión cT4 previsible en tomografía, compromiso voluminoso central, o alteración evidente en la voz. Documentar parálisis ipsilateral antes del procedimiento alerta al cirujano a salvar el trayecto contralateral.<br><br>Perla ENARM: \"Should the patient undergo voice or laryngeal examination prior to surgery? How should the recurrent laryngeal nerves be assessed intraoperatively?... Laryngoscopy, including evaluation of vocal cord mobility.\"<br><br>Análisis de Distractores: Las opciones A y B identifican fisiología sistémica o regional del tumor metastásico pero de forma estática; carecen de utilidad real fisiológica fonatoria. La opción C planifica topográficamente la linfadenectomía sin proteger per se un defecto preexistente que afecte mecánicamente la ventilación glótica.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 869." 
+    },
+    {
+        id: 20, 
+        question: "Alteración somática genética que determina alta refractariedad sistémica y progresión locorregional mortal al interactuar simultáneamente con la mutación BRAF V600E.", 
+        options: ["Mutación activadora del gen RAS", "Fusión oncoprotéica TRK A y B", "Mutación del promotor TERT", "Rearreglo cromosómico RET/PTC"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, el hallazgo de mutación BRAF V600E de forma individual incrementa el daño local sin acarrear siempre la muerte. Sin embargo, su manifestación co-mutada y simultánea junto al gen del promotor de transcriptasa inversa telomerasa (TERT) potencia brutalmente el cáncer y bloquea la internalización yodada del radiofármaco postoperatorio.<br><br>Perla ENARM: \"The coexistence of BRAF V600E and TERT promoter mutations is associated with an extremely high risk of tumor aggressiveness and increased tumor specific mortality, making it refractory to RAI therapy.\"<br><br>Análisis de Distractores: Las opciones A y D son alteraciones típicas en carcinomas incidentales solitarios e intraparenquimatosos con un excelente comportamiento indolente y sobrevida elevada. La opción B amerita uso de terapias sistémicas con larotrectinib, pero su prevalencia e implicación clínica mortífera sinérgica no se comprara a la temible \"dupla genética\" TERT/BRAF.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Epidemiology and Etiology, Página 852." 
+    },
+    {
+        id: 21, 
+        question: "Límite anatómico transversal en la tomografía computada que establece la frontera inferior del nivel ganglionar III y el inicio del nivel IV.", 
+        options: ["Borde inferior del hueso hioides", "Borde inferior del cartílago cricoides", "Borde superior del manubrio esternal", "Borde inferior de la glándula submandibular"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Niveles ganglionares por TAC, el reparo tomográfico estandarizado para dividir a los ganglios de la cadena yugular media (Nivel III) de los ganglios de la cadena yugular inferior (Nivel IV) es el plano transversal que pasa por el límite caudal del cricoides.<br><br>Perla ENARM: \"El nivel III está delimitado hacia superior por un plano horizontal definido por el borde inferior del cuerpo del hueso hioides, hacia inferior por un plano horizontal definido por el borde inferior del cartílago cricoides.\"<br><br>Análisis de Distractores: La opción A delimita la frontera superior del nivel III separándolo del nivel II. La opción C marca el límite inferior anatómico definitivo del nivel IV y VI hacia el mediastino. La opción D divide indirectamente compartimentos submandibulares en la región superior, ajenos a la cadena yugular baja.", 
+        source: "Niveles ganglionares por TAC, 2018, Tabla I, Página 119." 
+    },
+    {
+        id: 22, 
+        question: "Estructura anatómica afectada que clasifica a un tumor primario estrictamente como estadio local cT3b según el sistema AJCC.", 
+        options: ["Músculos esternohioideo y omohioideo", "Nervio laríngeo recurrente ipsilateral", "Fascia prevertebral y vasos mediastinales", "Tejido blando subcutáneo cervical"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, la estadificación T3b está reservada exclusivamente para los tumores de cualquier tamaño que presentan invasión extratiroidea macroscópica restringida a los músculos infrahioideos o \"strap muscles\" (esternohioideo, esternotiroideo, tirohioideo u omohioideo).<br><br>Perla ENARM: \"T3b Gross extrathyroidal extension invading only strap muscles (sternohyoid, sternothyroid, thyrohyoid, or omohyoid muscles) from a tumor of any size.\"<br><br>Análisis de Distractores: La opción B y D escalan inmediatamente el pronóstico a un estadio T4a (enfermedad localmente avanzada). La opción C describe la invasión masiva irresecable correspondiente a la máxima categoría tumoral T4b.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Staging, Página 876." 
+    },
+    {
+        id: 23, 
+        question: "Referencia muscular que permite subdividir tomográficamente el nivel ganglionar submentoniano (Ia) del nivel submandibular (Ib) en el cuello.", 
+        options: ["Vientre posterior del músculo digástrico", "Borde medial del músculo milohioideo", "Vientre anterior del músculo digástrico", "Borde lateral del músculo estilohioideo"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Niveles ganglionares por TAC, el compartimento anatómico I se subdivide en Ia y Ib utilizando como frontera en los cortes axiales superiores al vientre anterior del músculo digástrico. Lo que se ubica medial es el territorio submentoniano, y lo lateral es el lecho de la glándula submandibular.<br><br>Perla ENARM: \"Si el ganglio corresponde al nivel I debemos localizar el vientre anterior del músculo digástrico. Si se encuentra medial al mismo, es el nivel Ia; mientras que si se encuentra lateral, corresponde al nivel Ib.\"<br><br>Análisis de Distractores: La opción A y D delimitan las porciones posteriores de este triángulo anatómico dividiendo el nivel I del nivel II superior. La opción B conforma el piso muscular profundo de la boca, no un límite de escrutinio linfático seccional estandarizado.", 
+        source: "Niveles ganglionares por TAC, 2018, Región Superior, Página 120." 
+    },
+    {
+        id: 24, 
+        question: "Tamaño mínimo en el diámetro menor de un ganglio linfático cervical lateral sospechoso por ultrasonido para tener indicación de biopsia por aspiración con aguja fina.", 
+        options: ["Mayor a 3 milímetros", "Mayor a 5 milímetros", "Mayor a 8 milímetros", "Mayor a 15 milímetros"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, la punción ganglionar preoperatoria está fundamentada para confirmar metástasis que cambien la conducta quirúrgica, recomendándose intervenir aquellos nodos que rebasan un eje corto mínimo de 8 a 10 mm y muestran patrón ecográfico de riesgo.<br><br>Perla ENARM: \"Ultrasound-guided FNA of sonographically suspicious lymph nodes greater than 8–10 mm in the smallest diameter should be performed to confirm malignancy if this would change management.\"<br><br>Análisis de Distractores: Las opciones A y B describen adenopatías subcentimétricas (micrometástasis) cuyo muestreo es técnicamente difícil y cuya confirmación preoperatoria rara vez modifica la morbimortalidad, prefiriéndose vigilancia estrecha. La opción D retrasa inaceptablemente el diagnóstico al exigir cargas tumorales voluminosas evidentes a simple vista.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 856." 
+    },
+    {
+        id: 25, 
+        question: "Tecnología de imagen emergente intraoperatoria recomendada para mejorar la identificación anatómica y preservar la vascularidad de las glándulas paratiroides.", 
+        options: ["Resonancia magnética transoperatoria directa", "Gammagrafía con tecnecio 99m sestamibi", "Autofluorescencia y verde de indocianina", "Tomografía computada de haz cónico"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, la identificación paratiroidea para prevenir el hipoparatiroidismo definitivo ha evolucionado del simple reconocimiento visual a la integración de sistemas de infrarrojo cercano que detectan la autofluorescencia intrínseca paratiroidea acoplados a angiografía con verde de indocianina para verificar su perfusión en tiempo real.<br><br>Perla ENARM: \"Autofluorescence and indocyanine green in thyroid surgery: A systematic review and meta-analysis... Near-infrared autofluorescence imaging in thyroid surgery.\"<br><br>Análisis de Distractores: Las opciones A y D son herramientas excesivamente invasivas y sin viabilidad de integración rápida al lecho quirúrgico central del cuello. La opción B es un recurso de mapeo preoperatorio de adenomas hiperfuncionantes, careciendo de utilidad vascular dinámica en el transoperatorio de tiroides oncológica.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 873." 
+    },
+    {
+        id: 26, 
+        question: "Volumen quirúrgico anual mínimo por cirujano asociado a una reducción significativa en las complicaciones posoperatorias de la tiroidectomía oncológica.", 
+        options: ["Mayor a 10 tiroidectomías por año", "Mayor a 25 tiroidectomías por año", "Mayor a 75 tiroidectomías por año", "Mayor a 100 tiroidectomías por año"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, existe evidencia contundente de que el abordaje por cirujanos de alto volumen, definidos por realizar más de 25 a 50 tiroidectomías anualmente, impacta drásticamente en la disminución del daño laringeo permanente y la hipocalcemia refractaria.<br><br>Perla ENARM: \"Due to lower complication rates and improved outcomes on average associated with high volume thyroid surgeons (>25–50 thyroidectomies/year), patients with thyroid cancer should be offered referral to a high-volume surgeon.\"<br><br>Análisis de Distractores: La opción A define a un cirujano de bajo volumen con riesgo elevado comprobado de lesión neural e injuria paratiroidea en linfadenectomías del nivel VI. Las opciones C y D superan el umbral bibliográfico establecido mundialmente para asegurar estandarización técnica segura y calidad institucional, aunque representen excelente pericia clínica.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 855." 
+    },
+    {
+        id: 27, 
+        question: "Conducta clínica respecto a la terapia con yodo radiactivo posoperatorio tras el uso de tomografía computada con contraste yodado preoperatorio.", 
+        options: ["Contraindica permanentemente la terapia adyuvante", "Requiere diálisis profiláctica preoperatoria", "Disminuye la dosis total de yodo necesaria", "Retrasa el tratamiento por 4 a 8 semanas"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid, la tomografía con contraste no debe evitarse si es necesaria para delinear la invasión laringotraqueal o linfática lateral. Su uso satura el pool de yodo orgánico, lo cual exige esperar entre 4 y 8 semanas metabólicas para lograr un aclaramiento fisiológico total y proceder con el radioyodo sin interferencia competitiva.<br><br>Perla ENARM: \"Use of iodinated contrast is required for optimal cervical imaging using CT; potential delay in RAI treatment will not cause harm... 4-8 weeks are required for clearance.\"<br><br>Análisis de Distractores: La opción A refleja un mito histórico desmentido por el aclaramiento renal compensatorio a mediano plazo. La opción B carece de justificación metabólica y somete a riesgo de sangrado. La opción C es falsa, la dosis se prescribe por estadificación de riesgo, sin ser compensada ni alterada por el yodo libre inerte.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Papillary Carcinoma, Página PAP-1 y THYR-C." 
+    },
+    {
+        id: 28, 
+        question: "Compartimento ganglionar al que pertenecen topográficamente los ganglios linfáticos del nivel VII y su estadificación regional patológica correspondiente.", 
+        options: ["Compartimento lateral clasificado como pN1b", "Compartimento retrofaríngeo clasificado como pN1b", "Compartimento mediastinal clasificado como pM1", "Compartimento central clasificado como pN1a"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, la octava edición del AJCC reclasificó a los ganglios linfáticos mediastinales superiores (Nivel VII), previamente agrupados con la enfermedad lateral, integrándolos biológicamente como extensión directa dependiente del lecho yugular anterior. Quirúrgicamente se disecan como progresión anatómica unificada del compartimento central.<br><br>Perla ENARM: \"Level VII lymph nodes, previously classified as lateral neck lymph nodes (N1b), were reclassified as Central neck lymph nodes (N1a).\"<br><br>Análisis de Distractores: Las opciones A y B confunden con grupos de relevo distal con implicación pronóstica adversa dispar que ameritan abordajes cervicales amplios modificados (disección radical o compartimental lateral). La opción C describe erróneamente diseminación sistémica, cuando el nivel mediastinal alto representa propagación linfática locorregional anatómica directa por gravedad fascial.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Staging, Página 876." 
+    },
+    {
+        id: 29, 
+        question: "Criterio de progresión estructural absoluto para abandonar la vigilancia activa e indicar la resección quirúrgica en un microcarcinoma papilar.", 
+        options: ["Crecimiento tumoral ≥ 1 milímetro", "Crecimiento tumoral ≥ 3 milímetros", "Incremento del volumen mayor al 10%", "Disminución de la ecogenicidad tumoral"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, en el protocolo de monitoreo estrecho de microcarcinomas, un nódulo que evidencia incremento dimensional igual o superior a 3 milímetros en cualquier eje, invasión progresiva a la cápsula, o aparición de adenopatía incidental, traduce comportamiento biológico hostil debiendo ejecutarse el tratamiento ablativo primario diferido.<br><br>Perla ENARM: \"... prompt initial or follow-up consultation with the involved thyroid surgeon is indicated if there is clinically significant increase in tumor size described as cancer growth by ≥ 3 mm in any dimension.\"<br><br>Análisis de Distractores: La opción A representa una variación interobservador o técnica milimétrica del ecografista sin relevancia biológica concluyente. La opción C emplea un criterio volumétrico aislado tridimensional no adoptado universalmente frente a diámetros sólidos directos. La opción D define cambios isquémicos u oncocíticos sin ser indicio indiscutible de agresividad y volumen en expansión.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 861." 
+    },
+    {
+        id: 30, 
+        question: "Característica ecográfica específica en una adenopatía cervical sospechosa que justifica añadir la medición de tiroglobulina en el lavado de la aguja (FNA-Tg).", 
+        options: ["Presencia de microcalcificaciones difusas", "Aumento de la vascularidad periférica", "Ganglio linfático con cambios quísticos", "Pérdida del hilio graso ecogénico"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, cuando un ganglio presenta degeneración quística extensa, la aspiración rinde escasas células foliculares o abundantes histiocitos, arrojando falsos negativos citológicos. La determinación de tiroglobulina en el líquido lavado de dicha cavidad brinda máxima especificidad confirmando o descartando depósito tumoral de origen tiroideo.<br><br>Perla ENARM: \"Tg washout is a helpful adjunct to FNA, particularly in cases where the lymph nodes are cystic, cytological evaluation of the lymph node is inadequate...\"<br><br>Análisis de Distractores: Las opciones A, B y D denotan hallazgos estructurales sólidos sospechosos cuya matriz celular compacta permite generalmente una evaluación morfológica citológica altamente concluyente de Bethesda maligno sin requerir forzosamente validaciones bioquímicas de rutina para programar disección de niveles.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 857." 
+    },
+    {
+        id: 31, 
+        question: "Consecuencia oncológica directa de realizar la extirpación exclusiva de ganglios visibles individuales (\"cherry-picking\") en un cuello lateral cN1b.", 
+        options: ["Altas tasas de recurrencia locorregional", "Reducción del riesgo de quilotórax", "Prevención del hipoparatiroidismo definitivo", "Disminución del riesgo de disfonía"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, ante enfermedad evidente metastásica, el intento fallido de remover únicamente la masa aparente dejando intacto el tejido graso linfático residual contiguo abandona micrometástasis inminentes en la aponeurosis. Se impone reglamentariamente la disección en bloque de niveles II-Vb sistemática para curación.<br><br>Perla ENARM: \"Because of the increased risk of recurrence with ''berry-picking,'' compartmental dissection is recommended in the primary setting and during reoperation if it proves possible.\"<br><br>Análisis de Distractores: La opción B no compensa de forma lícita abandonar nidos malignos. Las opciones C y D evalúan morbilidades primordiales del área traqueoesofágica nivel VI o central, no siendo los focos fisiopatológicos de las cirugías radicales espinales de las áreas latero-cervicales y yugulares del cuello diseminado.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Long-term Management, Página 906." 
+    },
+    {
+        id: 32, 
+        question: "Objetivo funcional principal de la identificación anatómica y neuromonitorización de la rama externa del nervio laríngeo superior.", 
+        options: ["Prevenir la parálisis bilateral de cuerdas", "Mantener la movilidad de la articulación cricoaritenoidea", "Preservar agudos y frecuencia fundamental", "Disminuir la incidencia de traqueostomía posoperatoria"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, el nervio laríngeo superior inerva el músculo cricotiroideo, tensando las cuerdas vocales. Su lesión compromete la proyección de tonos altos y condiciona fatiga vocal temprana (frecuencia fundamental disminuida). El uso de neuroestimulación EBSLN (External Branch Superior Laryngeal Nerve) minimiza notablemente este deterioro microestructural de la voz.<br><br>Perla ENARM: \"Intraoperative identification and neurophysiological monitoring of the external branch of the superior laryngeal nerve (EBSLN) may be performed during thyroidectomy for malignancy in an effort to improve accurate nerve identification and improve voice outcomes.\"<br><br>Análisis de Distractores: Las opciones A, B y D son secuelas fisiológicas dramáticas puras derivadas exclusivamente del colapso del nervio laríngeo recurrente, afectando la motricidad transversal y apertura total glótica; yugulando agudamente la vía aérea del paciente resecado, y no limitándose a variaciones semánticas del habla.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 869." 
+    },
+    {
+        id: 33, 
+        question: "Hallazgo intraoperatorio o radiológico que estadifica a un carcinoma de tiroides como enfermedad local muy avanzada cT4b.", 
+        options: ["Invasión a la fascia prevertebral", "Invasión al nervio laríngeo recurrente", "Invasión a los músculos esternohioideos", "Invasión al tejido blando subcutáneo"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, el peor escenario primario de invasión en la glándula es aquel donde el tumor rompe compartimentos hacia posterior alcanzando la musculatura de la base de la columna (fascia prevertebral) o abrazando grandes vasos (carótida, mediastino), confiriendo la categoría de extremo riesgo anatómico o irresecabilidad T4b.<br><br>Perla ENARM: \"T4b Very advanced disease; tumor of any size with extension toward the spine or into nearby large blood vessels, gross extrathyroidal extension invading the prevertebral fascia, or encasing the carotid artery or mediastinal vessels.\"<br><br>Análisis de Distractores: La opción B y D determinan un estadio avanzado T4a manejable frecuentemente con exéresis ampliada. La opción C es una extensión moderada T3b susceptible de abordajes oncológicos limpios sin morbilidad sistémica catastrófica inminente durante la disección paratraqueal.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Staging, Página 876." 
+    },
+    {
+        id: 34, 
+        question: "Tratamiento quirúrgico de primera línea indicado para un carcinoma papilar con ganglios laterales metastásicos comprobados por biopsia.", 
+        options: ["Lobectomía ipsilateral aislada", "Tiroidectomía total con disección lateral", "Resección endoscópica transoral", "Ablación con etanol percutánea"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, la existencia de diseminación locorregional cN1 demostrada dicta imperativamente abordar con máxima exigencia la glándula central para supresión y yodo adyuvante. El manejo ablativo conservador unicameral no suprime integralmente el origen en paciente diseminado requiriendo por tanto tiroidectomía radical aunada a vaciamiento linfático formal.<br><br>Perla ENARM: \"For patients with... clinically apparent metastatic disease to lymph nodes (cN1) or distant sites (cM1), the initial surgical procedure should include a total thyroidectomy with gross removal of all primary tumor and node dissection...\"<br><br>Análisis de Distractores: La opción A es el manejo idealizado moderno pero condicionado exclusivamente a estadios tempranos confinados cN0. La opción C esconde gran morbilidad reconstructiva y pobre limpieza ganglionar lateral en cirujanos estándar. La opción D asiste en paliación irresecable de cuellos hostiles por comorbilidades sistémicas pero jamás es curativa primaria.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 861." 
+    },
+    {
+        id: 35, 
+        question: "Terapia primaria recomendada para el control local de un carcinoma papilar irresecable que invade estructuras vitales en el cuello.", 
+        options: ["Quimioterapia citotóxica preoperatoria", "Radioterapia de haz externo locorregional", "Disección radical de cuello tipo I", "Supresión agresiva de hormona estimulante"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid, en presencia de un conglomerado maligno fijado masivamente a la vía aerodigestiva sin posibilidad técnica de rescate quirúrgico, la radioterapia de haz externo ofrece la mejor tasa de preservación estructural vital y detiene la injuria destructiva inmediata del primario inoperable.<br><br>Perla ENARM: \"For select patients with unresectable, RAI-refractory, and progressive disease, consider: RT. Consider EBRT if disease is threatening vital structures.\"<br><br>Análisis de Distractores: La opción A no ha demostrado efectividad de inducción (neo) concluyente comparable al rescate actínico focalizado para masas en tiroides. La opción C supone un riesgo hemostático fatal no redituable ante falta de movilidad plana de fascias. La opción D retrasa el crecimiento subcentimétrico de focos remanentes, sin efecto citorreductor físico de urgencia.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Papillary Carcinoma, Página PAP-9." 
+    },
+    {
+        id: 36, 
+        question: "Conducta terapéutica inicial recomendada para el manejo posoperatorio de la sensación de rigidez cervical y disfagia limitante tras la tiroidectomía.", 
+        options: ["Inyección local de toxina botulínica", "Masaje y ejercicios de rango de movimiento", "Relajantes musculares de acción central", "Reintervención para fasciotomía cervical"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, un alto número de resecados desarrolla el \"cuello apretado\", englobando limitación cervical por contractura aponeurótica tras cierre platismal. La indicación estelar consiste en instituir terapia física precoz de deslizamiento miocutáneo logrando evitar la cronicidad del síntoma sin medicalización superflua.<br><br>Perla ENARM: \"Some patients experience a \"tight neck\" after thyroid surgery that is most noticeable in the first 3 months... Massage and neck range of motion exercises in the immediate post-op period may help to minimize this effect...\"<br><br>Análisis de Distractores: La opción A representa una medida extrema denervadora ante focos espásticos focales inusuales refractarios, no como primera línea funcional del dolor. Las opciones C y D carecen de sustento mecanicista tisular local y escalan desproporcionadamente la intervención al generar toxicidad sistémica y riesgo anatómico hemorrágico local injustificable en una recuperación fisiológica previsible.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 871." 
+    },
+    {
+        id: 37, 
+        question: "Clasificación clínica regional ganglionar correcta para la presencia de enfermedad metastásica aislada en los ganglios retrofaríngeos.", 
+        options: ["Ganglios linfáticos N0b", "Ganglios linfáticos N1a", "Ganglios linfáticos N1b", "Ganglios linfáticos NX"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid, la agrupación de diseminación N1b no solo abarca los niveles cervicales laterales (I a V), sino que define intrínsecamente la progresión hostil reticular del drenaje linfático hacia las cadenas profundas retrofaríngeas ensombreciendo de forma sistémica el abordaje terapéutico.<br><br>Perla ENARM: \"N1b Metastasis to unilateral, bilateral, or contralateral lateral neck lymph nodes (levels I, II, III, IV, or V) or retropharyngeal lymph nodes.\"<br><br>Análisis de Distractores: La opción A afirma engañosamente sanidad de imagen preoperatoria, siendo radicalmente falso. La opción B define micrometástasis paratraqueales contiguas puramente dependientes del lecho operatorio natural. La opción D evalúa incertidumbre histológica ausente ante confirmación estructural profunda evaluada.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Staging, Página ST-2." 
+    },
+    {
+        id: 38, 
+        question: "Condición clínica específica del tumor primario que justifica realizar una disección ganglionar central profiláctica en un paciente con cuello cN0.", 
+        options: ["Carcinoma microinvasor cT1a", "Tumores primarios avanzados cT3 o cT4", "Carcinomas foliculares no invasivos", "Tumor incidental menor a 1 cm"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, cuando existe una masa voluminosa maciza con alta presunción preoperatoria de envolvimiento muscular u órgano-estructural (T3-T4) se considera aceptable y seguro oncológicamente el realizar remoción profiláctica nivel VI por la alta incidencia demostrada de macrometástasis oculta que facilitaría invasión catastrófica recurrente futura.<br><br>Perla ENARM: \"Prophylactic central-compartment neck dissection may be considered in patients with PTC and clinically uninvolved lymph nodes (cN0) who have advanced primary tumors (T3 or T4).\"<br><br>Análisis de Distractores: Las opciones A y D son entidades benignas comportamentales en su mayoría en las cuales el hipoparatiroidismo provocado arriesga la calidad de vida de un enfermo con expectativa global prístina. La opción C disemina fisiopatológicamente mediante rutas hemáticas y vasculares de salto sistémico volviendo fútil barrer niveles linfoides cervicales centrales asintomáticos.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 866." 
+    },
+    {
+        id: 39, 
+        question: "Hallazgo histopatológico posoperatorio tras una lobectomía tiroidea que establece la indicación absoluta de tiroidectomía de completamiento.", 
+        options: ["Presencia de invasión vascular", "Histología variante folicular encapsulada", "Ausencia de enfermedad contralateral", "Tumor menor a 2 cm unifocal"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid, el completamiento totalizador quirúrgico de la glándula tras un abordaje inicial hemitiroideo se indica obligatoriamente de forma retroactiva si la patología expone marcadores letales ocultos como la invasión en los vasos sanguíneos, lo cual exige obligatoriamente rastreo metabólico global y administración de yodo adyuvante para erradicar émbolos a distancia.<br><br>Perla ENARM: \"Completion of thyroidectomy: Any of the following: Gross positive resection margins, Gross extra-thyroidal extension, Confirmed nodal metastasis, Confirmed contralateral disease, Vascular invasion.\"<br><br>Análisis de Distractores: Las opciones C y D evalúan estadios precoces de contención intracapsular biológica excelente donde es regla áurea mantener en vigilancia armada al lóbulo residual minimizando exposición de los nervios contralaterales al trauma. La opción B enmarca un tipo específico reetiquetado internacionalmente hacia NIFTP cuyo curso indolente proscribe el manejo quirúrgico radical o yodo empírico asumiendo riesgo cero.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Papillary Carcinoma, Página PAP-2." 
+    },
+    {
+        id: 40, 
+        question: "Terapia de elección para el control ortopédico de metástasis óseas sintomáticas en sitios anatómicos de carga mecánica.", 
+        options: ["Vigilancia activa con resonancia magnética", "Paliación quirúrgica y radioterapia de haz externo", "Quimioterapia citotóxica neoadyuvante exclusiva", "Supresión leve de TSH sin intervención local"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid, las metástasis esqueléticas dependientes de la glándula de tiroides asientan secundariamente alta agresividad osteolítica. Su presentación dolorosa progresiva en regiones con soporte de peso (columna o fémur) exige urgente estabilización ortopédica local para el salvamento de la integridad mecánica aunada a haz irradiante coadyuvante con el fin de frenar la destrucción local en hueso blando.<br><br>Perla ENARM: \"Consider surgical palliation and/or RT/other local therapies when available if symptomatic, or asymptomatic in weight-bearing sites. Embolization prior to surgical resection of bone metastases should be considered to reduce the risk of hemorrhage.\"<br><br>Análisis de Distractores: La opción A expone al paciente inevitablemente a fracturas patológicas discapacitantes por carga que dictaminan morbimortalidad incapacitante. La opción C no tiene penetrancia ni rol estandarizado agudo focal en tejidos estructurales de hueso. La opción D disminuye a largo plazo la estimulación celular pero jamás consolida un hueso perforado frágil sin sostén, debiendo combinarse con las terapias ablativas mecánicas descritas en la respuesta estelar.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Papillary Carcinoma, Página PAP-10." 
+    },
+    {
+        id: 41, 
+        question: "Límite anatómico lateral que define quirúrgicamente al compartimento ganglionar central o Nivel VI del cuello.", 
+        options: ["Venas yugulares internas", "Músculos omohioideos", "Arterias carótidas comunes", "Nervios vagos cervicales"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Niveles ganglionares por TAC, el nivel VI es el sitio inicial de abordaje profiláctico o terapéutico en el cáncer papilar. Su dominió anatómico transversal confina estrictamente el vaciamiento entre ambas vainas carotideas. Extender la disección por fuera de este límite arterial implica ingresar a la cadena yugular media inferior correspondiente a los niveles III y IV.<br><br>Perla ENARM: \"Se encuentra delimitado hacia superior por el hueso hioides, hacia inferior por el borde superior del esternón y hacia ambos lados por las arterias carótidas comunes.\"<br><br>Análisis de Distractores: La opción A transcurre lateral a la carótida marcando el eje estructural de los niveles II a IV. La opción B cruza oblicuamente el cuello sin representar un límite compartimental central estandarizado vertical. La opción D asienta dentro de la vaina carotídea posterior, no siendo el punto de reparo quirúrgico anterior principal del nivel VI.", 
+        source: "Niveles ganglionares por TAC, 2018, Tabla I, Página 119." 
+    },
+    {
+        id: 42, 
+        question: "Estructura cuya invasión directa por el tumor primario estadifica clínicamente al carcinoma papilar como enfermedad T4a.", 
+        options: ["Fascia prevertebral posterior", "Nervio laríngeo recurrente", "Músculos esternohioideos", "Arteria carótida interna"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, la invasión destructiva de la vía aerodigestiva adyacente, incluyendo laringe, tráquea, esófago, tejido blando subcutáneo o el nervio laríngeo recurrente, eleva drásticamente la morbimortalidad locorregional y define categóricamente un estadio avanzado resecable T4a.<br><br>Perla ENARM: \"T4a Gross extrathyroidal extension to major neck structures: Invading soft tissue, larynx, trachea, esophagus, or recurrent laryngeal nerve.\"<br><br>Análisis de Distractores: Las opciones A y D son hallazgos de invasión masiva hacia grandes vasos o columna que lo tornan virtualmente irresecable y elevan el estadio al máximo nivel T4b. La opción C corresponde a invasión extratiroidea macroscópica de la musculatura anterior pretiroidea, catalogada como cT3b.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Staging, Página 876." 
+    },
+    {
+        id: 43, 
+        question: "Localización topográfica del margen quirúrgico microscópico positivo asociada de forma independiente a la mayor tasa de persistencia y recurrencia locorregional.", 
+        options: ["Margen anterior positivo", "Margen traqueal superior", "Margen posterior positivo", "Margen istmico medial"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, la disección del aspecto dorsal tiroideo representa un reto técnico máximo al intentar preservar el nervio recurrente y las paratiroides. Dejar enfermedad residual en el lecho posterior (zona de ligamento de Berry y surco traqueoesofágico) dispara la tasa de recurrencia al 11.6% frente a un escaso 3.6% de los márgenes anteriores.<br><br>Perla ENARM: \"Lang et al. retrospectively evaluated 1513 patients with DTC... they found a 3.6% rate of recurrence in those patients with a positive anterior margin and 11.6% risk of recurrence in those patients with a positive posterior margin. This led the authors to conclude that a positive posterior margin is an independent risk factor for persistent/recurrent disease (HR = 22.95).\"<br><br>Análisis de Distractores: La opción A posee mejor tasa de rescate y menor letalidad anatómica al no comprometer estructuras vitales profundas. Las opciones B y D representan zonas de visualización quirúrgica franca donde es anómalo dejar tumor por falla de exposición, no siendo el principal predictor descrito en la literatura para fallo oncológico del lecho.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Staging, Página 878." 
+    },
+    {
+        id: 44, 
+        question: "Referencia anatómica precisa que delimita la frontera anterior de todo el compartimento ganglionar cervical Nivel V.", 
+        options: ["Borde anterior del trapecio", "Borde posterior del esternocleidomastoideo", "Vientre posterior del digástrico", "Borde lateral del músculo escaleno"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Niveles ganglionares por TAC, el triángulo posterior del cuello que alojan los ganglios espinales o Nivel V se encuentra techado y limitado hacia adelante por el borde libre posterior del esternocleidomastoideo o el plano de emergencia de los ramos sensitivos del plexo cervical.<br><br>Perla ENARM: \"Limitado hacia anterior por el borde posterior del músculo esternocleidomastoideo o los ramos sensitivos del plexo cervical y hacia posterior por el borde anterior del músculo trapecio. Incluye a los ganglios linfáticos del triángulo posterior del cuello.\"<br><br>Análisis de Distractores: La opción A enmarca la barrera de contención posterior absoluta de la disección lateral. La opción C es el límite superior para la región yugulodigástrica (Nivel II). La opción D configura el piso profundo fascial del área, por encima del cual transcurre la disección sin ser el borde perimetral anterior.", 
+        source: "Niveles ganglionares por TAC, 2018, Tabla I, Página 119." 
+    },
+    {
+        id: 45, 
+        question: "Terapia quirúrgica oncológica recomendada de primera intención para un diagnóstico anatomopatológico definitivo de neoplasia folicular no invasiva con características nucleares tipo papilar (NIFTP).", 
+        options: ["Tiroidectomía total sistemática", "Lobectomía tiroidea exclusiva", "Disección central profiláctica", "Totalización y yodo radiactivo"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025 y NCCN Thyroid, la entidad NIFTP posee un potencial de letalidad casi nulo, reclasificada para evitar sobretratamientos en la población. La resección diagnóstica unilateral mediante lobectomía es el manejo inicial y final completo. El completamiento del lóbulo sano residual o someter a la toxicidad del yodo no aporta beneficio biológico y está proscrito en guías oncológicas estandarizadas.<br><br>Perla ENARM: \"NIFTP... have a very low malignant potential (lower than the lowest-risk DTC). Further treatment with completion thyroidectomy/lymphadenectomy and/or RAI is not advised routinely.\"<br><br>Análisis de Distractores: La opción A somete sin indicación a riesgo paratiroideo y daño neural bilateral a una entidad benigno-limítrofe. Las opciones C y D representan esquemas radicales terapéuticos y adyuvantes exclusivos de la enfermedad infiltrante, agresiva e invasora documentada con alto riesgo de mortalidad clínica, no aplicables para un NIFTP encapsulado sin invasión.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Pathology, Página 850." 
+    },
+    {
+        id: 46, 
+        question: "Dosis de radioterapia de haz externo (EBRT) indicada en el lecho tiroideo frente a la presencia posoperatoria de enfermedad microscópica residual (Resección R1).", 
+        options: ["45 a 54 Gy", "50 a 56 Gy", "60 a 66 Gy", "66 a 70 Gy"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid, la consolidación actínica locorregional adyuvante para pacientes intervenidos en los que el patólogo documenta microscópicamente enfermedad abandonada (R1) exige un rango terapéutico intensificado de 60 a 66 Gy en fracciones fraccionadas convencionales para lograr la erradicación celular del remanente microscópico.<br><br>Perla ENARM: \"Adjuvant RT for high-risk disease (after R1 resection). Microscopic disease (thyroid bed, involved resected lymph node regions): 60–66 Gy in 1.8–2 Gy per fraction.\"<br><br>Análisis de Distractores: Las opciones A y B representan el dosaje radioterapéutico profiláctico y electivo para cuellos no tratados quirúrgicamente de bajo riesgo o zonas nodales adyacentes sanas. La opción D se emplea como tratamiento definitivo primario o dosis de rescate masivo ante enfermedad macroscópica no extirpada, recurrente inoperable o tumor visible remanente (R2).", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Principles of Radiation, Página THYR-C 3 de 5." 
+    },
+    {
+        id: 47, 
+        question: "Intervalo cronológico posquirúrgico recomendado para la determinación bioquímica de respuesta tumoral de Tiroglobulina (Tg) y sus anticuerpos.", 
+        options: ["A las dos semanas", "De seis a doce semanas", "A los tres días", "Al primer año exclusivamente"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, la medición de los niveles basales séricos y lavado tumoral biológico de la tiroglobulina secretada pos-tiroidectomía requiere estabilización del recambio hormonal bajo levotiroxina. El nadir oncológico idóneo representativo del tejido persistente remanente dictamina ejecutar la toma entre el mes y medio hasta el tercer mes de convalecencia posoperatoria inicial.<br><br>Perla ENARM: \"Assessment 6-12 weeks post-op on levothyroxine therapy: Tg/Tg Ab & Imaging.\"<br><br>Análisis de Distractores: Las opciones A y C son prematuras, recogiendo falsos positivos elevados circulantes procedentes del trauma de la glándula resecada y degradación de coloides en resolución sin aclarar. La opción D representa el periodo estandarizado para reclasificar la respuesta estructural dinámica, pero retrasa inaceptablemente la intervención ablativa de la brecha terapéutica inmediata.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Management, Página 894 (Figura 5)." 
+    },
+    {
+        id: 48, 
+        question: "Hallazgo imagenológico ecográfico que invalida la lobectomía en un carcinoma papilar bajo riesgo <4 cm, forzando una tiroidectomía total bilateral.", 
+        options: ["Crecimiento exofítico lobar ipsilateral", "Nódulo ipsilateral espongiforme", "Vascularidad nodular periférica incrementada", "Nódulo contralateral sospechoso por biopsia"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid, en el contexto de decidir el abordaje del lecho primario, si durante el escrutinio contralateral prequirúrgico el paciente posee nodularidad bilateral sincrónica con criterios de punción que arrojan Bethesda positivo o sospechoso, se aborta la estrategia preservadora hemicervical y se debe extirpar categóricamente todo el tejido glandular mediante totalización.<br><br>Perla ENARM: \"Lobectomy, findings, upper pathway: Abnormal Contralateral nodule meeting FNA criteria or abnormal lymph node.\"<br><br>Análisis de Distractores: Las opciones A y C son descriptores de morfotipo ecográfico que incrementan el riesgo interno del lóbulo primario pero que en tumores intra-capsulares sin ETE no dictaminan retirar el lóbulo intacto sano enfrente. La opción B define clásicamente una lesión uniformemente benigna y secretora folicular pasiva que no ensombrece biológicamente a un cáncer adyacente resecable simple.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Post-Lobectomy, Página PAP-2." 
+    },
+    {
+        id: 49, 
+        question: "Fármaco inhibidor sistémico con nivel de evidencia 1 para emplear en carcinoma papilar de tiroides localmente invasivo, progresivo y refractario a yodo radiactivo.", 
+        options: ["Lenvatinib", "Pembrolizumab", "Paclitaxel", "Cisplatino"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid, los inhibidores multicianasa son el parteaguas en enfermedad estructural destructiva sistémica que pierde avidez por radioyodo. En este escenario terminal, lenvatinib (junto a sorafenib) ha logrado la primera línea de aprobación en ensayos fase 3 por alta tasa de control locorregional inhibiendo fuertemente receptores del factor de crecimiento endotelial (VEGFR).<br><br>Perla ENARM: \"Systemic Therapy Regimens for Metastatic Disease. Preferred: Lenvatinib (Category 1). Sorafenib (Category 1).\"<br><br>Análisis de Distractores: La opción B es útil excepcionalmente en deficiencias de reparación de desajustes mutacionales, con uso en subpoblaciones PD-L1 o TMB alto. Las opciones C y D han mostrado pésimas tasas de supervivencia y respuestas citotóxicas obsoletas nulas en tumores diferenciados, careciendo de sustento para primeralinea en tiroides.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Principles of Systemic Therapy, Página THYR-B 1 de 5." 
+    },
+    {
+        id: 50, 
+        question: "Criterio microscópico que define histopatológicamente a un tumor confinado como carcinoma folicular de tiroides mínimamente invasivo.", 
+        options: ["Invasión vascular microscópica en cuatro focos", "Extensión extratiroidea macroscópica de músculo", "Presencia exclusiva de necrosis coagulativa", "Invasión capsular microscópica sin invasión vascular"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid, en el análisis patológico la ausencia total de angioinvasión con ruptura sutil exclusiva de la capa fibrótica conectiva permite clasificar a este subtipo folicular como de excelente pronóstico y baja mortalidad, validando frecuentemente preservar la hemitiroides y rechazar el uso forzoso yódo radiactivo postoperatorio sistémico.<br><br>Perla ENARM: \"Minimally invasive cancer is characterized as an encapsulated tumor with microscopic capsular invasion and without vascular invasion.\"<br><br>Análisis de Distractores: La opción A catapulta al espécimen como variante angioinvasiva de amplio riesgo estructural exigiendo completamiento de tiroides. La opción B configura un tumor clínico cT3b del sistema TNM para invasión frontal destructora del estuche visceral. La opción C forma un pilar diagnóstico oncológico para el carcinoma pobremente diferenciado, no para variantes indolentes intracapsulares.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Discussion Follicular Thyroid Carcinoma, Página MS-28." 
+    },
+    {
+        id: 51, 
+        question: "Categoría en estadificación por grupos pronósticos TNM correspondiente a un paciente de 60 años con carcinoma papilar de 1.5 cm, afección ganglionar Nivel VI (pN1a) y sin metástasis distantes.", 
+        options: ["Estadio I", "Estadio II", "Estadio III", "Estadio IVa"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025 y manual AJCC 8va edición, la edad superior a 55 años obliga a estratificar el riesgo en bloques avanzados. En este cohorte adulto maduro, el hallazgo de positividad locorregional cervical (sea N1a o N1b) para tumores T1 o T2 dictamina un ascenso unificado hacia el Grupo Estadio II, presagiando aumento sustancial en mortalidad sistémica a una decada de estudio continuo.<br><br>Perla ENARM: \"Differentiated 55 Years and Older. Stage II: T1 N1 M0, T2 N1 M0, T3a/T3b Any N M0.\"<br><br>Análisis de Distractores: La opción A se reserva a pacientes añosos pero con glándulas intactas intracapsulares sin siembras nodales (N0), o menores a 55 años que ignoran el volumen nodal. La opción C y D exigen invasiones T4a a laringe o esófago (tejido peritiroideo masivo) y T4b prevertebral o fascia irresecable vascular independientemente del status nodal que acompaña a la edad crítica oncológica límite.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Staging, Página 876 y NCCN Thyroid ST-1." 
+    },
+    {
+        id: 52, 
+        question: "Criterio mandatorio para justificar el uso rutinario de ecografía cervical como escrutinio en familiares asintomáticos de primer grado ante sospecha de cáncer tiroideo no medular familiar.", 
+        options: ["Un familiar de primer grado diagnosticado antes de los 40 años", "Dos familiares de segundo grado con carcinoma folicular", "Tres o más familiares consanguíneos afectados", "Mutación germinal incidental asilada en el promotor TERT"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, el beneficio real para detectar fenotipos familiares hereditarios (FNMTC) supera a los falsos positivos solo cuando el linaje posee una carga letal innegable marcada clínicamente por la afección confirmada clínica y patológica de 3 o más individuos relacionados, permitiendo recomendar el rastreo radiológico asintomático preventivo para abordaje temprano profiláctico.<br><br>Perla ENARM: \"Ultrasound screening may be considered in first-degree family members of individuals who meet criteria for a clinical diagnosis of FNMTC due to the presence of three or more (first or second degree) related individuals with diagnoses of NMTC.\"<br><br>Análisis de Distractores: Las opciones A y B catalogan el fenotipo de agregación casual esporádica de la población general o sindromática parcial donde las guías no demuestran ventajas preventivas de escrutinio radiológico asintomático agresivo. La opción D denota un factor puramente de pronóstico estructural somático agresivo adquirido y no enmarca el riesgo de transmisión de panel genético mendeliano para las demás generaciones.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Epidemiology, Página 856." 
+    },
+    {
+        id: 53, 
+        question: "Meta objetivo en el control bioquímico de la Hormona Estimulante de la Tiroides (TSH) a largo plazo tras tiroidectomía para un paciente clasificado como riesgo bajo, libre de recurrencia en vigilancia dinámica.", 
+        options: ["Supresión agresiva sostenida <0.1 mU/L", "Rango de referencia de laboratorio normal", "Supresión ligera entre 0.1-0.5 mU/L", "Elevación deliberada >50 mU/L"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, una vez confirmada la \"excelente respuesta\" en una categoría estructural de bajo riesgo, mantener supresiones TSH genera toxicidad ósea cardiológica en detrimento del estado de vida sin prolongar el freno tumoral real, estipulándose mantener las concentraciones en el espectro eutiroidéo bajo fisiológico standard en la sangre en evaluaciones repetitivas vitalicias.<br><br>Perla ENARM: \"Post total thyroidectomy... Excellent... TSH goal: TSH within normal reference range.\"<br><br>Análisis de Distractores: Las opciones A y C aplican obligatoriamente a enfermos con riesgo de recurrencia estructural inminente macroscópica (fallo anatómico) o persistencia bioquímica detectada de alto riesgo con elevación logarítmica de anticuerpos. La opción D se emplea agudamente y de manera temporal para la ablasión sistémica del radioyodo preparando la glándula para el escáner yódo sistémico metabólico postoperatorio de inducción masiva.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, TSH Goals, Página 884 (Tabla 9)." 
+    },
+    {
+        id: 54, 
+        question: "Rama nerviosa laríngea motora principal comprometida quirúrgicamente que explica la imposibilidad mecánica aguda del paciente para mantener agudos y la frecuencia fundamental en la voz.", 
+        options: ["Nervio laríngeo recurrente", "Rama interna del nervio laríngeo superior", "Nervio vago a nivel yugular", "Rama externa del nervio laríngeo superior"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, esta rama fina desciende contigua a los vasos tiroideos superiores e inerva únicamente el músculo cricotiroideo. Su función radica en la tensión de la masa de las cuerdas; al ser seccionada de forma yatrogénica inadvertida en el polo superior, el enfermo sufre disfunción selectiva a la elevación fonatoria, fatiga del habla e irregularidad de la frecuencia base sin insuficiencia respiratoria franca.<br><br>Perla ENARM: \"Intraoperative identification and neurophysiological monitoring of the external branch of the superior laryngeal nerve (EBSLN) may be performed... in an effort to improve voice outcomes... diminish mean phonation time and fundamental frequency.\"<br><br>Análisis de Distractores: La opción A devasta la laringe limitando la apertura glótica severa condicionando afonía, disnea y estridor si fuese bilateral. La opción B carece de función motora limitando su rol a la pura sensibilidad de la base supraglótica ocasionando aspiración microtraumática sin alteración fonética tonal. La opción C detona un síndrome letal cruzado de disfagia, disfonía central y dismotilidad cardiaca sin restringirse al espectro vocal periférico aislado.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Initial Management of Thyroid Cancer, Página 869." 
+    },
+    {
+        id: 55, 
+        question: "Abordaje quirúrgico linfático recomendado para un paciente con carcinoma papilar que desarrolla recidiva ganglionar en el compartimento lateral, el cual ya fue previamente disecado.", 
+        options: ["Vaciamiento radical de cuello sistemático clásico", "Resección enfocada de la región de la recurrencia", "Radioterapia definitiva sistémica preoperatoria", "Extirpación compartimental central total"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid y ATA, un cuello operado sufre destrucción masiva de tejido fascial volviendo hostil anatómica y fisiológicamente abordar niveles erradicados. Se autoriza por tanto una extirpación dirigida microscópica centrada exclusivamente en localizar la adenopatía resistente extirpando el bloque tisular específico circundante inmediato para lograr salvataje cervical sin destrozar la viabilidad venosa local.<br><br>Perla ENARM: \"Clinically significant nodal recurrence detected in a previously dissected nodal basin may be treated with a more focused dissection of the region containing the metastatic disease.\"<br><br>Análisis de Distractores: La opción A incrementa dramáticamente y con total letalidad los riesgos reoperatorios de sangrado del gran vaso y parálisis sin beneficio comprobable contra rescates enfocados anatómicos dirigidos en la imagen. La opción D ataca un relevo fascial intermedio central indemne ajeno al sitio metastásico principal laterocervical de recaída actual. La opción C es una medida paliativa para estadios terminales no resecables encajados e invasores musculares macizos que rehusan al control del cirujano hemostático oncológico hábil con curetaje.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Discussion Surgical Management, Página MS-13." 
+    },
+    {
+        id: 56, 
+        question: "Músculo cervical referencial usado topográficamente en cortes axiales que permite dividir de forma exacta al nivel linfático submentoniano (Ia) del nivel submandibular (Ib).", 
+        options: ["Músculo esternocleidomastoideo", "Vientre anterior del músculo digástrico", "Músculo omohioideo", "Músculo milohioideo profundo"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Niveles ganglionares por TAC, ambos vientres anteriores asientan superficialmente por el mentón definiendo de forma clara el margen de división linfática; al centro descansa el bloque submentoniano dependiente del labio inferior, y a los costados de dicha barrera muscular nacen los triángulos glandulares salivales Ib de metástasis transversa superior del macizo facial de cabeza y cuello.<br><br>Perla ENARM: \"Si el ganglio corresponde al nivel I debemos localizar el vientre anterior del músculo digástrico. Si se encuentra medial al mismo, es el nivel Ia; mientras que si se encuentra lateral, corresponde al nivel Ib.\"<br><br>Análisis de Distractores: La opción A demarca la gran vía laterocervical y límite de niveles II/III/IV/V sin interceder en piso de boca. La opción C separa subniveles fasciales peritraqueales bajos pretiroideos anatómicos y límite clínico superior yugular de poca aplicación actual radiológica. La opción D forma verdaderamente el piso muscular oral sin fungir de pilar topográfico divisor estándar axial en estudios de imagenología tumoral por TAC del cuello nivel I superficial y cutáneo nodular primario anterior.", 
+        source: "Niveles ganglionares por TAC, 2018, Región superior, Página 120." 
+    },
+    {
+        id: 57, 
+        question: "Límite topográfico superior tomográfico y quirúrgico inamovible que delimita el techo de los subniveles cervicales ganglionares correspondientes al Nivel I.", 
+        options: ["Sínfisis y cuerpo de la mandíbula", "Borde inferior del hueso hioides", "Vientre anterior del músculo digástrico", "Base del cráneo posterior faríngeo"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Niveles ganglionares por TAC, anatómicamente el compartimento submentoniano y submandibular cuelga del esqueleto facial óseo maxilar de la boca. En una imagenología el borde de hueso dental basal dictamina que todo ganglio debajo nace de la fascia profunda I del área cefálica sin ser parte del encéfalo, yéndose en barrido hasta topar abajo con la corbata muscular del hioides.<br><br>Perla ENARM: \"Se encuentra delimitado hacia superior por la sínfisis mandibular... hacia superior por el cuerpo de la mandíbula.\"<br><br>Análisis de Distractores: La opción B representa el piso o límite inferior que marca el fin anatómico de este compartimento de drenaje para ceder a las estaciones II yugulares o VI prelaringeas medias profundas. La opción C funge como pared vertical septal para dividirlo internamente, no como techo facial óseo craneal anatómico verdadero global para los tumores de cavidad bucal labio y encía. La opción D es la cúpula retrofaríngea alta nivel VII superior para nasofaringe, ajena a este relevo maxilofacial linfático anterógrado primario para ganglios Ib bucales.", 
+        source: "Niveles ganglionares por TAC, 2018, Tabla I, Página 119." 
+    },
+    {
+        id: 58, 
+        question: "Característica histopatológica que forma parte de los \"Criterios de Turín\" empleada obligatoriamente para diagnosticar un Carcinoma Pobremente Diferenciado de Tiroides.", 
+        options: ["Ausencia de características nucleares de carcinoma papilar", "Presencia de células foliculares hiperplásicas benignas", "Formación abundante de estructuras papilares fibrovasculares", "Extensión macroscópica de musculatura infrahioidea"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Guía ATA 2025, un tumor agresivo que forma matriz celular maciza, que desarrolla un índice reproductivo veloz mitótico y extensa necrosis sin lograr conformar los halos nucleares típicos acanalados del cáncer \"papilar\", consolida una degradación del tejido confirmando la desdiferenciación histológica del Cáncer Pobremente Diferenciado con curso letal acelerado local intermedio al de un Anaplásico letal letal e inminente de vía aerea local.<br><br>Perla ENARM: \"Poorly differentiated carcinoma (Turin-criteria): a. Solid/trabecular architecture b. Absence of nuclear features of papillary thyroid carcinoma c. Tumor necrosis...\"<br><br>Análisis de Distractores: Las opciones B y C son entidades antagónicas que expresan diferenciación completa pasiva y organización glandular del tejido respetada. La opción D es la herramienta de estatificación del patólogo macroscópica del AJCC para dictaminar invasión T3b que acorta el margen, sin determinar la estirpe intrínseca celular histológica del tumor primario de alto riesgo y mitosis destructiva masiva intra-capsular pobremente celular.", 
+        source: "American Thyroid Association Management Guidelines for Adult Patients with Differentiated Thyroid Cancer, 2025, Pathology, Página 849." 
+    },
+    {
+        id: 59, 
+        question: "Indicación terapéutica para el control agudo de una hemorragia masiva esperada previo a la resección ósea de una metástasis vertebral dolorosa de carcinoma tiroideo.", 
+        options: ["Ablación por yodo radiactivo altas dosis prequirúrgico", "Supresión aguda de TSH con altas dosis levotiroxina", "Embolización preoperatoria selectiva del lecho óseo", "Radioterapia pélvica paliativa aislada profiláctica"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid, los depósitos sistémicos oseos metastásicos acarrean un hiper-aflujo vascular intratumoral dramático. Intervenir ortopédicamente un hueso friable saturado sin ocluir los canales arteriales aferentes previamente, condena a una exanguinación descontrolada quirúrgica masiva mortal para el paciente diseminado. Por ello la terapia regional intervencionista es el pilar central pre-quirúrgico fundamental preparatorio vital en lesiones portadoras de carga y medulares.<br><br>Perla ENARM: \"Embolization prior to surgical resection of bone metastases should be considered to reduce the risk of hemorrhage.\"<br><br>Análisis de Distractores: La opción A produce lisis de tejido y exacerbación vascular inflamatoria temporal inicial, inútil para estabilizar mecánicamente una vértebra hipervascularizada antes del quirófano. Las opciones B y D carecen de poder vaso-oclusivo rápido para frenar los plexos veno-arteriales neo-formados agresivos que asaltan a un abordaje abierto osteolítico directo agudo en quirófano de forma inminente prequirurgica percutanea transarterial.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Papillary Carcinoma, Página PAP-10." 
+    },
+    {
+        id: 60, 
+        question: "Variante del gen RET mutado germinal que permite retrasar la tiroidectomía profiláctica total infantil ante evidencia de calcitonina sérica normal en síndrome MEN2A.", 
+        options: ["Mutación codon 634", "Mutación codon V804M", "Mutación A883F", "Mutación codon M918T"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Thyroid, en la profilaxis familiar pre-clínica, portar la mutación de muy bajo riesgo V804M autoriza someter a la familia a vigilancia y aplazar la extirpación central paratraqueal radical hasta adultez, si la monitorización ultrasonográfica anual no muestra hiperplasia. Salvar al neonato del hipoparatiroidismo temprano impacta favorablemente por décadas sin comprometer la curación curativa total definitiva a mediano plazo familiar preoperatoria segura.<br><br>Perla ENARM: \"Moderate-risk (codon V804M mutations): Given the lower risk of aggressive MTC, prophylactic thyroidectomy may be delayed... provided the annual basal calcitonin measurement is normal.\"<br><br>Análisis de Distractores: Las opciones A y C representan genotipos agresivos dominantes que determinan resección temprana pre-escolar dictaminada inamoviblemente al inicio antes de los primeros 5 años de edad. La opción D asienta el letal síndrome MEN2B donde la invasión clínica es congénita, ordenándose amputación sistémica el primer año de vida ininterrumpidamente neonatal urgente ablativa al nacimiento del paciente portador medular.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma Version 1.2026, Medullary Carcinoma, Página MEDU-4." 
+    },
+
+
+        ];
+
+        // ==========================================
+        // ==========================================
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('CATIROIDESLastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('CATIROIDESProgress');
+                localStorage.removeItem('CATIROIDESLastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-pink-500 shadow-md z-10 border-pink-500 dark:border-pink-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-pink-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-rose-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! UMAE 25 - 2026" : "R4 - UMAE 25 - 2026";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "UMAE 25 - R4";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus las respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="BS06308GYOE.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-pink-100 dark:border-pink-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-pink-50 has-[:checked]:border-pink-400 dark:has-[:checked]:bg-pink-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-pink-600 focus:ring-pink-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-600 dark:hover:bg-pink-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('CATIROIDESProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('CATIROIDESLastQId', currentQuestionId);
+                else localStorage.removeItem('CATIROIDESLastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('CATIROIDESProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB26PT8kuB-0fxyUYgGk51yC1rAsW0dYj0",
+        authDomain: "enarm-lite.firebaseapp.com",
+        projectId: "enarm-lite",
+        storageBucket: "enarm-lite.firebasestorage.app",
+        messagingSenderId: "767032952477",
+        appId: "1:767032952477:web:84347320ed3d376f7e7674",
+        measurementId: "G-PVR3RBVNSV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    //document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "usuarios_autorizados", user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            
+            if(userDocSnap.exists()) {
+                document.body.style.opacity = '1';
+            } else {
+                //window.location.href = "index.html"; 
+            }
+        } else {
+            //window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>
