@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen</title>
+    
+    <!-- Tailwind CSS (Framework de diseño) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Tipografía limpia y amigable) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- KaTeX (Para renderizar las fórmulas matemáticas de LaTeX) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Configuración personalizada de Tailwind y CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            blue: '#e0f2fe',    // light blue 100
+                            green: '#dcfce7',   // green 100
+                            yellow: '#fef08a',  // yellow 200
+                            red: '#ffe4e6',     // rose 100
+                            purple: '#f3e8ff',  // purple 100
+                            orange: '#ffedd5',  // orange 100
+                            teal: '#ccfbf1',    // teal 100
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc; /* Fondo gris muy suave */
+            color: #334155;
+        }
+
+        /* Estilos base para listas */
+        ul { list-style-type: none; padding-left: 0; }
+        ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; line-height: 1.6; }
+        ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            line-height: 1;
+            top: -2px;
+        }
+
+        /* ----- CLASES DINÁMICAS PARA SUBRAYADOS (HIGHLIGHTS) ----- */
+        /* Úsalas en cualquier parte del texto envolviéndolo en <mark class="hl-color">Texto</mark> */
+        mark {
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-weight: 700;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .hl-yellow { background-color: #fef08a; color: #854d0e; } /* Advertencias, conceptos */
+        .hl-red    { background-color: #fecdd3; color: #9f1239; } /* Peligro, Contraindicaciones, Severidad */
+        .hl-green  { background-color: #bbf7d0; color: #166534; } /* Tratamientos, Metas */
+        .hl-blue   { background-color: #bae6fd; color: #075985; } /* Tiempos, Definiciones clave */
+        .hl-purple { background-color: #e9d5ff; color: #581c87; } /* Epidemiología, Estadísticas */
+
+        /* ----- EFECTOS DE TARJETAS ----- */
+        .medical-card {
+            transition: all 0.3s ease;
+            border-top-width: 5px;
+            height: 100%;
+        }
+        .medical-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Estilo para las Perlas GPC */
+        .gpc-pearl {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 4px solid #f59e0b;
+            position: relative;
+        }
+        .gpc-pearl::before {
+            content: '\f0eb'; /* Lightbulb icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #f59e0b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-12">
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            
+            <!-- Izquierda: Botón Home y Título App -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <a href="index.html" class="text-slate-400 hover:text-indigo-600 transition-colors flex-shrink-0 bg-slate-50 hover:bg-indigo-50 p-2 sm:p-2.5 rounded-full" title="Ir al inicio">
+                    <i class="fa-solid fa-house text-lg sm:text-xl"></i>
+                </a>
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-100 text-indigo-600 p-2 sm:p-3 rounded-lg hidden sm:flex items-center justify-center">
+                        <i class="fa-solid fa-stethoscope text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-heading font-bold text-lg sm:text-2xl text-slate-800 leading-tight line-clamp-1">Resumen</h1>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Derecha: Tag y Logo ENARM Lite (Recreado con CSS para máxima velocidad/calidad) -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <span class="hidden md:inline-block bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">CDYE</span>
+                
+                <!-- Logo ENARM Lite® -->
+                <div class="border-2 border-slate-200/80 bg-slate-50/50 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 flex items-baseline gap-1 shadow-sm select-none">
+                    <span class="font-sans font-extrabold text-[#004f8f] text-sm sm:text-lg tracking-tight">Surgy</span>
+                    <span class="font-sans font-semibold text-[#64b036] text-sm sm:text-lg">Lite<sup class="text-[9px] sm:text-[11px] font-bold">®</sup></span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+     <!-- aqui -->
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="text-center mb-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-gradient-to-br from-indigo-100 to-emerald-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -mb-8 -ml-8 w-32 h-32 bg-gradient-to-tr from-cyan-100 to-teal-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        
+        <h2 class="relative font-heading font-extrabold text-3xl sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-teal-800 via-emerald-600 to-cyan-600 mb-3 tracking-tight leading-tight py-1">
+            Colitis Ulcerosa (UC)
+        </h2>
+        <p class="relative text-base text-slate-600 font-medium mb-3 max-w-3xl mx-auto">
+            Manifestaciones Clínicas, Escrutinio Integral y Clasificaciones Endoscópicas.
+        </p>
+        <div class="inline-block bg-teal-50 border border-teal-200 text-teal-800 px-4 py-1.5 rounded-full text-sm font-bold mt-1 shadow-sm">
+            <i class="fa-solid fa-ribbon mr-1"></i> Revisión ENARM: Guías ACG, ECCO-ESGAR-ESP y GEDIIB 2025
+        </div>
+        <div class="w-24 h-1.5 bg-gradient-to-r from-emerald-500 to-cyan-400 mx-auto rounded-full mt-5"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-person-dots-from-line"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Síntomas Cardinales</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-3 rounded-r-xl">
+                    <strong class="text-indigo-900 block mb-1">Sello Clínico Inicial:</strong>
+                    <p class="leading-relaxed">Inflamación de la mucosa rectal de presentación intermitente (brotes y remisiones).</p>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 leading-relaxed text-slate-800">
+                    <strong>Tríada Cardinal:</strong> <mark class="bg-indigo-100 px-1 rounded font-bold text-indigo-900">Hematoquecia</mark> (diarrea sanguinolenta), <u class="decoration-slate-400 decoration-2">urgencia fecal</u> y <u class="decoration-slate-400 decoration-2">tenesmo</u>. Suele acompañarse de dolor tipo cólico y evacuaciones nocturnas.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Progresión a Severidad</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-xl border shadow-sm border-l-4 border-red-500 leading-relaxed">
+                    <strong class="text-red-900 block mb-1">Síntomas Sistémicos:</strong>
+                    Fiebre, taquicardia, pérdida de peso y anemia son <strong class="text-slate-900">marcadores clínicos de severidad</strong> o progresión inminente hacia una Colitis Aguda Severa (ASUC).
+                </div>
+                <div class="bg-red-50 p-3 rounded-xl border border-red-200 text-red-950 font-bold text-center">
+                    El curso agudo refractario puede desencadenar de forma mortal un megacolon tóxico.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-arrows-to-circle"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Carga Extraintestinal</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium">
+                <p class="mb-2 text-slate-600 border-b pb-1 font-semibold">Su evaluación basal es mandatoria (guía la elección del biológico):</p>
+                <div class="space-y-2">
+                    <div class="flex items-start"><i class="fa-solid fa-bone text-indigo-500 mt-1 mr-2"></i><span><strong>Articular:</strong> Espondiloartritis axial/periférica.</span></div>
+                    <div class="flex items-start"><i class="fa-solid fa-eye text-indigo-500 mt-1 mr-2"></i><span><strong>Oftálmica:</strong> Uveítis, epiescleritis.</span></div>
+                    <div class="flex items-start"><i class="fa-solid fa-hand-dots text-indigo-500 mt-1 mr-2"></i><span><strong>Cutánea:</strong> Pioderma gangrenoso, eritema nudoso.</span></div>
+                    <div class="bg-amber-50 p-2 rounded border border-amber-200 text-amber-950 text-sm font-semibold">
+                        <strong>Hepatobiliar:</strong> Colangitis Esclerosante Primaria. Asocia fenotipo de afección colónica proximal con mayor riesgo a desarrollar neoplasia.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-stethoscope"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Historia Clínica</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong>Interrogatorio Estricto:</strong> Frecuencia de evacuaciones y evidencia de sangre visible.
+                </div>
+                <div class="bg-purple-50 p-3 rounded-lg border border-purple-200">
+                    <strong class="text-purple-900 block mb-1">Precipitantes de Exacerbación Clásicos:</strong>
+                    <p class="leading-relaxed">El <mark class="bg-purple-200 px-1 rounded font-bold">cese reciente del tabaquismo</mark> y el uso de antiinflamatorios no esteroideos (<strong class="text-red-700">AINEs</strong>) son causas clásicas de inicio de la enfermedad o de recaída franca.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Truelove y Witts Modificados</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Enfermedad Leve:</strong>
+                    &lt; 4 deposiciones/día, sin toxicidad, Hb &gt; 11 g/dL, VSG &lt; 20 mm/hr.
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 flex-1">
+                    <strong class="block mb-1">Colitis Aguda Severa (ASUC):</strong>
+                    <p class="mb-1"><mark class="bg-red-200 px-1 rounded font-bold">&ge; 6 deposiciones</mark> sanguinolentas/día, asociado a toxicidad:</p>
+                    <p class="font-semibold text-red-900">&bull; FC &gt; 90 lpm | Temp &gt; 37.8 &deg;C.</p>
+                    <p class="font-semibold text-red-900">&bull; Hb &lt; 10.5 g/dL | VSG &gt; 30 mm/hr.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-bacteria"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Exclusión Infecciosa</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-orange-500">
+                    <strong class="text-slate-900 block mb-1">Protocolo Obligatorio:</strong>
+                    Solicitar pruebas en heces para <strong class="text-red-700">Clostridioides difficile</strong> (PCR o ELISA) y patógenos entéricos en todo paciente con sospecha inicial o exacerbación. Su coinfección aumenta mortalidad.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border">
+                    <strong class="text-slate-900 block mb-1">Infección por CMV:</strong>
+                    En la colitis severa (ASUC) refractaria a esteroides (&gt; 72 horas), <u class="decoration-slate-400">debe descartarse sobreinfección</u> por Citomegalovirus mediante biopsia.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-poop"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Calprotectina Fecal (FC)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <p class="text-slate-600">Marcador no invasivo de elección para diferenciar enfermedad inflamatoria de funcionales:</p>
+                <div class="space-y-2">
+                    <div class="flex items-center bg-white p-2 rounded shadow-sm border"><i class="fa-solid fa-arrow-right text-cyan-500 mr-2"></i><span><strong class="text-slate-900">&le; 50 &mu;g/g:</strong> Descarta enfermedad (Especif. 92%).</span></div>
+                    <div class="flex items-center bg-white p-2 rounded shadow-sm border"><i class="fa-solid fa-arrow-right text-cyan-500 mr-2"></i><span><strong class="text-slate-900">&gt; 50 a 100 &mu;g/g:</strong> Detecta inflamación. Referir a endoscopia.</span></div>
+                    <div class="flex items-center bg-red-50 p-2 rounded border border-red-200 text-red-950 font-bold"><i class="fa-solid fa-arrow-up text-red-600 mr-2"></i><span><strong class="text-red-900">&gt; 250 &mu;g/g:</strong> Falta de curación mucosa y riesgo de recaída/fracaso.</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-vial"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Séricos y Albúmina</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong>PCR y VSG:</strong> Establecen presencia de inflamación, pero hasta el <mark class="bg-cyan-100 px-1 rounded font-bold">25% de pacientes</mark> con enfermedad leve pueden tener valores normales.
+                </div>
+                <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 text-amber-950">
+                    <strong class="block mb-1 text-amber-900"><i class="fa-solid fa-droplet text-amber-600 mr-1"></i> Albúmina Sérica Baja:</strong>
+                    Predictor directo de <u class="font-bold">falla al tratamiento médico</u> (ej. refractariedad a Infliximab por depuración acelerada), necesidad de cirugía temprana y mal pronóstico.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-ban text-cyan-600"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Anticuerpos Serológicos</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-center text-sm text-slate-700 font-medium">
+                <div class="bg-red-50 p-4 rounded-xl border border-red-200 text-red-950 font-bold leading-relaxed text-center shadow-inner">
+                    <i class="fa-solid fa-circle-xmark text-2xl text-red-600 mb-2 block"></i>
+                    No se recomienda el uso de anticuerpos serológicos de forma rutinaria para establecer o descartar el diagnóstico de colitis ulcerosa en la práctica clínica diaria.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-wave-square"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Ultrasonido (IUS)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Herramienta Primaria:</strong> Útil sin radiación. Se basa en el Grosor de la Pared (BWT) y la hiperemia submucosa (Doppler CDS).
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-200 text-emerald-950">
+                    <strong class="block mb-1">Corte Diagnóstico de Actividad:</strong>
+                    <p class="leading-relaxed">Grosor &gt; 3 mm en colon o &gt; 4 mm en recto, asociado a <u class="decoration-emerald-500 font-bold">pérdida de la estratificación</u> de capas de pared (indicativo de edema submucoso).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-x-ray"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Radiografía y RM</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 shadow-sm">
+                    <strong class="block mb-1"><i class="fa-solid fa-skull-crossbones text-red-600 mr-1"></i> Megacolon Tóxico:</strong>
+                    La Rx de abdomen es el estudio inicial ante sospecha de colitis severa. Hallazgo clásico: <mark class="bg-red-200 px-1 rounded font-bold text-red-900">dilatación del colon transverso &gt; 5.5 cm</mark>.
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong>MRE (Resonancia):</strong> Innecesaria de rutina, a menos que la endoscopia muestre íleon terminal anormal o los síntomas sugieran coexistencia atípica de Enf. de Crohn.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Índices Clínicos IUS</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-slate-50 p-3 rounded-lg border">
+                    <strong class="text-slate-900 block mb-1">Índice SCCAI:</strong>
+                    <p class="leading-relaxed">Califica la actividad diaria basándose en urgencia, sangre en heces, frecuencia intestinal diurna/nocturna y estado general.</p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Índices Validados por USG (UC):</strong>
+                    <p class="leading-relaxed">Se usan los <strong>Criterios ecográficos de Milán (MUC)</strong>, IBUS-SAS y UC-IUS, los cuales correlacionan directamente el ultrasonido con el riesgo de recaída clínica.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Endoscopia General</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-amber-500">
+                    <strong class="text-slate-900 block mb-1">Estándar de Oro Diagnóstico:</strong>
+                    Colonoscopia completa con intubación del íleon terminal y toma de biopsias escalonadas de zonas sanas y afectadas.
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 font-semibold leading-relaxed">
+                    <i class="fa-solid fa-ban text-red-600 mr-1"></i> <strong>Contraindicación Estricta:</strong>
+                    En ASUC, la colonoscopia completa está contraindicada por riesgo de perforación. <u class="font-bold">Elección: Sigmoidoscopia flexible</u> con mínima insuflación (24-72h).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Anatomía Macroscópica</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="space-y-2">
+                    <div class="flex items-start bg-white p-2 rounded shadow-sm border"><i class="fa-solid fa-check text-amber-500 mt-1 mr-2"></i><span>Inicia en margen anal y se extiende proximal, continua y circunferencial.</span></div>
+                    <div class="flex items-start bg-white p-2 rounded shadow-sm border"><i class="fa-solid fa-check text-amber-500 mt-1 mr-2"></i><span>Transición abrupta entre mucosa sana y enferma.</span></div>
+                    <div class="bg-amber-50 p-2.5 rounded border border-amber-200 text-amber-900 font-bold">
+                        "Backwash ileitis": Fenómeno de inflamación retrógrada hacia el íleon terminal, visto únicamente en casos de pancolitis severa.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-sitemap"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Clasificación de Montreal</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <p class="text-slate-600 font-bold border-b pb-1">Dictamina la Extensión Anatómica:</p>
+                <div class="space-y-2">
+                    <div class="bg-white p-2.5 rounded shadow-sm border border-l-4 border-emerald-400">
+                        <strong class="text-slate-900">E1 (Proctitis):</strong> Confinada al recto distal a la unión rectosigmoidea (hasta 18 cm del margen anal).
+                    </div>
+                    <div class="bg-white p-2.5 rounded shadow-sm border border-l-4 border-amber-400">
+                        <strong class="text-slate-900">E2 (Colitis izquierda):</strong> Extensión proximal al sigmoides, con límite superior en el ángulo esplénico.
+                    </div>
+                    <div class="bg-white p-2.5 rounded shadow-sm border border-l-4 border-red-500">
+                        <strong class="text-slate-900">E3 (Pancolitis):</strong> Se extiende más allá del ángulo esplénico, involucrando todo el colon.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-list-ol"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Escalas de Actividad</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-slate-50 p-2.5 rounded-lg border text-[13px]">
+                    <strong class="text-slate-900 block mb-1">Mayo Endoscopic Score (MES):</strong>
+                    <div class="flex justify-between border-b pb-0.5"><span>0:</span> <span>Mucosa normal.</span></div>
+                    <div class="flex justify-between border-b py-0.5"><span>1:</span> <span>Leve (Eritema, friabilidad).</span></div>
+                    <div class="flex justify-between border-b py-0.5"><span>2:</span> <span>Moderada (Ausencia de patrón vascular).</span></div>
+                    <div class="flex justify-between pt-0.5 text-red-700 font-bold"><span>3:</span> <span>Severa (Sangrado, ulceración profunda).</span></div>
+                </div>
+                <div class="bg-red-50 p-2 rounded-lg border border-red-200 text-red-950 font-bold text-[13px] leading-relaxed text-center">
+                    Un puntaje UCEIS &ge; 7 o MES de 3 identifica el mayor riesgo de requerir colectomía de urgencia.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-vial-circle-check"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Alteraciones Histológicas</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong class="text-slate-900 block mb-1">Datos de Cronicidad (Sello Patológico):</strong>
+                    Distorsión de criptas (pérdida de paralelismo, atrofia) y <mark class="bg-fuchsia-100 px-1 rounded font-bold text-fuchsia-900">Plasmocitosis Basal</mark> (linfocitos/plasmáticas hasta lámina profunda).
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border leading-relaxed">
+                    <strong class="text-slate-900 block mb-1">Actividad Aguda:</strong>
+                    Infiltración de neutrófilos en epitelio (criptitis) y en el lumen de cripta (abscesos crípticos), <u class="decoration-slate-400 font-bold">sin formar granulomas epitelioides</u> (típicos de Crohn).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-flag-checkered"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Remisión Histológica</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-fuchsia-50 p-3 rounded-lg border border-fuchsia-200 text-fuchsia-950 font-bold leading-relaxed text-center">
+                    Meta actual del tratamiento: La restitución arquitectónica y ausencia de neutrófilos disminuye significativamente las tasas de recaída y desarrollo de displasia/cáncer.
+                </div>
+                <div class="space-y-2">
+                    <div class="bg-white p-2.5 rounded shadow-sm border">
+                        <strong class="text-slate-900">Índice de Nancy (NI):</strong> Un NI de <strong>0 o 1</strong> equivale a curación histológica validada.
+                    </div>
+                    <div class="bg-white p-2.5 rounded shadow-sm border">
+                        <strong class="text-slate-900">Robarts Histopathology Index (RHI):</strong> Valores <strong>&le; 3</strong> sin neutrófilos epiteliales determinan remisión total de la enfermedad.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> 
+</main>
+
+      <!-- aqui -->
+
+        <!-- BOTÓN DE SIGUIENTE RESUMEN -->
+        <div class="mt-10 sm:mt-12 mb-4 flex justify-center">
+            <a href="index.html" class="group relative inline-flex items-center justify-center gap-3 px-8 py-3 sm:py-4 font-bold text-white bg-gradient-to-r from-indigo-600 to-teal-500 rounded-full shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-teal-600 transition-all duration-300 transform hover:-translate-y-1">
+                <span class="text-base sm:text-lg tracking-wide">Siguiente Resumen</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform duration-300"></i>
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Script de Inicialización de KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // Configuramos los delimitadores para que acepte el signo $ nativo de tu texto
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false,
+                output: 'html' // para mejor adaptación con fuentes web
+            });
+        });
+    </script>
+</body>
+</html>

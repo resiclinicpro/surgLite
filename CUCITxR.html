@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen</title>
+    
+    <!-- Tailwind CSS (Framework de diseño) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Tipografía limpia y amigable) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- KaTeX (Para renderizar las fórmulas matemáticas de LaTeX) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Configuración personalizada de Tailwind y CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            blue: '#e0f2fe',    // light blue 100
+                            green: '#dcfce7',   // green 100
+                            yellow: '#fef08a',  // yellow 200
+                            red: '#ffe4e6',     // rose 100
+                            purple: '#f3e8ff',  // purple 100
+                            orange: '#ffedd5',  // orange 100
+                            teal: '#ccfbf1',    // teal 100
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc; /* Fondo gris muy suave */
+            color: #334155;
+        }
+
+        /* Estilos base para listas */
+        ul { list-style-type: none; padding-left: 0; }
+        ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; line-height: 1.6; }
+        ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            line-height: 1;
+            top: -2px;
+        }
+
+        /* ----- CLASES DINÁMICAS PARA SUBRAYADOS (HIGHLIGHTS) ----- */
+        /* Úsalas en cualquier parte del texto envolviéndolo en <mark class="hl-color">Texto</mark> */
+        mark {
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-weight: 700;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .hl-yellow { background-color: #fef08a; color: #854d0e; } /* Advertencias, conceptos */
+        .hl-red    { background-color: #fecdd3; color: #9f1239; } /* Peligro, Contraindicaciones, Severidad */
+        .hl-green  { background-color: #bbf7d0; color: #166534; } /* Tratamientos, Metas */
+        .hl-blue   { background-color: #bae6fd; color: #075985; } /* Tiempos, Definiciones clave */
+        .hl-purple { background-color: #e9d5ff; color: #581c87; } /* Epidemiología, Estadísticas */
+
+        /* ----- EFECTOS DE TARJETAS ----- */
+        .medical-card {
+            transition: all 0.3s ease;
+            border-top-width: 5px;
+            height: 100%;
+        }
+        .medical-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Estilo para las Perlas GPC */
+        .gpc-pearl {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 4px solid #f59e0b;
+            position: relative;
+        }
+        .gpc-pearl::before {
+            content: '\f0eb'; /* Lightbulb icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #f59e0b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-12">
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            
+            <!-- Izquierda: Botón Home y Título App -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <a href="index.html" class="text-slate-400 hover:text-indigo-600 transition-colors flex-shrink-0 bg-slate-50 hover:bg-indigo-50 p-2 sm:p-2.5 rounded-full" title="Ir al inicio">
+                    <i class="fa-solid fa-house text-lg sm:text-xl"></i>
+                </a>
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-100 text-indigo-600 p-2 sm:p-3 rounded-lg hidden sm:flex items-center justify-center">
+                        <i class="fa-solid fa-stethoscope text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-heading font-bold text-lg sm:text-2xl text-slate-800 leading-tight line-clamp-1">Resumen</h1>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Derecha: Tag y Logo ENARM Lite (Recreado con CSS para máxima velocidad/calidad) -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <span class="hidden md:inline-block bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">CDYE</span>
+                
+                <!-- Logo ENARM Lite® -->
+                <div class="border-2 border-slate-200/80 bg-slate-50/50 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 flex items-baseline gap-1 shadow-sm select-none">
+                    <span class="font-sans font-extrabold text-[#004f8f] text-sm sm:text-lg tracking-tight">Surgy</span>
+                    <span class="font-sans font-semibold text-[#64b036] text-sm sm:text-lg">Lite<sup class="text-[9px] sm:text-[11px] font-bold">®</sup></span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+     <!-- aqui -->
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="text-center mb-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-gradient-to-br from-indigo-100 to-emerald-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -mb-8 -ml-8 w-32 h-32 bg-gradient-to-tr from-cyan-100 to-teal-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        
+        <h2 class="relative font-heading font-extrabold text-3xl sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-teal-800 via-emerald-600 to-cyan-600 mb-3 tracking-tight leading-tight py-1">
+            Colitis Ulcerosa (UC)
+        </h2>
+        <p class="relative text-base text-slate-600 font-medium mb-3 max-w-3xl mx-auto">
+            Tratamiento Farmacológico, Manejo Quirúrgico (ASUC) y Escrutinio Pronóstico.
+        </p>
+        <div class="inline-block bg-teal-50 border border-teal-200 text-teal-800 px-4 py-1.5 rounded-full text-sm font-bold mt-1 shadow-sm">
+            <i class="fa-solid fa-ribbon mr-1"></i> Revisión ENARM: Guías ACG, ECCO-ESGAR-ESP y GEDIIB 2025
+        </div>
+        <div class="w-24 h-1.5 bg-gradient-to-r from-emerald-500 to-cyan-400 mx-auto rounded-full mt-5"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-utensils"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Soporte Nutricional</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-3 rounded-r-xl">
+                    <strong class="text-indigo-900 block mb-1">Optimización Perioperatoria:</strong>
+                    <p class="leading-relaxed">Obligatoria en pacientes desnutridos. Se prefiere siempre la vía oral o enteral asistida.</p>
+                </div>
+                <div class="bg-red-50 p-3 rounded-xl border border-red-200 text-red-950 font-semibold leading-relaxed">
+                    <i class="fa-solid fa-ban text-red-600 mr-1"></i> Se desaconseja totalmente el uso de nutrición parenteral total con el único objetivo empírico de brindar "reposo intestinal" durante los episodios de actividad clínica severa.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Profilaxis y Proscritos</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-emerald-500">
+                    <strong class="text-slate-900 block mb-1">Tromboprofilaxis:</strong>
+                    Intervención <mark class="bg-emerald-100 px-1 rounded font-bold text-emerald-900">obligatoria</mark> con heparina de bajo peso molecular en todo paciente hospitalizado por actividad inflamatoria, <u class="decoration-emerald-400 font-bold">incluso ante presencia de sangrado rectal</u>.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-slate-800 leading-relaxed">
+                    <strong>Fármacos a Evitar:</strong> Proscrito el uso de AINEs, opiáceos y anticolinérgicos durante la agudización; precipitan dilatación colónica y toxicidad de manera severa.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-bullseye"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Meta (Treat-to-Target)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed mb-3">
+                    <strong>Objetivo Principal:</strong> Inducir y mantener de forma sostenida una remisión sistémica y local <strong class="text-slate-900">libre de esteroides</strong>.
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-200 text-indigo-950 flex-1 flex flex-col justify-center">
+                    <strong class="block mb-2 text-base text-center"><i class="fa-solid fa-check-double text-indigo-600 mr-1"></i> Remisión Profunda:</strong>
+                    <div class="space-y-1 font-semibold leading-relaxed">
+                        <p>&bull; <strong>Sintomática:</strong> Ausencia de sangrado rectal y urgencia.</p>
+                        <p>&bull; <strong>Mucosa (Endoscópica):</strong> Mayo Endoscopic Score (MES) de 0 o 1.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-pills"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Proctitis (E1)</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-cyan-500">
+                    <strong class="text-slate-900 block mb-1">Inducción y Mantenimiento:</strong>
+                    <p class="leading-relaxed">El estándar primario exige el uso de <strong class="text-slate-900">5-ASA rectales a dosis de 1 g/d</strong>.</p>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-slate-700">
+                    <p class="font-bold text-cyan-900 mb-1 border-b pb-1">Particularidades:</p>
+                    <div class="flex items-start mb-1"><i class="fa-solid fa-caret-right text-cyan-500 mt-1 mr-2"></i><span>Son comprobablemente superiores a los esteroides rectales.</span></div>
+                    <div class="flex items-start"><i class="fa-solid fa-caret-right text-cyan-500 mt-1 mr-2"></i><span><strong>Falla a 5-ASA tópico:</strong> Usar supositorios de tacrolimus o beclometasona.</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-capsules"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Colitis Izquierda (E2)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-xl border shadow-sm border-l-4 border-cyan-500 flex-1 flex flex-col justify-center">
+                    <strong class="text-slate-900 block mb-2 text-base text-center"><i class="fa-solid fa-object-group text-cyan-500 mr-1"></i> Terapia Combinada:</strong>
+                    <p class="text-center leading-relaxed">Constituye el estándar de tratamiento primario. Requiere la administración de <mark class="bg-cyan-100 px-1 rounded font-bold text-cyan-900">5-ASA rectal &ge; 1 g/d</mark> en combinación absoluta con <mark class="bg-cyan-100 px-1 rounded font-bold text-cyan-900">5-ASA oral &ge; 2 g/d</mark>.</p>
+                </div>
+                <div class="bg-amber-50 p-2.5 rounded border border-amber-200 text-amber-950 font-bold text-center">
+                    <i class="fa-solid fa-arrows-rotate mr-1 text-amber-600"></i> Falla a terapia 5-ASA: Iniciar uso de Budesonida MMX oral a dosis de 9 mg/d.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-prescription-bottle-medical"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Pancolitis (E3)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium">
+                <p class="mb-3 text-slate-600 font-bold border-b pb-1">Manejo en Colitis Extensa (E3) Leve a Moderada:</p>
+                <div class="space-y-3">
+                    <div class="flex items-start bg-white p-3 rounded shadow-sm border">
+                        <i class="fa-solid fa-bolt text-cyan-500 mt-1 mr-2"></i>
+                        <span><strong>Inducción Terapéutica:</strong> Administración de mesalamina (5-ASA) vía oral a dosis elevadas de <strong class="text-slate-900">&ge; 2 g/d</strong> (y con un tope seguro de hasta 4.8 g/d).</span>
+                    </div>
+                    <div class="flex items-start bg-slate-50 p-3 rounded border border-slate-200">
+                        <i class="fa-solid fa-shield-virus text-cyan-500 mt-1 mr-2"></i>
+                        <span><strong>Mantenimiento Sostenido:</strong> Continuación de 5-ASA vía oral a una dosis mínima efectiva de <strong class="text-slate-900">&ge; 1.5 g/d</strong>.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-syringe"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Corticosteroides Sistémicos</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-purple-500">
+                    <strong class="text-slate-900 block mb-1">Inducción en Enf. Moderada/Severa:</strong>
+                    <p class="leading-relaxed">Uso de corticoesteroides sistémicos (ej. <strong class="text-slate-900">prednisona 40 a 60 mg/d</strong>) para lograr una respuesta clínica rápida.</p>
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 flex-1">
+                    <strong class="block mb-1 text-center"><i class="fa-solid fa-ban text-red-600 mr-1"></i> Contraindicaciones y Reglas:</strong>
+                    <p class="text-center font-bold">Limitar su duración estrictamente. Iniciar terapia de mantenimiento libre de esteroides de manera simultánea.</p>
+                    <p class="text-center font-bold border-t border-red-200 pt-1 mt-1">No deben usarse tiopurinas o metotrexato como monoterapia para inducción.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-dna"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Terapia Biológica Avanzada</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong>Falla a 5-ASA / Criterios de Severidad:</strong> Iniciar moléculas pequeñas o terapia biológica:
+                    <ul class="mt-2 space-y-1 font-semibold text-slate-800">
+                        <li><i class="fa-solid fa-caret-right text-purple-500 mr-2"></i><strong class="text-slate-900">Anti-TNF:</strong> Infliximab, Adalimumab, Golimumab.</li>
+                        <li><i class="fa-solid fa-caret-right text-purple-500 mr-2"></i><strong class="text-slate-900">Anti-Integrinas:</strong> Vedolizumab.</li>
+                        <li><i class="fa-solid fa-caret-right text-purple-500 mr-2"></i><strong class="text-slate-900">Anti-IL12/23:</strong> Ustekinumab, Mirikizumab, Risankizumab.</li>
+                    </ul>
+                </div>
+                <div class="bg-slate-50 p-2.5 rounded border text-slate-700 font-semibold text-center">
+                    <strong class="block mb-0.5 text-slate-900">Otras Opciones:</strong> Inhibidores JAK (Tofacitinib, Upadacitinib) o Moduladores receptor S1P (Ozanimod).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-vial-virus"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Regla Crítica Infliximab</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-purple-50 p-4 rounded-xl border border-purple-200 text-purple-950 leading-relaxed shadow-sm flex-1 flex flex-col justify-center">
+                    <strong class="text-purple-900 block mb-2 text-base text-center"><i class="fa-solid fa-shield-virus text-purple-600 mr-1"></i> Terapia Combinada Forzosa:</strong>
+                    <p class="text-center">Al utilizar Infliximab para la inducción de la remisión, se debe emplear de manera simultánea una terapia combinada con <u class="font-bold">tiopurinas (ej. azatioprina)</u>.</p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm font-bold text-slate-800 text-center">
+                    Objetivo: Reducir drásticamente la formación de inmunogenicidad y la consecuente pérdida de respuesta al fármaco.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-red-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-red-100 text-red-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-truck-medical"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Colitis Aguda Severa (ASUC)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 font-bold text-center">
+                    Condición Crítica: Requiere hospitalización y valoración inmediata.
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-red-500 flex-1">
+                    <strong class="text-slate-900 block mb-2 text-base">Primera Línea Intravenosa:</strong>
+                    <p class="leading-relaxed">El tratamiento agudo exige la administración de corticosteroides por vía IV: <mark class="bg-red-100 px-1 rounded font-bold text-red-900">Metilprednisolona 60 mg/d</mark> o <mark class="bg-red-100 px-1 rounded font-bold text-red-900">Hidrocortisona 100 mg (3 a 4 veces al día)</mark>.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-red-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-red-100 text-red-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-stopwatch"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Día 3: Regla de Rescate</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-sm leading-relaxed">
+                    <strong class="text-red-900 block mb-1 text-base text-center"><i class="fa-solid fa-triangle-exclamation text-red-600 mr-1"></i> Falla Terapéutica al Día 3:</strong>
+                    Si no hay respuesta a los corticoesteroides en el <u class="font-bold">tercer día de tratamiento IV</u>, se establece la falla y se indica terapia de rescate médico inminente.
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm text-center">
+                    <strong class="text-slate-900 block mb-1">Opciones de Rescate Médico:</strong>
+                    <span class="block">Infliximab (5 mg/kg a 10 mg/kg)</span>
+                    <span class="block font-bold">O bien:</span>
+                    <span class="block">Ciclosporina intravenosa (2 mg/kg)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-red-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-red-100 text-red-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-clipboard-question"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Criterios de Oxford y Albúmina</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 leading-relaxed shadow-sm">
+                    <strong class="block mb-1 text-red-900">Criterios de Oxford (Predictor de Cirugía):</strong>
+                    Presencia de &gt; 8 evacuaciones/día al día 3 de uso de esteroides IV, o 3-8 evacuaciones junto con CRP &gt; 45 mg/L, <u class="font-bold">predicen tasa de colectomía de hasta el 85%</u>.
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong>Hipoalbuminemia (&lt; 2.5 g/dL):</strong> Intensificar la dosis de infliximab en estos pacientes, ya que sufren pérdida acelerada de fármaco a través de la mucosa altamente inflamada.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-disease"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Complicaciones Críticas</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-2.5 rounded border shadow-sm border-l-4 border-amber-500">
+                    <strong class="text-slate-900 block mb-0.5">Megacolon Tóxico:</strong>
+                    Complicación fulminante (Tx Rx: dilatación colónica transverso &gt; 5.5 cm). <span class="text-red-600 font-bold block mt-1">Peligro alto de perforación si se aplican procedimientos endoscópicos completos.</span>
+                </div>
+                <div class="bg-white p-2.5 rounded border shadow-sm border-l-4 border-red-500">
+                    <strong class="text-slate-900 block mb-0.5">Displasia y Cáncer (CRC):</strong>
+                    Riesgo aumenta de forma proporcional a la extensión de la enfermedad (pancolitis), severidad histológica persistente y <u class="decoration-red-400 font-bold">coexistencia de Colangitis Esclerosante Primaria (PSC)</u>.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-scalpel"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Indicaciones Quirúrgicas</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-red-50 p-2.5 rounded border border-red-200 text-red-950">
+                    <strong class="text-red-900 block mb-1"><i class="fa-solid fa-truck-medical text-red-600 mr-1"></i> Urgencia Inmediata:</strong>
+                    <p class="leading-relaxed">Presencia de megacolon tóxico, perforación libre, hemorragia masiva refractaria o <u class="font-bold">ASUC refractaria</u> (falla a esteroides y terapia de rescate tras 3-5 días).</p>
+                </div>
+                <div class="bg-white p-2.5 rounded border shadow-sm">
+                    <strong class="text-slate-900 block mb-1"><i class="fa-solid fa-calendar-check text-emerald-600 mr-1"></i> Cirugía Electiva:</strong>
+                    <p class="leading-relaxed">Refractariedad al tratamiento optimizado, desarrollo de displasia de alto grado/cáncer, o lesiones displásicas invisibles multifocales.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-scissors"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Opciones Quirúrgicas</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-red-50 p-3 rounded-xl border border-red-200 text-red-950 shadow-sm leading-relaxed">
+                    <strong class="text-red-900 block mb-1 text-center border-b border-red-200 pb-1">Urgencia (Control de Daños):</strong>
+                    Intervención estándar de emergencia es la <mark class="bg-red-200 px-1 rounded font-bold">colectomía subtotal abdominal con ileostomía terminal</mark> y preservación del muñón rectal.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-slate-800 leading-relaxed text-center">
+                    <strong class="block mb-1">Electiva (Curativa):</strong>
+                    Proctocolectomía restauradora con anastomosis ileoanal (IPAA), habitualmente con un reservorio en "J". Pouchitis es la complicación más frecuente a largo plazo tras IPAA.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-stopwatch"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Control Temprano (Optimización)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-center space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-emerald-950 leading-relaxed shadow-sm">
+                    <strong class="text-emerald-900 block mb-2 text-base text-center">Protocolo de Evaluación:</strong>
+                    Tras iniciar o modificar el tratamiento farmacológico (especialmente biológico o moléculas pequeñas), se recomienda una evaluación temprana en las primeras <mark class="bg-emerald-200 px-1 rounded font-bold text-emerald-900">8 a 12 semanas</mark>.
+                    <p class="mt-2 pt-2 border-t border-emerald-300 text-center font-bold">Utilizar parámetros clínicos y marcadores no invasivos como la Calprotectina fecal (FC), CRP y/o Ultrasonido (IUS).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-poop"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Monitoreo en Remisión</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong>Objetivo:</strong> Evitar recaídas subclínicas. El control se realiza de manera seriada mediante evaluación de FC, PCR o IUS cada <u class="font-bold">6 a 12 meses</u>.
+                </div>
+                <div class="space-y-2">
+                    <div class="bg-green-50 p-2.5 rounded border border-green-200 text-green-950 font-bold text-center">
+                        <i class="fa-solid fa-check mr-1 text-green-600"></i> FC &le; 50 &mu;g/g permite posponer o evitar colonoscopias.
+                    </div>
+                    <div class="bg-red-50 p-2.5 rounded border border-red-200 text-red-950 font-bold text-center">
+                        <i class="fa-solid fa-xmark mr-1 text-red-600"></i> FC &ge; 250 &mu;g/g identifica probabilidad de recaída/falta curación.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-camera-retro"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Vigilancia Endoscópica</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong class="text-slate-900 block mb-1">Mitigación de Displasia:</strong>
+                    La meta continua de curación mucosa mediante control estricto (MES 0 o 1) y erradicación histológica, reduce riesgo de cáncer.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-slate-800 font-bold text-center flex-1 flex flex-col justify-center shadow-inner">
+                    Tiempos de Cribado Oncológico:<br>
+                    Se recomiendan de manera rutinaria pasados <mark class="bg-emerald-100 px-1 rounded text-emerald-900">8 años del diagnóstico inicial</mark> en todos los casos de enfermedad extensa.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-amber-50 rounded-xl shadow-sm border border-amber-300 p-6 lg:col-span-3 relative overflow-hidden mt-2">
+            <div class="absolute right-0 top-0 opacity-10 text-amber-600 text-7xl -mt-2 -mr-2">
+                <i class="fa-solid fa-quote-right"></i>
+            </div>
+            <h3 class="font-heading font-bold text-xl text-amber-900 mb-5 relative z-10">
+                <i class="fa-solid fa-lightbulb text-amber-600 mr-2"></i> Perlas Quirúrgicas y Consenso de Intervención Urgente
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-sm text-amber-950 font-medium relative z-10">
+                <div class="bg-white/80 p-4 rounded-xl shadow-sm border border-amber-100 space-y-3">
+                    <p class="italic text-slate-800 leading-relaxed text-sm">
+                        "A <mark class="bg-red-200 text-red-900 font-bold px-1 rounded">subtotal colectomy with end ileostomy</mark> is recommended in emergency surgery. Surgery is indicated for patients with ASC if no clinical improvement is observed within 2-4 days of optimized medical rescue therapy or massive hemorrhage."
+                    </p>
+                </div>
+                <div class="bg-white/80 p-4 rounded-xl shadow-sm border border-amber-100 space-y-3">
+                    <p class="italic text-slate-800 leading-relaxed text-sm">
+                        "A three- or modified two-stage approach with delayed pouch construction are recommended in patients with preoperative exposure to biologics. <strong class="text-red-900">Patients receiving biologics should avoid restorative proctocolectomy in a single stage.</strong>"
+                    </p>
+                </div>
+                <div class="bg-white/80 p-4 rounded-xl shadow-sm border border-amber-100 space-y-3">
+                    <p class="italic text-slate-800 leading-relaxed text-sm">
+                        "We recommend avoiding delays (&gt; 5 days of intensive care) in surgical indications as there can be an increase morbidity and mortality."
+                        <span class="block border-t border-amber-100 pt-2 mt-2 font-bold text-red-900">"Damage control principles recommend emergency colectomy for unstable patients and patients with colonic perforations."</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div> 
+</main>
+
+      <!-- aqui -->
+
+        <!-- BOTÓN DE SIGUIENTE RESUMEN -->
+        <div class="mt-10 sm:mt-12 mb-4 flex justify-center">
+            <a href="index.html" class="group relative inline-flex items-center justify-center gap-3 px-8 py-3 sm:py-4 font-bold text-white bg-gradient-to-r from-indigo-600 to-teal-500 rounded-full shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-teal-600 transition-all duration-300 transform hover:-translate-y-1">
+                <span class="text-base sm:text-lg tracking-wide">Siguiente Resumen</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform duration-300"></i>
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Script de Inicialización de KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // Configuramos los delimitadores para que acepte el signo $ nativo de tu texto
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false,
+                output: 'html' // para mejor adaptación con fuentes web
+            });
+        });
+    </script>
+</body>
+</html>
