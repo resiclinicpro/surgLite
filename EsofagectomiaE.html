@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">UMAE</span>
+                    <span class="logo-Lite text-sm">25<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // =========================================================
+        const questionsData = [
+            {
+                id: 1, 
+                question: "¿Cuál es el hallazgo manométrico que define la acalasia tipo I según la clasificación de Chicago?", 
+                options: ["Presurización esofágica pan-esofágica", "Contracciones prematuras espásticas", "Ausencia de peristalsis y presurización", "Peristalsis fragmentada mayor a 5 cm"], 
+                answer: 2, 
+                justification: "Justificación: El diagnóstico de los trastornos de la motilidad se basa en la manometría de alta resolución. De acuerdo GPC de Reconstrucción Esofágica, la acalasia tipo I se caracteriza clásicamente por la ausencia total de contracciones peristálticas sin evidencia de presurización esofágica, sumado a la falta de relajación del esfínter esofágico inferior.<br><br>Perla ENARM: La acalasia tipo I se define manométricamente por un esfínter esofágico inferior que no se relaja, ausencia de peristalsis y falta de presurización esofágica.<br><br>Análisis de Distractores: La opción A describe la acalasia tipo II. La opción B define a la acalasia tipo III. La opción D corresponde a un trastorno de la motilidad inespecífico o esófago fragmentado, no a un patrón clásico de acalasia.", 
+                source: "Esophageal Disorders, 2025, Perioperative Care, 115." 
+            },
+            {
+                id: 2, 
+                question: "¿Cuál es el paso crítico omitido durante la primera cirugía que favorece la herniación de la funduplicatura al mediastino posterior?", 
+                options: ["Sección de vasos gástricos cortos", "Aproximación de pilares diafragmáticos", "Calibración con bujía 60F", "Maniobra de lustrado de zapatos"], 
+                answer: 1, 
+                justification: "Justificación: Durante la reconstrucción y reparación antirreflujo, la crura diafragmática debe cerrarse adecuadamente. De acuerdo GPC de Reconstrucción Esofágica, la aproximación de los pilares derecho e izquierdo con suturas irreabsorbibles previene la herniación del fundus envuelto hacia el tórax y restablece la acción sinérgica del diafragma con el esfínter esofágico inferior.<br><br>Perla ENARM: El cierre anatómico de los pilares diafragmáticos es un paso obligatorio en la funduplicatura para prevenir la migración intratorácica de la válvula y restaurar la barrera antirreflujo.<br><br>Análisis de Distractores: La opción A facilita la creación de una válvula sin tensión, pero su omisión causa disfagia o desgarro. La opción C previene el ajuste excesivo de la válvula. La opción D asegura que se utilice el fundus y no el cuerpo gástrico.", 
+                source: "The SAGES Manual of Foregut Surgery, 2019, Anatomy and Physiology of the Stomach and Pylorus, 99." 
+            },
+            {
+                id: 3, 
+                question: "¿Qué vaso sanguíneo proporciona la irrigación principal cuando se utiliza el colon izquierdo como conducto para reconstrucción esofágica?", 
+                options: ["Arteria cólica media", "Arteria cólica derecha", "Rama ascendente cólica izquierda", "Arteria mesentérica superior"], 
+                answer: 2, 
+                justification: "Justificación: La viabilidad de un conducto colónico depende enteramente de su pedículo vascular. De acuerdo GPC de Reconstrucción Esofágica, en la técnica de interposición de colon izquierdo, el segmento transverso hasta la flexura esplénica es irrigado de forma isoperistáltica por la rama ascendente de la arteria cólica izquierda y drenado por la vena mesentérica inferior.<br><br>Perla ENARM: La interposición de colon izquierdo se basa vascularmente en la preservación de la rama ascendente de la arteria cólica izquierda y la vena mesentérica inferior.<br><br>Análisis de Distractores: La opción A es el pedículo principal para el injerto de colon derecho. La opción B se liga y secciona durante la preparación del colon derecho. La opción D es el origen vascular primario, pero no el pedículo de tracción directa en el injerto izquierdo.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Colon and Jejunum Interposition After Esophagectomy, 429." 
+            },
+            {
+                id: 4, 
+                question: "¿Cuál estructura anatómica conforma el triángulo de Laimer en la pared posterior de la unión faringoesofágica?", 
+                options: ["Músculo constrictor faríngeo inferior", "Divertículo de Zenker", "Músculo cricofaríngeo", "Fibras musculares circulares internas"], 
+                answer: 3, 
+                justification: "Justificación: La transición del músculo estriado al liso en el esófago crea zonas de debilidad inherente. De acuerdo GPC de Reconstrucción Esofágica, por debajo del cartílago cricoides, la capa longitudinal externa del esófago se separa para insertarse en el tendón cricoesofágico, dejando expuestas únicamente las fibras musculares circulares internas. Esta brecha anatómica se conoce como triángulo de Laimer.<br><br>Perla ENARM: El triángulo de Laimer se ubica por debajo del músculo cricofaríngeo y está formado por la exposición de las fibras musculares circulares internas del esófago al separarse las fibras longitudinales.<br><br>Análisis de Distractores: Las opciones A y C delimitan el triángulo de Killian, ubicado superiormente y asociado al divertículo de Zenker (opción B).", 
+                source: "The SAGES Manual of Foregut Surgery, 2019, Anatomy and Physiology of the Esophagus and Lower Esophageal Sphincter, 14." 
+            },
+            {
+                id: 5, 
+                question: "¿Cuál es el diámetro del globo recomendado para la sesión inicial de dilatación neumática escalonada en acalasia?", 
+                options: ["30 mm", "20 mm", "35 mm", "40 mm"], 
+                answer: 0, 
+                justification: "Justificación: La dilatación neumática es el tratamiento no quirúrgico de primera línea en acalasia. Su objetivo es generar un desgarro controlado de las fibras musculares del esfínter esofágico inferior. De acuerdo GPC de Reconstrucción Esofágica, se recomienda un abordaje graduado que inicia invariablemente con un globo de 30 mm de diámetro, progresando a 35 mm o 40 mm en sesiones subsecuentes si los síntomas persisten.<br><br>Perla ENARM: La dilatación neumática escalonada en acalasia debe iniciar siempre con un globo de 30 mm, reservando diámetros mayores para dilataciones subsecuentes en caso de falla clínica.<br><br>Análisis de Distractores: La opción B es un diámetro ineficaz para la ruptura de fibras musculares. Las opciones C y D representan los diámetros utilizados en la segunda y tercera sesión respectivamente, si falla la dilatación inicial.", 
+                source: "Esophageal Disorders, 2025, Perioperative Care, 93." 
+            },
+            {
+                id: 6, 
+                question: "¿Qué resección ósea se recomienda para evitar la compresión del conducto colónico en la ruta retroesternal?", 
+                options: ["Tercio medio clavicular izquierdo", "Cabeza esternal clavicular izquierda", "Primera costilla derecha", "Manubrio esternal completo"], 
+                answer: 1, 
+                justification: "Justificación: El túnel retroesternal es un espacio anatómico limitado que alberga estructuras óseas rígidas en la entrada torácica. De acuerdo GPC de Reconstrucción Esofágica, se debe resecar rutinariamente la cabeza esternal de la clavícula izquierda para asegurar el paso holgado del conducto colónico sin compresión, previniendo la isquemia local o la estenosis mecánica del injerto en su trayecto hacia el cuello.<br><br>Perla ENARM: La resección de la cabeza esternal de la clavícula izquierda es un paso anatómico clave para ampliar la entrada torácica y prevenir la isquemia por compresión del conducto retroesternal.<br><br>Análisis de Distractores: La opción A no incide en el opérculo torácico interno. La opción C está en el lado contralateral a la vía de ascenso habitual. La opción D representa una morbilidad excesiva e innecesaria a menos que exista una patología subyacente severa.", 
+                source: "Esophageal Cancer, 2023, Colonic Interposition After Esophagectomy, 186." 
+            },
+            {
+                id: 7, 
+                question: "¿Qué preparación intestinal específica se recomienda 1 a 2 días previos a una interposición colónica?", 
+                options: ["Ayuno total absoluto", "Nutrición parenteral total", "Dieta hiperproteica", "Dieta líquida sin granos"], 
+                answer: 3, 
+                justification: "Justificación: La preparación óptima del conducto digestivo disminuye las complicaciones infecciosas y mecánicas postoperatorias. De acuerdo GPC de Reconstrucción Esofágica, antes de utilizar el colon como conducto de interposición, los pacientes deben someterse a una preparación intestinal mecánica estándar y seguir estrictamente una dieta líquida y libre de granos durante 1 a 2 días previos al procedimiento quirúrgico.<br><br>Perla ENARM: La preparación para interposición colónica exige una dieta líquida libre de granos 24 a 48 horas antes del evento quirúrgico para garantizar la limpieza mecánica de la luz intestinal.<br><br>Análisis de Distractores: La opción A induciría desnutrición aguda injustificada. La opción B no está indicada de forma rutinaria y aumenta el riesgo de infecciones de catéter. La opción C aumentaría la carga de residuos fecales.", 
+                source: "Esophageal Cancer, 2023, Colonic Interposition After Esophagectomy, 184 (Basado en revisión de historial clínico de preparación preoperatoria)." 
+            },
+            {
+                id: 8, 
+                question: "¿Cuál es la indicación anatómica principal para realizar el procedimiento de interposición yeyunal de Merendino?", 
+                options: ["Resección de esófago cervical", "Esofagectomía total", "Resección de unión gastroesofágica", "Derivación de esófago torácico"], 
+                answer: 2, 
+                justification: "Justificación: El procedimiento de Merendino busca preservar la función del reservorio gástrico mediante una restitución localizada. De acuerdo GPC de Reconstrucción Esofágica, esta técnica utiliza un asa de yeyuno interpuesta específicamente para reemplazar segmentos pequeños del esófago distal y la unión gastroesofágica en casos de displasia de alto grado o cáncer incipiente, manteniendo el estómago en su posición abdominal natural.<br><br>Perla ENARM: El procedimiento de Merendino (interposición yeyunal corta) es el abordaje de elección para restaurar la continuidad tras la resección anatómica localizada de la unión gastroesofágica.<br><br>Análisis de Distractores: Las opciones A y B requieren conductos de mayor longitud (ascenso gástrico o colónico). La opción D se refiere a procedimientos paliativos extraanatómicos y no a una interposición segmentaria corta funcional.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Oesophageal Replacement, 77." 
+            },
+            {
+                id: 9, 
+                question: "¿Cuál arteria debe preservarse de forma obligatoria durante la movilización gástrica, por ser la principal fuente de perfusión del conducto?", 
+                options: ["Arteria gástrica izquierda", "Arteria gástrica derecha", "Arteria gastroepiploica izquierda", "Arteria gastroepiploica derecha"], 
+                answer: 3, 
+                justification: "Justificación: La supervivencia del conducto gástrico tubular depende exclusivamente de su red vascular distal. De acuerdo GPC de Reconstrucción Esofágica, la arteria gastroepiploica derecha se convierte en el flujo arterial dominante tras la ligadura sistemática de la gástrica izquierda, los vasos cortos y la gastroepiploica izquierda durante la esofagectomía, y su preservación es crítica para evitar la necrosis isquémica del ascenso gástrico.<br><br>Perla ENARM: La arteria gastroepiploica derecha es la fuente de perfusión principal e indispensable del conducto gástrico tras una esofagectomía.<br><br>Análisis de Distractores: La opción A es el pedículo principal del estómago nativo, pero se liga obligatoriamente para lograr la movilización y linfadenectomía. Las opciones B y C proporcionan flujo residual o se ligan para el ascenso torácico.", 
+                source: "Cleveland Clinic Colorectal Case Studies, 2025, Esophagectomy: Approaches and Surgical Techniques, 379." 
+            },
+            {
+                id: 10, 
+                question: "¿Cuál es la dosis estándar de toxina botulínica utilizada en la inyección endoscópica para tratar la acalasia?", 
+                options: ["50 unidades", "100 unidades", "150 unidades", "200 unidades"], 
+                answer: 1, 
+                justification: "Justificación: La inyección endoscópica de toxina botulínica bloquea la liberación de acetilcolina, disminuyendo la presión del esfínter de forma temporal. De acuerdo GPC de Reconstrucción Esofágica, el protocolo universal estandarizado consiste en inyectar 100 unidades de toxina botulínica distribuidas en cuatro cuadrantes, aproximadamente 1 cm por encima de la unión esofagogástrica.<br><br>Perla ENARM: El protocolo estándar para la inyección endoscópica de toxina botulínica en acalasia es de 100 unidades divididas en los cuatro cuadrantes del esfínter esofágico inferior.<br><br>Análisis de Distractores: Las opciones A, C y D corresponden a dosis subterapéuticas o tóxicas que no forman parte de los protocolos validados para trastornos motores esofágicos.", 
+                source: "Esophageal Disorders, 2025, Perioperative Care, 92." 
+            },
+            {
+                id: 11, 
+                question: "Durante la cardioplastia quirúrgica para acalasia terminal, ¿qué característica debe tener la incisión en \"V\" de espesor total?", 
+                options: ["Rama esofágica más larga", "Ramas de igual longitud", "Rama gástrica más larga", "Incisión asimétrica irregular"], 
+                answer: 1, 
+                justification: "Justificación: La geometría de la cardioplastia determina la amplitud final de la luz esofagogástrica reparada. De acuerdo GPC de Reconstrucción Esofágica, al realizar una cardioplastia abierta o laparoscópica, la incisión en forma de V invertida debe estructurarse rigurosamente con dos ramas de igual longitud (típicamente 5 cm hacia el estómago y 5 cm hacia el esófago) para evitar una distorsión anatómica al momento del cierre transversal.<br><br>Perla ENARM: En la cardioplastia en Y-V para reconstrucción de la unión esofagogástrica, es imperativo que las ramas esofágica y gástrica de la incisión tengan exactamente la misma longitud.<br><br>Análisis de Distractores: Las opciones A, C y D ocasionan pliegues asimétricos, invaginación mucosa y estenosis secundaria al generar un cierre lineal discordante.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Failed Heller's Myotomy and End-Stage Achalasia, 278." 
+            },
+            {
+                id: 12, 
+                question: "¿Qué procedimiento se utiliza para descompresión del estómago retenido tras una exclusión esofágica y división de la unión gastroesofágica?", 
+                options: ["Gastrostomía de drenaje", "Gastrectomía subtotal", "Piloroplastia endoscópica", "Funduplicatura de Nissen"], 
+                answer: 0, 
+                justification: "Justificación: La exclusión esofágica aísla la patología torácica al derivar el tránsito cervical y evitar el reflujo ácido ascendente. De acuerdo GPC de Reconstrucción Esofágica, al seccionar y engrapar el esófago distal, el estómago queda anatómica e intrínsecamente cerrado por arriba, por lo que requiere obligatoriamente una gastrostomía de drenaje con sonda Foley para descomprimir las secreciones gástricas acumuladas, sumado a una yeyunostomía para soporte nutricional.<br><br>Perla ENARM: La exclusión esofágica intratorácica requiere sistemáticamente la colocación de una gastrostomía de drenaje para prevenir la dilatación aguda y perforación del estómago excluido.<br><br>Análisis de Distractores: La opción B representa una morbilidad extrema innecesaria. La opción C facilita el vaciamiento distal pero no drena de forma activa los fluidos. La opción D está contraindicada, ya que la continuidad gástrica superior ha sido obliterada.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Bridging Strategies and ‘Toolbox’ of Reconstruction, 50." 
+            },
+            {
+                id: 13, 
+                question: "¿En qué consiste la técnica de interposición colónica \"sobrealimentada\" (supercharged)?", 
+                options: ["Uso de doble conducto colónico", "Preservación de arteria mesentérica superior", "Anastomosis microvascular adicional", "Nutrición enteral hipercalórica"], 
+                answer: 2, 
+                justification: "Justificación: La necrosis isquémica del segmento colónico proximal en el cuello es una complicación devastadora en interposiciones largas. De acuerdo GPC de Reconstrucción Esofágica, la técnica \"sobrealimentada\" consiste en potenciar el flujo sanguíneo del conducto realizando una anastomosis microvascular adicional entre los vasos distales del injerto y un vaso receptor cervical (ej. arteria torácica interna o ramas carotídeas).<br><br>Perla ENARM: La interposición colónica o yeyunal supercharged utiliza anastomosis microvasculares en el cuello para asegurar la perfusión arterial y el drenaje venoso del extremo distal del injerto.<br><br>Análisis de Distractores: Las opciones A y D no tienen relación fisiopatológica con la técnica quirúrgica. La opción B es un paso estándar de la movilización, no un procedimiento de sobrealimentación vascular extracorpórea.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Colon and Jejunum Interposition After Esophagectomy, 430." 
+            },
+            {
+                id: 14, 
+                question: "¿En qué plano se realiza la separación del paquete neurovascular para obtener un colgajo muscular intercostal sin resecar la costilla?", 
+                options: ["Subperióstico del borde costal inferior", "Subperióstico del borde costal superior", "Supraperióstico del cartílago costal", "Intramuscular del intercostal externo"], 
+                answer: 0, 
+                justification: "Justificación: El colgajo intercostal se utiliza para reforzar suturas o cubrir perforaciones esofágicas intratorácicas. De acuerdo GPC de Reconstrucción Esofágica, al cosechar el músculo sin excisión ósea, el periostótomo debe usarse abrazando estrictamente el plano subperióstico a lo largo del borde inferior de la costilla superior respectiva, desprendiendo así el músculo intercostal y manteniendo intacto y visible el paquete neurovascular vital.<br><br>Perla ENARM: La disección segura de un colgajo muscular intercostal exige un abordaje subperióstico en el borde inferior de la costilla para proteger el paquete neurovascular.<br><br>Análisis de Distractores: La opción B daña invariablemente las fibras neurovasculares que cursan por debajo del borde costal. Las opciones C y D carecen del sustento fascial necesario y devascularizan el colgajo.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Bridging Strategies and ‘Toolbox’ of Reconstruction, 54." 
+            },
+            {
+                id: 15, 
+                question: "¿Qué hallazgo radiológico clásico se observa en el esofagograma baritado de un paciente con acalasia primaria?", 
+                options: ["Apariencia de sacacorchos", "Estrechamiento en pico de pájaro", "Divertículo epifrénico gigante", "Hernia hiatal por deslizamiento"], 
+                answer: 1, 
+                justification: "Justificación: El esofagograma con bario es clave en la evaluación morfológica de la acalasia y el planeamiento quirúrgico. De acuerdo GPC de Reconstrucción Esofágica, el fallo en la relajación del esfínter y la aperistalsis generan una dilatación proximal con retención de contraste que confluye inferiormente hacia un estrechamiento liso, simétrico y afilado en la unión esofagogástrica, conocido clásicamente como signo de \"pico de pájaro\".<br><br>Perla ENARM: El hallazgo patognomónico de la acalasia en el esofagograma baritado es la dilatación esofágica que termina en un estrechamiento distal liso en \"pico de pájaro\".<br><br>Análisis de Distractores: La opción A es patognomónica del espasmo esofágico difuso. La opción C puede ser una complicación secundaria tardía, pero no es el signo primario definitorio. La opción D es un hallazgo estructural distinto asociado a reflujo, no a espasmo esfinteriano.", 
+                source: "The SAGES Manual of Foregut Surgery, 2019, Anatomic and Physiologic Tests of Esophageal and Gastric Function, 68." 
+            },
+            {
+                id: 16, 
+                question: "¿Qué elemento clínico forma parte de la tríada de Borchardt sugestiva de vólvulo gástrico agudo?", 
+                options: ["Masa palpable en fosa ilíaca", "Hematemesis profusa indolora", "Diarrea con melena", "Imposibilidad para pasar sonda nasogástrica"], 
+                answer: 3, 
+                justification: "Justificación: El vólvulo gástrico intratorácico es una urgencia quirúrgica que requiere descompresión y reducción inmediata. De acuerdo GPC de Reconstrucción Esofágica, la tríada clínica aguda de Borchardt está constituida por dolor epigástrico intenso de inicio súbito, arcadas sin producción de vómito (vómito seco) y la completa imposibilidad de avanzar una sonda nasogástrica hacia la cámara gástrica por la torsión anatómica en el hiato.<br><br>Perla ENARM: La imposibilidad de avanzar una sonda nasogástrica, el dolor epigástrico y las arcadas improductivas conforman la tríada de Borchardt, patognomónica del vólvulo gástrico agudo.<br><br>Análisis de Distractores: Las opciones A y C sugieren patología intestinal baja. La opción B corresponde a sangrado variceal o desgarro de Mallory-Weiss, alejándose del mecanismo obstructivo torsivo del vólvulo.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Emergencies, 105." 
+            },
+            {
+                id: 17, 
+                question: "Durante la creación de una funduplicatura, ¿qué maniobra quirúrgica asegura que se utilice el fundus y no el cuerpo gástrico?", 
+                options: ["Tracción del nervio vago", "Movilización de flexura esplénica", "Maniobra de lustrado de zapatos", "Piloromiotomía profiláctica"], 
+                answer: 2, 
+                justification: "Justificación: La selección incorrecta de la porción gástrica para la funduplicatura resulta en disfagia posoperatoria o recidiva del reflujo. De acuerdo GPC de Reconstrucción Esofágica, se debe realizar invariablemente la maniobra de \"lustrado de zapatos\" (shoeshine maneuver) pasando el fundus por detrás del esófago y fraccionando alternativamente sus extremos para confirmar visual y tácticamente que se está utilizando la porción fúndica laxa, en lugar del cuerpo gástrico rígido.<br><br>Perla ENARM: La maniobra de \"lustrado de zapatos\" previene el error anatómico de construir una funduplicatura utilizando el cuerpo gástrico en lugar del fundus.<br><br>Análisis de Distractores: La opción A se evita sistemáticamente para no causar gastroparesia. La opción B moviliza el colon, no el fondo gástrico. La opción D se reserva para problemas de vaciamiento esofágico severo y no influye en la anatomía de la válvula.", 
+                source: "The SAGES Manual of Foregut Surgery, 2019, Anatomy and Physiology of the Stomach and Pylorus, 100." 
+            },
+            {
+                id: 18, 
+                question: "¿Qué parámetro fisiológico esofágico evalúa directamente la sonda de imagen luminal funcional endoluminal (EndoFLIP) en casos de diagnóstico manométrico inconcluso?", 
+                options: ["Distensibilidad de la unión esofagogástrica", "Frecuencia de contracciones espásticas", "Presurización intrabolo", "Latencia de peristalsis esofágica"], 
+                answer: 0, 
+                justification: "Justificación: Cuando los pacientes presentan clínica clásica de acalasia pero hallazgos manométricos atípicos, se requieren estudios de distensibilidad viscoelástica. De acuerdo GPC de Reconstrucción Esofágica, el EndoFLIP (sonda de imagen de luz funcional endoluminal) está diseñado para medir de forma volumétrica y presurométrica la compliancia y distensibilidad geométrica exacta de la unión esofagogástrica, revelando rigideces no detectadas en registros lineales.<br><br>Perla ENARM: La tecnología EndoFLIP permite diagnosticar trastornos motores evaluando directamente la distensibilidad viscoelástica y la apertura diametral de la unión esofagogástrica.<br><br>Análisis de Distractores: Las opciones B, C y D son variables cinéticas y presiométricas obtenidas mediante manometría de alta resolución estándar, no mediante la planimetría de impedancia volumétrica del EndoFLIP.", 
+                source: "Esophageal Disorders, 2025, Perioperative Care, 115." 
+            },
+            {
+                id: 19, 
+                question: "En un paciente con disfagia persistente tras una miotomía de Heller izquierda fallida, ¿qué abordaje y sitio anatómico se recomiendan para una nueva miotomía?", 
+                options: ["Toracoscópico en el lado izquierdo esofágico", "Laparoscópico en el lado derecho esofágico", "Endoscópico en la curvatura mayor", "Abierto en la pared posterior esofágica"], 
+                answer: 1, 
+                justification: "Justificación: Las reintervenciones esofágicas por acalasia recidivante enfrentan fibrosis mediastínica severa. De acuerdo GPC de Reconstrucción Esofágica, si la miotomía primaria se realizó por el lado izquierdo (toracoscópico o laparoscópico), el abordaje de elección para la redo-miotomía es laparoscópico incidiendo el lado derecho del esófago, ya que esta superficie virgen se encuentra libre de las densas adherencias y tejido cicatrizal de la primera operación.<br><br>Perla ENARM: En una segunda intervención por miotomía fallida, la nueva incisión muscular debe realizarse vía laparoscópica sobre la cara derecha del esófago para evitar la fibrosis del abordaje original izquierdo.<br><br>Análisis de Distractores: Las opciones A y D enfrentan el lecho cruento fibrótico de mayor riesgo de perforación mucosa. La opción C incide sobre la cámara gástrica pura, fuera de la zona de alta presión esfinteriana.", 
+                source: "Esophageal Cancer, 2023, Diagnosis and management of esophageal achalasia, 75." 
+            },
+            {
+                id: 20, 
+                question: "Debido al rico plexo linfático submucoso, ¿hacia dónde puede diseminarse el cáncer del esófago torácico medio de forma impredecible?", 
+                options: ["Exclusivamente a ganglios mediastínicos", "Solo a ganglios celíacos", "Directamente a ganglios inguinales", "A ganglios cervicales, mediastínicos o celíacos"], 
+                answer: 3, 
+                justification: "Justificación: La red linfática esofágica difiere de otros segmentos digestivos por su flujo bidireccional continuo longitudinal. De acuerdo GPC de Reconstrucción Esofágica, aunque un cáncer se ubique centralmente en el esófago torácico, el extensísimo plexo linfático submucoso esofágico permite que las células tumorales viajen libremente y den metástasis de \"salto\" indiscriminadamente hacia cualquier estación ganglionar: cervical, mediastínica o del tronco celíaco.<br><br>Perla ENARM: El cáncer de esófago se caracteriza por metástasis ganglionares impredecibles que pueden abarcar simultáneamente lechos cervicales, mediastínicos y celíacos debido a su denso plexo linfático submucoso longitudinal.<br><br>Análisis de Distractores: Las opciones A y B asumen drenajes segmentarios estrictos y anatómicos que no aplican al esófago. La opción C nombra un lecho linfático subdiafragmático muy distal sin conexión directa con el plexo esofágico primario.", 
+                source: "Cleveland Clinic Colorectal Case Studies, 2025, Esophagectomy: Approaches and Surgical Techniques, 375." 
+            },
+    {
+        id: 21,
+        question: "¿Cuál vaso sanguíneo debe ser sacrificado de forma rutinaria para permitir la movilización completa del estómago hacia el tórax al crear un conducto gástrico?",
+        options: ["Arteria gastroepiploica derecha", "Arteria gástrica izquierda", "Arteria gastroduodenal", "Arteria mesentérica superior"],
+        answer: 1,
+        justification: "Justificación: Durante la fase de movilización para una esofagectomía, la preservación del flujo sanguíneo es crítica. De acuerdo GPC de Reconstrucción Esofágica, la arteria gástrica izquierda (así como los vasos gástricos cortos y la arteria gastroepiploica izquierda) debe dividirse rutinariamente en su origen anatómico para permitir que el conducto gástrico ascienda libremente hacia el mediastino, dejando la perfusión dependiente en su totalidad de la arteria gastroepiploica derecha.<br><br>Perla ENARM: La ligadura de la arteria gástrica izquierda es un paso obligatorio en la esofagectomía para lograr la elongación gástrica, haciendo que la viabilidad del conducto dependa de la arteria gastroepiploica derecha.<br><br>Análisis de Distractores: La opción A es el vaso vital que debe preservarse estrictamente. La opción C no se interviene durante la movilización gástrica estándar. La opción D aporta irrigación al intestino medio, irrelevante en la tubulización gástrica primaria.",
+        source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Esophagectomy: Approaches and Surgical Techniques, 379."
+    },
+    {
+        id: 22,
+        question: "¿Qué arteria provee el pedículo vascular principal para garantizar la viabilidad del injerto cuando se emplea el colon derecho como sustituto esofágico?",
+        options: ["Arteria cólica media", "Arteria cólica izquierda", "Arteria mesentérica inferior", "Arteria ileocólica"],
+        answer: 0,
+        justification: "Justificación: El diseño del injerto depende de una arcada vascular dominante. De acuerdo GPC de Reconstrucción Esofágica, cuando se utiliza la técnica de interposición de colon derecho (que puede incluir el íleon terminal y el ciego), los vasos ileocólicos y cólicos derechos son ligados, basando la totalidad de la perfusión arterial isoperistáltica del injerto sobre la arteria cólica media.<br><br>Perla ENARM: La interposición de colon derecho depende exclusivamente de la preservación e integridad de la arteria cólica media.<br><br>Análisis de Distractores: Las opciones B y C conforman el pedículo vascular principal cuando se realiza una interposición de colon izquierdo. La opción D se secciona rutinariamente para permitir el ascenso del ciego y colon ascendente.",
+        source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Colon and Jejunum Interposition After Esophagectomy, 432."
+    },
+    {
+        id: 23,
+        question: "¿Cuál es el mecanismo fisiopatológico primario que condiciona el retraso del vaciamiento gástrico en un paciente sometido a esofagectomía?",
+        options: ["Torsión mecánica del conducto torácico", "Estenosis pilórica por fibrosis reactiva", "Disfunción motora por vagotomía troncular", "Presión intratorácica intrínsecamente positiva"],
+        answer: 2,
+        justification: "Justificación: La denervación del tracto digestivo superior altera permanentemente su motilidad. De acuerdo GPC de Reconstrucción Esofágica, el retraso del vaciamiento gástrico ocurre en un 15% a 39% de los casos y se atribuye primariamente al espasmo sostenido del píloro y a la pérdida completa de la motilidad gástrica intrínseca secundaria a la vagotomía troncular bilateral obligatoria durante la resección oncológica del esófago.<br><br>Perla ENARM: La vagotomía troncular secundaria a la esofagectomía genera espasmo pilórico y atonía, siendo la causa principal del retraso en el vaciamiento gástrico posoperatorio.<br><br>Análisis de Distractores: Las opciones A y D son mecanismos anatómicos secundarios menos frecuentes. La opción B se observa ante úlceras pépticas crónicas, no como efecto fisiopatológico primario de la resección quirúrgica per se.",
+        source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Delayed Gastric Emptying After Esophagectomy, 251."
+    },
+    {
+        id: 24,
+        question: "Ante la sospecha de dehiscencia anastomótica temprana pos-esofagectomía, ¿cuál es el estudio de imagen inicial de mayor utilidad práctica y diagnóstica?",
+        options: ["Fluoroscopia continua con bario", "Tomografía computarizada con contraste", "Resonancia magnética de tórax", "Gammagrafía con leucocitos marcados"],
+        answer: 1,
+        justification: "Justificación: La evaluación rápida y precisa dicta el pronóstico en complicaciones mayores. De acuerdo GPC de Reconstrucción Esofágica, la tomografía computarizada con contraste oral e intravenoso es la modalidad más útil y práctica, ya que no solo identifica la fuga y la extravasación de contraste, sino que también detecta colecciones asociadas, evalúa el estado del parénquima pulmonar y valora la vascularidad general del conducto en un solo tiempo.<br><br>Perla ENARM: La tomografía computarizada con contraste oral e intravenoso es el estudio de elección para el diagnóstico y mapeo anatómico de una fuga anastomótica pos-esofagectomía.<br><br>Análisis de Distractores: La opción A es menos sensible que la tomografía para pequeñas fugas y no evalúa colecciones extraluminales. La opción C es un estudio prolongado e inviable en pacientes sépticos o inestables. La opción D no tiene rol agudo en detectar defectos anatómicos.",
+        source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Anastomotic Leaks and Conduit Necrosis, 240."
+    },
+    {
+        id: 25,
+        question: "¿En qué escenario clínico está contraindicado utilizar la terapia de vacío endoluminal para el manejo de una complicación anastomótica?",
+        options: ["Fugas crónicas con cavidad bien definida", "Dehiscencia completa con necrosis tisular", "Fugas anastomóticas tras gastrectomía en manga", "Colecciones mediastínicas adecuadamente contenidas"],
+        answer: 1,
+        justification: "Justificación: La terapia de presión negativa promueve la granulación pero requiere tejido viable. De acuerdo GPC de Reconstrucción Esofágica, el uso de la esponja de vacío endoluminal (EsoSponge) está estrictamente contraindicado en casos de dehiscencia circunferencial completa de la anastomosis asociada a necrosis tisular evidente, escenario en el cual la cirugía de urgencia (resección y exclusión) es la única alternativa para salvar la vida del paciente.<br><br>Perla ENARM: La terapia de vacío endoluminal es ineficaz y peligrosa ante una dehiscencia anastomótica completa con isquemia o necrosis extensa del conducto.<br><br>Análisis de Distractores: Las opciones A, C y D representan indicaciones precisas y con altas tasas de éxito (>80%) para el uso de terapia de vacío endoluminal.",
+        source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Bridging Strategies and ‘Toolbox’ of Reconstruction, 60."
+    },
+    {
+        id: 26,
+        question: "¿Qué alteración anatómica tardía caracteriza clínicamente a una interposición colónica retroesternal cuando el injerto queda más largo de lo necesario?",
+        options: ["Redundancia del conducto colónico", "Fístula traqueoesofágica cervical espontánea", "Herniación transhiatal masiva del colon", "Dilatación isquémica proximal aguda"],
+        answer: 0,
+        justification: "Justificación: La cinemática del injerto sin soporte muscular intrínseco fuerte se ve alterada por la longitud excesiva. De acuerdo GPC de Reconstrucción Esofágica, cuando el conducto colónico se confecciona o moviliza más largo de lo necesario, tiende a elongarse con el tiempo generando una \"redundancia\" mecánica. Esto se manifiesta por acodamientos, estasis, disfagia tardía y clásicamente un abultamiento visible en la región supraclavicular del cuello del paciente al deglutir aire o líquidos.<br><br>Perla ENARM: La redundancia del conducto es una complicación anatómica tardía típica de la interposición colónica larga, produciendo disfagia, estasis y un abultamiento supraclavicular característico.<br><br>Análisis de Distractores: La opción B ocurre por daño a la vía aérea o erosión por stent, no por elongación del injerto. La opción C es una falla del cierre diafragmático inicial. La opción D ocurre de forma temprana por tensión vascular vascular, no por exceso de longitud tisular.",
+        source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Colon and Jejunum Interposition After Esophagectomy, 433."
+    },
+    {
+        id: 27,
+        question: "¿Cuál es el tratamiento quirúrgico mandatorio tras confirmar endoscópicamente la necrosis franca del conducto gástrico en el postoperatorio agudo?",
+        options: ["Resección del tejido necrótico y desviación", "Colocación de endoprótesis metálica autoexpandible", "Terapia de vacío endoluminal intraluminal continua", "Dilatación neumática y lavado mediastínico toracoscópico"],
+        answer: 0,
+        justification: "Justificación: La necrosis isquémica del conducto asciende la mortalidad exponencialmente si no se erradica el foco séptico. De acuerdo GPC de Reconstrucción Esofágica, ante el diagnóstico de necrosis del conducto (congestión purpúrica, ausencia de pulsos y tejido no viable), el manejo exige cirugía de emergencia para la extirpación inmediata de todo el tejido desvitalizado y la realización de una exclusión esofágica (esofagostomía cervical de derivación) con gastrostomía o yeyunostomía para soporte nutricional.<br><br>Perla ENARM: La necrosis del conducto post-esofagectomía es una emergencia quirúrgica absoluta que requiere resección del injerto y derivación esofágica cervical inmediata.<br><br>Análisis de Distractores: Las opciones B y C se usan exclusivamente en perforaciones o fugas contenidas con tejido 100% vital. La opción D exacerbaría la diseminación de la sepsis tisular muerta.",
+        source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Anastomotic Leaks and Conduit Necrosis, 246."
+    },
+    {
+        id: 28,
+        question: "Tras una dilatación neumática por acalasia, el paciente refiere dolor torácico súbito y se palpa enfisema subcutáneo. ¿Cuál estudio confirma inmediatamente la sospecha diagnóstica?",
+        options: ["Endoscopia superior diagnóstica de urgencia", "Manometría esofágica de alta resolución", "Esofagograma con contraste hidrosoluble", "Tránsito esofágico con bario de alta densidad"],
+        answer: 2,
+        justification: "Justificación: La perforación es la complicación más temida de la dilatación forzada. De acuerdo GPC de Reconstrucción Esofágica, ante la aparición de signos de neumomediastino o dolor torácico indicativos de perforación en las primeras 4 horas post-dilatación, el estándar de evaluación es un estudio de fluoroscopia utilizando contraste hidrosoluble (Gastrografin) o bien una tomografía computarizada con contraste oral para delimitar la extravasación e instaurar el tratamiento quirúrgico precoz.<br><br>Perla ENARM: La sospecha de perforación tras dilatación neumática en acalasia debe evaluarse siempre e inicialmente con un esofagograma con contraste hidrosoluble o tomografía.<br><br>Análisis de Distractores: La opción A puede agravar la perforación por insuflación de aire. La opción B está contraindicada por riesgo de trauma mecánico a la lesión. La opción D genera una severa e irreversible mediastinitis granulomatosa química si ocurre fuga.",
+        source: "The SAGES Manual of Foregut Surgery, 2019, Treatment of Achalasia, 25."
+    },
+    {
+        id: 29,
+        question: "¿Cuáles son los dos factores de riesgo independientes anatómico-quirúrgicos más potentes para el desarrollo de estenosis anastomótica benigna tras una esofagectomía?",
+        options: ["Reflujo biliar agudo e infección por Candida", "Pobre irrigación y fuga anastomótica previa", "Diámetro del tubo y uso de sutura manual", "Quimioterapia preoperatoria y edad avanzada"],
+        answer: 1,
+        justification: "Justificación: El proceso de cicatrización cicatrización en la anastomosis determina el calibre final. De acuerdo GPC de Reconstrucción Esofágica, aunque hasta un 30% de los pacientes desarrollarán algún grado de estrechamiento cicatrizal, la isquemia vascular (pobre irrigación del borde anastomótico) y la aparición de una fuga anastomótica previa se consolidan como los dos predictores independientes más importantes para el desarrollo de una estenosis refractaria posoperatoria.<br><br>Perla ENARM: La pobre perfusión tisular y la fuga de la anastomosis son los dos factores fisiopatológicos que predisponen de manera directa a una estenosis esofagogástrica benigna.<br><br>Análisis de Distractores: La opción A causa esofagitis, no estrechez fibrótica primaria. La opción C carece de relevancia clínica comprobada si la técnica fue óptima. La opción D disminuye la respuesta cicatrizal, pero no son los predictores isquémicos primarios.",
+        source: "Esophageal Cancer, 2023, Esophagectomy: Approaches and Surgical Techniques, 394."
+    },
+    {
+        id: 30,
+        question: "¿Qué alteración del ritmo cardíaco representa la disritmia más común (hasta 40%) en el postoperatorio de un paciente sometido a esofagectomía?",
+        options: ["Taquicardia ventricular polimórfica sin pulso", "Bloqueo auriculoventricular de tercer grado", "Fibrilación auricular de respuesta ventricular rápida", "Extrasístoles ventriculares multifocales aisladas"],
+        answer: 2,
+        justification: "Justificación: El estrés quirúrgico mayor y la manipulación cercana a las venas pulmonares inducen irritabilidad eléctrica. De acuerdo GPC de Reconstrucción Esofágica, las complicaciones cardíacas posoperatorias alcanzan hasta un 40% en pacientes con esofagectomía intratorácica; siendo la fibrilación auricular el trastorno del ritmo más frecuente. Requiere una evaluación minuciosa para descartar isquemia miocárdica simultánea o alteraciones electrolíticas agudas, seguidas de cardioversión farmacológica rápida.<br><br>Perla ENARM: La fibrilación auricular es la disritmia cardíaca posoperatoria de mayor incidencia en pacientes tras una esofagectomía intratorácica mayor.<br><br>Análisis de Distractores: Las opciones A y B representan eventos terminales o raros no característicos de la irritabilidad por disección mediastínica. La opción D es un hallazgo inespecífico de menor trascendencia clínica en este contexto.",
+        source: "Esophageal Cancer, 2023, Esophagectomy for End-Stage Achalasia, 87."
+    },
+    {
+        id: 31,
+        question: "En la confección de una yeyunostomía de alimentación post-esofagectomía, ¿a qué distancia distal del ligamento de Treitz debe situarse óptimamente la entrada del tubo?",
+        options: ["5 a 10 cm", "20 a 30 cm", "40 a 50 cm", "60 a 70 cm"],
+        answer: 1,
+        justification: "Justificación: La correcta ubicación de la sonda enteral previene el reflujo y la oclusión del lumen. De acuerdo GPC de Reconstrucción Esofágica, al colocar un tubo de yeyunostomía tipo Witzel o de kit directo (ej. catéter MIC), el sitio de punción ideal se localiza entre 20 cm y 30 cm distales al ligamento de Treitz, asegurando un trayecto de fijación antirreflujo y preservando una laxitud adecuada que evite angulaciones al distenderse la cavidad abdominal.<br><br>Perla ENARM: El sitio de inserción estandarizado para una yeyunostomía de alimentación se encuentra de 20 a 30 cm distales al ángulo de Treitz.<br><br>Análisis de Distractores: La opción A sitúa el estoma en la tercera o cuarta porción duodenal. Las opciones C y D sacrifican segmento funcional absortivo valioso de manera innecesaria.",
+        source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Bridging Strategies and ‘Toolbox’ of Reconstruction, 56."
+    },
+    {
+        id: 32,
+        question: "¿Qué lesión neurológica yatrogénica se reporta en el 10% a 20% de los pacientes sometidos exclusivamente a una anastomosis esofagogástrica a nivel cervical?",
+        options: ["Parálisis del nervio frénico izquierdo", "Lesión del nervio laríngeo recurrente", "Disfunción del tronco vagal posterior", "Neuropatía motora del plexo braquial"],
+        answer: 1,
+        justification: "Justificación: El abordaje de disección cervical profundo transita por zonas de alta densidad neural. De acuerdo GPC de Reconstrucción Esofágica, al movilizar el esófago cervical para construir la anastomosis, existe un riesgo intrínseco del 10% al 20% de lesionar los nervios laríngeos recurrentes. Esta morbilidad se manifiesta como disfonía, aspiración bronquial y tos persistente, un peligro letal para el paciente al tener un conducto gástrico carente de esfínteres anatómicos en el tórax.<br><br>Perla ENARM: La morbilidad neurológica predominante de la anastomosis cervical en esofagectomía es la lesión del nervio laríngeo recurrente.<br><br>Análisis de Distractores: La opción A afecta la hemidiafragmática pero no es típica del abordaje cervical superior. La opción C fue sacrificada rutinariamente en el tórax durante la extirpación tumoral. La opción D resulta de posicionamiento anómalo de extremidades, no de la incisión anatómica en sí.",
+        source: "Esophageal Cancer, 2023, Esophagectomy: Approaches and Surgical Techniques, 395."
+    },
+    {
+        id: 33,
+        question: "¿Qué hallazgo intraluminal detectado durante la colonoscopia de escrutinio preoperatoria es una contraindicación absoluta para utilizar el colon en la reconstrucción esofágica?",
+        options: ["Diverticulosis extensa", "Hemorroides internas grado II", "Melanosis cólica moderada", "Hipertrofia de válvula ileocecal"],
+        answer: 0,
+        justification: "Justificación: El uso del colon está sujeto a un examen de integridad estructural absoluto. De acuerdo GPC de Reconstrucción Esofágica, realizar una colonoscopia rutinaria es imperativo para certificar la idoneidad del tejido. Las patologías que contraindican categóricamente el uso del colon como injerto son la presencia de pólipos malignos sincrónicos, enfermedad inflamatoria intestinal activa y la diverticulosis extensa, debido al altísimo riesgo de microperforaciones, fugas locales y estenosis segmentarias.<br><br>Perla ENARM: La presencia de diverticulosis extensa diagnosticada por colonoscopia es una contraindicación formal para el uso del colon como conducto de reemplazo esofágico.<br><br>Análisis de Distractores: La opción B es un trastorno anorrectal distal irrelevante para el arco colónico proximal. La opción C es una pigmentación benigna asintomática por uso de laxantes. La opción D es un hallazgo morfológico no patológico.",
+        source: "Esophageal Cancer, 2023, Esophagectomy for End-Stage Achalasia, 84."
+    },
+    {
+        id: 34,
+        question: "¿Cuál característica anatómica define a una funduplicatura \"deslizada\" o slipped Nissen causante de dolor epigástrico crónico y disfagia posoperatoria?",
+        options: ["Migración intratorácica íntegra de los pilares", "Herniación del estómago sobre la válvula", "Ruptura transversal de las suturas gástricas", "Estenosis fibrótica reactiva del hiato esofágico"],
+        answer: 1,
+        justification: "Justificación: El fracaso anatómico de la cirugía antirreflujo tiene patrones mecánicos precisos. De acuerdo GPC de Reconstrucción Esofágica, un \"slipped Nissen\" o funduplicatura deslizada ocurre cuando la válvula antirreflujo, posicionada inicialmente de forma correcta, desciende o el cuerpo gástrico se hernia proximalmente a través de ella. Esto deja un segmento de la cámara gástrica estrangulado por encima del envoltorio, provocando retención ácida, dolor recurrente, y signos de obstrucción.<br><br>Perla ENARM: La funduplicatura deslizada se define anatómicamente por la herniación o desplazamiento del estómago proximal por encima de la válvula antirreflujo intacta.<br><br>Análisis de Distractores: La opción A describe una hernia hiatal recurrente o transhiatal, donde la unión y la válvula migran al tórax en conjunto. La opción C es la disrupción total de la funduplicatura. La opción D causa disfagia, pero es ajena a la cinemática del tejido gástrico sobre sí mismo.",
+        source: "The SAGES Manual of Foregut Surgery, 2019, Management of Failed Anti-reflux Surgery, 87."
+    },
+    {
+        id: 35,
+        question: "Al tubularizar el estómago usando grapadoras lineales seriadas, ¿cuál es el diámetro diametral recomendado del conducto para garantizar vaciamiento sin isquemia?",
+        options: ["1 a 2 cm", "4 a 5 cm", "7 a 8 cm", "10 a 11 cm"],
+        answer: 1,
+        justification: "Justificación: La geometría del nuevo esófago estomacal impacta en la oxigenación de la línea de grapas. De acuerdo GPC de Reconstrucción Esofágica, la tubularización del conducto gástrico se realiza progresando desde la incisura angularis hacia el fundus, debiendo formar un tubo de aproximadamente 4 a 5 cm de diámetro constante. Confeccionar conductos más estrechos (< 3 cm) aumenta drásticamente el riesgo de necrosis isquémica e interrupción capilar, predisponiendo a fugas anastomóticas severas.<br><br>Perla ENARM: En la reconstrucción con ascenso gástrico, el conducto tubular debe mantener un diámetro óptimo de 4 a 5 cm para asegurar la microcirculación capilar y prevenir complicaciones isquémicas.<br><br>Análisis de Distractores: La opción A condena el tejido a isquemia letal y estenosis oclusiva temprana. Las opciones C y D dejan un estómago residual excesivamente ancho y redundante, que causará acodamiento, éstasis y dilatación mediastínica postoperatoria.",
+        source: "Esophageal Cancer, 2023, Esophagectomy for End-Stage Achalasia, 85."
+    },
+    {
+        id: 36,
+        question: "Comparando las rutas quirúrgicas en la esofagectomía, ¿cuál es la principal desventaja fisiopatológica de realizar la anastomosis esofagogástrica a nivel cervical?",
+        options: ["Incapacidad intrínseca para tratar fugas contenidas", "Mayor tasa de dehiscencia por tensión e isquemia", "Riesgo inminente de fístula aortoesofágica masiva", "Mayor incidencia de quilotórax torácico intratable"],
+        answer: 1,
+        justification: "Justificación: Las leyes de la perfusión determinan la supervivencia del injerto ascendido. De acuerdo GPC de Reconstrucción Esofágica, el abordaje cervical exige elongar el conducto gástrico a su máxima capacidad anatómica. Al alejar el punto de sutura de su pedículo arterial base (la arteria gastroepiploica derecha), la anastomosis del cuello sufre mayor isquemia relativa y tensión mecánica comparada con una anastomosis intratorácica baja (Ivor Lewis), triplicando estadísticamente la incidencia de fugas anastomóticas.<br><br>Perla ENARM: La anastomosis esofagogástrica cervical tiene una tasa de dehiscencia significativamente mayor que la anastomosis intratorácica debido a la isquemia distal del conducto y la tensión mecánica por elongación.<br><br>Análisis de Distractores: La opción A es falsa, de hecho, las fugas cervicales son más fáciles de drenar hacia el exterior. Las opciones C y D están relacionadas a la técnica de disección oncológica mediastínica profunda, independientes de dónde termine ubicada la unión luminal final.",
+        source: "Esophageal Cancer, 2023, Esophagectomy: Approaches and Surgical Techniques, 383."
+    },
+    {
+        id: 37,
+        question: "¿Qué tecnología emergente se utiliza intraoperatoriamente como coadyuvante visual para certificar el estado de perfusión microvascular de un conducto colónico antes de realizar la anastomosis?",
+        options: ["Gammagrafía isotópica con tecnecio-99m", "Angiografía con verde de indocianina", "Pletismografía de impedancia bioeléctrica", "Oximetría de pulso fotopletismográfica transmural"],
+        answer: 1,
+        justification: "Justificación: La evaluación clínica subjetiva subestima áreas de isquemia crítica. De acuerdo GPC de Reconstrucción Esofágica, el uso de la angiografía de fluorescencia mejorada en el infrarrojo cercano mediante la administración endovenosa de verde de indocianina (ICG) es una técnica moderna e inestimable en el quirófano para evaluar en tiempo real la integridad microvascular de los colgajos tisulares y anastomosis en el colon o estómago, permitiendo al cirujano descartar porciones hipoperfundidas.<br><br>Perla ENARM: La angiografía intraoperatoria con verde de indocianina (ICG) es el método tecnológico de elección para asegurar la viabilidad vascular de los márgenes en los conductos de interposición.<br><br>Análisis de Distractores: La opción A es un estudio metabólico nuclear postoperatorio o crónico, inútil transquirúrgicamente. Las opciones C y D no tienen utilidad anatómica descriptiva topográfica en la sala quirúrgica estéril para vísceras.",
+        source: "Esophageal Cancer, 2023, Colonic Interposition After Esophagectomy, 185."
+    },
+    {
+        id: 38,
+        question: "En el monitoreo agudo tras esofagectomía, ¿qué marcador bioquímico analizado directamente desde el líquido de drenaje torácico funge como el predictor temprano más versátil y exacto de una fuga anastomótica?",
+        options: ["Amilasa libre o total", "Deshidrogenasa láctica tisular", "Proteína C reactiva serosa", "Fosfatasa alcalina alcalina"],
+        answer: 0,
+        justification: "Justificación: Detectar saliva libre en la pleura es patognomónico de ruptura del tubo digestivo. De acuerdo GPC de Reconstrucción Esofágica, el análisis seriado de los niveles de amilasa directamente en el efluente del drenaje pleural es una prueba bioquímica sencilla, económica y altamente predictiva. Un aumento súbito y elevado de amilasa en el tórax precede a los signos sistémicos sépticos y sugiere con alta especificidad la presencia de una comunicación (fuga) con el lumen esofágico-gástrico salival.<br><br>Perla ENARM: La detección temprana de niveles altos de amilasa en el líquido del drenaje pleural es el marcador diagnóstico más predictivo de una fuga anastomótica pos-esofagectomía.<br><br>Análisis de Distractores: Las opciones B y C son marcadores inflamatorios y destructivos inespecíficos hallados tras toda toracotomía masiva. La opción D se altera primariamente en vía biliar u ósea, sin valor discriminatorio en mediastinitis.",
+        source: "Esophageal Cancer, 2023, Esophagectomy: Approaches and Surgical Techniques, 389."
+    },
+    {
+        id: 39,
+        question: "En la técnica clásica de Ivor Lewis para resección de adenocarcinomas de la unión, ¿a qué nivel mediastínico exacto se debe confeccionar idealmente la anastomosis esofagogástrica intratorácica?",
+        options: ["Inmediatamente suprahiatal subdiafragmática", "A nivel o por encima de la vena ácigos", "Exclusivamente en el vértice pleural derecho", "A la altura de las venas pulmonares inferiores"],
+        answer: 1,
+        justification: "Justificación: La obtención de un margen oncológico proximal libre de enfermedad en el tórax inferior dictamina la altura de la sección. De acuerdo GPC de Reconstrucción Esofágica, la esofagectomía parcial mediante el abordaje de Ivor Lewis (laparotomía y toracotomía derecha) requiere resecar generosamente la porción afectada del esófago distal, estipulando realizar el cruce y la reconstrucción anastomótica (usualmente mecánica circular) sistemáticamente al nivel del cayado de la vena ácigos, o levemente por encima de esta.<br><br>Perla ENARM: La anastomosis esofagogástrica intratorácica en la técnica de Ivor Lewis debe ser localizada clásicamente a nivel del arco de la vena ácigos.<br><br>Análisis de Distractores: La opción A no garantiza un margen esofágico oncológico de >5 cm. La opción C pertenece a la fase torácica superior, usual del abordaje de McKeown. La opción D es demasiado distal y condena a un margen histológico marginal o positivo en neoplasias cardiales.",
+        source: "Esophageal Cancer, 2023, Esophagectomy: Approaches and Surgical Techniques, 380."
+    },
+    {
+        id: 40,
+        question: "En un paciente que experimenta disfagia refractaria documentada por fracaso inicial a una miotomía de Heller, ¿cuál es la tasa de éxito clínico esperable al someterlo subsecuentemente a una dilatación neumática?",
+        options: ["20% a 30%", "40% a 50%", "60% a 82%", "90% a 95%"],
+        answer: 2,
+        justification: "Justificación: El algoritmo escalonado permite medidas de rescate menos invasivas antes de una esofagectomía. De acuerdo GPC de Reconstrucción Esofágica, las directrices de la ISDE (International Society for Diseases of the Esophagus) establecen firmemente que la dilatación neumática debe ser el procedimiento no quirúrgico de rescate recomendado tras una miotomía de Heller o técnica POEM fallidas, brindando tasas reportadas de éxito de alivio sintomático que oscilan sólidamente entre el 60% y el 82%.<br><br>Perla ENARM: La dilatación neumática de rescate posterior al fracaso de una miotomía de Heller inicial cuenta con una tasa de éxito clínico reportada del 60% al 82%.<br><br>Análisis de Distractores: Las opciones A y B subestiman la utilidad de esta terapia puente, incentivando de forma errónea una cirugía radical precoz. La opción D es falsamente optimista y representa únicamente las tasas de éxito curativo del tratamiento miotómico primario en un paciente virgen de tratamiento.",
+        source: "Annals of Esophagus, 2025, Esophagectomy for end-stage achalasia, 5."
+    },
+            {
+                id: 41, 
+                question: "¿Cuál es el criterio radiográfico indispensable que define morfológicamente un megaesófago en el contexto de una acalasia terminal?", 
+                options: ["Nivel hidroaéreo >10 cm", "Diámetro transversal >6 cm", "Diámetro transversal >4 cm", "Ausencia de cámara gástrica"], 
+                answer: 1, 
+                justification: "Justificación: La progresión de la enfermedad motora esofágica resulta en un fracaso estructural severo. De acuerdo GPC de Reconstrucción Esofágica, el diagnóstico de acalasia terminal o en etapa final se sustenta radiográficamente cuando los estudios baritados evidencian una dilatación masiva catalogada como megaesófago, la cual se define por un diámetro transversal >6 cm, asociado a angulación distal y adopción de una morfología sigmoidea (esófago en sigmoide).<br><br>Perla ENARM: La acalasia terminal se define radiográficamente por la presencia de un megaesófago con un diámetro transversal >6 cm y morfología tortuosa sigmoidea.<br><br>Análisis de Distractores: La opción A es un hallazgo común de retención, pero no el criterio biométrico definitorio de megaesófago. La opción C es una dilatación moderada que aún puede responder a miotomía. La opción D ocurre en hernias hiatales gigantes, no en acalasia.", 
+                source: "Foregut Surgery, 2020, Esophagectomy for End-Stage Achalasia, 79." 
+            },
+            {
+                id: 42, 
+                question: "Tras realizar una miotomía de Heller para el tratamiento de acalasia, ¿qué técnica de funduplicatura está formalmente contraindicada para prevenir el reflujo postoperatorio?", 
+                options: ["Funduplicatura total de Nissen", "Funduplicatura anterior de Dor", "Funduplicatura posterior de Toupet", "Funduplicatura de Belsey Mark IV"], 
+                answer: 0, 
+                justification: "Justificación: La adición de una válvula antirreflujo es mandatoria tras destruir el esfínter inferior, pero la motilidad del cuerpo esofágico es nula. De acuerdo GPC de Reconstrucción Esofágica, se debe realizar una funduplicatura parcial (como Dor de 180° o Toupet de 270°) para prevenir el reflujo sin generar obstrucción. La creación de una funduplicatura total de Nissen (360°) está absolutamente contraindicada, ya que el esófago aperistáltico de la acalasia no posee la fuerza motora para vencer la resistencia de un envoltura completa, causando disfagia refractaria inmediata.<br><br>Perla ENARM: En cirugía de acalasia, la funduplicatura total de Nissen está contraindicada por generar obstrucción severa ante la ausencia de peristalsis esofágica, debiendo utilizarse válvulas parciales.<br><br>Análisis de Distractores: Las opciones B y C son los procedimientos de elección recomendados universalmente tras la miotomía. La opción D es un abordaje transtorácico (240°) que puede emplearse en escenarios muy seleccionados, pero el Nissen es la contraindicación absoluta.", 
+                source: "Foregut Surgery, 2020, Comparison of Different Treatment Modalities, 95." 
+            },
+            {
+                id: 43, 
+                question: "En comparación con la miotomía de Heller laparoscópica, ¿qué complicación fisiológica a largo plazo presenta una incidencia significativamente mayor tras una miotomía endoscópica peroral (POEM)?", 
+                options: ["Disfagia residual severa", "Fístula traqueoesofágica", "Enfermedad por reflujo gastroesofágico", "Retraso del vaciamiento gástrico"], 
+                answer: 2, 
+                justification: "Justificación: La técnica POEM carece del componente antirreflujo mecánico de la cirugía tradicional. De acuerdo GPC de Reconstrucción Esofágica, aunque la POEM tiene tasas de éxito equivalentes para el alivio de la disfagia (92.7%), los pacientes sometidos a este abordaje endoscópico tienen un riesgo sustancialmente mayor de desarrollar enfermedad por reflujo gastroesofágico (ERGE), esofagitis erosiva severa y exposición ácida anormal documentada por pH-metría en comparación con la miotomía laparoscópica asociada a funduplicatura parcial.<br><br>Perla ENARM: La principal desventaja y complicación a largo plazo de la miotomía endoscópica peroral (POEM) es la alta incidencia de enfermedad por reflujo gastroesofágico.<br><br>Análisis de Distractores: La opción A se alivia de manera similar a la vía laparoscópica. Las opciones B y D no son complicaciones inherentes o prevalentes en las miotomías confinadas al espacio submucoso.", 
+                source: "Foregut Surgery, 2020, Comparison of Different Treatment Modalities, 97." 
+            },
+            {
+                id: 44, 
+                question: "¿Cuál es el sitio anatómico más frecuente donde se desarrollan las fugas anastomóticas tras una gastrectomía en manga (sleeve gastrectomy)?", 
+                options: ["Porción distal del antro gástrico", "Borde superior bajo el ángulo de His", "Curvatura menor a nivel de incisura", "Anastomosis gastroduodenal anterior"], 
+                answer: 1, 
+                justification: "Justificación: La fisiología de la perfusión y la resistencia mecánica predisponen puntos de falla en las líneas de grapas largas. De acuerdo GPC de Reconstrucción Esofágica, la isquemia relativa por tensión y la alta presión intraluminal provocan que las fugas de la gastrectomía en manga se desarrollen de manera casi exclusiva en el extremo más proximal de la línea de grapado, anatómicamente situado justo por debajo del ángulo de His, cercano a la unión esofagogástrica.<br><br>Perla ENARM: El sitio clásico y más frecuente de fuga tras una gastrectomía en manga es la porción superior de la línea de grapas, inmediatamente caudal al ángulo de His.<br><br>Análisis de Distractores: Las opciones A y C poseen un aporte vascular más robusto y están sujetas a menor tensión circunferencial. La opción D no aplica, ya que la gastrectomía en manga no altera el píloro ni el duodeno.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Leaks Following Bariatric Surgery, 183." 
+            },
+            {
+                id: 45, 
+                question: "Durante la reintervención quirúrgica por miotomía previa fallida secundaria a cicatrización fibrótica extensa, ¿cuál es el sitio topográfico de elección para realizar la nueva incisión muscular?", 
+                options: ["En el lecho exacto de la miotomía previa", "Exclusivamente en la vertiente gástrica", "En el aspecto posterior intratorácico", "En la cara opuesta del esófago anterior"], 
+                answer: 3, 
+                justification: "Justificación: Trabajar sobre tejido inflamatorio crónico aumenta drásticamente la morbilidad. De acuerdo GPC de Reconstrucción Esofágica, cuando un paciente requiere una segunda cirugía (re-miotomía) debido a cicatrización del borde distal de la miotomía original, el abordaje más seguro consiste en movilizar el fundus para exponer toda la pared esofágica y efectuar una nueva miotomía directamente en la cara opuesta (sana) a la cicatriz previa, evadiendo la fibrosis densa y el riesgo de desgarro mucoso.<br><br>Perla ENARM: La re-miotomía quirúrgica por acalasia recurrente exige realizar el corte sobre la cara opuesta del esófago para evitar el tejido cicatrizal de la cirugía original.<br><br>Análisis de Distractores: La opción A garantiza la perforación mucosa por falta de planos de clivaje. La opción B omite la zona de alta presión del esfínter inferior. La opción C es de difícil acceso en abordajes abdominales anteriores estandarizados.", 
+                source: "Foregut Surgery, 2020, Persistent or Recurrent Symptoms After Heller Myotomy, 73." 
+            },
+            {
+                id: 46, 
+                question: "En el abordaje quirúrgico transhiatal para esofagectomía, ¿cuál es la ventaja fisiológica principal en comparación con la técnica transtorácica de Ivor Lewis?", 
+                options: ["Menor incidencia de parálisis de cuerda vocal", "Menor tasa de dehiscencia de anastomosis", "Menor incidencia de complicaciones respiratorias", "Mayor recuperación de ganglios mediastínicos"], 
+                answer: 2, 
+                justification: "Justificación: La elección del abordaje quirúrgico evalúa un equilibrio entre el riesgo cardiopulmonar y el alcance oncológico. De acuerdo GPC de Reconstrucción Esofágica, la esofagectomía transhiatal moviliza el esófago a través del hiato de forma roma hacia el cuello, obviando por completo la necesidad de una toracotomía. Esta omisión otorga como ventaja fisiológica primordial una reducción sustancial de complicaciones respiratorias, dolor postoperatorio y neumonía, comparado con técnicas transtorácicas.<br><br>Perla ENARM: La principal ventaja de la esofagectomía transhiatal radica en la evitación de la toracotomía, lo que disminuye significativamente la morbilidad respiratoria postoperatoria.<br><br>Análisis de Distractores: Las opciones A y B son precisamente las desventajas de la técnica transhiatal, pues la anastomosis cervical tiene mayor riesgo de fuga y lesión del nervio laríngeo recurrente. La opción D es superior en abordajes transtorácicos (Ivor Lewis o McKeown).", 
+                source: "Thoracic Surgery Clerkship, 2024, Esophagectomy: Approaches and Surgical Techniques, 348." 
+            },
+            {
+                id: 47, 
+                question: "En el algoritmo de manejo agudo de una ingestión cáustica severa comprobada, ¿qué medida está formalmente contraindicada?", 
+                options: ["Tomografía computarizada de tórax", "Inserción de sonda nasogástrica", "Insuflación endoscópica mínima", "Reposición intensiva de líquidos"], 
+                answer: 1, 
+                justification: "Justificación: Las maniobras ciegas exacerban el daño tisular químico inicial. De acuerdo GPC de Reconstrucción Esofágica, en el paciente sintomático o con hallazgos de lesión corrosiva, están absolutamente contraindicadas la colocación de sondas nasogástricas, el uso de agentes neutralizantes, los eméticos y la administración rutinaria de corticosteroides, dado el inminente riesgo de inducir arcadas, necrosis transmural o perforación franca de una pared friable.<br><br>Perla ENARM: En la lesión esofágica aguda por cáusticos, la inserción de una sonda nasogástrica, inducir el vómito y el uso de neutralizantes están contraindicados por el alto riesgo de perforación y exacerbación térmica.<br><br>Análisis de Distractores: Las opciones A y D son pilares mandatorios en la resucitación y estadificación aguda (evaluación de necrosis transmural). La opción C se permite bajo visión directa durante la endoscopia diagnóstica cuidadosa en las primeras 48 horas.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Management Algorithms, 308." 
+            },
+            {
+                id: 48, 
+                question: "¿En qué momento histórico de la cronología post-lesión corrosiva se debe iniciar la vigilancia endoscópica anual ante el riesgo de carcinoma escamocelular (30%)?", 
+                options: ["1 año posterior a la lesión", "5 años posteriores a la lesión", "10 años posteriores a la lesión", "20 años posteriores a la lesión"], 
+                answer: 2, 
+                justification: "Justificación: El trauma corrosivo condiciona inflamación crónica y regeneración aberrante. De acuerdo GPC de Reconstrucción Esofágica, los pacientes que han sufrido lesiones cáusticas graves y sobrevivido sin resección esofágica portan un riesgo estimado de hasta el 30% de desarrollar carcinoma escamocelular. Por ello, el algoritmo normativo dicta que la vigilancia endoscópica anual rigurosa debe instaurarse invariablemente 10 años después del evento químico lesivo.<br><br>Perla ENARM: La vigilancia endoscópica anual en búsqueda de carcinoma escamocelular es mandatoria iniciando 10 años después de una lesión esofágica corrosiva significativa.<br><br>Análisis de Distractores: Las opciones A y B son etapas tempranas para la oncogénesis secundaria a cáusticos, caracterizadas más por la formación de estenosis fibróticas. La opción D retrasa inaceptablemente el escrutinio de un proceso neoplásico silente altamente agresivo.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Management Algorithms, 308." 
+            },
+            {
+                id: 49, 
+                question: "En la técnica quirúrgica de exclusión esofágica por partición gástrica, ¿cuál dispositivo se emplea sistemáticamente para el drenaje directo de la curvatura menor adherida al esófago excluido?", 
+                options: ["Tubo en T de Kehr", "Sonda nasoyeyunal distal", "Catéter de Foley anclado", "Drenaje torácico de silicón"], 
+                answer: 2, 
+                justification: "Justificación: La exclusión requiere controlar los efluentes para frenar la sepsis y evitar la dilatación ciega. De acuerdo GPC de Reconstrucción Esofágica, en el procedimiento de partición gástrica, la porción de la curvatura menor que se deja intencionalmente conectada al esófago requiere un drenaje activo. Esto se logra introduciendo un catéter de Foley fijado con una jareta, exteriorizado a través de la pared abdominal, el cual desvía la saliva y secreciones del segmento cerrado al exterior.<br><br>Perla ENARM: La exclusión esofágica mediante partición del estómago exige el uso de un catéter de Foley insertado en la curvatura menor aislada para establecer una gastrostomía de drenaje pasivo.<br><br>Análisis de Distractores: La opción A drena la vía biliar. La opción B garantiza la nutrición pero no descomprime el bolsón esofágico superior ciego. La opción D se encarga del espacio pleural mediastínico, no del lumen digestivo.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Bridging Strategies and ‘Toolbox’ of Reconstruction, 50." 
+            },
+            {
+                id: 50, 
+                question: "Para prevenir la segmentación de la cavidad abscesada al utilizar terapia de vacío endoluminal (EsoSponge), ¿dónde debe posicionarse estrictamente la esponja en las primeras fases?", 
+                options: ["En el lumen esofágico adyacente a la fuga", "Directamente dentro de la cavidad extraluminal", "En la valva anterior del estómago", "En el receso costofrénico posterior"], 
+                answer: 1, 
+                justification: "Justificación: La física de fluidos de la terapia de vacío dicta la contracción espacial del absceso. De acuerdo GPC de Reconstrucción Esofágica, en la fase aguda del manejo de una dehiscencia con cavidad contenida, es de suma importancia introducir y posicionar la EsoSponge directamente \"dentro\" de la cavidad extraluminal a través de la perforación (y no solo en el lumen esofágico). De no hacer esto, se corre el riesgo de un cierre prematuro del orificio, atrapando pus residual y causando segmentación o tabicación de la cavidad primaria.<br><br>Perla ENARM: La esponja de terapia de vacío endoluminal debe alojarse directamente en el interior de la cavidad periesofágica abscesada para evitar el cierre luminal prematuro y la partición séptica de la colección.<br><br>Análisis de Distractores: La opción A se usa solo cuando la cavidad es inexistente o mínima (<1 cm). Las opciones C y D son sitios anatómicamente desconectados del origen infeccioso primario de interés.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Bridging Strategies and ‘Toolbox’ of Reconstruction, 60." 
+            },
+            {
+                id: 51, 
+                question: "¿Cuál es el tratamiento intervencionista de primera línea ante el vaciamiento gástrico retrasado severo post-esofagectomía?", 
+                options: ["Piloroplastia de Heineke-Mikulicz", "Dilatación endoscópica e inyección de toxina botulínica", "Derivación gastroyeyunal en Y de Roux", "Piloromiotomía quirúrgica abierta"], 
+                answer: 1, 
+                justification: "Justificación: El manejo inicial de complicaciones funcionales privilegia procedimientos mínimamente invasivos. De acuerdo GPC de Reconstrucción Esofágica, ante un vaciamiento gástrico retrasado postoperatorio provocado por el espasmo pilórico y la atonía (vagotomía), el tratamiento inicial consta de dilatación endoscópica transiluminada del esfínter pilórico combinada con inyección focal de toxina botulínica. La intervención quirúrgica se reserva únicamente para fallos endoscópicos repetidos o alteraciones anatómicas por redundancia severa.<br><br>Perla ENARM: La primera línea de tratamiento intervencionista para el vaciamiento gástrico retrasado post-esofagectomía es la dilatación pilórica endoscópica junto con la inyección de toxina botulínica.<br><br>Análisis de Distractores: Las opciones A y D son terapias de rescate quirúrgico si falla el abordaje endoscópico inicial. La opción C es una cirugía derivativa extrema innecesaria para un espasmo esfinteriano distal simple.", 
+                source: "Thoracic Surgery Clerkship, 2024, Esophagectomy: Approaches and Surgical Techniques, 394." 
+            },
+            {
+                id: 52, 
+                question: "¿Qué complicación fisiopatológica subyace en un paciente que, meses después de un abordaje de funduplicatura, presenta saciedad temprana, dolor postprandial intenso y una imagen endoscópica de estómago bilobulado o deforme sobre el diafragma?", 
+                options: ["Herniación transhiatal total de la válvula", "Deslizamiento del estómago sobre el envoltorio", "Ruptura transversal aislada de la válvula", "Fibrosis secundaria periesofágica severa"], 
+                answer: 1, 
+                justification: "Justificación: El fracaso por deslizamiento (\"slipped Nissen\") genera una obstrucción gástrica segmentaria. De acuerdo GPC de Reconstrucción Esofágica, un slipped Nissen se caracteriza porque el fundus o el cuerpo gástrico superior resbala intratorácicamente por el hiato, pasando por encima y por el medio de una funduplicatura que mantiene su constricción, dividiendo mecánicamente el estómago en dos compartimentos y causando dolor severo tipo isquémico o distensión agudos con la ingesta.<br><br>Perla ENARM: La imagen de \"estómago bilobulado\" asociado a dolor postprandial y disfagia denota clásicamente una funduplicatura deslizada (slipped Nissen), en la cual la cámara gástrica migró por encima de la válvula ajustada.<br><br>Análisis de Distractores: La opción A describe una hernia sin partición gástrica restrictiva aguda local. La opción C abole la función del esfínter, cursando primordialmente con reflujo libre masivo. La opción D se presenta puramente con disfagia sólida, sin morfología bilobulada.", 
+                source: "The SAGES Manual of Foregut Surgery, 2019, Management of Failed Anti-reflux Surgery, 87." 
+            },
+            {
+                id: 53, 
+                question: "¿Qué vía de abordaje quirúrgico y estrategia de reparación es mandataria ante una lesión traqueal yatrogénica reconocida durante una esofagectomía transhiatal?", 
+                options: ["Esternotomía media y reparación directa", "Toracoscopia izquierda y uso de malla", "Toracotomía posterolateral derecha y colgajo muscular", "Cervicotomía transversa y uso de parche"], 
+                answer: 2, 
+                justification: "Justificación: El daño incidental a la vía aérea membranosa posterior es una complicación temida y letal de la disección roma transhiatal. De acuerdo GPC de Reconstrucción Esofágica, si ocurre una ruptura traqueal, se debe suspender la maniobra transhiatal y acceder de emergencia mediante una toracotomía posterolateral derecha. La reparación requiere visualización directa total y la aposición obligatoria de un colgajo muscular pediculado (ej. intercostal) para cubrir el defecto y prevenir una temible fístula traqueoesofágica postoperatoria.<br><br>Perla ENARM: La lesión traqueal durante una esofagectomía transhiatal requiere conversión inmediata a toracotomía derecha para reparación primaria y cobertura obligatoria con colgajos musculares pediculados.<br><br>Análisis de Distractores: La opción A proporciona pésimo acceso a la tráquea membranosa posterior. La opción B enfrenta el arco aórtico, bloqueando la visión del defecto. La opción D solo permite ver los primeros anillos traqueales.", 
+                source: "Foregut Surgery, 2020, Esophagectomy for End-Stage Achalasia, 87." 
+            },
+            {
+                id: 54, 
+                question: "Durante la preparación del conducto colónico, ¿qué puntos de referencia anatómicos deben ser utilizados como medida externa estándar con una cinta umbilical para calcular la longitud que requerirá el injerto?", 
+                options: ["Lóbulo de la oreja izquierda a proceso xifoides", "Escotadura yugular a cicatriz umbilical", "Borde mandibular a sínfisis púbica", "Ángulo de Louis a región epigástrica"], 
+                answer: 0, 
+                justification: "Justificación: La medida precisa intraoperatoria evita tensión anastomótica o redundancias isquémicas letales. De acuerdo GPC de Reconstrucción Esofágica, previo a la sección mesentérica, la longitud de colon necesaria se estima colocando un extremo de una cinta umbilical en el lóbulo de la oreja izquierda del paciente, descendiendo superficialmente sobre la piel del cuello y el tórax hasta el nivel del proceso xifoides; esta misma distancia se transfiere y marca sobre la longitud del segmento colónico seleccionado en la cavidad abdominal.<br><br>Perla ENARM: Para interposiciones colónicas largas al cuello, la longitud requerida del injerto se estima midiendo la distancia desde el lóbulo de la oreja izquierda hasta el proceso xifoides del paciente.<br><br>Análisis de Distractores: Las opciones B, C y D corresponden a distancias cortas inexactas o subestimaciones severas que no contemplan la curvatura torácica y el margen cervical necesario para una anastomosis holgada.", 
+                source: "Operative Dictations in General and Vascular Surgery, 2017, Transhiatal Esophagogastrectomy with Colonic Interposition, 15." 
+            },
+            {
+                id: 55, 
+                question: "¿Cuál es el principal factor de riesgo independiente y desventaja fisiopatológica atribuida al uso del colon derecho como conducto sustituto, en comparación con el colon izquierdo?", 
+                options: ["Presencia de válvula ileocecal incompetente", "Diámetro luminal intrínsecamente menor", "Alta tasa de variación y anomalía vascular", "Resistencia isquémica deficiente a la acidez"], 
+                answer: 2, 
+                justification: "Justificación: La viabilidad de cualquier interposición intestinal se rige por su anatomía arterial. De acuerdo GPC de Reconstrucción Esofágica, aunque el colon derecho asimila bien el volumen como reservorio, la arteria cólica media, ileocólica y derecha presentan un grado inaceptablemente alto de variaciones vasculares y anomalías de bifurcación anatómica en la población general, constituyendo la principal desventaja biológica de usar el colon derecho debido al alto riesgo de necrosis impredecible del conducto proximal.<br><br>Perla ENARM: La alta incidencia de variabilidad en la anatomía vascular (cólica media/derecha) representa la principal desventaja clínica en la interposición esofágica usando colon derecho.<br><br>Análisis de Distractores: La opción A es incorrecta; la válvula ileocecal suele considerarse una ventaja anatómica al actuar como barrera antirreflujo. La opción B es falsa; el ciego tiene el mayor diámetro del colon. La opción D no difiere significativamente del comportamiento de la mucosa colónica izquierda.", 
+                source: "Risk Factors and Therapy of Esophagus Cancer, 2024, Colon and Jejunum Interposition After Esophagectomy, 429." 
+            },
+            {
+                id: 56, 
+                question: "¿En qué plano anatómico exacto del mediastino superior y cuello debe desarrollarse la disección caudal a la escotadura yugular para crear un túnel retroesternal vascularmente seguro?", 
+                options: ["Posterior a músculos pretiroideos y anterior al timo", "Directamente posterior a la fascia bucofaríngea", "Anterior a los cuerpos vertebrales cervicales", "Anterior a la glándula tiroides y tejido celular"], 
+                answer: 0, 
+                justification: "Justificación: La creación errónea del túnel superior lesiona venas letales de la entrada torácica. De acuerdo GPC de Reconstrucción Esofágica, al desarrollar el plano retroesternal \"de arriba hacia abajo\" (desde el cuello al tórax), la disección debe insertarse cuidadosamente justo por detrás de la fascia de los músculos pretiroideos (esternohioideo y esternotiroideo) pero estrictamente por delante de la celda tímica y la vena braquiocefálica, utilizando disección aguda bajo visión directa antes de emplear dilatadores romos.<br><br>Perla ENARM: El túnel retroesternal seguro para interposiciones intestinales se inicia en el cuello en el plano anatómico comprendido entre los músculos pretiroideos (anterior) y el timo/vena braquiocefálica (posterior).<br><br>Análisis de Distractores: Las opciones B y C describen el plano periesofágico primario (túnel transhiatal), ubicado en el mediastino posterior. La opción D crearía un injerto subcutáneo en el aspecto más prominente del cuello, arriesgando erosión dérmica aguda.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Surgical Access, 30." 
+            },
+            {
+                id: 57, 
+                question: "Ante el hallazgo de una perforación esofágica instrumental asintomática contenida en el mediastino durante una endoscopia diagnóstica, ¿cuál es la conducta terapéutica inicial de elección?", 
+                options: ["Toracotomía posterolateral derecha y lavado", "Exclusión esofágica completa con esofagostomía", "Colocación de prótesis metálica autoexpandible", "Ayuno estricto, antibióticos y vigilancia clínica"], 
+                answer: 3, 
+                justification: "Justificación: No todas las perforaciones iatrogénicas exigen intervención agresiva si no hay desgarro pleural o sepsis. De acuerdo GPC de Reconstrucción Esofágica y algoritmos de manejo, en un paciente hemodinámicamente estable con una perforación instrumental puramente \"contenida\" (fuga en el mediastino que recesa hacia el esófago sin cavidad amplia ni signos de respuesta inflamatoria sistémica severa), el manejo seguro consiste en ayuno absoluto, nutrición enteral distal, antibióticos y antifúngicos de amplio espectro, seguidos de re-evaluación tomográfica estrecha.<br><br>Perla ENARM: Una perforación esofágica instrumental de diagnóstico agudo que está anatómicamente contenida en un paciente estable, responde óptimamente al tratamiento médico conservador con ayuno, antibióticos y vigilancia por imagen.<br><br>Análisis de Distractores: Las opciones A y B someten al paciente a una cirugía radical y excesiva con morbimortalidad alta e innecesaria en estadios asintomáticos y contenidos. La opción C (endoprótesis) se reserva cuando existe extravasación descontrolada y no es posible la cirugía.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Management Algorithms, 308." 
+            },
+            {
+                id: 58, 
+                question: "En el paciente joven con esófago de Barrett de segmento corto y displasia de alto grado refractaria a métodos ablativos endoscópicos, ¿cuál técnica permite restituir el tránsito asumiendo la preservación total del estómago?", 
+                options: ["Ascenso de colon izquierdo retroesternal", "Interposición isoperistáltica de yeyuno (Merendino)", "Tubulización gástrica en curvatura menor", "Esofagectomía transhiatal de McKeown"], 
+                answer: 1, 
+                justification: "Justificación: Reemplazar segmentos ultra cortos y benignos aboga por opciones fisiológicas que eviten el vaciamiento rápido o reflujo severo. De acuerdo GPC de Reconstrucción Esofágica, en displasias recalcitrantes del esófago distal se recomienda la técnica de Merendino. Esta realiza una resección en bloque de la unión y el esófago inferior, y utiliza un colgajo corto de asa yeyunal isoperistáltica interpuesta entre el esófago sano y el estómago, conservando este último en su nicho intraabdominal y manteniendo intacto el reservorio gástrico.<br><br>Perla ENARM: El procedimiento de Merendino utiliza un asa interpuesta isoperistáltica de yeyuno para reemplazar resecciones locales en la unión gastroesofágica, lo cual evita secuelas funcionales al preservar toda la cámara gástrica.<br><br>Análisis de Distractores: La opción A es una cirugía mayor masiva indicada si se requiere sustitución subtotal completa. La opción C es mecánicamente inadecuada. La opción D erradica irremediablemente el estómago superior y exige anastomosis en el cuello.", 
+                source: "Risk Factors and Therapy of Esophagus Cancer, 2024, Colon and Jejunum Interposition After Esophagectomy, 435." 
+            },
+            {
+                id: 59, 
+                question: "En la reparación directa de una perforación esofágica con contaminación extensa, se suele utilizar un parche muscular. ¿Qué estructura anatómica proporciona el colgajo idóneo mediante su resección subperióstica lateral local?", 
+                options: ["Omento mayor suprahiatal", "Pectoral mayor inferior", "Fascículo del dorsal ancho", "Músculo intercostal in situ"], 
+                answer: 3, 
+                justification: "Justificación: El tejido de granulación requiere perfusión máxima, especialmente en medios hostiles como la mediastinitis. De acuerdo GPC de Reconstrucción Esofágica, en una toracotomía, el colgajo más accesible y óptimamente vascularizado para cubrir o reforzar una línea de sutura en un esófago frágil o perforado es el del músculo intercostal ipsilateral. Se diseca el lecho subperióstico, preservando escrupulosamente su haz neurovascular que viaja en el borde inferior del arco costal adyacente superior.<br><br>Perla ENARM: El colgajo muscular pediculado intercostal es el tejido de elección para el refuerzo intratorácico (parche) de perforaciones esofágicas reparadas primariamente.<br><br>Análisis de Distractores: La opción A se usa fundamentalmente en el abdomen bajo. Las opciones B y C son colgajos miocutáneos masivos para pared torácica, pero excesivos e imprácticos para el mediastino profundo en la urgencia esofágica pura.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Bridging Strategies and ‘Toolbox’ of Reconstruction, 54." 
+            },
+            {
+                id: 60, 
+                question: "Histopatológicamente, ¿qué característica intrínseca patognomónica de la neoplasia define la elegibilidad formal para aplicar la resección endoscópica de la mucosa (REM) con fines curativos en adenocarcinoma esofágico temprano?", 
+                options: ["Limitación estricta al espesor de la muscular propia", "Tumoración exofítica >5 cm", "Presencia de focos en anillo de sello", "Infiltración confinada a la mucosa sin invasión linfovascular"], 
+                answer: 3, 
+                justification: "Justificación: La terapia conservadora de órganos en oncología exige la exclusión biológica del riesgo de adenopatías sistémicas. De acuerdo GPC de Reconstrucción Esofágica, la resección endoscópica de la mucosa (REM) se recomienda como tratamiento primario resolutivo, sin toracotomía, en pacientes con adenocarcinoma esofágico con estadio T1a y displasia de alto grado en los que el tumor está firmemente confinado a la mucosa (encima de la muscularis mucosae), evidenciando diferenciación histológica adecuada y total ausencia de invasión linfovascular subyacente.<br><br>Perla ENARM: Para el tratamiento del cáncer de esófago incipiente mediante resección endoscópica mucosa (REM), el tumor debe estar estrictamente confinado a la mucosa y carecer de invasión linfovascular o pobre diferenciación.<br><br>Análisis de Distractores: La opción A implica estadio T2, requiriendo esofagectomía con linfadenectomía obligatoria. La opción B sugiere un estadio avanzado. La opción C (anillo de sello) denota pobre diferenciación tumoral, constituyendo una contraindicación de alto riesgo para la resección endoscópica exclusiva por micrometástasis probables.", 
+                source: "Cáncer de Esófago, 2024, Tratamiento Estadios 0 a I, 202." 
+            },
+            {
+                id: 61, 
+                question: "¿Cuál es el valor de corte de la presión de relajación integrada en la manometría de alta resolución para establecer el diagnóstico clásico de acalasia?", 
+                options: ["> 5 mmHg", "> 10 mmHg", "> 15 mmHg", "> 20 mmHg"], 
+                answer: 2, 
+                justification: "Justificación: El diagnóstico de los trastornos motores primarios depende de mediciones presiométricas exactas. De acuerdo GPC de Reconstrucción Esofágica, la acalasia se define manométricamente por la falla en la relajación del esfínter esofágico inferior, documentado mediante una presión de relajación integrada (IRP) consistentemente mayor a 15 mmHg, sumado a la pérdida de la peristalsis esofágica normal.<br><br>Perla ENARM: La presión de relajación integrada mayor a 15 mmHg en la manometría de alta resolución es el hallazgo clave que confirma la falla de relajación esfinteriana en la acalasia.<br><br>Análisis de Distractores: Las opciones A y B representan valores de relajación esfinteriana normales o en el límite superior, que descartan el diagnóstico clásico de acalasia. La opción D es un valor patológico pero excede el límite de corte mínimo diagnóstico estandarizado universalmente.", 
+                source: "Esophageal Disorders, 2025, Perioperative Care, 79." 
+            },
+            {
+                id: 62, 
+                question: "Durante una esofagectomía oncológica con intención curativa, ¿cuál es la longitud mínima del margen de resección proximal y distal recomendada?", 
+                options: ["5 cm", "7 cm", "9 cm", "11 cm"], 
+                answer: 0, 
+                justification: "Justificación: Las redes linfáticas submucosas favorecen la diseminación longitudinal microscópica. De acuerdo GPC de Reconstrucción Esofágica, para lograr una resección R0 en el cáncer de esófago, el cirujano debe garantizar obligatoriamente un margen anatómico libre de enfermedad de al menos 5 cm tanto en dirección proximal como distal a la masa tumoral visible.<br><br>Perla ENARM: En la resección quirúrgica del cáncer esofágico, el margen oncológico proximal y distal mínimo exigido es de 5 cm.<br><br>Análisis de Distractores: Las opciones B, C y D representan márgenes anatómicos excesivos que, aunque seguros oncológicamente, pueden volver inviable el uso del estómago como conducto o forzar anastomosis cervicales innecesarias.", 
+                source: "Thoracic Surgery Clerkship, 2024, Esophagectomy: Approaches and Surgical Techniques, 377." 
+            },
+            {
+                id: 63, 
+                question: "En el postoperatorio de una esofagectomía, se sospecha de un quilotórax. ¿Qué nivel de triglicéridos en el líquido pleural confirma bioquímicamente este diagnóstico?", 
+                options: ["> 50 mg/dl", "> 70 mg/dl", "> 90 mg/dl", "> 110 mg/dl"], 
+                answer: 3, 
+                justification: "Justificación: La lesión inadvertida del conducto torácico condiciona una fuga linfática de alto débito. De acuerdo GPC de Reconstrucción Esofágica, su diagnóstico se establece clínicamente y se confirma bioquímicamente mediante el hallazgo de un líquido pleural con niveles de triglicéridos estrictamente mayores a 110 mg/dl, asociados a un porcentaje de linfocitos superior al 90%.<br><br>Perla ENARM: El diagnóstico bioquímico de quilotórax posoperatorio requiere documentar triglicéridos mayores a 110 mg/dl en el líquido pleural.<br><br>Análisis de Distractores: Las opciones A, B y C son valores inespecíficos que pueden presentarse en derrames pleurales exudativos comunes o pseudoquilotórax.", 
+                source: "Esophageal Cancer, 2023, Esophagectomy for End-Stage Achalasia, 88." 
+            },
+            {
+                id: 64, 
+                question: "¿Qué hallazgo anatómico define a una hernia hiatal tipo IV, la cual presenta un riesgo significativamente elevado de encarcelamiento y estrangulamiento?", 
+                options: ["Desplazamiento exclusivo de la unión esofagogástrica", "Herniación del fundus con unión esofagogástrica abdominal", "Migración de la unión esofagogástrica y el fundus", "Herniación de un órgano intraabdominal distinto al estómago"], 
+                answer: 3, 
+                justification: "Justificación: Las fallas anatómicas del hiato posoperatorio o primarias se clasifican según el contenido herniado. De acuerdo GPC de Reconstrucción Esofágica, una hernia hiatal tipo IV se define como aquella en la que un órgano intraabdominal distinto al estómago (como el colon, bazo, epiplón o intestino delgado) se hernia a través del hiato hacia el mediastino posterior.<br><br>Perla ENARM: La hernia hiatal tipo IV se caracteriza anatómicamente por la presencia de vísceras adicionales al estómago (colon, epiplón, bazo) en el saco herniario intratorácico.<br><br>Análisis de Distractores: La opción A define la hernia hiatal tipo I (deslizamiento). La opción B define la tipo II (paraesofágica pura). La opción C define la tipo III (mixta).", 
+                source: "Esophageal Disorders, 2025, Management of Failed Anti-reflux Surgery, 88." 
+            },
+            {
+                id: 65, 
+                question: "¿Cuál es la ruta anatómica de elección para ascender un conducto sustituto esofágico por ser el trayecto más corto y recto disponible?", 
+                options: ["Mediastino posterior", "Espacio retroesternal", "Tejido celular subcutáneo", "Espacio prevertebral cervical"], 
+                answer: 0, 
+                justification: "Justificación: La fisiología pasiva de los conductos de reemplazo exige vías sin angulaciones o resistencias. De acuerdo GPC de Reconstrucción Esofágica, el conducto óptimo requiere el trayecto más corto y recto posible hacia el cuello, siendo el lecho del mediastino posterior la ruta primaria de elección.<br><br>Perla ENARM: El mediastino posterior es la ruta anatómica preferida y de primera elección para cualquier interposición esofágica debido a que es el trayecto más corto y recto.<br><br>Análisis de Distractores: La opción B es más larga y puede generar acodamiento. La opción C es el último recurso por pobres resultados estéticos e isquémicos. La opción D no es un trayecto continuo natural.", 
+                source: "Esophageal Cancer, 2023, Colon and Jejunum Interposition After Esophagectomy, 425." 
+            },
+            {
+                id: 66, 
+                question: "¿Qué hallazgo tomográfico es altamente sugestivo y confirma el diagnóstico de una fístula atrioesofágica tras una ablación cardíaca?", 
+                options: ["Derrame pericárdico loculado extenso", "Aire libre en la aurícula izquierda o pericardio", "Engrosamiento de la vena pulmonar superior", "Medio de contraste en la cavidad pleural derecha"], 
+                answer: 1, 
+                justification: "Justificación: El trauma térmico por radiofrecuencia genera necrosis coagulativa tardía. De acuerdo GPC de Reconstrucción Esofágica, la fístula atrioesofágica es una complicación rara pero letal. El estudio de elección es la tomografía computarizada con contraste, revelando clásicamente la presencia de gas (aire libre) dentro de la aurícula izquierda o en el espacio pericárdico.<br><br>Perla ENARM: El hallazgo patognomónico de una fístula atrioesofágica en la tomografía computarizada es la presencia de gas dentro de la aurícula izquierda o el pericardio.<br><br>Análisis de Distractores: La opción A es un hallazgo inespecífico. La opción C es resultado esperado del tratamiento ablativo primario. La opción D ocurre en perforaciones esofágicas libres hacia la pleura.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Emergencies, 122." 
+            },
+            {
+                id: 67, 
+                question: "En un paciente con antecedentes de cirugía aórtica o endoprótesis esofágica, ¿qué manifestación clínica inicial es característica y premonitoria de una fístula aortoesofágica?", 
+                options: ["Hemorragia heraldo", "Disfagia a líquidos", "Neumomediastino a tensión", "Síncope vasovagal"], 
+                answer: 0, 
+                justification: "Justificación: Las comunicaciones fistulosas vasculares requieren diagnóstico temprano para evitar exanguinación fulminante. De acuerdo GPC de Reconstrucción Esofágica, el diagnóstico exige alta sospecha, presentándose comúnmente con un sangrado gastrointestinal menor autolimitado conocido clásicamente como \"hemorragia heraldo\".<br><br>Perla ENARM: La \"hemorragia heraldo\" es el signo clínico clásico y premonitorio que alerta sobre la inminencia de un sangrado letal por fístula aortoesofágica.<br><br>Análisis de Distractores: La opción B ocurre en estenosis progresivas. La opción C es típica del barotrauma esofágico. La opción D no es un síntoma cardinal de lesiones aórticas erosivas.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Emergencies, 110." 
+            },
+            {
+                id: 68, 
+                question: "¿Qué inmunomodulador está indicado como terapia adyuvante en pacientes con cáncer de esófago resecado (R0) que presentan enfermedad residual tras recibir quimiorradioterapia neoadyuvante?", 
+                options: ["Infliximab", "Nivolumab", "Pembrolizumab", "Rituximab"], 
+                answer: 1, 
+                justification: "Justificación: La optimización de la supervivencia en enfermedad residual exige consolidación sistémica. De acuerdo GPC de Reconstrucción Esofágica, basándose en el ensayo global de fase III CheckMate 577, los pacientes con cáncer esofágico o de la unión en estadio II o III sometidos a resección R0 que recibieron quimiorradioterapia preoperatoria pero mostraron enfermedad tumoral residual logran una mejora significativa en la supervivencia libre de enfermedad mediante la administración adyuvante de Nivolumab.<br><br>Perla ENARM: El Nivolumab está indicado como tratamiento adyuvante en pacientes con cáncer de esófago resecado (R0) que mantienen enfermedad residual post-quimiorradioterapia neoadyuvante.<br><br>Análisis de Distractores: Las opciones A y D son anticuerpos monoclonales utilizados en patología reumatológica y linfomas. La opción C es otro inhibidor PD-1, pero el régimen validado es el Nivolumab.", 
+                source: "Cáncer de Esófago, 2024, Tratamiento Estadios 0 a I, 199." 
+            },
+            {
+                id: 69, 
+                question: "¿Cuál es el calibre recomendado de la bujía esofágica utilizada para calibrar de forma rutinaria y prevenir el ajuste excesivo durante la creación de una funduplicatura?", 
+                options: ["30F a 34F", "40F a 44F", "56F a 60F", "66F a 70F"], 
+                answer: 2, 
+                justification: "Justificación: La técnica meticulosa de calibración luminal evita la disfagia obstructiva precoz y tardía. De acuerdo GPC de Reconstrucción Esofágica, se recomienda introducir de forma sistemática una bujía esofágica calibre 56F a 60F antes de anudar la válvula sobre sí misma, proporcionando un esqueleto de medición que asegura un envoltorio holgado.<br><br>Perla ENARM: La funduplicatura debe calibrarse rutinariamente utilizando una bujía gruesa de 56F a 60F para evitar el ajuste excesivo de la válvula sobre el esófago distal.<br><br>Análisis de Distractores: Las opciones A y B son calibres muy delgados que favorecen un ajuste oclusivo del tejido gástrico. La opción D es innecesariamente gruesa y riesgosa.", 
+                source: "The SAGES Manual of Foregut Surgery, 2019, Anatomy and Physiology of the Stomach and Pylorus, 97." 
+            },
+            {
+                id: 70, 
+                question: "En el cuidado postoperatorio temprano tras una interposición colónica, ¿qué grupo farmacológico debe evitarse en la medida de lo posible para prevenir la isquemia del conducto por reducción de la microcirculación?", 
+                options: ["Betabloqueadores", "Inotrópicos positivos", "Vasoconstrictores", "Diuréticos de asa"], 
+                answer: 2, 
+                justification: "Justificación: El flujo marginal colónico es extremadamente sensible a los espasmos del lecho capilar. De acuerdo GPC de Reconstrucción Esofágica, en los primeros días postoperatorios, es indispensable mantener una volemia y presión arterial adecuadas estrictamente sin el uso de medicamentos vasoconstrictores sistémicos, ya que inducen una reducción crítica de la microcirculación terminal del injerto.<br><br>Perla ENARM: Durante el postoperatorio temprano de una interposición colónica, el uso de fármacos vasoconstrictores debe evitarse a toda costa por el alto riesgo de inducir necrosis isquémica del injerto.<br><br>Análisis de Distractores: La opción A no contrae activamente el lecho vascular terminal. La opción B mejora el gasto cardíaco. La opción D impacta el volumen, pero se maneja con reposición hídrica estándar.", 
+                source: "Esophageal Cancer, 2023, Colonic Interposition After Esophagectomy, 189." 
+            },
+            {
+                id: 71, 
+                question: "En la técnica de exclusión esofágica temporal sin necesidad de cirugía reconstructiva posterior, ¿qué material de sutura se utiliza para ligar el esófago cervical por debajo de la esofagostomía de drenaje?", 
+                options: ["Seda trenzada irreabsorbible", "Sutura absorbible de poliglactina", "Monofilamento de polipropileno", "Alambre de acero inoxidable"], 
+                answer: 1, 
+                justification: "Justificación: Las estrategias de exclusión puente buscan el retorno de la continuidad sin re-operaciones hostiles. De acuerdo GPC de Reconstrucción Esofágica, un método refinado para aislar el esófago consiste en ligar el esófago cervical utilizando un hilo grueso de sutura absorbible (como poliglactina/Vicryl). Con el paso de algunas semanas, la sutura se reabsorbe, la pared luminal se abre por sí sola y la continuidad digestiva se restablece.<br><br>Perla ENARM: En la exclusión esofágica temporal, la ligadura del esófago cervical se realiza con una sutura absorbible fuerte para permitir la recanalización espontánea tras la absorción del material.<br><br>Análisis de Distractores: Las opciones A, C y D corresponden a materiales irreabsorbibles permanentes que generarían un bloqueo luminal de por vida.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Bridging Strategies and ‘Toolbox’ of Reconstruction, 50." 
+            },
+            {
+                id: 72, 
+                question: "¿A partir de qué valor del integral contráctil distal (DCI) se clasifica un trastorno de la motilidad como esófago hipercontráctil según la Clasificación de Chicago?", 
+                options: ["> 2000 mmHg/s/cm", "> 4000 mmHg/s/cm", "> 6000 mmHg/s/cm", "> 8000 mmHg/s/cm"], 
+                answer: 3, 
+                justification: "Justificación: Las métricas de la onda manométrica tipifican las miopatías por hiperactividad. De acuerdo GPC de Reconstrucción Esofágica, se establece el diagnóstico de esófago hipercontráctil o \"Jackhammer\" cuando los valores contráctiles del DCI superan consistentemente el umbral de los 8000 mmHg/s/cm en las degluciones evaluadas.<br><br>Perla ENARM: Un Integral Contráctil Distal (DCI) mayor a 8000 mmHg/s/cm en la manometría de alta resolución define formalmente a un esófago hipercontráctil.<br><br>Análisis de Distractores: Las opciones A, B y C son valores dentro de la cinética vigorosa o normal, sin alcanzar el criterio numérico de espasmo hipercontráctil patológico.", 
+                source: "The SAGES Manual of Foregut Surgery, 2019, Anatomic and Physiologic Tests of Esophageal and Gastric Function, 73." 
+            },
+            {
+                id: 73, 
+                question: "¿Cuál es el tratamiento médico de primera línea indicado para manejar la colitis asociada a reflujo en un paciente con antecedente de interposición colónica esofágica?", 
+                options: ["Mesalazina oral", "Inhibidores de bomba de protones", "Corticosteroides sistémicos", "Antibióticos de amplio espectro"], 
+                answer: 1, 
+                justification: "Justificación: El tejido colónico carece de los mecanismos defensivos del estómago ante la agresión clorhídrica. De acuerdo GPC de Reconstrucción Esofágica, en los injertos largos, la colitis posoperatoria en el segmento colónico se debe al reflujo de secreciones ácidas desde el estómago residual. A diferencia de las enteropatías inflamatorias primarias, esta \"colitis por reflujo\" debe ser tratada invariablemente con inhibidores de la bomba de protones.<br><br>Perla ENARM: La colitis desarrollada en un conducto de interposición colónica es secundaria a reflujo ácido y responde óptimamente al tratamiento estándar con inhibidores de la bomba de protones.<br><br>Análisis de Distractores: Las opciones A y C están indicadas para la enfermedad inflamatoria intestinal inmunomediada intrínseca, no para inflamación erosiva gástrica exógena. La opción D solo se usa ante sepsis evidente.", 
+                source: "Esophageal Cancer, 2023, Colon and Jejunum Interposition After Esophagectomy, 434." 
+            },
+            {
+                id: 74, 
+                question: "Durante una esofagectomía por cáncer, ¿cuál es el número mínimo de ganglios linfáticos que se recomienda extirpar para garantizar una estadificación anatomopatológica adecuada?", 
+                options: ["5 ganglios linfáticos", "10 ganglios linfáticos", "15 ganglios linfáticos", "25 ganglios linfáticos"], 
+                answer: 2, 
+                justification: "Justificación: La radicalidad oncológica del vaciamiento dictamina el pronóstico real. De acuerdo GPC de Reconstrucción Esofágica, para obtener una estadificación linfática fiable que minimice la \"migración de estadio\", las normativas internacionales recomiendan que el cirujano reseque y analice un mínimo de 15 ganglios linfáticos mediastínicos y periesofágicos durante el procedimiento.<br><br>Perla ENARM: Se requiere la resección y análisis de un mínimo de 15 ganglios linfáticos para lograr una estadificación oncológica adecuada y confiable en la esofagectomía por cáncer.<br><br>Análisis de Distractores: Las opciones A y B representan vaciamientos insuficientes. La opción D representa un vaciamiento radical de 3 campos que supera el umbral \"mínimo\" estandarizado.", 
+                source: "Thoracic Surgery Clerkship, 2024, Esophagectomy: Approaches and Surgical Techniques, 377." 
+            },
+            {
+                id: 75, 
+                question: "Durante una cirugía de revisión por funduplicatura fallida en la que se identifica un esófago intrínsecamente corto, ¿qué procedimiento técnico debe añadirse para lograr una reparación sin tensión?", 
+                options: ["Miotomía de Heller", "Gastroplastia de Collis", "Piloroplastia de Heineke-Mikulicz", "Vagotomía supraselectiva"], 
+                answer: 1, 
+                justification: "Justificación: El fracaso estructural del mecanismo antirreflujo resulta a menudo de obviar acortamientos fibrosos de la longitud esofágica. De acuerdo GPC de Reconstrucción Esofágica, en las cirugías de revisión donde se documenta que la falla inicial se debe a un esófago corto (incapaz de permanecer 2.5 a 3 cm sin tensión bajo el diafragma), es imperativo realizar una gastroplastia de Collis, la cual utiliza la curvatura menor del estómago para alargar el tubo esofágico.<br><br>Perla ENARM: La presencia de un esófago corto diagnosticado durante una reintervención por funduplicatura fallida se maneja de elección mediante una gastroplastia de elongación de Collis.<br><br>Análisis de Distractores: La opción A debilita el esfínter esofágico exacerbandando el reflujo. Las opciones C y D intervienen el vaciamiento antro-pilórico distal y no influyen en la tensión longitudinal proximal.", 
+                source: "Esophageal Disorders, 2025, Management of Failed Anti-reflux Surgery, 92." 
+            },
+            {
+                id: 76, 
+                question: "¿En qué escenario clínico específico se indica utilizar la ruta subcutánea como vía de ascenso para un conducto sustituto esofágico?", 
+                options: ["Pacientes con esófago de Barrett corto", "Anatomía preservada sin cirugías previas", "Inviabilidad de ruta mediastínica y retroesternal", "Necesidad de anastomosis intratorácica baja"], 
+                answer: 2, 
+                justification: "Justificación: La estética y funcionalidad vascular colocan a las vías preesternales en el peldaño final del armamentario. De acuerdo GPC de Reconstrucción Esofágica, la tunelización subcutánea anterior se considera la opción de salvataje y el \"último recurso\" en las interposiciones, estando justificada exclusivamente cuando la ruta del mediastino posterior es inviable y la ruta retroesternal no está disponible.<br><br>Perla ENARM: La ruta subcutánea para el ascenso de conductos de interposición digestiva es una medida de último recurso, reservada para pacientes donde los trayectos retroesternal y mediastínico posterior son intransitables.<br><br>Análisis de Distractores: Las opciones A y B aplican para reconstrucciones directas anatómicamente amigables. La opción D imposibilita la ruta subcutánea, pues ésta está diseñada para llevar el conducto hacia arriba a nivel netamente cervical.", 
+                source: "Esophageal Cancer, 2023, Colonic Interposition After Esophagectomy, 187." 
+            },
+            {
+                id: 77, 
+                question: "¿Qué diseño estructural caracteriza al dispositivo VAC-Stent utilizado en la terapia de vacío endoluminal para perforaciones esofágicas?", 
+                options: ["Stent metálico autoexpandible cubierto por esponja", "Sonda de silicón con doble balón hemostático", "Esponja de poliuretano sin soporte luminal", "Malla de polipropileno recubierta de colágeno"], 
+                answer: 0, 
+                justification: "Justificación: La hibridación de tecnologías combina la descompresión intraluminal y la restitución luminal. De acuerdo GPC de Reconstrucción Esofágica, a diferencia de la esponja pura, el dispositivo VAC-Stent consiste estructuralmente en un stent de malla metálica autoexpandible completamente cubierto, cuya porción central está revestida exteriormente por una esponja de poliuretano macroporosa. Esto sella la fuga y drena el absceso mediante vacío, al mismo tiempo que el núcleo metálico mantiene la permeabilidad del tracto digestivo.<br><br>Perla ENARM: El VAC-Stent combina un stent metálico autoexpandible con una cubierta externa de esponja de poliuretano, permitiendo la terapia de vacío activo sin ocluir la luz esofágica.<br><br>Análisis de Distractores: La opción B describe un tubo de Sengstaken-Blakemore. La opción C corresponde a la EsoSponge convencional que colapsa la luz esofágica. La opción D es un parche biológico para reparación de pared abdominal.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Bridging Strategies and ‘Toolbox’ of Reconstruction, 60." 
+            },
+            {
+                id: 78, 
+                question: "Ante un conducto gástrico crónicamente dilatado y redundante que condiciona vaciamiento gástrico retrasado refractario, ¿qué técnica quirúrgica de revisión está indicada?", 
+                options: ["Tubularización con plicatura de seda o grapado", "Resección del cardias y anastomosis cervical", "Derivación gastroyeyunal en Y de Roux", "Dilatación neumática del píloro a 30 mm"], 
+                answer: 0, 
+                justification: "Justificación: Un reservorio excesivamente ancho sin peristalsis se abomba y acoda dentro de la caja torácica. De acuerdo GPC de Reconstrucción Esofágica, en pacientes pos-esofagectomía que desarrollan disfunción de vaciamiento grave con un conducto gástrico tipo \"bolsa\", la cirugía de revisión requiere remodelar el injerto. Esto se logra mediante la tubularización intratorácica del tejido redundante utilizando una línea continua de engrapado a lo largo de la curvatura menor, o colocando suturas invaginantes de seda para estrechar el diámetro.<br><br>Perla ENARM: El tratamiento quirúrgico del vaciamiento gástrico retrasado por conducto redundante consiste en estrechar o \"tubularizar\" el estómago dilatado mediante grapado lineal o plicaturas de seda.<br><br>Análisis de Distractores: La opción B no resuelve el segmento dilatado torácico. La opción C es una desviación distal útil para estenosis severas. La opción D genera perforación pilórica iatrogénica.", 
+                source: "Esophageal Disorders, 2025, Delayed Gastric Emptying After Esophagectomy, 254." 
+            },
+            {
+                id: 79, 
+                question: "¿Por qué motivo está estrictamente contraindicada la insuflación con aire durante la evaluación endoscópica de una presunta fístula atrioesofágica?", 
+                options: ["Genera neumotórax a tensión bilateral", "Provoca disección aguda de la aorta", "Induce embolismo aéreo cerebral letal", "Causa ruptura del tabique interventricular"], 
+                answer: 2, 
+                justification: "Justificación: La comunicación directa de la vía digestiva al corazón izquierdo implica riesgos hemodinámicos severos. De acuerdo GPC de Reconstrucción Esofágica, al evaluar una posible fístula desde el esófago hacia la aurícula izquierda, la insuflación de gas a presión dentro de la luz esofágica impulsará burbujas masivas de aire directo al ventrículo izquierdo y circulación sistémica, provocando infarto cerebral letal o choque instantáneo.<br><br>Perla ENARM: La insuflación endoscópica está formalmente contraindicada ante la sospecha de fístula atrioesofágica debido al altísimo riesgo de inducir un embolismo aéreo sistémico masivo letal.<br><br>Análisis de Distractores: Las opciones A y D describen injurias torácicas en espacios anatómicamente cerrados aislados del trayecto auricular. La opción B tiene fisiopatología de desgarro intimal hipertensivo.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Emergencies, 122." 
+            },
+            {
+                id: 80, 
+                question: "Al realizar una exclusión esofágica temporal aislando la perforación mediante gastrostomía de drenaje y esofagostomía, ¿qué instrumento se utiliza para cerrar la unión gastroesofágica y evitar el reflujo?", 
+                options: ["Engrapadora lineal cortante", "Engrapadora lineal no cortante", "Jareta con sutura de polipropileno", "Clip hemostático de titanio"], 
+                answer: 1, 
+                justification: "Justificación: La exclusión temporal busca un puente salvavidas que cierre la comunicación del tracto pero retenga la anatomía. De acuerdo GPC de Reconstrucción Esofágica, en el modelo de exclusión temporal, la unión esofagogástrica inferior se debe ocluir disparando estrictamente una engrapadora lineal no cortante transversalmente sobre el cardias. Esto oblitera físicamente la luz esofágica excluyendo el reflujo, pero mantiene el esófago anatómicamente contiguo para su posterior recanalización.<br><br>Perla ENARM: En la técnica de exclusión esofágica temporal se utiliza una engrapadora lineal no cortante para sellar la unión esofagogástrica inferior de manera que el reflujo quede bloqueado, permitiendo posteriormente la apertura natural del tejido cicatrizal.<br><br>Análisis de Distractores: La opción A seccionaría por completo la unión, forzando una intervención mayor. La opción C es una técnica de estoma. La opción D carece de fuerza de tensión suficiente.", 
+                source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Bridging Strategies and ‘Toolbox’ of Reconstruction, 50." 
+            },
+    {
+        id: 81,
+        question: "¿Cuál es el hallazgo manométrico que define a la acalasia tipo II de acuerdo con la clasificación de Chicago?",
+        options: ["Ausencia de peristalsis sin presurización", "Presurización esofágica panesofágica", "Contracciones espásticas prematuras", "Relajación normal del esfínter inferior"],
+        answer: 1,
+        justification: "Justificación: El diagnóstico topográfico del trastorno motor dictamina el abordaje y pronóstico del paciente. De acuerdo GPC de Reconstrucción Esofágica, la acalasia tipo II se diferencia de sus variantes hermanas por la presencia inconfundible de presurización panesofágica generada por el atrapamiento de fluidos entre un esfínter esofágico superior cerrado y un esfínter inferior que falla en su relajación (IRP >15 mmHg).<br><br>Perla ENARM: La acalasia tipo II se caracteriza manométricamente por la falla de relajación del esfínter asociada de forma patognomónica a una presurización esofágica panesofágica.<br><br>Análisis de Distractores: La opción A describe la acalasia clásica o tipo I. La opción C define a la acalasia tipo III. La opción D excluye automáticamente el diagnóstico de acalasia, orientando hacia otros trastornos motores como la obstrucción al flujo de salida aislada.",
+        source: "Esophageal Disorders, 2025, Perioperative Care, 85."
+    },
+    {
+        id: 82,
+        question: "¿Qué capa histológica está ausente en la pared del esófago, lo cual predispone a una diseminación tumoral temprana y a un mayor riesgo de dehiscencia anastomótica?",
+        options: ["Muscular de la mucosa", "Submucosa", "Serosa", "Muscular propia"],
+        answer: 2,
+        justification: "Justificación: La carencia de recubrimientos anatómicos acelera la progresión de enfermedades esofágicas. De acuerdo GPC de Reconstrucción Esofágica, a diferencia de la mayor parte del tracto gastrointestinal inferior, la pared del esófago torácico carece por completo de capa serosa (estando recubierto solo por adventicia), lo que disminuye drásticamente su resistencia a la tensión anastomótica, compromete el sellado de las suturas y permite la infiltración extraluminal rápida de los tumores malignos.<br><br>Perla ENARM: La pared del esófago carece de la capa serosa anatómica, factor biológico que favorece la propagación de células tumorales extraesofágicas y eleva la fragilidad de las anastomosis.<br><br>Análisis de Distractores: Las opciones A, B y D son capas constitutivas intrínsecas presentes en toda la longitud del tubo esofágico, siendo la submucosa la que alberga la rica y extensa red linfática diseminadora.",
+        source: "Cáncer de Esófago, 2024, Introducción y Anatomopatología, 201."
+    },
+    {
+        id: 83,
+        question: "¿De qué estructura vascular provienen las ramas arteriales principales que irrigan la porción cervical del esófago?",
+        options: ["Arteria tiroidea inferior", "Arteria subclavia directa", "Tronco braquiocefálico", "Arteria carótida común"],
+        answer: 0,
+        justification: "Justificación: Las disecciones cervicales profundas enfrentan una anatomía vascular densa y segmentaria. De acuerdo GPC de Reconstrucción Esofágica, la irrigación del esófago se divide por tercios; en el cuello, el aporte arterial dominante para el esófago cervical proviene casi exclusivamente de las ramas esofágicas derivadas de la arteria tiroidea inferior bilateralmente.<br><br>Perla ENARM: La irrigación arterial del esófago cervical depende de forma primaria de las ramas originadas en la arteria tiroidea inferior.<br><br>Análisis de Distractores: Las opciones B, C y D son vasos troncales mayores del opérculo torácico que no emiten ramos colaterales directos hacia el esófago proximal. La disección descuidada de estos induce hemorragias masivas, pero no desvascularización esofágica isquémica per se.",
+        source: "Esophageal Cancer, 2023, Anatomy and Physiology of the Esophagus, 4."
+    },
+    {
+        id: 84,
+        question: "Durante la división del ligamento gastrohepático para exponer el pilar derecho, ¿qué variante anatómica vascular debe identificarse y preservarse de ser posible?",
+        options: ["Arteria gástrica posterior", "Arteria hepática izquierda accesoria", "Vena gástrica coronaria", "Arteria esplénica aberrante"],
+        answer: 1,
+        justification: "Justificación: Las variaciones hepatobiliares son comunes en la región del hiato diafragmático. De acuerdo GPC de Reconstrucción Esofágica, al realizar la apertura de la pars flaccida del ligamento gastrohepático para acceder al pilar derecho y esófago distal, el cirujano debe buscar intencionadamente la presencia de una arteria hepática izquierda accesoria o aberrante que nace de la arteria gástrica izquierda y cursa libremente por este epiplón hacia el lóbulo hepático izquierdo.<br><br>Perla ENARM: Durante la disección del ligamento gastrohepático se debe evitar lesionar una posible arteria hepática izquierda accesoria aberrante proveniente de la arteria gástrica izquierda.<br><br>Análisis de Distractores: La opción A nace de la esplénica posteriormente. La opción C viaja a lo largo de la curvatura menor hacia el sistema porta, no cruzando el ligamento libremente. La opción D se localiza en el retroperitoneo distal.",
+        source: "Esophageal Disorders, 2025, Anatomy and Physiology of the Stomach, 51."
+    },
+    {
+        id: 85,
+        question: "¿Cuál es el patógeno responsable de la destrucción del plexo de Auerbach que condiciona el desarrollo de megaesófago secundario en áreas endémicas?",
+        options: ["Plasmodium falciparum", "Trypanosoma cruzi", "Toxoplasma gondii", "Leishmania donovani"],
+        answer: 1,
+        justification: "Justificación: La denervación del músculo liso altera la relajación esfinteriana de forma irreversible. De acuerdo GPC de Reconstrucción Esofágica, en regiones endémicas como América del Sur, la infección por Trypanosoma cruzi (Enfermedad de Chagas) ocasiona una destrucción de las células ganglionares parasimpáticas en los plexos mientéricos de Auerbach del tracto digestivo, produciendo una acalasia secundaria sistémica que evoluciona clínicamente hacia un megaesófago avanzado y megacolon.<br><br>Perla ENARM: La enfermedad de Chagas, ocasionada por Trypanosoma cruzi, induce megaesófago secundario debido a la destrucción anatómica de los ganglios del plexo mientérico de Auerbach.<br><br>Análisis de Distractores: Las opciones A, C y D corresponden a parásitos que afectan eritrocitos, sistema nervioso central o macrófagos tisulares respectivamente, sin causar una miopatía entérica denervante constrictiva.",
+        source: "Esophageal Disorders, 2025, Diagnosis and Management of Esophageal Achalasia, 86."
+    },
+    {
+        id: 86,
+        question: "¿Cuál es la etiología más frecuente de la pseudoacalasia que obliga a realizar una endoscopia diagnóstica en pacientes con clínica obstructiva y pérdida de peso rápida?",
+        options: ["Anillo de Schatzki fibrótico", "Compresión aórtica extrínseca", "Infiltración maligna en la unión", "Estenosis péptica crónica"],
+        answer: 2,
+        justification: "Justificación: La acalasia esofágica de inicio tardío (>60 años) exige descartar una neoplasia obstructiva. De acuerdo GPC de Reconstrucción Esofágica, la pseudoacalasia es la presentación clínica y manométrica idéntica a la acalasia idiopática, pero desencadenada mecánicamente por la infiltración maligna de un tumor (usualmente adenocarcinoma) en la unión gastroesofágica o cardias que rigidiza la pared e impide la relajación esfinteriana, requiriendo evaluación endoscópica obligatoria en retroflexión.<br><br>Perla ENARM: La causa subyacente más frecuente de pseudoacalasia es la infiltración maligna neoplásica del cardias o de la unión gastroesofágica.<br><br>Análisis de Distractores: Las opciones A y D causan disfagia mecánica progresiva pero no reproducen los hallazgos manométricos de falla contráctil o espasmo idiopático. La opción B produce disfagia lusoria intermitente, no pérdida de relajación esfinteriana.",
+        source: "Esophageal Disorders, 2025, Clinical Presentation and Diagnostic Evaluation, 77."
+    },
+    {
+        id: 87,
+        question: "¿Qué abordaje quirúrgico de esofagectomía se caracteriza por requerir tres campos operatorios (abdomen, tórax derecho y cuello) para realizar la anastomosis cervical?",
+        options: ["Esofagectomía transhiatal", "Procedimiento de Ivor Lewis", "Esofagectomía de McKeown", "Interposición de Merendino"],
+        answer: 2,
+        justification: "Justificación: La topografía de los tumores medios y superiores obliga a buscar márgenes holgados en el cuello. De acuerdo GPC de Reconstrucción Esofágica, el procedimiento de McKeown (esofagectomía de tres campos) inicia con una toracotomía derecha para la disección mediastínica tumoral en bloque, seguida de una laparotomía para movilización gástrica, y culmina con una incisión cervical para exteriorizar el conducto y confeccionar la anastomosis esofagogástrica muy alta.<br><br>Perla ENARM: La esofagectomía de McKeown es el abordaje oncológico estándar de tres campos que combina toracotomía derecha, laparotomía y anastomosis cervical.<br><br>Análisis de Distractores: La opción A evita completamente la toracotomía. La opción B finaliza su anastomosis dentro del tórax derecho, sin incisión cervical. La opción D es una resección local muy corta de la unión reconstruida con yeyuno intrabdominal.",
+        source: "Cáncer de Esófago, 2024, Abordajes Quirúrgicos, 204."
+    },
+    {
+        id: 88,
+        question: "¿Cuál es la longitud estándar del componente metálico autoexpandible en el dispositivo híbrido VAC-Stent utilizado para la terapia de vacío endoluminal?",
+        options: ["50 mm", "70 mm", "100 mm", "120 mm"],
+        answer: 1,
+        justification: "Justificación: El diseño estructural dicta la capacidad de cobertura del defecto esofágico. De acuerdo GPC de Reconstrucción Esofágica, la innovación del dispositivo híbrido VAC-Stent recae en poseer un esqueleto de stent metálico autoexpandible completamente recubierto que mide exactamente 70 mm de longitud y 14 mm de ancho intraluminal, cuya porción central está forrada externamente por una esponja de poliuretano macroporosa, permitiendo succión activa y alimentación simultánea.<br><br>Perla ENARM: El VAC-Stent utilizado en terapia de vacío para perforaciones gastroesofágicas está conformado por un stent metálico cubierto de 70 mm de longitud.<br><br>Análisis de Distractores: Las opciones A, C y D corresponden a dimensiones comerciales de stents convencionales paliativos que carecen del ensamblaje híbrido milimétrico necesario para tolerar el colapso del sistema de vacío poroso integrado.",
+        source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Endoluminal Vacuum Therapy, 60."
+    },
+    {
+        id: 89,
+        question: "¿Cuál estructura muscular estriada constituye el componente funcional primario y de mayor presión del esfínter esofágico superior?",
+        options: ["Músculo constrictor faríngeo superior", "Músculo constrictor faríngeo medio", "Músculo cricofaríngeo", "Músculo palatofaríngeo"],
+        answer: 2,
+        justification: "Justificación: La resistencia a la deglución superior depende de la tensión tónica muscular del cuello. De acuerdo GPC de Reconstrucción Esofágica, aunque el esfínter esofágico superior es una estructura anatómica compleja, el músculo cricofaríngeo (una banda muscular horizontal estriada adosada al cartílago cricoides) funge como su componente principal y el generador dominante de la barrera de presión en reposo que previene la aspiración traqueal.<br><br>Perla ENARM: El músculo cricofaríngeo es el responsable fisiológico primario de la alta presión basal del esfínter esofágico superior.<br><br>Análisis de Distractores: Las opciones A y B participan en el impulso propulsivo orofaríngeo descendente del bolo (fase faríngea), pero no son elementos esfinterianos oclusivos de alta presión estática. La opción D sella la nasofaringe.",
+        source: "The SAGES Manual of Foregut Surgery, 2019, Anatomy and Physiology of the Esophagus and Lower Esophageal Sphincter, 17."
+    },
+    {
+        id: 90,
+        question: "¿Qué alteración anatómica define específicamente a una hernia hiatal tipo III?",
+        options: ["Deslizamiento aislado de la unión", "Herniación fúndica con unión intrabdominal", "Deslizamiento de la unión y herniación fúndica", "Inclusión de bazo o colon en el hiato"],
+        answer: 2,
+        justification: "Justificación: La clasificación de la falla hiatal guía la necesidad de reparación urgente. De acuerdo GPC de Reconstrucción Esofágica, la hernia hiatal tipo III se define como una hernia mixta, combinando anatómicamente un desplazamiento axial (deslizamiento) de la unión gastroesofágica hacia el mediastino posterior, simultáneamente con una herniación paraesofágica del fundus gástrico rodando por encima y a un lado del cardias.<br><br>Perla ENARM: La hernia hiatal tipo III se compone de elementos mixtos, integrando el deslizamiento mediastínico de la unión esofagogástrica con la herniación paraesofágica del fundus.<br><br>Análisis de Distractores: La opción A describe la hernia tipo I. La opción B define estrictamente a la hernia paraesofágica pura (tipo II). La opción D corresponde al grado de mayor severidad (hernia tipo IV).",
+        source: "Esophageal Disorders, 2025, Management of Failed Anti-reflux Surgery, 88."
+    },
+    {
+        id: 91,
+        question: "De acuerdo con el ensayo CROSS, ¿cuál es la dosis de radioterapia externa recomendada como estándar durante la quimiorradioterapia neoadyuvante para cáncer de esófago?",
+        options: ["30.4 Gy", "41.4 Gy", "50.4 Gy", "60.4 Gy"],
+        answer: 1,
+        justification: "Justificación: La dosis de radiación busca control locorregional maximizando la curación de los tejidos sanos posquirúrgicos. De acuerdo GPC de Reconstrucción Esofágica y evidencia del histórico ensayo CROSS, el régimen neoadyuvante preoperatorio óptimo para reducir el tamaño tumoral mejorando la sobrevida global y logrando tasas R0 se estableció suministrando quimioterapia concurrente emparejada con una dosis moderada de radioterapia externa de exactamente 41.4 Gy en 23 fracciones, evitando dosis mayores que comprometen la microcirculación del conducto esofágico.<br><br>Perla ENARM: El régimen validado internacionalmente por el ensayo CROSS recomienda utilizar una dosis de radioterapia neoadyuvante de 41.4 Gy para el cáncer de esófago localmente avanzado.<br><br>Análisis de Distractores: La opción A es insuficiente para erradicar micrometástasis. La opción C es la dosis estándar preferida para intención radical definitiva, pero en neoadyuvancia aumenta la toxicidad operatoria inaceptablemente. La opción D induce necrosis mediastínica extrema posoperatoria.",
+        source: "Cáncer de Esófago, 2024, Tratamiento Estadios II a III, 207."
+    },
+    {
+        id: 92,
+        question: "¿Qué colgajo muscular pediculado se recomienda utilizar para cubrir y reparar perforaciones complejas del esófago cervical inducidas por material de osteosíntesis espinal anterior?",
+        options: ["Colgajo del músculo esternocleidomastoideo", "Colgajo del músculo omohioideo superior", "Colgajo del músculo platisma", "Colgajo del músculo pectoral mayor"],
+        answer: 1,
+        justification: "Justificación: El trauma vertebral penetrante sobre el esófago requiere tejido de interposición denso e irrigado in situ. De acuerdo GPC de Reconstrucción Esofágica, las placas y tornillos vertebrales desplazados generan fístulas esofágicas destructivas; para su reparación óptima en la región del cuello, se recomienda rotar el vientre superior del músculo omohioideo sobre el defecto, ya que cuenta con pedículo propio cercano y separa eficazmente la mucosa digestiva del hardware metálico.<br><br>Perla ENARM: El colgajo del músculo omohioideo superior es el tejido ideal local para interponerse y sellar perforaciones del esófago cervical causadas por injuria o erosión de material de fijación espinal.<br><br>Análisis de Distractores: La opción A es un colgajo mayor voluminoso que distorsiona la cosmética y movilidad cervical del paciente asimétricamente. La opción C es un músculo cutáneo extremadamente fino que se necrosa ante el primer embate salival infeccioso. La opción D se usa como último recurso en fístulas cutáneas masivas, dada la extrema morbilidad de su ascenso desde el tórax.",
+        source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Oesophageal Replacement, 80."
+    },
+    {
+        id: 93,
+        question: "En pacientes con síndrome de heterotaxia (isomerismo izquierdo), ¿qué anomalía venosa intratorácica mayor dificulta la movilización del esófago durante una resección?",
+        options: ["Vena cava superior izquierda persistente", "Drenaje venoso pulmonar anómalo total", "Continuación ácigos de la vena cava inferior", "Agenesia de la vena braquiocefálica derecha"],
+        answer: 2,
+        justification: "Justificación: Los síndromes de disposición orgánica aberrante desafían la anatomía de abordaje rutinaria. De acuerdo GPC de Reconstrucción Esofágica, el síndrome de heterotaxia o isomerismo izquierdo se asocia clásicamente con la interrupción de la vena cava inferior a nivel hepático, compensada por un drenaje masivo a través del sistema ácigos (continuación ácigos). Esta dilatación venosa colosal transita pegada y entretejida al esófago por todo el mediastino posterior, convirtiendo la disección transtorácica o transhiatal oncológica en un riesgo crítico de exanguinación masiva.<br><br>Perla ENARM: El síndrome de heterotaxia con isomerismo izquierdo se asocia a la interrupción de la vena cava inferior con continuación ácigos, creando un obstáculo vascular masivo adherido al esófago intratorácico.<br><br>Análisis de Distractores: La opción A cursa por el lado izquierdo hacia el seno coronario, lejos del trayecto periesofágico derecho predominante. Las opciones B y D son anomalías cianógenas o confluencias superiores que no interfieren longitudinalmente con toda la bisección de la pars posterior.",
+        source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Unusual Anatomy, 41."
+    },
+    {
+        id: 94,
+        question: "Según series clínicas recientes, ¿cuál es la tasa de mortalidad operatoria reportada para pacientes sometidos a esofagectomía como tratamiento de la acalasia en etapa terminal?",
+        options: ["0%", "5%", "10%", "15%"],
+        answer: 0,
+        justification: "Justificación: La morbimortalidad evalúa el riesgo-beneficio en patología benigna irremediable. De acuerdo GPC de Reconstrucción Esofágica y reportes recientes de cohortes controladas, la esofagectomía por acalasia terminal o fracaso de miotomías reiteradas es factible, segura y curativa; se ha documentado que la mortalidad operatoria actual se reduce de manera óptima al 0%, con una tasa de morbilidad tratable del 38% y una satisfacción reportada de 7.6 sobre 10 a largo plazo.<br><br>Perla ENARM: La esofagectomía en centros de alto volumen para acalasia terminal reporta una mortalidad operatoria segura de 0%, indicando que ya no debe considerarse estrictamente una opción desesperada de \"último recurso\".<br><br>Análisis de Distractores: Las opciones B, C y D reflejaban porcentajes inaceptables e históricos prohibitivos que condenaban a los pacientes al uso de endoprótesis y desnutrición pasiva, cifras desfasadas con la optimización anestésica quirúrgica moderna.",
+        source: "Annals of Esophagus, 2025, Esophagectomy for end-stage achalasia: functional and quality of life outcomes, 3."
+    },
+    {
+        id: 95,
+        question: "Para obtener un conducto yeyunal de longitud adecuada, ¿a qué distancia distal del ligamento de Treitz debe realizarse la transección proximal inicial del intestino?",
+        options: ["5 cm", "15 cm", "35 cm", "50 cm"],
+        answer: 1,
+        justification: "Justificación: La física mesentérica proximal restringe el alcance cefálico intestinal. De acuerdo GPC de Reconstrucción Esofágica, en la preparación de una interposición yeyunal intratorácica, el cirujano debe transectar el intestino con grapadora lineal aproximadamente a 15 cm distales al ligamento de Treitz. Elegir este punto maximiza la preservación de los arcos vasculares paralelos y vasos rectos proximales que sufren menos rectificación durante la elevación al cuello.<br><br>Perla ENARM: Al fabricar un asa para interposición yeyunal, la transección inicial debe hacerse a 15 cm del ligamento de Treitz para garantizar la suficiencia vascular de las arcadas primarias.<br><br>Análisis de Distractores: La opción A es anatómicamente imposible sin dañar el flexo dudodenoyeyunal. Las opciones C y D sacrifican segmento y arcadas vigorosas en favor de yeyuno distal de menor diámetro y con red vascular secundaria fragmentada propensa a necrosis isquémica en ascenso.",
+        source: "Risk Factors and Therapy of Esophagus Cancer, 2024, Colon and Jejunum Interposition After Esophagectomy, 434."
+    },
+    {
+        id: 96,
+        question: "Topográficamente, ¿en qué segmento del esófago se localiza hasta el 50% de los carcinomas escamocelulares?",
+        options: ["Esófago cervical", "Tercio superior torácico", "Tercio medio torácico", "Unión gastroesofágica"],
+        answer: 2,
+        justification: "Justificación: La histología dicta el patrón de vigilancia endoscópica sectorial. De acuerdo GPC de Reconstrucción Esofágica, la epidemiología oncológica esofágica establece un patrón claro: el 50% de los carcinomas escamocelulares se originan centralmente en el tercio medio torácico, el 20% en el tercio superior y el 30% restante en el tercio distal; esto contrasta dramáticamente con el adenocarcinoma, del cual el 97% reside invariablemente en la porción inferior del tórax o cardias.<br><br>Perla ENARM: El carcinoma escamocelular del esófago tiene su predilección topográfica principal en el tercio medio del esófago torácico, representando el 50% de los casos.<br><br>Análisis de Distractores: Las opciones A y B engloban la minoría de los tumores epidermoides de altísima agresividad regional traqueal. La opción D es el territorio indiscutible de predominio biológico absoluto del adenocarcinoma metaplásico.",
+        source: "Cáncer de Esófago, 2024, Anatomopatología, 200."
+    },
+    {
+        id: 97,
+        question: "Tras una esofagectomía con resección completa R0, ¿cuál es el beneficio comprobado en la supervivencia global al administrar radioterapia adyuvante como monoterapia?",
+        options: ["Incremento del 20% a 5 años", "Reducción del 50% en metástasis", "Ningún beneficio comprobado", "Duplica la supervivencia libre de enfermedad"],
+        answer: 2,
+        justification: "Justificación: La agresión tisular excesiva sin quimioterapia sincrónica anula ventajas teóricas locales tardías. De acuerdo GPC de Reconstrucción Esofágica, los ensayos prospectivos aleatorizados determinan que en un paciente sometido a resección R0, la radioterapia adyuvante exclusiva posoperatoria (45-56 Gy) puede disminuir levemente recidivas locales pero no se ha encontrado ningún beneficio importante en la tasa de supervivencia global y, por el contrario, conlleva morbilidad fibrótica limitante.<br><br>Perla ENARM: La administración de radioterapia adyuvante como monoterapia tras una esofagectomía R0 no ha demostrado ningún beneficio clínico comprobado en la supervivencia global del paciente.<br><br>Análisis de Distractores: Las opciones A, B y D atribuyen un éxito oncológico falsamente optimista a un tratamiento radioterápico posoperatorio aislado no respaldado universalmente ni por ensayos ni guías clínicas vigentes.",
+        source: "Cáncer de Esófago, 2024, Terapia Adyuvante, 205."
+    },
+    {
+        id: 98,
+        question: "Para reparar una hernia incisional torácica sintomática secundaria a una toracotomía previa, ¿qué material y técnica se recomiendan para obliterar el espacio intercostal?",
+        options: ["Malla biológica fijada con grapas", "Suturas en 8 con material irreabsorbible calibre 5", "Cemento óseo de polimetilmetacrilato", "Placas de titanio atornilladas a los arcos"],
+        answer: 1,
+        justification: "Justificación: El movimiento asimétrico inspiratorio de la pared obliga a retenciones elásticas masivas. De acuerdo GPC de Reconstrucción Esofágica, ante la debilidad muscular de una herida toracotómica clásica, el defecto expansivo y la herniación pulmonar secundaria se corrigen realizando el cierre activo directo de los arcos costales superior e inferior; esto se logra mediante la inserción de suturas irreabsorbibles extragruesas (tipo Ethibond #5) cruzadas en forma de 8, lo que aproxima el marco óseo y previene la necesidad de mallas exógenas proclives a infección pleural.<br><br>Perla ENARM: La hernia incisional torácica con tejido costal viable se repara efectivamente sin el uso rutinario de malla, mediante suturas intercostales irreabsorbibles fuertes (#5) en patrón de 8.<br><br>Análisis de Distractores: La opción A se disuelve rápidamente con el constante movimiento ventilatorio. La opción C bloquea la expansión diafragmática produciendo restricción severa y necrosis focal. La opción D se emplea para estabilización y pseudoartrosis en el tórax inestable óseo puro, no para hernias miocutáneas de brechas intercostales blandas.",
+        source: "Reconstructive Surgery of the Oesophagus and Stomach, 2025, Thoracic Incisional Hernia, 40."
+    },
+    {
+        id: 99,
+        question: "En el esofagograma lateral, ¿qué estructura anatómica produce la indentación posterior característica conocida como impresión poscricoidea durante la deglución?",
+        options: ["Glándula tiroides", "Músculo cricofaríngeo", "Cartílago aritenoides", "Vasos braquiocefálicos"],
+        answer: 1,
+        justification: "Justificación: La imagen fluoroscópica dinámica captura la rigidez pasiva de esfínteres. De acuerdo GPC de Reconstrucción Esofágica, en condiciones anatómicas normales, el esofagograma con trago de bario en proyección lateral dibuja una muesca o indentación prominente lisa situada en el contorno posterior de la luz faringoesofágica inferior; esta estampa (\"post-cricoid impression\") no es patológica y corresponde exclusivamente a la masa carnosa proyectada del músculo cricofaríngeo intacto en contracción basal intermitente.<br><br>Perla ENARM: La \"impresión poscricoidea\" en el esofagograma fluoroscópico lateral es producida anatómicamente por la protrusión del músculo cricofaríngeo en la luz esofágica posterior.<br><br>Análisis de Distractores: La opción A envuelve el eje traqueal anteriormente, no la faringe posterior. La opción C es intrínsecamente laríngea superior y cartilaginosa respiratoria. La opción D asienta varios centímetros abajo, en el mediastino superior extrínseco.",
+        source: "The SAGES Manual of Foregut Surgery, 2019, Anatomy and Physiology of the Esophagus and Lower Esophageal Sphincter, 17."
+    },
+    {
+        id: 100,
+        question: "Fisiopatológicamente, ¿qué disfunción motora subyace primariamente a la formación de un divertículo de Zenker en el triángulo de Killian?",
+        options: ["Hiperperistalsis del esófago cervical", "Relajación prematura del esfínter inferior", "Falla en la apertura del esfínter esofágico superior", "Atonía de los músculos constrictores faríngeos"],
+        answer: 2,
+        justification: "Justificación: Las presiones intraluminales destructivas exigen disyuntivas obstructivas preexistentes en los mecanismos deglutorios. De acuerdo GPC de Reconstrucción Esofágica, el divertículo faríngeo de Zenker no es una simple dilatación de pared; es un fenómeno impulsado por estrés. Se origina patogénicamente porque existe una alteración estructural contráctil, espasmo o falla general en la apertura funcional del esfínter esofágico superior (músculo cricofaríngeo) al momento en que la faringe genera una elevada fuerza intrabolo propulsiva hacia abajo.<br><br>Perla ENARM: El divertículo de Zenker se desarrolla en el triángulo de Killian secundario a una disfunción motora por falla en la apertura o relajación del esfínter esofágico superior (cricofaríngeo).<br><br>Análisis de Distractores: La opción A no existe patológicamente con fuerza pulsiva retrógrada masiva. La opción B causa reflujo proximal sin obstrucción faríngea de contacto agudo. La opción D produciría estasis salival inerte asintomática sin fuerza propulsiva suficiente para herniar submucosa.",
+        source: "The SAGES Manual of Foregut Surgery, 2019, Anatomy and Physiology of the Esophagus and Lower Esophageal Sphincter, 18."
+    }
+
+
+
+        ];
+
+        // ==========================================
+        // ==========================================
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('SOFAGECTOMIALastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('SOFAGECTOMIAProgress');
+                localStorage.removeItem('SOFAGECTOMIALastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-pink-500 shadow-md z-10 border-pink-500 dark:border-pink-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-pink-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-rose-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! UMAE 25 - 2026" : "R4 - UMAE 25 - 2026";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "UMAE 25 - R4";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus las respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="BS06308GYOE.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-pink-100 dark:border-pink-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-pink-50 has-[:checked]:border-pink-400 dark:has-[:checked]:bg-pink-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-pink-600 focus:ring-pink-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-600 dark:hover:bg-pink-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('SOFAGECTOMIAProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('SOFAGECTOMIALastQId', currentQuestionId);
+                else localStorage.removeItem('SOFAGECTOMIALastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('SOFAGECTOMIAProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB26PT8kuB-0fxyUYgGk51yC1rAsW0dYj0",
+        authDomain: "enarm-lite.firebaseapp.com",
+        projectId: "enarm-lite",
+        storageBucket: "enarm-lite.firebasestorage.app",
+        messagingSenderId: "767032952477",
+        appId: "1:767032952477:web:84347320ed3d376f7e7674",
+        measurementId: "G-PVR3RBVNSV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    //document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "usuarios_autorizados", user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            
+            if(userDocSnap.exists()) {
+                document.body.style.opacity = '1';
+            } else {
+                //window.location.href = "index.html"; 
+            }
+        } else {
+            //window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>
