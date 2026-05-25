@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen GPC</title>
+    
+    <!-- Tailwind CSS (Framework de diseño) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Tipografía limpia y amigable) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- KaTeX (Para renderizar las fórmulas matemáticas de LaTeX) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Configuración personalizada de Tailwind y CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            blue: '#e0f2fe',    // light blue 100
+                            green: '#dcfce7',   // green 100
+                            yellow: '#fef08a',  // yellow 200
+                            red: '#ffe4e6',     // rose 100
+                            purple: '#f3e8ff',  // purple 100
+                            orange: '#ffedd5',  // orange 100
+                            teal: '#ccfbf1',    // teal 100
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc; /* Fondo gris muy suave */
+            color: #334155;
+        }
+
+        /* Estilos base para listas */
+        ul { list-style-type: none; padding-left: 0; }
+        ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; line-height: 1.6; }
+        ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            line-height: 1;
+            top: -2px;
+        }
+
+        /* ----- CLASES DINÁMICAS PARA SUBRAYADOS (HIGHLIGHTS) ----- */
+        /* Úsalas en cualquier parte del texto envolviéndolo en <mark class="hl-color">Texto</mark> */
+        mark {
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-weight: 700;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .hl-yellow { background-color: #fef08a; color: #854d0e; } /* Advertencias, conceptos */
+        .hl-red    { background-color: #fecdd3; color: #9f1239; } /* Peligro, Contraindicaciones, Severidad */
+        .hl-green  { background-color: #bbf7d0; color: #166534; } /* Tratamientos, Metas */
+        .hl-blue   { background-color: #bae6fd; color: #075985; } /* Tiempos, Definiciones clave */
+        .hl-purple { background-color: #e9d5ff; color: #581c87; } /* Epidemiología, Estadísticas */
+
+        /* ----- EFECTOS DE TARJETAS ----- */
+        .medical-card {
+            transition: all 0.3s ease;
+            border-top-width: 5px;
+            height: 100%;
+        }
+        .medical-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Estilo para las Perlas GPC */
+        .gpc-pearl {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 4px solid #f59e0b;
+            position: relative;
+        }
+        .gpc-pearl::before {
+            content: '\f0eb'; /* Lightbulb icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #f59e0b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-12">
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            
+            <!-- Izquierda: Botón Home y Título App -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <a href="index.html" class="text-slate-400 hover:text-indigo-600 transition-colors flex-shrink-0 bg-slate-50 hover:bg-indigo-50 p-2 sm:p-2.5 rounded-full" title="Ir al inicio">
+                    <i class="fa-solid fa-house text-lg sm:text-xl"></i>
+                </a>
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-100 text-indigo-600 p-2 sm:p-3 rounded-lg hidden sm:flex items-center justify-center">
+                        <i class="fa-solid fa-stethoscope text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-heading font-bold text-lg sm:text-2xl text-slate-800 leading-tight line-clamp-1">Resumen</h1>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Derecha: Tag y Logo ENARM Lite (Recreado con CSS para máxima velocidad/calidad) -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <span class="hidden md:inline-block bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">MEDICINA INTERNA</span>
+                
+                <!-- Logo ENARM Lite® -->
+                <div class="border-2 border-slate-200/80 bg-slate-50/50 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 flex items-baseline gap-1 shadow-sm select-none">
+                    <span class="font-sans font-extrabold text-[#004f8f] text-sm sm:text-lg tracking-tight">ENARM</span>
+                    <span class="font-sans font-semibold text-[#64b036] text-sm sm:text-lg">Lite<sup class="text-[9px] sm:text-[11px] font-bold">®</sup></span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+     <!-- aqui -->
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="text-center mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-5 relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-gradient-to-br from-indigo-100 to-blue-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -mb-8 -ml-8 w-24 h-24 bg-gradient-to-tr from-cyan-100 to-indigo-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        
+        <h2 class="relative font-heading font-extrabold text-2xl sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-800 via-blue-600 to-cyan-600 mb-2 tracking-tight leading-tight py-1">
+            NCCN Oncology: Cáncer de Colon
+        </h2>
+        <div class="inline-block bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm font-bold mt-2">
+            <i class="fa-solid fa-ribbon mr-1"></i> Versión 2.2026 - Año 2026
+        </div>
+        <div class="w-20 sm:w-24 h-1.5 bg-gradient-to-r from-indigo-500 to-cyan-400 mx-auto rounded-full mt-4"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
+
+        <!-- ================= FILA 1 ================= -->
+        
+        <!-- 1. DEFINICIÓN, EPIDEMIOLOGÍA Y RIESGOS (SPAN 2) - MIXTO -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-blue-400 p-5 md:col-span-2 xl:col-span-2 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-book-medical"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Definiciones Clave, Epidemiología y Riesgos</h3>
+            </div>
+            <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 text-base text-slate-600">
+                <div class="space-y-4 flex flex-col justify-center">
+                    <div class="bg-white border border-slate-200 p-4 rounded-lg shadow-sm flex-1 border-l-4 border-blue-500">
+                        <p class="font-bold text-slate-800 mb-2 text-sm">Definiciones y Epidemiología:</p>
+                        
+                        <!-- VIÑETAS SIMPLES -->
+                        <div class="text-sm space-y-3 text-slate-800 font-medium">
+                            <div class="flex items-start">
+                                <span class="text-blue-500 font-bold mr-2 text-lg leading-none">&bull;</span>
+                                <span><strong class="text-slate-900">Cáncer de Colon:</strong> Neoplasia maligna primaria originada en el tejido colónico, confirmada mediante histopatología.</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-blue-500 font-bold mr-2 text-lg leading-none">&bull;</span>
+                                <span><strong class="text-slate-900">Pólipo Maligno:</strong> Cáncer que invade a través de la muscularis mucosae hacia la submucosa (pT1).</span>
+                            </div>
+                            <div class="flex items-start bg-blue-50 p-2 rounded border border-blue-100 mt-2">
+                                <span class="text-indigo-500 font-bold mr-2 text-lg leading-none">-</span>
+                                <span><strong class="text-slate-900">Epidemiología:</strong> Es la 4ª neoplasia más diagnosticada y la 2ª causa de muerte por cáncer en Estados Unidos.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-4 flex flex-col justify-center">
+                    <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-lg flex-1">
+                        <p class="font-bold text-indigo-900 mb-3 text-sm">Factores de Riesgo y Protección:</p>
+                        
+                        <!-- ICONOS -->
+                        <div class="text-sm space-y-3 text-slate-800 font-medium">
+                            <div class="flex items-start gap-2 bg-white p-2 rounded shadow-sm border border-indigo-100">
+                                <i class="fa-solid fa-dna text-indigo-500 mt-1 shrink-0"></i>
+                                <span><strong class="text-slate-900">No modificables:</strong> Antecedentes familiares de cáncer colorrectal o adenomas, Síndrome de Lynch (mutaciones germinales en MLH1, MSH2, MSH6, PMS2 que causan del 2% al 4% de los casos), y Poliposis Adenomatosa Familiar (FAP). EII (Colitis Ulcerativa, enfermedad de Crohn) y diabetes mellitus.</span>
+                            </div>
+                            <div class="flex items-start gap-2 bg-white p-2 rounded shadow-sm border border-indigo-100">
+                                <i class="fa-solid fa-burger text-orange-500 mt-1 shrink-0"></i>
+                                <span><strong class="text-slate-900">Modificables:</strong> Tabaquismo, carnes rojas/procesadas, alcohol, sedentarismo, síndrome metabólico y obesidad / alto IMC.</span>
+                            </div>
+                            <div class="flex items-start gap-2 bg-white p-2 rounded shadow-sm border border-indigo-100">
+                                <i class="fa-solid fa-shield-heart text-emerald-500 mt-1 shrink-0"></i>
+                                <span><strong class="text-slate-900">Protectores:</strong> Peso saludable, dieta vegetal, actividad física y consumo de aspirina o AINEs.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. ANATOMÍA Y FISIOPATOLOGÍA (SPAN 1) - VIÑETAS SIMPLES -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-cyan-400 p-5 md:col-span-1 xl:col-span-1 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-cyan-100 text-cyan-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-microscope"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Fisiopatología Molecular</h3>
+            </div>
+            <div class="text-base text-slate-600 space-y-4 flex-1 flex flex-col justify-center">
+                <div class="bg-cyan-50 p-4 rounded-lg border border-cyan-200">
+                    <p class="font-bold text-cyan-900 mb-3 text-sm">Mecanismo Subyacente:</p>
+                    
+                    <!-- VIÑETAS SIMPLES -->
+                    <div class="text-sm space-y-3 leading-relaxed text-slate-800 font-medium">
+                        <div class="flex items-start">
+                            <span class="text-cyan-600 font-bold mr-2">&rsaquo;</span>
+                            <span>El cáncer colorrectal es una enfermedad heterogénea que con frecuencia se origina a través de una <strong class="text-slate-900">secuencia mutacional progresiva</strong>.</span>
+                        </div>
+                        <div class="flex items-start bg-white p-2 rounded shadow-sm border border-cyan-100">
+                            <span class="text-cyan-600 font-bold mr-2">&rsaquo;</span>
+                            <span>Puede presentar inestabilidad cromosómica clásica o <strong class="text-slate-900">Inestabilidad Microsatelital Alta (MSI-H)</strong> derivada de una deficiencia en la reparación de desapareamientos del ADN (dMMR).</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-cyan-600 font-bold mr-2">&rsaquo;</span>
+                            <span>Mutaciones en los genes de la polimerasa (POLE/POLD1) resultan en la pérdida de la función de corrección de pruebas durante la replicación del ADN, lo que confiere un fenotipo ultrahigermutado con una carga mutacional tumoral (TMB) > 50 mut/Mb.</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= FILA 2 ================= -->
+
+        <!-- 3. CLÍNICA Y CLASIFICACIÓN (SPAN 1) - ICONOS Y VIÑETAS -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-blue-400 p-5 md:col-span-1 xl:col-span-1 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-stethoscope"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Presentación y Brotamiento</h3>
+            </div>
+            <div class="text-base text-slate-600 space-y-4 flex-1 flex flex-col justify-center">
+                <div class="bg-white border border-slate-200 p-4 rounded-lg shadow-sm border-l-4 border-blue-500">
+                    
+                    <!-- ICONOS -->
+                    <div class="text-sm space-y-4 text-slate-800 font-medium">
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-person-falling text-red-500 mt-1 shrink-0"></i>
+                            <div>
+                                <strong class="text-slate-900">Síntomas agudos/avanzados:</strong> Los pacientes pueden debutar con obstrucción intestinal, sangrado significativo o perforación.
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 border-t border-slate-100 pt-3">
+                            <i class="fa-solid fa-triangle-exclamation text-orange-500 mt-1 shrink-0"></i>
+                            <div>
+                                <strong class="text-slate-900">Origen Apendicular:</strong> Pueden simular apendicitis aguda, presentando dolor abdominal en FID, vómito, cambios de hábito intestinal y náuseas.
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 bg-slate-50 p-2 rounded mt-2 border border-slate-200">
+                            <i class="fa-solid fa-seedling text-emerald-500 mt-1 shrink-0"></i>
+                            <div>
+                                <strong class="text-slate-900">Brotamiento tumoral (Tumor budding):</strong> Niveles en área de 0.785 mm²: bajo (0-4), intermedio (5-9) y alto (≥ 10). <strong class="text-red-700">Factor pronóstico adverso vital</strong>.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. CLASIFICACIÓN TNM AJCC 8VA (SPAN 2) - VIÑETAS SIMPLES -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-indigo-400 p-5 md:col-span-1 xl:col-span-2 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-list-ol"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Sistema de Estadificación TNM (AJCC 8ª ed. 2017)</h3>
+            </div>
+            <div class="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-6 text-base text-slate-600">
+                
+                <div class="space-y-4 flex flex-col justify-center">
+                    <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200 flex-1">
+                        <p class="font-bold text-indigo-900 mb-3 text-sm">Tumor Primario (T):</p>
+                        
+                        <!-- VIÑETAS SIMPLES -->
+                        <div class="text-sm space-y-2 text-slate-800 font-medium">
+                            <div class="flex items-start">
+                                <span class="text-indigo-500 font-bold mr-2">&bull;</span>
+                                <span><strong class="text-slate-900">T1:</strong> Invade la submucosa.</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-indigo-500 font-bold mr-2">&bull;</span>
+                                <span><strong class="text-slate-900">T2:</strong> Invade la muscularis propria.</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-indigo-500 font-bold mr-2">&bull;</span>
+                                <span><strong class="text-slate-900">T3:</strong> Invade a través de la muscularis propria hacia los tejidos pericolorrectales.</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-indigo-500 font-bold mr-2">&bull;</span>
+                                <span><strong class="text-slate-900">T4a:</strong> Invade el peritoneo visceral.</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-indigo-500 font-bold mr-2">&bull;</span>
+                                <span><strong class="text-slate-900">T4b:</strong> Invade directamente o se adhiere a estructuras u órganos adyacentes.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4 flex flex-col justify-center">
+                    <div class="bg-white border border-slate-200 p-4 rounded-lg shadow-sm flex-1 border-l-4 border-indigo-500">
+                        <p class="font-bold text-slate-800 mb-3 text-sm">Ganglios Linfáticos (N):</p>
+                        
+                        <!-- VIÑETAS SIMPLES -->
+                        <div class="text-sm space-y-2 text-slate-800 font-medium">
+                            <div class="flex items-start">
+                                <span class="text-slate-500 font-bold mr-2">-</span>
+                                <span><strong class="text-slate-900">N1a:</strong> 1 ganglio positivo.</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-slate-500 font-bold mr-2">-</span>
+                                <span><strong class="text-slate-900">N1b:</strong> 2-3 ganglios positivos.</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-slate-500 font-bold mr-2">-</span>
+                                <span><strong class="text-slate-900">N1c:</strong> Depósitos tumorales en la subserosa o mesenterio sin ganglios linfáticos positivos.</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-slate-500 font-bold mr-2">-</span>
+                                <span><strong class="text-slate-900">N2a:</strong> 4-6 ganglios positivos.</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-slate-500 font-bold mr-2">-</span>
+                                <span><strong class="text-slate-900">N2b:</strong> ≥ 7 ganglios positivos.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4 flex flex-col justify-center">
+                    <div class="bg-cyan-50 p-4 rounded-lg border border-cyan-200 flex-1">
+                        <p class="font-bold text-cyan-900 mb-3 text-sm">Metástasis a Distancia (M):</p>
+                        
+                        <!-- VIÑETAS SIMPLES -->
+                        <div class="text-sm space-y-2 text-slate-800 font-medium">
+                            <div class="flex items-start">
+                                <span class="text-cyan-500 font-bold mr-2">&rsaquo;</span>
+                                <span><strong class="text-slate-900">M1a:</strong> Metástasis en 1 sitio u órgano.</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-cyan-500 font-bold mr-2">&rsaquo;</span>
+                                <span><strong class="text-slate-900">M1b:</strong> Metástasis en ≥ 2 sitios u órganos.</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-cyan-500 font-bold mr-2">&rsaquo;</span>
+                                <span><strong class="text-slate-900">M1c:</strong> Metástasis en la superficie peritoneal.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= FILA 3 ================= -->
+
+        <!-- 5. DIAGNÓSTICO INTEGRAL (SPAN 3 - FILA COMPLETA) - MIXTO -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-blue-500 p-5 md:col-span-1 xl:col-span-3 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-vial-circle-check"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Abordaje Diagnóstico Molecular e Imagenología</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-600 flex-1">
+                
+                <!-- Columna 1: Clínico y Basales (Viñetas) -->
+                <div class="bg-blue-50 p-5 rounded-lg border border-blue-200 flex flex-col justify-center">
+                    <p class="font-bold text-blue-900 mb-4 text-base"><i class="fa-solid fa-user-doctor text-blue-600 mr-2"></i> Clínico y Laboratorios:</p>
+                    
+                    <!-- VIÑETAS SIMPLES -->
+                    <div class="space-y-4 text-sm text-slate-800">
+                        <div class="flex items-start">
+                            <span class="text-blue-600 font-bold mr-2">&bull;</span>
+                            <span><strong class="text-slate-900">Clínico:</strong> Evaluación de historia familiar para síndromes hereditarios y consejo de preservación de fertilidad en pacientes jóvenes.</span>
+                        </div>
+                        <div class="flex items-start bg-white p-3 rounded shadow-sm border border-blue-100">
+                            <span class="text-blue-600 font-bold mr-2">&bull;</span>
+                            <span><strong class="text-slate-900">Basales:</strong> Biometría hemática completa, perfil bioquímico, y nivel del Antígeno Carcinoembrionario (CEA).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna 2: Pruebas Moleculares (Iconos) -->
+                <div class="bg-white border border-slate-200 p-5 rounded-lg shadow-sm flex flex-col justify-center">
+                    <p class="font-bold text-slate-800 mb-4 text-base"><i class="fa-solid fa-dna text-indigo-500 mr-2"></i> Molecular y Farmacogenética:</p>
+                    
+                    <!-- ICONOS -->
+                    <div class="space-y-4 text-sm text-slate-800">
+                        <div class="flex items-start gap-2 bg-indigo-50 p-3 rounded border border-indigo-100">
+                            <i class="fa-solid fa-circle-nodes text-indigo-600 mt-1 shrink-0"></i>
+                            <div>
+                                <strong class="text-slate-900">Pruebas Moleculares:</strong> Obligatorio tamizaje universal para MMR o MSI, pruebas de KRAS, NRAS, BRAF V600E, alteraciones PIK3CA, sobreexpresión HER2 y fusiones RET y NTRK 1/2/3. Se prefiere Secuenciación NGS.
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2 bg-red-50 p-3 rounded border border-red-100">
+                            <i class="fa-solid fa-skull-crossbones text-red-500 mt-1 shrink-0"></i>
+                            <span><strong class="text-slate-900">Farmacogenética:</strong> Prueba de DPYD previo a fluoropirimidinas por <strong class="text-red-700">riesgo de toxicidad mortal</strong>.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna 3: Imagen (Viñetas) -->
+                <div class="bg-cyan-50 p-5 rounded-lg border border-cyan-200 flex flex-col justify-center">
+                    <p class="font-bold text-cyan-900 mb-4 text-base"><i class="fa-solid fa-x-ray text-cyan-600 mr-2"></i> Imagenología de Elección:</p>
+                    
+                    <!-- VIÑETAS SIMPLES -->
+                    <div class="space-y-4 text-sm text-slate-800">
+                        <div class="flex items-start bg-white p-3 rounded shadow-sm border-l-4 border-cyan-500">
+                            <span class="text-cyan-500 font-bold mr-2">-</span>
+                            <span><strong class="text-slate-900">Estudio Inicial:</strong> TC de tórax, abdomen y pelvis con contraste IV y oral.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-cyan-500 font-bold mr-2">-</span>
+                            <span><strong class="text-slate-900">Resonancia (RM):</strong> De abdomen/pelvis para definir lesión baja (colónica vs rectal) y RM hepática con contraste ante sospecha de metástasis resecables.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-slate-400 font-bold mr-2">-</span>
+                            <span><strong class="text-slate-900">PET/CT:</strong> No rutinario; se reserva para hallazgos equívocos o cuando se planea tratamiento quirúrgico de metástasis con intención curativa.</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= FILA 4 ================= -->
+
+        <!-- 6. TRATAMIENTO Y CIRUGÍA (SPAN 3 - FILA COMPLETA) - MIXTO -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-indigo-500 p-5 md:col-span-1 xl:col-span-3 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-kit-medical"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Manejo Terapéutico y Quirúrgico</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-600 flex-1">
+                
+                <!-- Columna 1: Estilos de Vida y Adyuvancia (Viñetas) -->
+                <div class="bg-white border border-slate-200 p-5 rounded-lg shadow-sm flex flex-col justify-center">
+                    <p class="font-bold text-slate-800 mb-4 text-base"><i class="fa-solid fa-heart-pulse text-red-500 mr-2"></i> Manejo y Adyuvancia:</p>
+                    
+                    <!-- VIÑETAS SIMPLES -->
+                    <div class="space-y-4 text-sm text-slate-800">
+                        <div class="flex items-start bg-slate-50 p-2 rounded border border-slate-100">
+                            <span class="text-slate-500 font-bold mr-2">&rsaquo;</span>
+                            <span>Consejería: Meta de ≥ 150 min/semana de actividad física. Dieta vegetal, limitar alcohol y erradicar tabaquismo.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-indigo-500 font-bold mr-2">&rsaquo;</span>
+                            <span><strong class="text-slate-900">Adyuvancia Etapas II-III:</strong> Fluoropirimidinas con o sin oxaliplatino (FOLFOX y CAPEOX).</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-indigo-500 font-bold mr-2">&rsaquo;</span>
+                            <span><strong class="text-slate-900">Mutación PI3K (Etapa II/III):</strong> Iniciar aspirina 100-162 mg diarios por 3 años postoperatorios.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna 2: Inmunoterapia y Metástasis (Iconos) -->
+                <div class="bg-indigo-50 p-5 rounded-lg border border-indigo-200 flex flex-col justify-center">
+                    <p class="font-bold text-indigo-900 mb-4 text-base"><i class="fa-solid fa-shield-virus text-indigo-600 mr-2"></i> Inmunoterapia y Avanzado:</p>
+                    
+                    <!-- ICONOS -->
+                    <div class="space-y-4 text-sm text-slate-800">
+                        <div class="flex items-start gap-2 bg-white p-3 rounded shadow-sm border-l-4 border-indigo-500">
+                            <i class="fa-solid fa-dna text-indigo-500 mt-1 shrink-0"></i>
+                            <div>
+                                <strong class="text-slate-900">Enfermedad dMMR/MSI-H:</strong> Uso de inmunoterapia (Pembrolizumab, Nivolumab ± Ipilimumab, Atezolizumab) en entorno metastásico o neoadyuvante.
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2 bg-white p-3 rounded shadow-sm border-l-4 border-purple-500">
+                            <i class="fa-solid fa-lungs-virus text-purple-500 mt-1 shrink-0"></i>
+                            <div>
+                                <strong class="text-slate-900">Metastásico:</strong> FOLFOX, CAPEOX, FOLFIRI o FOLFIRINOX ± bevacizumab. <br>
+                                Si <strong class="text-slate-900">WT + Izquierdo:</strong> Añadir anti-EGFR (Cetuximab/Panitumumab). <br>
+                                Si <strong class="text-slate-900">BRAF V600E:</strong> Encorafenib + anti-EGFR.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna 3: Quirúrgico (Viñetas) -->
+                <div class="bg-cyan-50 p-5 rounded-lg border border-cyan-200 flex flex-col justify-center">
+                    <p class="font-bold text-cyan-900 mb-4 text-base"><i class="fa-solid fa-scalpel text-cyan-600 mr-2"></i> Tratamiento Quirúrgico:</p>
+                    
+                    <!-- VIÑETAS SIMPLES -->
+                    <div class="space-y-4 text-sm text-slate-800">
+                        <div class="flex items-start bg-white p-3 rounded shadow-sm border border-cyan-100">
+                            <span class="text-cyan-500 font-bold mr-2">&bull;</span>
+                            <span>Colectomía con escisión en bloque de ganglios y márgenes libres. Imperativo evaluar <strong class="text-slate-900">≥ 12 ganglios</strong> para estadiaje exacto.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-cyan-500 font-bold mr-2">&bull;</span>
+                            <span><strong class="text-slate-900">Metástasis Sincrónicas/Metacrónicas:</strong> Cirugía es estándar si hay resección completa R0. Para lesiones pequeñas (≤ 3 cm), la ablación térmica muestra resultados equivalentes a cirugía.</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= FILA 5 ================= -->
+
+        <!-- 7. COMPLICACIONES (SPAN 1) - USO DE ICONOS -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-red-400 p-5 md:col-span-1 xl:col-span-1 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Complicaciones</h3>
+            </div>
+            <div class="text-base text-slate-600 space-y-4 flex-1 flex flex-col justify-center">
+                <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                    
+                    <!-- ICONOS -->
+                    <div class="text-sm space-y-3 font-medium text-slate-800 leading-relaxed">
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-scissors text-red-500 mt-1 shrink-0"></i>
+                            <span><strong class="text-slate-900">Patología:</strong> Oclusión intestinal, perforación franca y sangrado gastrointestinal.</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-pills text-blue-500 mt-1 shrink-0"></i>
+                            <span><strong class="text-slate-900">Neuropatía por Oxaliplatino:</strong> Justifica "stop-and-go" o suspensión a los 3 meses.</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-hand-dots text-orange-500 mt-1 shrink-0"></i>
+                            <span><strong class="text-slate-900">Capecitabina:</strong> Síndrome mano-pie.</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-droplet-slash text-purple-500 mt-1 shrink-0"></i>
+                            <span><strong class="text-slate-900">Bevacizumab:</strong> Sangrado/pérdida de cicatrización. Suspender al menos 6 semanas previas a cirugía.</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-toilet text-yellow-600 mt-1 shrink-0"></i>
+                            <span><strong class="text-slate-900">Deficiencia DPD:</strong> Diarrea y neutropenia severa por fluoropirimidinas.</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. SEGUIMIENTO Y PRONÓSTICO (SPAN 2) - USO DE VIÑETAS SIMPLES -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-indigo-400 p-5 md:col-span-1 xl:col-span-2 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Seguimiento (Etapas II y III) y Pronóstico</h3>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-base text-slate-600 flex-1">
+                
+                <div class="bg-white border border-slate-200 p-5 rounded-lg shadow-sm border-l-4 border-indigo-500 flex flex-col justify-center h-full">
+                    <p class="font-bold text-slate-800 mb-3 text-sm">Cronograma de Seguimiento:</p>
+                    
+                    <!-- VIÑETAS SIMPLES -->
+                    <div class="text-sm space-y-3 font-medium text-slate-800">
+                        <div class="flex items-start">
+                            <span class="text-indigo-500 font-bold mr-2">&rsaquo;</span>
+                            <span><strong class="text-slate-900">Examen físico:</strong> Cada 3-6 meses por 2 años, luego cada 6 meses hasta 5 años.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-indigo-500 font-bold mr-2">&rsaquo;</span>
+                            <span><strong class="text-slate-900">Niveles CEA:</strong> Cada 3-6 meses por 2 años, luego cada 6 meses por 5 años (solo si es candidato a rescate quirúrgico).</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-indigo-500 font-bold mr-2">&rsaquo;</span>
+                            <span><strong class="text-slate-900">Tomografía (TC):</strong> Cada 6-12 meses por 5 años.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-indigo-500 font-bold mr-2">&rsaquo;</span>
+                            <span><strong class="text-slate-900">Colonoscopia:</strong> Al 1 año post-cirugía. Si no hay adenomas avanzados, repetir a los 3 años y luego cada 5 años.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-50 p-5 rounded-lg border border-indigo-200 flex flex-col justify-center h-full">
+                    <p class="font-bold text-indigo-900 mb-3 text-sm">Pronóstico (Riesgo en Etapa II):</p>
+                    
+                    <!-- VIÑETAS SIMPLES -->
+                    <div class="text-sm space-y-3 text-slate-800">
+                        <div class="flex items-start bg-white p-2 rounded shadow-sm border border-red-200">
+                            <span class="text-red-500 font-bold mr-2">&bull;</span>
+                            <span>Factores de alto riesgo para progresión: Invasión perineural (PNI), tumores T4, menos de 12 ganglios analizados, histología poco diferenciada, perforación/obstrucción, márgenes positivos y brotamiento tumoral alto (≥ 10 brotes).</span>
+                        </div>
+                        <div class="flex items-start bg-white p-2 rounded shadow-sm border border-emerald-200 mt-2">
+                            <span class="text-emerald-500 font-bold mr-2">&bull;</span>
+                            <span>Las neoplasias <strong class="text-slate-900">dMMR/MSI-H</strong> tienen en general un <strong class="text-slate-900">mejor pronóstico</strong> estadio por estadio frente a pMMR.</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div> 
+    
+    <!-- PERLAS GPC -->
+    <div class="gpc-pearl rounded-xl p-6 mt-6 w-full bg-amber-50 border border-amber-200">
+        <h3 class="font-heading font-bold text-xl text-amber-800 mb-4"><i class="fa-solid fa-quote-left mr-2 opacity-50"></i> Perlas Quirúrgicas NCCN</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-amber-900 font-medium">
+            <div class="bg-white/60 p-5 rounded-lg shadow-sm border border-amber-200 flex items-center leading-relaxed">
+                <p>"El cirujano está animado a <mark class="hl-yellow text-slate-900 px-1">marcar el área de la superficie no peritonizada</mark> con un clip o sutura".</p>
+            </div>
+            <div class="bg-white/60 p-5 rounded-lg shadow-sm border border-amber-200 flex items-center leading-relaxed">
+                <p>"Para las metástasis hepáticas, en general, se puede <mark class="hl-blue text-slate-900 px-1">dar prioridad a la resección sobre la ablación</mark> térmica local".</p>
+            </div>
+            <div class="bg-white/60 p-5 rounded-lg shadow-sm border border-amber-200 flex items-center leading-relaxed">
+                <p>"La <mark class="hl-red text-slate-900 px-1">resección parcial (menos de una resección R0) no está recomendada</mark>".</p>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+      <!-- aqui -->
+
+        <!-- BOTÓN DE SIGUIENTE RESUMEN -->
+        <div class="mt-10 sm:mt-12 mb-4 flex justify-center">
+            <a href="index.html" class="group relative inline-flex items-center justify-center gap-3 px-8 py-3 sm:py-4 font-bold text-white bg-gradient-to-r from-indigo-600 to-teal-500 rounded-full shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-teal-600 transition-all duration-300 transform hover:-translate-y-1">
+                <span class="text-base sm:text-lg tracking-wide">Siguiente Resumen</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform duration-300"></i>
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Script de Inicialización de KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // Configuramos los delimitadores para que acepte el signo $ nativo de tu texto
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false,
+                output: 'html' // para mejor adaptación con fuentes web
+            });
+        });
+    </script>
+</body>
+</html>
