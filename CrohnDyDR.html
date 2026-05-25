@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen</title>
+    
+    <!-- Tailwind CSS (Framework de diseño) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Tipografía limpia y amigable) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- KaTeX (Para renderizar las fórmulas matemáticas de LaTeX) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Configuración personalizada de Tailwind y CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            blue: '#e0f2fe',    // light blue 100
+                            green: '#dcfce7',   // green 100
+                            yellow: '#fef08a',  // yellow 200
+                            red: '#ffe4e6',     // rose 100
+                            purple: '#f3e8ff',  // purple 100
+                            orange: '#ffedd5',  // orange 100
+                            teal: '#ccfbf1',    // teal 100
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc; /* Fondo gris muy suave */
+            color: #334155;
+        }
+
+        /* Estilos base para listas */
+        ul { list-style-type: none; padding-left: 0; }
+        ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; line-height: 1.6; }
+        ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            line-height: 1;
+            top: -2px;
+        }
+
+        /* ----- CLASES DINÁMICAS PARA SUBRAYADOS (HIGHLIGHTS) ----- */
+        /* Úsalas en cualquier parte del texto envolviéndolo en <mark class="hl-color">Texto</mark> */
+        mark {
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-weight: 700;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .hl-yellow { background-color: #fef08a; color: #854d0e; } /* Advertencias, conceptos */
+        .hl-red    { background-color: #fecdd3; color: #9f1239; } /* Peligro, Contraindicaciones, Severidad */
+        .hl-green  { background-color: #bbf7d0; color: #166534; } /* Tratamientos, Metas */
+        .hl-blue   { background-color: #bae6fd; color: #075985; } /* Tiempos, Definiciones clave */
+        .hl-purple { background-color: #e9d5ff; color: #581c87; } /* Epidemiología, Estadísticas */
+
+        /* ----- EFECTOS DE TARJETAS ----- */
+        .medical-card {
+            transition: all 0.3s ease;
+            border-top-width: 5px;
+            height: 100%;
+        }
+        .medical-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Estilo para las Perlas GPC */
+        .gpc-pearl {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 4px solid #f59e0b;
+            position: relative;
+        }
+        .gpc-pearl::before {
+            content: '\f0eb'; /* Lightbulb icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #f59e0b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-12">
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            
+            <!-- Izquierda: Botón Home y Título App -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <a href="index.html" class="text-slate-400 hover:text-indigo-600 transition-colors flex-shrink-0 bg-slate-50 hover:bg-indigo-50 p-2 sm:p-2.5 rounded-full" title="Ir al inicio">
+                    <i class="fa-solid fa-house text-lg sm:text-xl"></i>
+                </a>
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-100 text-indigo-600 p-2 sm:p-3 rounded-lg hidden sm:flex items-center justify-center">
+                        <i class="fa-solid fa-stethoscope text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-heading font-bold text-lg sm:text-2xl text-slate-800 leading-tight line-clamp-1">Resumen</h1>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Derecha: Tag y Logo ENARM Lite (Recreado con CSS para máxima velocidad/calidad) -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <span class="hidden md:inline-block bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">CDYE</span>
+                
+                <!-- Logo ENARM Lite® -->
+                <div class="border-2 border-slate-200/80 bg-slate-50/50 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 flex items-baseline gap-1 shadow-sm select-none">
+                    <span class="font-sans font-extrabold text-[#004f8f] text-sm sm:text-lg tracking-tight">Surgy</span>
+                    <span class="font-sans font-semibold text-[#64b036] text-sm sm:text-lg">Lite<sup class="text-[9px] sm:text-[11px] font-bold">®</sup></span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+     <!-- aqui -->
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="text-center mb-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-gradient-to-br from-indigo-100 to-emerald-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -mb-8 -ml-8 w-32 h-32 bg-gradient-to-tr from-cyan-100 to-teal-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        
+        <h2 class="relative font-heading font-extrabold text-3xl sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-teal-800 via-emerald-600 to-cyan-600 mb-3 tracking-tight leading-tight py-1">
+            Enfermedad de Crohn (CD)
+        </h2>
+        <p class="relative text-base text-slate-600 font-medium mb-3 max-w-3xl mx-auto">
+            Directrices Académicas: Fisiopatología, Escalas Clínicas y Escrutinio Diagnóstico Integral.
+        </p>
+        <div class="inline-block bg-teal-50 border border-teal-200 text-teal-800 px-4 py-1.5 rounded-full text-sm font-bold mt-1 shadow-sm">
+            <i class="fa-solid fa-ribbon mr-1"></i> Guías ACG 2025, ECCO 2024, BSG 2025 y Consenso GEDIIB
+        </div>
+        <div class="w-24 h-1.5 bg-gradient-to-r from-emerald-500 to-cyan-400 mx-auto rounded-full mt-5"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-book-medical"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Concepto Central</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-3 rounded-r-xl">
+                    <strong class="text-indigo-900 block mb-1">Enfermedad de Crohn (CD):</strong>
+                    <p class="leading-relaxed">Trastorno inflamatorio idiopático crónico del tracto gastrointestinal que genera daño intestinal progresivo y discapacidad clínica severa.</p>
+                </div>
+                <div class="bg-white p-3 rounded-xl border shadow-sm leading-relaxed text-slate-600">
+                    Es el resultado de una compleja y progresiva interacción entre la susceptibilidad genética, múltiples factores ambientales precipitantes y la <u class="decoration-slate-400 font-bold">desregulación del microbioma</u>.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Epidemiología y Clima</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block border-b pb-1 mb-2">Cronología Diagnóstica:</strong>
+                    <div class="flex justify-between items-center mb-1"><span>Pico de Incidencia:</span><span class="font-bold text-indigo-700 text-base">18 a 35 años</span></div>
+                    <div class="flex justify-between items-center"><span>Segundo Pico:</span><span class="font-bold text-indigo-700 text-base">50 a 60 años</span></div>
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 font-bold">
+                    <i class="fa-solid fa-smoking-ban mr-1 text-red-600"></i> Tabaquismo Activo: Es el factor de riesgo modificable más crítico (eleva tasas de recurrencias, penetración y cirugía).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-dna"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Genética y Precipitantes</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-200">
+                    <strong class="text-indigo-950 block mb-1">Genes y Polimorfismos de Riesgo:</strong>
+                    Se asocia a antecedentes familiares de 1er grado y mutaciones clásicas en <mark class="bg-indigo-200 px-1 rounded font-bold">NOD2 (CARD15)</mark>, HLADQA1*05 y NUDT15.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 leading-relaxed text-slate-800">
+                    <strong>Otros Factores Asociados:</strong> Responde a una inmunidad innata desregulada desencadenada por uso previo de antibióticos, o antecedentes de apendicectomía.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-diagram-project"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Anatomía y Daño Estructural</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-purple-500">
+                    <strong class="text-slate-900 block mb-1">Sitio Anatómico:</strong>
+                    Afecta cualquier segmento del tubo digestivo (boca a ano). Presentación primaria clásica en <u class="font-bold">íleon terminal y el colon proximal</u>.
+                </div>
+                <div class="bg-purple-50 p-3 rounded-lg border border-purple-200 text-purple-950 flex-1 leading-relaxed">
+                    <strong class="block mb-1">Mecanismo de Daño Crónico:</strong>
+                    Inflamación de afección <mark class="bg-purple-200 px-1 rounded font-bold">transmural discontinua (parches/skip lesions)</mark>. Por afectar el espesor completo, el paciente desarrolla estenosis, fístulas y abscesos.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-sitemap"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Montreal: Edad y Localización</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-2 border-b pb-1">Edad al Diagnóstico (A):</strong>
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center"><span class="font-bold text-slate-800">A1:</span><span>&le; 16 años</span></div>
+                        <div class="flex justify-between items-center"><span class="font-bold text-slate-800">A2:</span><span>17 a 40 años</span></div>
+                        <div class="flex justify-between items-center"><span class="font-bold text-slate-800">A3:</span><span>&gt; 40 años</span></div>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <strong class="text-slate-900 block mb-2 border-b pb-1">Localización Anatómica (L):</strong>
+                    <div class="grid grid-cols-2 gap-2 text-center">
+                        <span class="bg-white border rounded p-1"><strong>L1:</strong> Ileal</span><span class="bg-white border rounded p-1"><strong>L2:</strong> Colónica</span>
+                        <span class="bg-white border rounded p-1"><strong>L3:</strong> Ileocolónica</span><span class="bg-white border rounded p-1"><strong>L4:</strong> Tracto Sup.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-arrows-to-circle"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Montreal (B) y Paris</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-amber-500 flex-1 flex flex-col justify-center">
+                    <strong class="text-slate-900 block mb-2 border-b pb-1">Comportamiento del Tumor (B):</strong>
+                    <div class="space-y-1">
+                        <div class="flex items-start"><i class="fa-solid fa-caret-right text-amber-500 mt-1 mr-2"></i><span><strong>B1:</strong> No estenosante / No penetrante.</span></div>
+                        <div class="flex items-start"><i class="fa-solid fa-caret-right text-amber-500 mt-1 mr-2"></i><span><strong>B2:</strong> Estenosante / Fibroestenótico.</span></div>
+                        <div class="flex items-start"><i class="fa-solid fa-caret-right text-amber-500 mt-1 mr-2"></i><span><strong>B3:</strong> Penetrante (Formación de fístulas).</span></div>
+                    </div>
+                    <p class="mt-2 text-center text-amber-900 font-bold border-t border-amber-100 pt-1">Modificador: Se añade "p" si coexiste enf. perianal.</p>
+                </div>
+                <div class="bg-purple-50 p-2.5 rounded border border-purple-200 text-center font-bold text-purple-950 shadow-inner">
+                    <i class="fa-solid fa-child mr-1"></i> Clasificación de Paris: Utilizada para estatificación pediátrica.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-list-ol"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Escalas de Severidad</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-slate-50 p-3 rounded-lg border">
+                    <strong class="text-slate-900 block mb-1 border-b pb-1">Crohn's Disease Activity Index (CDAI):</strong>
+                    <div class="grid grid-cols-2 gap-1 text-center">
+                        <span class="bg-white p-1 rounded border"><strong>&lt; 150:</strong> Remisión</span><span class="bg-white p-1 rounded border"><strong>150-219:</strong> Leve</span>
+                        <span class="bg-white p-1 rounded border"><strong>220-450:</strong> Moderada</span><span class="bg-red-50 p-1 rounded border border-red-200 text-red-900 font-bold"><strong>&gt; 450:</strong> Severa</span>
+                    </div>
+                </div>
+                <div class="bg-cyan-50 p-3 rounded-lg border border-cyan-200">
+                    <strong class="text-cyan-900 block mb-1 border-b border-cyan-300 pb-1">Harvey-Bradshaw Index (HBI):</strong>
+                    <div class="flex justify-between items-center"><span>&le; 4: Remisión</span><span>5-7: Actividad Leve</span></div>
+                    <div class="flex justify-between items-center"><span>8-16: Moderada</span><span class="text-red-700 font-bold">&gt; 16: Severa</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-person-dots-from-line"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Manifestaciones Clínicas</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-cyan-500">
+                    <strong class="text-slate-900 block mb-1">Cuadro Clásico Inicial:</strong>
+                    Los pacientes refieren clásicamente diarrea crónica, dolor abdominal (localizado frecuentemente en la <strong class="text-slate-900">fosa ilíaca derecha</strong> y exacerbado postprandial), fatiga profunda y pérdida de peso.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 flex-1 flex flex-col justify-center">
+                    <strong class="text-slate-900 block mb-1">Síntomas Sutiles:</strong>
+                    El cuadro puede ser insidioso y presentarse de inicio únicamente como <u class="font-bold">anemia de origen oscuro, fiebre de bajo grado o retraso del crecimiento en adolescentes</u>.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-street-view"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Tardíos y Extraintestinales</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950">
+                    <strong class="block mb-1 text-red-900"><i class="fa-solid fa-triangle-exclamation mr-1 text-red-600"></i> Progresión Natural Severa:</strong>
+                    Hasta el 50% desarrollará daño intestinal irreversible (fístulas, estenosis, flemones) a 20 años. Un <mark class="bg-red-200 px-1 rounded font-bold">10% debuta con fístula o absceso perianal</mark> como síntoma primario.
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Afección Extraintestinal (50%):</strong>
+                    Daño reumatológico (axial/periférico), dermatológico (pioderma, eritema), ocular (uveítis/escleritis) y <strong class="text-slate-900">Colangitis Esclerosante Primaria</strong> hepatobiliar.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-user-doctor"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Abordaje Pre-Pruebas</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Evaluación Obligatoria Inicial:</strong>
+                    El diagnóstico es un proceso de exclusión. Se debe realizar inspección buscando <u class="font-bold">masa palpable/dolorosa en el cuadrante inferior derecho</u>, así como una exploración perineal minuciosa por fístulas ocultas.
+                </div>
+                <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 text-amber-950 font-semibold text-center leading-relaxed">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i> Precaución: Los síntomas no correlacionan estrictamente con la actividad inflamatoria subyacente; deben respaldarse con mediciones objetivas.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-vials"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Laboratorios Básicos</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-slate-50 p-3 rounded-lg border">
+                    <strong class="text-slate-900 block mb-1">Panel Sérico de Rutina:</strong>
+                    Requiere Biometría Hemática completa (buscar anemia, leucocitosis o trombocitosis), Química Sanguínea (albúmina obligatoria) y pruebas de inflamación como la <strong class="text-slate-900">Proteína C Reactiva (PCR)</strong>.
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-red-500">
+                    <strong class="text-red-900 block mb-1">Exclusión Patógena de Escrutinio:</strong>
+                    Es absolutamente imperativo solicitar coprocultivos generales y un panel completo para toxinas de <mark class="bg-red-100 px-1 rounded font-bold text-red-900">Clostridioides difficile</mark>.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-poop"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Calprotectina Fecal (FC)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <p class="text-slate-600 font-semibold border-b pb-1">Es el biomarcador no invasivo fundamental y se realiza al inicio para diferenciar patología funcional de inflamatoria:</p>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center bg-white p-2 rounded shadow-sm border"><span><strong>&lt; 40 a 50 &mu;g/g:</strong></span><span class="font-bold text-emerald-700 text-right">Descarta prácticamente CD</span></div>
+                    <div class="flex justify-between items-center bg-white p-2 rounded shadow-sm border"><span><strong>&gt; 50 a 100 &mu;g/g:</strong></span><span class="font-bold text-amber-600 text-right">Justifica abordaje endoscópico</span></div>
+                    <div class="flex flex-col bg-red-50 p-2 rounded border border-red-200 text-center">
+                        <span class="text-red-950 font-bold">&gt; 250 &mu;g/g</span>
+                        <span class="text-red-800 font-semibold mt-0.5">Alta probabilidad y correlación con ulceraciones en mucosa y actividad severa.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-x-ray"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Imagen Abdominal MRE / IUS</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-amber-500">
+                    <strong class="text-slate-900 block mb-1">Evaluación Concurrente Obligatoria:</strong>
+                    Toda evaluación inicial por sospecha requiere forzosamente la evaluación imagenológica concurrente de la patología en <strong class="text-slate-900">intestino delgado</strong>.
+                </div>
+                <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-amber-950 flex-1 flex flex-col justify-center">
+                    <strong class="block mb-1 text-center"><i class="fa-solid fa-award text-amber-600 mr-1"></i> Estudios de 1ra Línea:</strong>
+                    La <strong>enteroresonancia (MRE)</strong> y el <strong>ultrasonido intestinal (IUS)</strong> evalúan el daño transmural, miden el grosor de la pared y detectan fístulas o estenosis sin emitir radiación ionizante (preferidos en &lt; 35 años y en monitoreo a largo plazo).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-radiation"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Tomografía Enterográfica (CTE)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-center space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-red-50 p-4 rounded-xl border border-red-200 shadow-sm leading-relaxed text-red-950">
+                    <strong class="text-red-900 block mb-2 text-base text-center"><i class="fa-solid fa-truck-medical text-red-600 mr-1"></i> Indicación de Reserva:</strong>
+                    La CTE es sumamente útil y sensible (&gt; 90%) para descartar rápidamente complicaciones intraabdominales agudas como <strong>abscesos intrabdominales severos, megacolon tóxico inminente y perforaciones viscerales</strong>.
+                    <p class="text-center font-bold border-t border-red-200 pt-2 mt-2">Se reserva únicamente para situaciones de urgencia clínica o indisponibilidad de MRE/IUS, con el fin de evitar exposición acumulada a radiación ionizante.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-camera-retro"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Estándar Endoscópico</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Ileocolonoscopia:</strong>
+                    Estándar de Oro indispensable. Evalúa formación de úlceras profundas/serpiginosas y una mucosa de aspecto patognomónico <mark class="bg-amber-100 px-1 rounded font-bold text-amber-900">en empedrado (cobblestoning)</mark>. <u>Respeta el recto</u> de manera clásica.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <strong class="text-slate-900 block mb-1">Cápsula Endoscópica:</strong>
+                    Adjunta cuando hay alta sospecha y estudios negativos. <strong>Precaución estricta:</strong> Usar siempre una cápsula de permeabilidad previa para descartar estenosis y evitar retención gástrica u obstructiva.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Mapeo de Biopsias Endoscópico</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-center space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-fuchsia-50 p-4 rounded-xl border border-fuchsia-200 text-fuchsia-950 shadow-sm leading-relaxed text-center">
+                    <strong class="text-fuchsia-900 block mb-2 text-base">Protocolo de Mapeo Universal:</strong>
+                    Se deben protocolizar tomas de biopsias múltiples obligatorias (incluso en aquellas zonas de mucosa de aspecto endoscópico normal) para diagnosticar, evaluar y mapear con precisión la extensión sistémica de la inflamación.
+                    <p class="font-bold border-t border-fuchsia-300 pt-2 mt-2">Requiere tomar un mínimo estricto de <mark class="bg-fuchsia-200 px-1 rounded text-fuchsia-900">2 biopsias del íleon terminal</mark>, y <mark class="bg-fuchsia-200 px-1 rounded text-fuchsia-900">4 o más biopsias</mark> de distintos segmentos anatómicos colónicos y del recto de forma sistematizada.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-vial-circle-check"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Hallazgos Histopatológicos</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-fuchsia-500">
+                    <strong class="text-slate-900 block mb-1">El Sello de Identidad Patognomónico:</strong>
+                    Presencia clínica del <mark class="bg-fuchsia-100 px-1 rounded font-bold text-fuchsia-900">granuloma epitelioide no caseificante</mark>. Sin embargo, este rasgo solo se logra documentar microscópicamente en &lt; 20% al 33% de los análisis de biopsia estándar.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 flex-1">
+                    <strong class="text-slate-900 block mb-1">Otros Signos Microscópicos Cronicidad:</strong>
+                    <p>Infiltrado celular inflamatorio de configuración focal focal en parches, evidencia de distorsión arquitectural de criptas glandulares colónicas y plasmocitosis basal demostrada.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Discordancia Histológica</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong class="text-slate-900 block mb-1">"Inflamación Inespecífica":</strong>
+                    En fases iniciales de CD, los hallazgos patológicos pueden ser sutiles o ausentes por el respeto de capas superficiales. Si reporta cambios inespecíficos, el especialista debe re-evaluar integrando obligatoriamente el contexto clínico, imagenológico y endoscópico para dictaminar diagnóstico.
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 font-bold text-center leading-relaxed shadow-inner">
+                    <i class="fa-solid fa-triangle-exclamation text-red-600 mr-1"></i> A diferencia de la Colitis Ulcerosa, en Enfermedad de Crohn la <u class="decoration-red-400">curación histológica hoy en día no se considera un objetivo o diana terapéutica mandatoria estricta</u>.
+                </div>
+            </div>
+        </div>
+
+    </div> 
+</main>
+
+      <!-- aqui -->
+
+        <!-- BOTÓN DE SIGUIENTE RESUMEN -->
+        <div class="mt-10 sm:mt-12 mb-4 flex justify-center">
+            <a href="index.html" class="group relative inline-flex items-center justify-center gap-3 px-8 py-3 sm:py-4 font-bold text-white bg-gradient-to-r from-indigo-600 to-teal-500 rounded-full shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-teal-600 transition-all duration-300 transform hover:-translate-y-1">
+                <span class="text-base sm:text-lg tracking-wide">Siguiente Resumen</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform duration-300"></i>
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Script de Inicialización de KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // Configuramos los delimitadores para que acepte el signo $ nativo de tu texto
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false,
+                output: 'html' // para mejor adaptación con fuentes web
+            });
+        });
+    </script>
+</body>
+</html>

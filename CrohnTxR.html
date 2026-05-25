@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen</title>
+    
+    <!-- Tailwind CSS (Framework de diseño) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Tipografía limpia y amigable) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- KaTeX (Para renderizar las fórmulas matemáticas de LaTeX) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Configuración personalizada de Tailwind y CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            blue: '#e0f2fe',    // light blue 100
+                            green: '#dcfce7',   // green 100
+                            yellow: '#fef08a',  // yellow 200
+                            red: '#ffe4e6',     // rose 100
+                            purple: '#f3e8ff',  // purple 100
+                            orange: '#ffedd5',  // orange 100
+                            teal: '#ccfbf1',    // teal 100
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc; /* Fondo gris muy suave */
+            color: #334155;
+        }
+
+        /* Estilos base para listas */
+        ul { list-style-type: none; padding-left: 0; }
+        ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; line-height: 1.6; }
+        ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            line-height: 1;
+            top: -2px;
+        }
+
+        /* ----- CLASES DINÁMICAS PARA SUBRAYADOS (HIGHLIGHTS) ----- */
+        /* Úsalas en cualquier parte del texto envolviéndolo en <mark class="hl-color">Texto</mark> */
+        mark {
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-weight: 700;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .hl-yellow { background-color: #fef08a; color: #854d0e; } /* Advertencias, conceptos */
+        .hl-red    { background-color: #fecdd3; color: #9f1239; } /* Peligro, Contraindicaciones, Severidad */
+        .hl-green  { background-color: #bbf7d0; color: #166534; } /* Tratamientos, Metas */
+        .hl-blue   { background-color: #bae6fd; color: #075985; } /* Tiempos, Definiciones clave */
+        .hl-purple { background-color: #e9d5ff; color: #581c87; } /* Epidemiología, Estadísticas */
+
+        /* ----- EFECTOS DE TARJETAS ----- */
+        .medical-card {
+            transition: all 0.3s ease;
+            border-top-width: 5px;
+            height: 100%;
+        }
+        .medical-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Estilo para las Perlas GPC */
+        .gpc-pearl {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 4px solid #f59e0b;
+            position: relative;
+        }
+        .gpc-pearl::before {
+            content: '\f0eb'; /* Lightbulb icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #f59e0b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-12">
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            
+            <!-- Izquierda: Botón Home y Título App -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <a href="index.html" class="text-slate-400 hover:text-indigo-600 transition-colors flex-shrink-0 bg-slate-50 hover:bg-indigo-50 p-2 sm:p-2.5 rounded-full" title="Ir al inicio">
+                    <i class="fa-solid fa-house text-lg sm:text-xl"></i>
+                </a>
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-100 text-indigo-600 p-2 sm:p-3 rounded-lg hidden sm:flex items-center justify-center">
+                        <i class="fa-solid fa-stethoscope text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-heading font-bold text-lg sm:text-2xl text-slate-800 leading-tight line-clamp-1">Resumen</h1>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Derecha: Tag y Logo ENARM Lite (Recreado con CSS para máxima velocidad/calidad) -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <span class="hidden md:inline-block bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">CDYE</span>
+                
+                <!-- Logo ENARM Lite® -->
+                <div class="border-2 border-slate-200/80 bg-slate-50/50 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 flex items-baseline gap-1 shadow-sm select-none">
+                    <span class="font-sans font-extrabold text-[#004f8f] text-sm sm:text-lg tracking-tight">Surgy</span>
+                    <span class="font-sans font-semibold text-[#64b036] text-sm sm:text-lg">Lite<sup class="text-[9px] sm:text-[11px] font-bold">®</sup></span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+     <!-- aqui -->
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="text-center mb-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-gradient-to-br from-indigo-100 to-emerald-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -mb-8 -ml-8 w-32 h-32 bg-gradient-to-tr from-cyan-100 to-teal-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        
+        <h2 class="relative font-heading font-extrabold text-3xl sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-teal-800 via-emerald-600 to-cyan-600 mb-3 tracking-tight leading-tight py-1">
+            Enfermedad de Crohn (CD)
+        </h2>
+        <p class="relative text-base text-slate-600 font-medium mb-3 max-w-3xl mx-auto">
+            Tratamiento Médico-Quirúrgico, Complicaciones, Seguimiento y Pronóstico.
+        </p>
+        <div class="inline-block bg-teal-50 border border-teal-200 text-teal-800 px-4 py-1.5 rounded-full text-sm font-bold mt-1 shadow-sm">
+            <i class="fa-solid fa-ribbon mr-1"></i> Revisión ENARM: Guías ACG, ECCO, BSG y GEDIIB 2024-2025
+        </div>
+        <div class="w-24 h-1.5 bg-gradient-to-r from-emerald-500 to-cyan-400 mx-auto rounded-full mt-5"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-book-medical"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Marco Normativo</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-slate-50 p-3 rounded-lg border leading-relaxed">
+                    <strong class="text-slate-900 block mb-2 border-b pb-1">Fundamento de la Revisión:</strong>
+                    <div class="space-y-1">
+                        <div class="flex items-start"><i class="fa-solid fa-check text-indigo-500 mt-1 mr-2"></i><span><strong>ACG 2025:</strong> Manejo en adultos.</span></div>
+                        <div class="flex items-start"><i class="fa-solid fa-check text-indigo-500 mt-1 mr-2"></i><span><strong>ECCO 2024 / ECCO Dieta 2025:</strong> Manejo médico y quirúrgico.</span></div>
+                        <div class="flex items-start"><i class="fa-solid fa-check text-indigo-500 mt-1 mr-2"></i><span><strong>BSG & ECCO-ESGAR 2025:</strong> Diagnóstico y EII.</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-bullseye"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Metas (STRIDE-II)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-indigo-500">
+                    <strong class="text-slate-900 block mb-1">A Largo Plazo:</strong>
+                    Remisión clínica sostenida y curación endoscópica (resolución de ulceraciones) para prevenir el daño estructural.
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-200 text-indigo-950 font-bold">
+                    <i class="fa-solid fa-stopwatch text-indigo-600 mr-1"></i> A Corto Plazo:
+                    <p class="font-medium mt-1">Normalización estricta de la Proteína C Reactiva (PCR) y la Calprotectina Fecal (FC).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-apple-whole"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">No Farmacológico</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950">
+                    <strong class="block mb-1"><i class="fa-solid fa-smoking-ban text-red-600 mr-1"></i> Tabaquismo:</strong>
+                    Intervención obligatoria. Activo aumenta tasas de estomas y riesgo de recurrencia posquirúrgica.
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm flex-1">
+                    <strong class="text-slate-900 block mb-1">Nutrición Enteral Exclusiva (EEN):</strong>
+                    Dieta líquida sin sólidos. Eficaz para inducir remisión (fenotipo estenosante/fístulas) y <mark class="bg-indigo-100 px-1 rounded font-bold text-indigo-900">obligatoria preoperatoria</mark> en desnutridos.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-pills"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Inducción (Leve-Mod)</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-emerald-500">
+                    <strong class="text-slate-900 block mb-1">Enfermedad Luminal (Ileocecal):</strong>
+                    La <strong class="text-slate-900">Budesonida de liberación ileal</strong> a dosis de 9 mg/día es el fármaco de elección por un periodo máximo de 8 a 12 semanas.
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 font-bold text-center flex-1 flex flex-col justify-center shadow-inner">
+                    <i class="fa-solid fa-ban text-red-600 mr-1 mb-2 text-xl block"></i>
+                    Los derivados de Mesalazina (5-ASA) NO están recomendados para inducir ni mantener la remisión en CD.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-syringe"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Inducción (Mod-Sev)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-2 border-b pb-1">Corticosteroides Sistémicos:</strong>
+                    Indicados en brotes severos u hospitalizados (Prednisona 40-60 mg/día oral o Metilprednisolona IV).
+                </div>
+                <div class="bg-purple-50 p-3 rounded-lg border border-purple-200 text-purple-950">
+                    <strong class="block mb-1"><i class="fa-solid fa-triangle-exclamation text-purple-600 mr-1"></i> Regla de Uso:</strong>
+                    Uso máximo &lt; 8 semanas. Estrictamente para <u>rescate agudo y NO para mantenimiento</u> por alto índice de resistencia/dependencia (hasta 50%).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-arrow-down-up-across-line"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Enfoque "Top-Down"</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-center space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-4 rounded-xl border shadow-sm border-l-4 border-purple-500">
+                    <strong class="text-slate-900 block mb-2 text-base">Terapias Biológicas Tempranas:</strong>
+                    <p class="leading-relaxed">En pacientes con factores de riesgo de progresión (diagnóstico temprano, enfermedad perianal, fenotipo estenosante/penetrante o úlceras profundas).</p>
+                    <p class="mt-2 pt-2 border-t font-semibold text-slate-800">Iniciar terapias combinadas previene la hospitalización y cirugía.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-shield-virus"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Agentes Anti-TNF</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-cyan-50 p-3 rounded-lg border border-cyan-200">
+                    <strong class="text-cyan-950 block mb-1">Infliximab / Adalimumab:</strong>
+                    <p>Recomendados para inducción y mantenimiento en enf. moderada a severa. Infliximab (5 mg/kg IV) es <strong>1ra línea en perianal fistulizante</strong>.</p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Reducción de Inmunogenicidad:</strong>
+                    Se indica forzosamente la combinación con inmunomoduladores (Tiopurinas).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-capsules"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Inmunomoduladores</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Azatioprina / 6-MP:</strong>
+                    Sugeridas tras inducir remisión con esteroides. <mark class="bg-amber-100 px-1 rounded font-bold text-amber-900">Regla:</mark> Solicitar genotipo o actividad de TPMT previo a su uso.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <strong class="text-slate-900 block mb-1">Metotrexato (MTX):</strong>
+                    25 mg/sem SC/IM. Alternativa de mantenimiento si fallan o no se toleran tiopurinas. <strong class="text-red-700">No usar como monoterapia de inducción.</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-dna"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Anti-IL, Integrinas y JAK</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-2 border-b pb-1">Altamente Eficaces:</strong>
+                    <div class="space-y-1">
+                        <div class="flex items-start"><i class="fa-solid fa-check text-cyan-500 mt-1 mr-2"></i><span><strong>Vedolizumab</strong> (Anti-integrina).</span></div>
+                        <div class="flex items-start"><i class="fa-solid fa-check text-cyan-500 mt-1 mr-2"></i><span><strong>Ustekinumab, Risankizumab, Mirikizumab</strong> (Anti-IL). Perfil seguro ideal en &ge; 60-65 años.</span></div>
+                    </div>
+                </div>
+                <div class="bg-cyan-50 p-3 rounded-lg border border-cyan-200 text-cyan-950 font-bold">
+                    <i class="fa-solid fa-circle-plus text-cyan-600 mr-1"></i> Upadacitinib (JAK): Efectivo en casos de refractariedad previa a agentes Anti-TNF.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-scalpel"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Indicaciones de Cirugía</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Intervención Urgente vs Electiva:</strong>
+                    Indicado ante complicaciones estructurales: estenosis con obstrucción, hemorragia, perforación libre, displasia/cáncer o refractariedad médica.
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 shadow-inner">
+                    <strong class="block mb-1 text-red-900"><i class="fa-solid fa-triangle-exclamation text-red-600 mr-1"></i> Regla Infecciosa:</strong>
+                    Abscesos &gt; 2 cm deben ser drenados primero (percutáneo guiado por imagen) con ABX sistémicos, <u class="font-bold">difiriendo la cirugía hasta controlar la sepsis</u>.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-scissors"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Técnica: Estenosis</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="space-y-2">
+                    <div class="bg-slate-50 p-2.5 rounded border"><strong class="text-slate-900">Resección Ileocecal (Lap):</strong> Estándar en obstrucción de segmento corto.</div>
+                    <div class="bg-emerald-50 p-2.5 rounded border border-emerald-200 text-emerald-950 font-bold"><strong class="text-emerald-900">Estenoplastia (Strictureplasty):</strong> Elección si estenosis &lt; 10 cm o múltiples. Preserva intestino.</div>
+                </div>
+                <div class="bg-white p-2.5 rounded border shadow-sm font-semibold">
+                    <strong class="text-slate-900">Prevención Anastomótica:</strong> Kono-S (término-terminal antimesentérica cosida a mano) o resección del mesenterio.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-disease"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Fístulas Perianales</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-emerald-500">
+                    <strong class="text-slate-900 block mb-1">Sepsis Pélvica Aguda:</strong>
+                    EUA (Exploración Bajo Anestesia) con <mark class="bg-emerald-100 px-1 rounded font-bold text-emerald-900">colocación de setones</mark> + ABX (Metro/Cipro) + Infliximab.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <strong class="text-slate-900 block mb-1">Manejo Definitivo:</strong>
+                    <div class="flex items-start"><i class="fa-solid fa-check text-emerald-500 mt-1 mr-2"></i><span><strong>Sin Proctitis:</strong> Técnicas LIFT o colgajo de avance.</span></div>
+                    <div class="flex items-start"><i class="fa-solid fa-check text-emerald-500 mt-1 mr-2"></i><span><strong>Proctitis Severa:</strong> Derivación fecal (estoma) o proctectomía.</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-heart-crack"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Complicaciones Crónicas</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">A los 20 Años del Diagnóstico:</strong>
+                    El 50% progresará a daño estructural: Estenosis fibrótica, abscesos, flemones y fístulas (enteroentéricas, enterovesicales, enterocutáneas, rectovaginales).
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 font-bold text-center">
+                    Riesgo acumulado del 40-55% a 10 años de requerir cirugía abdominal mayor (30-35% de riesgo de una segunda resección).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-person-arrow-down-to-line"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Metabolismo y Riesgo CRC</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <strong class="text-slate-900 block mb-1">Carga Metabólica:</strong>
+                    Alta incidencia de malnutrición, deficiencia de Hierro, Ácido Fólico, Vitamina B12 (posresección ileal), osteoporosis y eventos tromboembólicos (TEV).
+                </div>
+                <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 text-amber-950">
+                    <strong class="block mb-1"><i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i> Riesgo Oncológico:</strong>
+                    Aumento significativo del riesgo de <strong>Cáncer Colorrectal (CRC)</strong>, directamente proporcional a la extensión de afección colónica y tiempo de evolución.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-truck-medical"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Criterios de Referencia</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Ingreso Urgente (Multidisciplinario):</strong>
+                    Abscesos intraabdominales, perforación, megacolon tóxico, hemorragia digestiva inestable o estenosis obstructiva.
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Especialidad (Biológicos):</strong>
+                    Pacientes &lt; 17 años (riesgo fallo de medro), afectación extensa, enf. perianal refractaria/fistulizante profunda.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-vial"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Seguimiento y Control</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-fuchsia-50 p-3 rounded-lg border border-fuchsia-200 text-fuchsia-950">
+                    <strong class="block mb-1">Evaluación Temprana:</strong>
+                    En pacientes iniciando biológicos, evaluar respuesta clínica y bioquímica (PCR, FC) a las <mark class="bg-fuchsia-200 px-1 rounded font-bold">12 semanas</mark>.
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Mantenimiento Estable:</strong>
+                    Evaluación seriada con índice clínico (PRO-2, CDAI), Calprotectina Fecal (<strong class="text-fuchsia-700">&lt; 100 &mu;g/g indica remisión</strong>) cada 6 a 12 meses y ultrasonido (IUS).
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-camera-retro"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Vigilancia Post-Qx (Rutgeerts)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-fuchsia-500">
+                    <strong class="text-slate-900 block mb-1">Control Posquirúrgico:</strong>
+                    Ileocolonoscopia obligada a los <u class="font-bold">6-12 meses posteriores a la cirugía</u> para aplicar el <strong>Score de Rutgeerts</strong>, que dirige el inicio profiláctico de biológicos.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <strong class="text-slate-900 block mb-1">Cribado Oncológico:</strong>
+                    Colonoscopias periódicas con cromoendoscopia e histopatología sistematizada para vigilar displasia o CRC tras cronicidad.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-chart-gantt"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Pronóstico Vital</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-4 rounded-xl border shadow-sm text-center flex-1 flex flex-col justify-center">
+                    <strong class="text-slate-900 block mb-2 text-base border-b pb-1">Mortalidad General:</strong>
+                    <p class="leading-relaxed">Aumentada (tasa estandarizada 1.4 veces mayor a la población general) impulsada por afección GI grave, infecciones y cáncer.</p>
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 font-bold text-center shadow-inner">
+                    Solo el 20-30% de los individuos experimentará un curso indolente sin progresión, justificando el monitoreo proactivo constante.
+                </div>
+            </div>
+        </div>
+
+        <div class="medical-card bg-amber-50 rounded-xl shadow-sm border border-amber-300 p-6 lg:col-span-3 relative overflow-hidden mt-2">
+            <div class="absolute right-0 top-0 opacity-10 text-amber-600 text-7xl -mt-2 -mr-2">
+                <i class="fa-solid fa-quote-right"></i>
+            </div>
+            <h3 class="font-heading font-bold text-xl text-amber-900 mb-5 relative z-10">
+                <i class="fa-solid fa-lightbulb text-amber-600 mr-2"></i> Perlas Quirúrgicas y Consensos Internacionales
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-sm text-amber-950 font-medium relative z-10">
+                <div class="bg-white/80 p-4 rounded-xl shadow-sm border border-amber-100 space-y-3">
+                    <p class="italic text-slate-800 leading-relaxed text-sm">
+                        "Recomendamos <mark class="bg-amber-200 text-amber-900 font-bold px-1 rounded">profilaxis extendida para tromboembolismo</mark> posterior al alta hospitalaria tras cirugía de Enfermedad de Crohn."
+                    </p>
+                    <p class="italic text-slate-800 leading-relaxed text-sm border-t border-amber-200 pt-2">
+                        "Sugerimos el uso de antibióticos intravenosos y <strong class="text-red-900">drenaje percutáneo guiado por imagen como tratamiento de primera línea para abscesos</strong> intraabdominales."
+                    </p>
+                </div>
+                <div class="bg-white/80 p-4 rounded-xl shadow-sm border border-amber-100 space-y-3">
+                    <p class="italic text-slate-800 leading-relaxed text-sm">
+                        "Sugerimos que la resección laparoscópica debe ser considerada en la enfermedad de Crohn ileocecal localizada para aquellos que no responden o recaen tras la terapia médica inicial."
+                    </p>
+                    <p class="italic text-slate-800 leading-relaxed text-sm border-t border-amber-200 pt-2">
+                        "Recomendamos que la <strong class="text-slate-900">terapia anti-TNF puede continuarse en el período preoperatorio</strong> para pacientes que se someten a cirugía."
+                    </p>
+                </div>
+                <div class="bg-white/80 p-4 rounded-xl shadow-sm border border-amber-100 space-y-3 flex flex-col justify-center">
+                    <p class="italic text-slate-800 leading-relaxed text-sm text-center">
+                        "Sugerimos priorizar el uso de <u class="font-bold decoration-amber-500">imagen transversal abdominal y ultrasonido intestinal</u> en el diagnóstico y evaluación de estenosis."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div> 
+</main>
+
+      <!-- aqui -->
+
+        <!-- BOTÓN DE SIGUIENTE RESUMEN -->
+        <div class="mt-10 sm:mt-12 mb-4 flex justify-center">
+            <a href="index.html" class="group relative inline-flex items-center justify-center gap-3 px-8 py-3 sm:py-4 font-bold text-white bg-gradient-to-r from-indigo-600 to-teal-500 rounded-full shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-teal-600 transition-all duration-300 transform hover:-translate-y-1">
+                <span class="text-base sm:text-lg tracking-wide">Siguiente Resumen</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform duration-300"></i>
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Script de Inicialización de KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // Configuramos los delimitadores para que acepte el signo $ nativo de tu texto
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false,
+                output: 'html' // para mejor adaptación con fuentes web
+            });
+        });
+    </script>
+</body>
+</html>

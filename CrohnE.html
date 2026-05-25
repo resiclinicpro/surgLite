@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">UMAE</span>
+                    <span class="logo-Lite text-sm">25<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // =========================================================
+        const questionsData = [
+    {
+        id: 1, 
+        question: "¿Cuál es el gen cuyas mutaciones representan uno de los factores de riesgo genético más firmemente asociados al desarrollo de la enfermedad de Crohn, involucrado fisiopatológicamente en la vía de la autofagia y la función de las células de Paneth?", 
+        options: ["NOD2 (CARD15)", "NUDT15", "HLA-DQA105", "TPMT"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento The Lancet 2024, la patogénesis de la enfermedad de Crohn implica una barrera epitelial intestinal disfuncional. Las células de Paneth, una fuente importante de expresión del gen NOD2 en el íleon terminal, juegan un papel central en el control de la invasión bacteriana mediante la secreción de factores antimicrobianos. Las mutaciones en genes como Atg16L1 y NOD2 alteran la vía de la autofagia, lo que deteriora la función de estas células, desregula la microbiota y disminuye la integridad de la barrera mucosa.<br><br>Perla ENARM: \"La expresión del gen NOD2 y la disrupción de la vía de la autofagia a través de mutaciones resultan en un deterioro de la función de las células de Paneth, propiciando la inflamación transmural característica.\"<br><br>Análisis de Distractores: NUDT15 y TPMT son genes que codifican enzimas relacionadas con el metabolismo de las tiopurinas; sus mutaciones elevan el riesgo de mielosupresión por fármacos, no son el mecanismo primario de la enfermedad. HLA-DQA105 es un genotipo que aumenta el riesgo de desarrollar anticuerpos contra terapias anti-TNF (Infliximab/Adalimumab), afectando la farmacocinética pero no la génesis de la inflamación inicial.", 
+        source: "Enfermedad de Crohn - The lancet, 2024, Fisiopatología, Página 1178." 
+    },
+    {
+        id: 2, 
+        question: "¿Cuál es el factor de riesgo ambiental modificable que se asocia con un mayor incremento en la tasa de recurrencias posquirúrgicas, desarrollo de fenotipo penetrante y necesidad de una primera o subsecuentes cirugías de resección en la enfermedad de Crohn?", 
+        options: ["Uso intermitente de antiinflamatorios no esteroideos", "Infección previa por citomegalovirus", "Tabaquismo activo", "Dieta con patrón occidental alta en carnes rojas"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025, el tabaquismo activo es el factor de riesgo exógeno más potente para el empeoramiento de la enfermedad de Crohn. Aumenta sustancialmente la incidencia de brotes graves, el riesgo de requerir cirugía mayor abdominal, la formación de estomas y la recurrencia clínica y endoscópica posoperatoria en anastomosis. Interrumpir este hábito modifica drásticamente la historia natural de la patología.<br><br>Perla ENARM: \"Se recomienda asesoramiento preoperatorio aconsejando el cese del tabaquismo. Antes de la cirugía electiva, los pacientes deben ser informados del aumento de los riesgos quirúrgicos, incluyendo mayores tasas de formación de estoma y aumento del riesgo de recurrencia de la enfermedad en fumadores.\"<br><br>Análisis de Distractores: Aunque el uso de AINEs puede desencadenar brotes inflamatorios, y la infección por citomegalovirus complica formas severas de colitis refractaria, ninguno de estos tiene el peso epidemiológico y pronóstico continuo que tiene el tabaco sobre las complicaciones estructurales penetrantes. La dieta occidental eleva el riesgo de aparición inicial (etiología), pero el tabaquismo es el determinante fundamental en la progresión hacia la cirugía.", 
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Tratamiento y Estilo de vida, Página 184." 
+    },
+    {
+        id: 3, 
+        question: "¿Cuál es el valor de calprotectina fecal que, al encontrarse por debajo de este límite en el abordaje inicial, excluye de forma fiable el diagnóstico de enfermedad inflamatoria intestinal sintomática frente a un trastorno funcional?", 
+        options: ["<150 µg/g", "<250 µg/g", "<100 µg/g", "<40 µg/g"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Biomarcadores fecales 2024, la calprotectina fecal es el biomarcador no invasivo de primera línea para diferenciar causas orgánicas de funcionales (ej. síndrome de intestino irritable). En el análisis estadístico, el valor predictivo máximo para excluir la enfermedad inflamatoria intestinal se logra con niveles de calprotectina fecal <40 µg/g, evitando así endoscopias innecesarias en pacientes de bajo riesgo.<br><br>Perla ENARM: \"La exclusión de síndrome de intestino irritable o trastorno funcional frente a enfermedad inflamatoria intestinal alcanza su máximo valor predictivo con una calprotectina fecal <40 µg/g.\"<br><br>Análisis de Distractores: Cifras de <100 µg/g o <150 µg/g son útiles como metas terapéuticas (remisión endoscópica) en pacientes ya diagnosticados y bajo tratamiento, pero para tamizaje inicial de exclusión absoluta, el corte es más estricto (<40 a 50 µg/g). Cifras de >250 µg/g tienen alta probabilidad de daño endoscópico severo y dictan necesidad de ileocolonoscopia.", 
+        source: "Biomarcadores fecales, sanguíneos y urinarios en enfermedades inflamatorias intestinales, 2024, Fecal calprotectin and diagnosis, Página 67." 
+    },
+    {
+        id: 4, 
+        question: "¿Cuál es el protocolo endoscópico mínimo de toma de biopsias requerido durante una ileocolonoscopia de primera vez para documentar la extensión y confirmar microscópicamente el diagnóstico de enfermedad de Crohn?", 
+        options: ["1 biopsia de íleon terminal y 2 biopsias de colon derecho e izquierdo", "2 biopsias de íleon terminal y ≥4 biopsias de múltiples segmentos colónicos y recto", "4 biopsias seriadas de íleon terminal exclusivamente", "2 biopsias de ciego y 2 biopsias de la unión rectosigmoidea"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ECCO-ESGAR 2025, la enfermedad de Crohn se caracteriza por una afectación focal, discontinua y parcheada que puede involucrar tejido de aspecto endoscópicamente normal. Para asegurar un mapeo completo y no omitir actividad microscópica, es obligatorio sistematizar la toma de tejido.<br><br>Perla ENARM: \"Para el diagnóstico inicial, se deben obtener un mínimo de 2 biopsias del íleon terminal y al menos 4 biopsias de múltiples segmentos colónicos, incluyendo el recto, independientemente de la apariencia de la mucosa.\"<br><br>Análisis de Distractores: Tomar únicamente biopsias del íleon o del colon derecho (opciones A, C, D) es insuficiente, ya que la enfermedad puede afectar el colon transverso, izquierdo o presentar afección perianal/rectal sutil. Se requiere un barrido completo de todos los segmentos topográficos anatómicos mayores del intestino bajo.", 
+        source: "Guía ECCO-ESGAR-ESP-IBUS sobre diagnóstico y seguimiento de pacientes con EII Parte 1, 2025, Diagnostics at initial diagnosis, Página 218." 
+    },
+    {
+        id: 5, 
+        question: "¿Cuál es el hallazgo histopatológico considerado patognomónico y definitivo para el diagnóstico de la enfermedad de Crohn, el cual confirma la enfermedad aunque solo se identifique en una minoría de los especímenes biopsiados?", 
+        options: ["Criptitis neutrofílica con abscesos crípticos", "Distorsión arquitectural severa de criptas", "Granuloma epitelioide no caseificante", "Infiltrado inflamatorio eosinofílico en lámina propia"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025, el rasgo de mayor peso diagnóstico para diferenciar la enfermedad de Crohn de la Colitis Ulcerativa u otras colitis es la demostración de inflamación granulomatosa, específicamente el granuloma epitelioide no caseificante. Aunque su sensibilidad es baja (presente en 20-33% de los casos), su especificidad es absoluta tras descartar infecciones como tuberculosis.<br><br>Perla ENARM: \"Los reportes histopatológicos deben mencionar la distribución de células inflamatorias, atrofia críptica, neutrófilos, úlceras, y granulomas epitelioides no caseificantes, siendo estos últimos el sello distintivo morfológico en la enfermedad de Crohn.\"<br><br>Análisis de Distractores: La criptitis y los abscesos crípticos (opción A) son marcadores de actividad aguda (presencia de neutrófilos) comunes tanto en CU como en Crohn. La distorsión arquitectural (opción B) indica cronicidad pero no es patognomónica. Los eosinófilos en lámina propia (opción D) no son un marcador validado de actividad en enfermedad inflamatoria intestinal.", 
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Histopathology, Página 162." 
+    },
+    {
+        id: 6, 
+        question: "¿Cuáles son las dos modalidades de imagen de primera línea preferidas en guías internacionales para la evaluación diagnóstica de complicaciones estructurales transmurales (estenosis, fístulas) en intestino delgado, priorizadas por no emitir radiación ionizante?", 
+        options: ["Tomografía computarizada enterográfica y tránsito intestinal con bario", "Enteroresonancia magnética y ultrasonido intestinal", "Tomografía por emisión de positrones y endoscopia con cápsula", "Radiografía de abdomen en bipedestación y ultrasonido endoscópico"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025, la enfermedad de Crohn requiere escrutinio luminal y transmural debido a la edad joven de los pacientes y la necesidad de valoraciones repetidas. Las técnicas que evitan la radiación ionizante acumulada son el estándar de oro inicial. La enteroresonancia permite ver todo el tracto gastrointestinal, mientras el ultrasonido intestinal se realiza a pie de cama evaluando grosor, flujo Doppler (hiperemia) y grasa mesentérica.<br><br>Perla ENARM: \"El uso de imagen transversal abdominal (específicamente entero-resonancia) y el ultrasonido intestinal deben priorizarse en el diagnóstico y evaluación de estenosis, ya que no exponen a los pacientes a radiación ionizante.\"<br><br>Análisis de Distractores: La enterotomografía computarizada (opción A) es excelente y altamente sensible, pero expone a radiación; se reserva si la RM o el ultrasonido no están disponibles o en urgencias agudas (perforación/megacolon). La endoscopia con cápsula (opción C) no evalúa la pared transmural y está contraindicada si hay sospecha de estenosis sin prueba de permeabilidad previa.", 
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Imaging modalities, Página 161." 
+    },
+    {
+        id: 7, 
+        question: "De acuerdo con la clasificación de Montreal para estratificar el fenotipo en pacientes adultos con enfermedad de Crohn, ¿qué sufijo alfanumérico debe añadirse a la nomenclatura de comportamiento (B) para denotar la coexistencia de enfermedad perianal?", 
+        options: ["L4", "B3", "p", "A2"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025, la clasificación de Montreal clasifica a los pacientes según la edad de inicio (A), la localización (L) y el comportamiento de la enfermedad (B). Debido a que la presencia de enfermedad perianal (fístulas, abscesos perianales) es un marcador pronóstico independiente de severidad que puede coexistir con fenotipos no estenosantes, estenosantes o penetrantes intrabdominales, se añade el sufijo \"p\" al comportamiento principal (ej. B1p, B2p, B3p).<br><br>Perla ENARM: \"Se añade 'p' a los fenotipos B1, B2 o B3 cuando coexiste enfermedad perianal en la clasificación fenotípica de Montreal.\"<br><br>Análisis de Distractores: La opción A (L4) denota localización en el tracto gastrointestinal superior. La opción B (B3) se refiere a enfermedad de comportamiento puramente penetrante (fístulas internas, flemones intrabdominales), no específicamente perianal. La opción D (A2) señala edad al diagnóstico entre 17 y 40 años.", 
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Classifications, Página 158." 
+    },
+    {
+        id: 8, 
+        question: "¿Cuál es el tratamiento farmacológico de primera línea recomendado explícitamente para inducir la remisión clínica en pacientes ambulatorios con enfermedad de Crohn de localización ileocecal y actividad sintomática leve a moderada?", 
+        options: ["Infliximab 5 mg/kg intravenoso en esquema 0, 2 y 6 semanas", "Mesalazina oral 4 g/día dividida en dos tomas", "Budesonida de liberación ileal 9 mg/día hasta por 12 semanas", "Azatioprina 2.5 mg/kg/día por vía oral"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ACG 2025, para los brotes leves a moderados localizados en íleon terminal y/o colon ascendente, se prefiere un corticosteroide de alta potencia tópica luminal y bajo efecto sistémico por un corto periodo para minimizar toxicidad. La budesonida alcanza altas concentraciones exactamente en el territorio ileocecal por su recubrimiento.<br><br>Perla ENARM: \"Recomendamos el uso de budesonida de liberación ileal controlada a una dosis de 9 mg diarios para la inducción de remisión sintomática en pacientes con enfermedad de Crohn ileocecal con actividad leve a moderada.\"<br><br>Análisis de Distractores: Infliximab (opción A) se reserva como primera línea en enfermedad severa (top-down) o perianal/fistulizante aguda. Mesalazina (opción B) NO está indicada en enfermedad de Crohn para inducción ni mantenimiento. Azatioprina (opción D) es un agente inmunomodulador de mantenimiento cuyo tiempo de latencia es de semanas a meses, no sirve como monoterapia para inducir remisión aguda.", 
+        source: "Guía clínica del ACG, Manejo de la enfermedad de Crohn en adultos, 2025, Mild to moderately severe disease, Página 257." 
+    },
+    {
+        id: 9, 
+        question: "¿Qué grupo farmacológico de uso frecuente en patología intestinal está explícitamente NO recomendado por las guías clínicas actuales para la inducción ni el mantenimiento de la remisión en pacientes con enfermedad de Crohn luminal activa?", 
+        options: ["Corticosteroides tópicos y sistémicos", "Aminosalicilatos orales (5-ASA)", "Anti-integrinas (Vedolizumab)", "Antibióticos como metronidazol"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ACG 2025, las formulaciones orales de Mesalazina o Sulfasalazina (5-ASA), pilares históricos en el tratamiento de la Colitis Ulcerativa, han demostrado de manera contundente en múltiples ensayos y metaanálisis que no tienen mayor eficacia que el placebo en inducir o mantener la remisión clínica en la enfermedad de Crohn, por lo que su prescripción debe evitarse.<br><br>Perla ENARM: \"Recomendamos en contra del uso de mesalazina oral para inducción o mantenimiento en pacientes con enfermedad de Crohn con actividad leve a moderadamente activa.\"<br><br>Análisis de Distractores: Los corticosteroides (opción A) sí están indicados pero únicamente para inducción de remisión a corto plazo (máximo 8 semanas). Las anti-integrinas (opción C) son terapias avanzadas aprobadas y altamente efectivas en la patología. Los antibióticos (opción D) no son terapia primaria de remisión, pero son útiles temporalmente en el escenario de abscesos intraabdominales o enfermedad perianal fistulizante con sepsis.", 
+        source: "Guía clínica del ACG, Manejo de la enfermedad de Crohn en adultos, 2025, Mild to moderately severe disease, Página 257." 
+    },
+    {
+        id: 10, 
+        question: "¿Cuál es el abordaje inicial recomendado para un paciente con diagnóstico de enfermedad de Crohn penetrante intraabdominal que presenta fiebre, dolor focalizado y un absceso cuantificado por tomografía de >2 cm de diámetro?", 
+        options: ["Laparotomía exploradora de urgencia para resección de segmento y estoma terminal", "Drenaje percutáneo guiado por imagen apoyado con antibióticos intravenosos", "Inicio inmediato de terapia combinada con Infliximab y Azatioprina", "Terapia médica exclusiva con metilprednisolona intravenosa a dosis altas"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía Quirúrgica ECCO 2024, el manejo agudo de un flemón o absceso grande (>2 cm) debe enfocarse en controlar la sepsis y resolver el estado inflamatorio antes de considerar una resección intestinal. Operar sobre una cavidad abdominal séptica y edematosa aumenta dramáticamente el riesgo de morbilidad, fuga anastomótica y pérdida de intestino corto.<br><br>Perla ENARM: \"Sugerimos el uso de antibióticos intravenosos y drenaje percutáneo guiado por imagen como tratamiento de primera línea para abscesos intraabdominales relacionados a Enfermedad de Crohn, reservando la resección intestinal una vez controlada la sepsis.\"<br><br>Análisis de Distractores: La cirugía de urgencia (opción A) se reserva para falla de drenaje percutáneo, sepsis incontrolable, peritonitis generalizada o perforación libre. Iniciar inmunosupresores biológicos o esteroides sistémicos (opciones C y D) en presencia de un absceso no drenado está absolutamente contraindicado por el riesgo inminente de diseminación séptica fatal.", 
+        source: "Directrices de la ECCO sobre la terapéutica en la enfermedad de Crohn. Tratamiento quirúrgico, 2024, Complicaciones, Página 1567." 
+    },
+    {
+        id: 11, 
+        question: "En un paciente con patrón fibroestenosante del intestino delgado, la estenoplastia (strictureplasty) es una alternativa preservadora de intestino frente a la resección. ¿Cuál es la longitud máxima recomendada de la estenosis para realizar una estenoplastia de manera convencional y segura?", 
+        options: ["≤5 cm", "≤20 cm", "≤15 cm", "≤10 cm"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía Quirúrgica ECCO 2024 (and BSG 2025 equivalent context), la estenoplastia tiene como objetivo principal prevenir el síndrome de intestino corto en pacientes que requerirían resecciones repetidas a lo largo de su vida. El procedimiento estándar (ej. Heineke-Mikulicz) es la alternativa segura y con mejor rendimiento biomecánico en segmentos aislados cortos de intestino delgado que no excedan los 10 cm de longitud.<br><br>Perla ENARM: \"Recomendamos que la estenoplastia es una alternativa a la resección en pacientes con estenosis de enfermedad de Crohn de intestino delgado con longitud más corta que 10 cm, siendo útil cuando hay múltiples estenosis.\"<br><br>Análisis de Distractores: Una lesión estenótica mayor a 10 cm, o estenosis contiguas extensas (ej. >20 cm o flemones inflamatorios) presentan alto riesgo de falla técnica por rigidez de pared, fuga y dehiscencia, siendo preferible la resección del segmento afectado o configuraciones complejas (Finney / Michelassi), pero el estándar para la técnica básica dicta el punto de corte en 10 cm.", 
+        source: "Directrices de la ECCO sobre la terapéutica en la enfermedad de Crohn. Tratamiento médico / quirúrgico (base knowledge from guidelines), Perlas de Resumen Quirúrgico (Punto 4 de Perlas Clínicas)." 
+    },
+    {
+        id: 12, 
+        question: "Con el objetivo anatómico y fisiopatológico de disminuir drásticamente el riesgo de recurrencia posoperatoria de la enfermedad de Crohn, ¿cuál técnica de anastomosis está recomendada tras realizar una resección ileocecal?", 
+        options: ["Anastomosis funcional término-terminal antimesentérica cosida a mano (Kono-S)", "Anastomosis latero-lateral mecánica con engrapadora lineal", "Anastomosis término-terminal invaginante con sutura continua", "Anastomosis término-lateral mecánica en dos planos"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Guía Quirúrgica ECCO 2024, la prevención de la recurrencia anastomótica es vital, ya que la inflamación suele reactivarse en el sitio de la unión. La técnica Kono-S está diseñada para mantener el mesenterio, principal sitio de tejido adiposo inflamatorio, excluido del lumen funcional de la anastomosis, además de proveer una boca amplia que previene la estenosis temprana secundaria a fibrosis tisular.<br><br>Perla ENARM: \"La configuración de la anastomosis, específicamente la técnica funcional término-terminal antimesentérica cosida a mano (Kono-S) o la resección extensa del mesenterio, previene recurrencias en sitios de anastomosis.\"<br><br>Análisis de Distractores: Las técnicas convencionales término-terminales, término-laterales y latero-laterales (opciones B, C y D) han sido las técnicas estándar históricas; sin embargo, en ensayos clínicos recientes y consensos de EII, ninguna ha superado en profilaxis de recurrencia clínica y endoscópica a las configuraciones anatómicas exclusivas como Kono-S.", 
+        source: "Directrices de la ECCO sobre la terapéutica en la enfermedad de Crohn. Tratamiento quirúrgico, 2024, Manejo Quirúrgico (Prevención de recurrencia)." 
+    },
+    {
+        id: 13, 
+        question: "Durante la Exploración Bajo Anestesia (EUA) primaria en un paciente con fístula perianal compleja por enfermedad de Crohn, ¿qué hallazgo local anatómico dictamina peores tasas de curación, prohíbe la realización de colgajos de avance (AF) y obliga a mantener drenaje temporal a largo plazo o considerar estoma?", 
+        options: ["Ausencia de absceso submucoso o isquiorrectal", "Presencia de proctitis severa concomitante", "Trayecto fistuloso único de tipo interesfintérico", "Involucro superficial del esfínter anal interno"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía Quirúrgica ECCO 2024, la evaluación endoscópica del recto es obligatoria durante la cirugía anal en enfermedad de Crohn. La presencia de inflamación macroscópica (proctitis) contraindica rotundamente técnicas de cierre definitivo como el colgajo de avance (Advancement Flap) o el LIFT, debido a que el tejido está friable y enfermo, garantizando la dehiscencia y sepsis pélvica si se cierran los trayectos.<br><br>Perla ENARM: \"Recomendamos que la examinación bajo anestesia incluya evaluación de la mucosa rectal, ya que la presencia de proctitis está fuertemente asociada a tasas menores de curación y contraindica reparaciones reconstructivas.\"<br><br>Análisis de Distractores: La ausencia de abscesos (opción A) es el estado ideal para permitir técnicas de reconstrucción definitivas. Un trayecto interesfintérico bajo o superficial (opciones C y D) generalmente corresponde a fístulas simples, las cuales pueden tratarse con fistulotomía segura sin riesgo elevado de incontinencia ni falla, siempre que el recto esté sano.", 
+        source: "Directrices de la ECCO sobre la terapéutica en la enfermedad de Crohn. Tratamiento quirúrgico, 2024, Perianal fistula Algorithm, Página 1568." 
+    },
+    {
+        id: 14, 
+        question: "En el seguimiento de un paciente que fue sometido a resección intestinal por enfermedad de Crohn, ¿en qué intervalo de tiempo está obligatoriamente recomendada la realización de la primera ileocolonoscopia de control para aplicar el Score de Rutgeerts?", 
+        options: ["Entre 1 y 3 meses posoperatorios", "Entre 6 y 12 meses posoperatorios", "A los 24 meses posoperatorios exactos", "Solamente si el paciente reanuda con diarrea"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía ECCO-ESGAR 2025, la recurrencia endoscópica precede inevitablemente a la recurrencia clínica por varios meses. El Score de Rutgeerts evalúa la anastomosis y el neoterminal ileal. Detectar tempranamente lesiones (i2b, i3, i4) a los 6-12 meses tras la cirugía permite escalar oportunamente a terapia biológica (ej. Anti-TNF) antes de que el daño estructural cause síntomas o re-estenosis irreversible.<br><br>Perla ENARM: \"Es obligatorio realizar una valoración endoscópica mediante colonoscopia a los 6 a 12 meses posteriores a la cirugía de resección para evaluar los marcadores de recurrencia tempranos (Score de Rutgeerts) e individualizar la terapia biológica.\"<br><br>Análisis de Distractores: De 1 a 3 meses (opción A) es muy temprano y la mucosa podría presentar edema reactivo puramente quirúrgico, alterando la interpretación. Retrasarlo a 24 meses (opción C) o esperar síntomas (opción D) pierde la \"ventana de oportunidad\" para iniciar profilaxis biológica, resultando frecuentemente en re-estenosis establecida.", 
+        source: "Guía ECCO-ESGAR-ESP-IBUS sobre diagnóstico y seguimiento de pacientes con EII Parte 2, 2025, Endoscopic scoring systems (Rutgeerts), Página 223." 
+    },
+    {
+        id: 15, 
+        question: "¿Cuál intervención es altamente eficaz y se recomienda como terapia de inducción de remisión clínica de primera línea en niños con enfermedad de Crohn intraluminal activa, sirviendo adicionalmente como optimización preoperatoria si cursan desnutrición severa?", 
+        options: ["Restricción de consumo de lácteos por 12 semanas", "Nutrición Enteral Exclusiva (EEN) por 6 a 8 semanas", "Dieta baja en hidratos de carbono fermentables (FODMAP)", "Ayuno con nutrición parenteral total exclusiva por 10 días"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Consenso Dietético ECCO 2025, la Nutrición Enteral Exclusiva (EEN) que utiliza fórmulas poliméricas orales al 100% (eliminando temporalmente todos los alimentos sólidos habituales) ha demostrado altas tasas de curación endoscópica y de inducción de remisión equiparables a los esteroides, sin la toxicidad de éstos, haciéndola el estándar en pediatría.<br><br>Perla ENARM: \"La nutrición enteral exclusiva (EEN) es efectiva para la inducción de la remisión clínica y endoscópica en niños y adultos con enfermedad de Crohn luminal leve a moderada.\"<br><br>Análisis de Distractores: La dieta baja en FODMAP (opción A) mitiga síntomas de intestino irritable sobrepuesto (gases/distensión) pero no desinflama la mucosa. Restringir lácteos (opción A) solo aplica si hay deficiencia de lactasa. La nutrición parenteral total (opción D) está reservada estrictamente para estados de fallo intestinal total o íleo prolongado, ya que presenta mayor morbilidad asociada al catéter que la ruta enteral trófica.", 
+        source: "Consenso de la ECCO sobre el manejo dietético de la enfermedad inflamatoria intestinal, 2025, Exclusive enteral nutrition, Página 33." 
+    },
+    {
+        id: 16, 
+        question: "Con base en los lineamientos de mantenimiento de la salud preventiva, ¿qué inmunización debe prescribirse a todo paciente adulto con enfermedad inflamatoria intestinal que cumpla 50 años, independientemente de estar bajo terapia inmunosupresora?", 
+        options: ["Vacuna de virus vivos contra rotavirus", "Vacuna contra virus de varicela-zóster de cepa atenuada", "Vacunación neumocócica conjugada (PCV20 o PCV21)", "Vacuna antimeningocócica recombinante serie B"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Prevención ACG 2025, los pacientes con EII cursan con alteraciones del sistema inmune per se y agravadas por fármacos. Las infecciones invasivas por Streptococcus pneumoniae imponen un grave riesgo. El colegio americano insta a vacunar de manera estandarizada a la población con vacunas conjugadas modernas.<br><br>Perla ENARM: \"En todos los pacientes adultos con enfermedad inflamatoria intestinal de 50 años o más y sin vacunación neumocócica previa, sugerimos la inmunización con vacuna PCV20 o PCV21.\"<br><br>Análisis de Distractores: Las vacunas de virus vivos atenuados (ej. varicela-zóster atenuada, fiebre amarilla, rotavirus - opciones A y B) están formalmente contraindicadas en pacientes bajo inmunosupresión biológica o corticoterapia, debiendo usarse cepas recombinantes inactivadas. La antimeningocócica (opción C) está indicada en poblaciones cerradas (universidades/militares) o con asplenia, no siendo un mandato universal a los 50 años para todo EII.", 
+        source: "ACG - Atención preventiva en la enfermedad inflamatoria intestinal, 2025, Recommendations, Página 2." 
+    },
+    {
+        id: 17, 
+        question: "Tras someterse a una resección luminal significativa que incluyó íleon terminal por enfermedad de Crohn estenosante, un paciente desarrolla cólico litósico recurrente. ¿Qué restricción dietética combinada con suplementos de citrato de calcio está fisiopatológicamente recomendada para evitar esta complicación extracólica?", 
+        options: ["Dieta baja en fibra insoluble", "Dieta baja en fructooligosacáridos", "Dieta baja en purinas y ácido úrico", "Dieta baja en oxalato"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Consenso Dietético ECCO 2025, la malabsorción de sales biliares tras la pérdida del íleon terminal ocasiona que los ácidos grasos libres colónicos se unan al calcio intraluminal de la dieta. Esto deja al oxalato dietético libre, el cual se absorbe masivamente en el colon, se filtra en orina y precipita formando nefrolitiasis severa.<br><br>Perla ENARM: \"En personas con enfermedad de Crohn que han sufrido resección intestinal, sugerimos que la hidratación adecuada, calcio dietético incrementado, citrato de calcio suplementario y una dieta baja en oxalatos reducen la absorción y la formación de cálculos de oxalato.\"<br><br>Análisis de Distractores: La restricción de purinas (opción C) atiende la litiasis por ácido úrico, la cual no es el disturbio de malabsorción selectiva pos-ileal. La dieta baja en FODMAP (opción B) alivia meteorismo en sobreposición con intestino irritable. La fibra baja (opción A) se usa pre-operatoriamente en estenosis puras con síntomas oclusivos mecánicos, no previene litos renales.", 
+        source: "Consenso de la ECCO sobre el manejo dietético de la enfermedad inflamatoria intestinal, 2025, Intestinal resection and stones, Página 47." 
+    },
+    {
+        id: 18, 
+        question: "Antes de iniciar terapia inmunomoduladora de mantenimiento con Tiopurinas en un paciente que logró inducción con esteroides sistémicos, ¿qué estudio de cribado es obligatorio realizar para advertir toxicidad hematológica potencialmente letal?", 
+        options: ["Medición de genotipo HLA-DQA105", "Actividad de la tiopurina metiltransferasa (TPMT)", "Niveles séricos basales de calprotectina", "Cuantificación de anticuerpos antinucleares (ANA)"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025, la azatioprina y la 6-mercaptopurina son metabolizadas intensamente en el cuerpo humano por la enzima TPMT. Una deficiencia genética homocigótica de esta enzima deriva en la acumulación de metabolitos tóxicos citotóxicos masivos (6-TGN), causando supresión medular fulminante (leucopenia, trombocitopenia extrema) si se administran dosis estándar.<br><br>Perla ENARM: \"Los especialistas requieren de forma mandatoria la evaluación del genotipo o actividad fenotípica de la tiopurina metiltransferasa (TPMT) previa a la prescripción para ajustar posología y prevenir mielosupresión aguda.\"<br><br>Análisis de Distractores: El tamizaje de HLA-DQA105 (opción A) es reciente y predice riesgo de formar anticuerpos contra los bloqueadores del TNF, no para tiopurinas. La calprotectina basal (opción C) mide inflamación intestinal de control, no toxicidad metabólica hepática. Los ANA (opción D) detectan riesgo de lupus inducido por drogas, pero no es tamizaje rutinario pre-inmunomodulador.", 
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Pre-assessment screening, Página 165." 
+    },
+    {
+        id: 19, 
+        question: "Un paciente de 67 años con enfermedad de Crohn extensa dependiente de Infliximab, hipertensión mal controlada e historia de tabaquismo pesado acude para optimización de terapia biológica ante pobre respuesta secundaria. ¿Qué clase de moléculas novedosas conllevan advertencia estricta en este perfil por aumento de Riesgo Adverso Cardiovascular Mayor (MACE) y trombosis venosa?", 
+        options: ["Anti-Interleucinas 23 (Risankizumab)", "Anti-Integrina α4β7 (Vedolizumab)", "Inhibidores de la Janus cinasa (Tofacitinib / Upadacitinib)", "Moduladores de receptores de esfingosina-1-fosfato (Ozanimod)"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025, los inhibidores orales JAK (pequeñas moléculas) han demostrado eficacia notable y rápida en rescatar actividad severa; no obstante, el ensayo clínico ORAL Surveillance levantó advertencias \"Black Box\" regulatorias por un aumento sustancial de eventos isquémicos cardiovasculares (infarto agudo, EVC), tromboembolismo pulmonar y neoplasias malignas frente al uso de anti-TNF, específicamente limitando su perfil de seguridad en personas >65 años, fumadores crónicos y cardiópatas.<br><br>Perla ENARM: \"Los inhibidores de JAK deben usarse con extrema precaución en pacientes mayores de 65 años, personas con mayor riesgo cardiovascular o tromboembolismo venoso (VTE), y aquellos con historial extenso de tabaquismo activo.\"<br><br>Análisis de Distractores: El Vedolizumab (opción B) posee selectividad intestinal exclusiva y tiene un perfil de seguridad prístino para infecciones y eventos sistémicos, ideal para el paciente geriátrico. Risankizumab/Ustekinumab (opción A) bloquean IL-12/23 con un excelente historial en pacientes mayores sin elevar alertas trombogénicas marcadas. Ozanimod (opción D) requiere electrocardiograma basal por riesgo de bradicardia inicial, no MACE estructural.", 
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Table Implementation considerations, Página 168." 
+    },
+    {
+        id: 20, 
+        question: "Todo paciente con diagnóstico documentado de enfermedad de Crohn o Colitis Ulcerativa que sea admitido al área de urgencias médicas por una exacerbación severa no quirúrgica debe recibir rutinariamente la siguiente indicación, salvo que exista sangrado mayor activo:", 
+        options: ["Antibióticos de amplio espectro intravenosos empíricos", "Nutrición parenteral total desde el ingreso", "Profilaxis farmacológica universal para tromboembolismo venoso", "Transfusión preventiva de plaquetas aféresis"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía Quirúrgica ECCO 2024 / BSG 2025, el estado inflamatorio sistémico hipercoagulante intrínseco de la enfermedad inflamatoria intestinal eleva exorbitantemente el riesgo de presentar trombosis venosa profunda o tromboembolismo pulmonar fatal durante un internamiento y en posoperatorios, dictaminando que la profilaxis química con heparinas de bajo peso molecular es vital e ineludible.<br><br>Perla ENARM: \"Recomendamos profilaxis médica para tromboembolismo venoso en todos los pacientes ingresados al hospital con patología inflamatoria intestinal activa aguda o posquirúrgicos, extendiéndose posterior al alta.\"<br><br>Análisis de Distractores: Los antibióticos empíricos (opción A) en una exacerbación inflamatoria luminal de Crohn están contraindicados ya que promueven disbiosis o infección por Clostridioides, a menos que haya absceso intraabdominal, peritonitis o megacolon. La desnutrición se maneja primeramente con enteral (opción B). La transfusión plaquetaria preventiva (opción D) es irracional ya que estos pacientes comúnmente exhiben trombocitosis reactiva por la tormenta de citoquinas inflamatorias.", 
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Acute Severe Colitis/General care, Página 181." 
+    },
+    {
+        id: 21, 
+        question: "En un paciente con sospecha clínica de enfermedad de Crohn de intestino delgado, con hallazgos negativos en enteroresonancia magnética y síntomas intermitentes de oclusión intestinal, ¿cuál es el paso obligatorio previo a la realización de una endoscopia con cápsula diagnóstica?", 
+        options: ["Realizar enterotomografía computarizada urgente", "Administrar procinéticos intestinales de acción central", "Utilizar una cápsula de permeabilidad de prueba", "Proceder con ileoscopia retrógrada de doble balón"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ECCO-ESGAR-ESP-IBUS sobre diagnóstico y seguimiento, la endoscopia con cápsula está indicada cuando hay sospecha de afección de intestino delgado no demostrada por otros métodos. Sin embargo, su principal complicación es la retención en zonas de estenosis inadvertida. En pacientes con síntomas obstructivos, es mandatorio evaluar la permeabilidad intestinal (patency capsule) para evitar la retención que podría requerir rescate quirúrgico.<br><br>Perla ENARM: \"Los pacientes con síntomas obstructivos deben someterse a imágenes de intestino delgado o a una evaluación con cápsula de permeabilidad antes de la endoscopia con cápsula de video para disminuir el riesgo de retención.\"<br><br>Análisis de Distractores: La enterotomografía computarizada (opción A) expone innecesariamente a radiación cuando ya existe evaluación transversal previa. Los procinéticos (opción B) no resuelven estenosis mecánicas fibróticas. La enteroscopia de doble balón (opción D) es un procedimiento invasivo de segunda línea reservado para toma de biopsias o dilatación de lesiones previamente documentadas.", 
+        source: "Guía ECCO-ESGAR-ESP-IBUS sobre diagnóstico y seguimiento de pacientes con EII Parte 2, 2025, Endoscopy, Página 218." 
+    },
+    {
+        id: 22, 
+        question: "Una paciente de 28 años con enfermedad de Crohn en remisión inducida bajo mantenimiento con metotrexato acude a consulta de planificación familiar deseando concebir. ¿Cuál es la indicación médica absoluta respecto a su terapia de mantenimiento?", 
+        options: ["Reducir la dosis a 15 mg semanales hasta el parto", "Suspender el fármaco un mínimo de 1 a 3 meses previos", "Cambiar a administración subcutánea estrictamente", "Iniciar altas dosis de ácido fólico y continuar terapia"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Declaración de consenso mundial sobre el embarazo en EII 2025, el metotrexato es altamente teratogénico y está asociado con aborto espontáneo y defectos del tubo neural. Se recomienda su suspensión total y el inicio de suplementación con ácido fólico al menos de 1 a 3 meses antes de intentar la concepción para permitir la eliminación completa de los conjugados del fármaco.<br><br>Perla ENARM: \"En mujeres con enfermedad inflamatoria intestinal, recomendamos suspender la terapia de mantenimiento con metotrexato al menos 1 a 3 meses antes de la concepción debido a su perfil de teratogenicidad.\"<br><br>Análisis de Distractores: Reducir la dosis (opción A), cambiar la vía de administración (opción C) o compensar únicamente con ácido fólico (opción D) son medidas insuficientes e inaceptables, ya que cualquier nivel de exposición sistémica al metotrexato en el primer trimestre contraindica el embarazo por el riesgo inminente de malformaciones.", 
+        source: "Declaración de consenso mundial sobre el tratamiento del embarazo en la enfermedad inflamatoria intestinal, 2025, Medications during pregnancy, Página 15." 
+    },
+    {
+        id: 23, 
+        question: "Al iniciar la terapia biológica con un agente bloqueador del factor de necrosis tumoral (infliximab) en un paciente con enfermedad de Crohn moderada a severa, ¿cuál es la estrategia farmacológica recomendada para reducir significativamente el riesgo de formación de anticuerpos contra el fármaco y prolongar su eficacia?", 
+        options: ["Premedicación rutinaria con hidrocortisona intravenosa", "Administración simultánea con terapia de anti-integrinas", "Iniciar tratamiento concomitante con azatioprina", "Duplicar la dosis de inducción inicial a 10 mg/kg"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025 (y Guía ACG 2025), la inmunogenicidad (desarrollo de anticuerpos antidroga) es la causa principal de la pérdida secundaria de respuesta a los anticuerpos monoclonales quiméricos. La terapia combinada, es decir, la adición de un inmunomodulador como una tiopurina (azatioprina/6-mercaptopurina) o metotrexato, reduce de manera drástica este riesgo y mejora la farmacocinética al incrementar los niveles valle del biológico.<br><br>Perla ENARM: \"Se recomienda considerar el inicio de un inmunomodulador concomitante con o antes del inicio de la terapia anti-TNF para reducir el riesgo de desarrollo de anticuerpos contra el fármaco y aumentar las tasas de remisión.\"<br><br>Análisis de Distractores: La premedicación con hidrocortisona (opción A) previene reacciones infusionales agudas, pero no evita la inmunogenicidad a largo plazo. Duplicar la dosis (opción D) sin inmunomodulador no previene la formación de anticuerpos de forma sostenida. Combinar dos terapias biológicas simultáneas de forma primaria (opción B) aumenta el riesgo de infecciones oportunistas y no es el estándar de cuidado.", 
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Drug monitoring, Página 186." 
+    },
+    {
+        id: 24, 
+        question: "En un paciente con factores de riesgo elevados (tabaquismo, enfermedad penetrante) sometido recientemente a resección ileocecal por enfermedad de Crohn, ¿cuál es la clase terapéutica que ha demostrado mayor eficacia y es fuertemente recomendada para prevenir la recurrencia endoscópica posquirúrgica?", 
+        options: ["Corticosteroides orales de liberación prolongada", "Derivados del ácido 5-aminosalicílico", "Moduladores de receptores de esfingosina-1-fosfato", "Agentes bloqueadores del factor de necrosis tumoral"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía clínica del ACG 2025, en pacientes con alto riesgo de recurrencia (ej. tabaquismo activo, perforación, segunda cirugía), el inicio temprano de terapia biológica profiláctica es el estándar de cuidado. La evidencia más fuerte y consistente de modificación del curso natural de la enfermedad posoperatoria respalda a los inhibidores del TNF (infliximab/adalimumab).<br><br>Perla ENARM: \"En pacientes con enfermedad de Crohn de alto riesgo, recomendamos la terapia anti-TNF para prevenir la recurrencia endoscópica posoperatoria, ya que altera significativamente la probabilidad de reintervención.\"<br><br>Análisis de Distractores: Los corticosteroides y los derivados del 5-ASA (opciones A y B) son ineficaces para mantener la remisión posquirúrgica y se desaconsejan fuertemente. Las pequeñas moléculas (opción C) aún carecen de ensayos prospectivos robustos a largo plazo específicos para el contexto de prevención de recurrencia en el posoperatorio inmediato.", 
+        source: "Guía clínica del ACG, Manejo de la enfermedad de Crohn en adultos, 2025, Postoperative CD, Página 260." 
+    },
+    {
+        id: 25, 
+        question: "Una mujer embarazada en su tercer trimestre tratada con azatioprina desarrolla prurito palmar y plantar intenso con elevación de enzimas hepáticas y ácidos biliares. ¿Qué alteración metabólica inducida por la gestación explica la toxicidad de este fármaco?", 
+        options: ["Aceleración de la depuración renal del metabolito activo", "Reactivación de hepatitis viral latente por inmunosupresión", "Derivación metabólica hacia nucleótidos de metilmercaptopurina", "Toxicidad directa inducida por deficiencia de ácido fólico"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Declaración de consenso mundial sobre el embarazo en EII 2025, el metabolismo de las tiopurinas se altera significativamente durante las etapas tardías del embarazo. Ocurre una derivación (shunting) hacia metabolitos tóxicos, aumentando la relación de nucleótidos de metilmercaptopurina frente a los de tioguanina. Esta acumulación metabólica es responsable de desencadenar colestasis intrahepática del embarazo y hepatotoxicidad, ameritando vigilancia estricta de las enzimas hepáticas.<br><br>Perla ENARM: \"El metabolismo de las tiopurinas se altera en el embarazo, con un mayor riesgo de derivación (shunting) de los metabolitos hacia niveles altos de 6-metilmercaptopurina en el tercer trimestre, lo cual puede desencadenar colestasis intrahepática.\"<br><br>Análisis de Distractores: Las opciones A, B y D son incorrectas fisiopatológicamente. La colestasis intrahepática del embarazo en este contexto es un efecto directo de la toxicidad por metabolitos hepáticos de la tiopurina, y no se debe a infecciones reactivadas ni a depleción de folato.", 
+        source: "Declaración de consenso mundial sobre el tratamiento del embarazo en la enfermedad inflamatoria intestinal, 2025, Medications during pregnancy, Página 16." 
+    },
+    {
+        id: 26, 
+        question: "Un paciente con fenotipo estenosante y desnutrición severa está programado para una resección intestinal electiva. ¿Cuál es el soporte nutricional preoperatorio óptimo, recomendado para disminuir el riesgo de complicaciones sépticas e inflamatorias en el posoperatorio?", 
+        options: ["Nutrición enteral exclusiva por un mínimo de 2 a 4 semanas", "Nutrición parenteral total exclusiva por 7 días", "Ayuno intermitente con hidratación intravenosa", "Dieta mediterránea suplementada con zinc y selenio"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Consenso de la ECCO sobre el manejo dietético 2025, la nutrición enteral exclusiva preoperatoria administrada por al menos 2 a 4 semanas no solo corrige las deficiencias calórico-proteicas, sino que disminuye la carga inflamatoria mesentérica, reduciendo dramáticamente las tasas de abscesos, fugas anastomóticas y en ocasiones permitiendo evitar el estoma.<br><br>Perla ENARM: \"Para reducir el riesgo de complicaciones posoperatorias en personas con enfermedad de Crohn que esperan intervención quirúrgica, se recomienda la provisión de nutrición enteral exclusiva preoperatoria por un periodo mínimo de 2 a 4 semanas.\"<br><br>Análisis de Distractores: La nutrición parenteral total (opción B) se reserva estrictamente si la vía enteral está absolutamente contraindicada u obstruida por el riesgo elevado de infección por catéter y atrofia de vellosidades. El ayuno y dietas específicas no calóricas (opciones C y D) no aportan el soporte nutricional completo y carecen de las propiedades curativas intraluminales de las fórmulas elementales/poliméricas de la EEN.", 
+        source: "Consenso de la ECCO sobre el manejo dietético de la enfermedad inflamatoria intestinal, 2025, Preoperative nutritional care, Página 18." 
+    },
+    {
+        id: 27, 
+        question: "En un paciente adulto con diagnóstico reciente de ileítis terminal localizada menor a 40 cm y refractaria a tratamiento convencional, ¿cuál intervención proporciona tasas similares de calidad de vida y se considera una alternativa razonable frente al inicio de terapia con biológicos?", 
+        options: ["Terapia combinada con metotrexato a dosis plenas", "Procedimiento derivativo con ileostomía en asa", "Estenoplastia múltiple con configuración Kono-S", "Resección ileocecal por abordaje laparoscópico"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025 y a los resultados del estudio LIR!C, en la enfermedad de Crohn ileocecal aislada no complicada y de segmento corto (<40 cm), la cirugía resectiva laparoscópica temprana ha demostrado ser igual de efectiva en mantener la calidad de vida que el tratamiento médico escalonado con infliximab, minimizando el tiempo de exposición a drogas y hospitalizaciones.<br><br>Perla ENARM: \"Se debe considerar una resección laparoscópica en la enfermedad de Crohn ileocecal localizada en pacientes que no responden a la terapia médica inicial, ofreciendo niveles equivalentes de calidad de vida en comparación con el inicio de agentes biológicos.\"<br><br>Análisis de Distractores: La estenoplastia (opción B) se reserva para intestino delgado proximal o intestino muy corto, no es de elección primaria para el íleon terminal aislado donde la resección es curativa a corto plazo. La derivación (opción C) no reseca la enfermedad activa y requiere múltiples cirugías posteriores. El metotrexato (opción A) como monoterapia de inducción en este escenario tiene evidencia muy baja y no es curativo estructuralmente.", 
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Surgical considerations for luminal Crohn's disease, Página 171." 
+    },
+    {
+        id: 28, 
+        question: "Tras realizar la exploración bajo anestesia y colocación de setones no cortantes en un absceso perianal por enfermedad de Crohn, ¿cuál es la terapia biológica de primera línea sugerida para inducir el cierre y cicatrización de los trayectos fistulosos restantes?", 
+        options: ["Risankizumab infusión intravenosa", "Vedolizumab subcutáneo mensual", "Infliximab por vía intravenosa", "Certolizumab pegol subcutáneo"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía Quirúrgica ECCO 2024, una vez asegurado el drenaje de sepsis perineal mediante cirugía, se debe iniciar agresivamente el tratamiento médico inmunosupresor. El único agente biológico que ha demostrado prospectiva y consistentemente eficacia contundente para el cierre y mantenimiento de fístulas perianales complejas es el infliximab.<br><br>Perla ENARM: \"Sugerimos el uso de infliximab como terapia biológica de primera línea para la enfermedad de Crohn perianal, debiendo iniciarse tan pronto como se logre el drenaje quirúrgico adecuado de la sepsis pélvica.\"<br><br>Análisis de Distractores: Aunque medicamentos como el vedolizumab (opción B) o risankizumab (opción A) son altamente eficaces para la enfermedad luminal, su nivel de evidencia para cicatrizar directamente la enfermedad fistulizante profunda y destructiva es considerablemente menor. El certolizumab (opción D) tiene tasas de respuesta inferiores en cicatrización estructural comparado con infliximab.", 
+        source: "Directrices de la ECCO sobre la terapéutica en la enfermedad de Crohn. Tratamiento quirúrgico, 2024, Combined approaches, Página 1563." 
+    },
+    {
+        id: 29, 
+        question: "¿Qué agente biológico, clasificado como un anticuerpo monoclonal antagonista dirigido contra la interleucina-23 (anti-IL-23), ha sido aprobado recientemente y es fuertemente recomendado para la inducción y mantenimiento en enfermedad de Crohn refractaria?", 
+        options: ["Adalimumab", "Tofacitinib", "Risankizumab", "Infliximab"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía clínica del ACG 2025, el risankizumab es un anticuerpo monoclonal humano de última generación que se une de manera selectiva a la subunidad p19 de la interleucina-23. Ha demostrado una eficacia y seguridad superiores en ensayos recientes (ej. ADVANCE y MOTIVATE) induciendo y manteniendo la remisión clínica y endoscópica, incluso en pacientes que han fallado previamente a terapias anti-TNF.<br><br>Perla ENARM: \"Recomendamos el uso de risankizumab para la inducción y el mantenimiento de la remisión en pacientes con enfermedad de Crohn con actividad moderada a severa, incluyendo aquellos con exposición previa a agentes anti-TNF.\"<br><br>Análisis de Distractores: Adalimumab e Infliximab (opciones A y D) son antagonistas del TNF alfa, no de interleucinas. El tofacitinib (opción B) es un inhibidor de la vía intracelular de la Janus cinasa (JAK), no es un anticuerpo biológico directo contra la IL-23.", 
+        source: "Guía clínica del ACG, Manejo de la enfermedad de Crohn en adultos, 2025, Medical Management, Página 263." 
+    },
+    {
+        id: 30, 
+        question: "En un paciente masculino de 35 años con enfermedad de Crohn perianal severa, progresiva y destructiva, que ha agotado sin éxito múltiples terapias médicas y drenajes locales con afectación incesante de la calidad de vida, ¿qué intervención quirúrgica paliativa se sugiere para detener el daño estructural y retrasar la proctectomía definitiva?", 
+        options: ["Reparación primaria con colgajo de avance endorrectal", "Aplicación tópica de tapón de matriz de colágeno", "Formación de una ileostomía de derivación fecal", "Fistulectomía extensa con conservación esfinteriana"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía Quirúrgica ECCO 2024, en el fenotipo más severo y refractario de enfermedad de Crohn perianal donde hay destrucción muscular o sepsis incontrolable, los intentos de reparación anatómica (colgajos, tapones biológicos) fracasarán irremediablemente y empeorarán la incontinencia. La derivación del tránsito fecal mediante una ostomía proximal (ileostomía o colostomía) es mandatoria para desfuncionalizar la zona, mitigar la sepsis, preservar temporalmente la continencia y dar tiempo a que los tratamientos médicos actúen, evitando la proctectomía inminente.<br><br>Perla ENARM: \"Sugerimos la derivación fecal con una ileostomía o colostomía desfuncionalizante para el tratamiento de la enfermedad perianal compleja y refractaria en la enfermedad de Crohn, con el fin de retrasar o evitar la colectomía.\"<br><br>Análisis de Distractores: Las opciones reconstructivas locales como el colgajo de avance (opción A) o el tapón biológico (opción B) están absolutamente contraindicadas ante inflamación activa y falta de control de sepsis perianal grave. La fistulectomía extensa (opción D) en Crohn resulta en heridas de no cicatrización (ulceración crónica perineal) e incontinencia permanente.", 
+        source: "Directrices de la ECCO sobre la terapéutica en la enfermedad de Crohn. Tratamiento quirúrgico, 2024, Management of complex fistulae, Página 1565." 
+    },
+    {
+        id: 31, 
+        question: "En pacientes bajo tratamiento prolongado de mantenimiento con tiopurinas, las guías internacionales enfatizan que existe un incremento independiente y estadísticamente significativo del riesgo de desarrollar ¿qué tipo de neoplasia específica?", 
+        options: ["Adenocarcinoma de intestino delgado", "Cáncer de piel no melanoma", "Linfoma de células T hepatoesplénico primario", "Sarcoma de Kaposi metastásico"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Prevención ACG 2025, el uso de inmunosupresores convencionales, particularmente la exposición a tiopurinas (azatioprina/6-mercaptopurina) a lo largo del tiempo, se asocia directamente con un aumento significativo del riesgo de desarrollar cáncer de piel no melanoma (carcinoma de células basales y carcinoma espinocelular). El riesgo persiste durante la duración de la terapia y es dosis dependiente. Se recomienda evaluación dermatológica anual.<br><br>Perla ENARM: \"En pacientes con enfermedad inflamatoria intestinal que reciben terapias inmunomoduladoras, específicamente tiopurinas, sugerimos un examen de detección anual de cáncer de piel no melanoma mientras utilizan estos agentes, dado su riesgo significativamente elevado.\"<br><br>Análisis de Distractores: El linfoma de células T hepatoesplénico (opción C) ocurre con tiopurinas pero es extraordinariamente raro (casos aislados, sobre todo en hombres jóvenes bajo terapia combinada), no es la neoplasia sólida más prevalente asociada. El riesgo de adenocarcinoma (opción A) es inherente a la inflamación transmural crónica del Crohn, no inducido directamente por la tiopurina.", 
+        source: "ACG 2025 - Atención preventiva en la enfermedad inflamatoria intestinal, NMSC with thiopurine use, Página 3." 
+    },
+    {
+        id: 32, 
+        question: "Un paciente diagnosticado con colitis por enfermedad de Crohn acude al área de emergencias con fiebre, taquicardia y distensión abdominal masiva progresiva. Ante la fuerte sospecha clínica de megacolon tóxico, ¿cuál es el estudio de imagen preferido por las guías actuales para su evaluación inmediata y diagnóstico?", 
+        options: ["Colonoscopia total para toma urgente de biopsias", "Radiografía simple de abdomen en posición de pie", "Tomografía computarizada de abdomen", "Tránsito intestinal con administración de bario"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ECCO-ESGAR-ESP-IBUS 2025 sobre diagnóstico, históricamente la radiografía abdominal evaluaba la dilatación colónica (>6 cm); sin embargo, en el contexto actual de complicaciones agudas por EII y sospecha inminente de megacolon tóxico, la tomografía computarizada (TC) ha desplazado a la radiografía debido a su alta sensibilidad (>90%) para evaluar de inmediato complicaciones amenazantes de la vida, como perforación libre oculta, neumatosis intestinal o abscesos ocultos peridiverticulares.<br><br>Perla ENARM: \"En caso de sospecha clínica de megacolon tóxico, sugerimos la realización de tomografía computarizada (TC) en lugar de una radiografía abdominal simple para un diagnóstico y evaluación precisa de la pared intestinal.\"<br><br>Análisis de Distractores: La colonoscopia total (opción A) y el tránsito con bario (opción D) están absolutamente contraindicados en el megacolon tóxico por el altísimo riesgo de perforación iatrogénica por barotrauma o contraste. La radiografía simple (opción B) tiene escasa utilidad para definir el espesor de la pared isquémica y no descarta perforaciones localizadas tempranas.", 
+        source: "Guía ECCO-ESGAR-ESP-IBUS sobre diagnóstico y seguimiento de pacientes con EII Parte 1, 2025, Imaging in Specific Situations, Página 219." 
+    },
+    {
+        id: 33, 
+        question: "Una mujer embarazada de 24 semanas de gestación diagnosticada con enfermedad de Crohn se encuentra en tratamiento de mantenimiento con adalimumab y en remisión clínica sostenida. De acuerdo con el consenso mundial, ¿qué conducta terapéutica debe tomarse respecto a su medicación biológica?", 
+        options: ["Cambiar la pauta terapéutica por metotrexato a dosis bajas", "Sustituir el biológico por budesonida oral y mesalazina", "Suspender las dosis del fármaco a partir de la semana 26", "Continuar la terapia de mantenimiento sin interrupción"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Declaración de consenso mundial sobre el embarazo en EII 2025, el factor de riesgo más importante para un desenlace adverso del embarazo (parto pretérmino, bajo peso, muerte fetal) es la reactivación de la enfermedad inflamatoria intestinal. Por tanto, se recomienda contundentemente mantener la terapia con agentes Anti-TNF (adalimumab, infliximab) a lo largo del embarazo si la paciente está en remisión, evaluando riesgos de transferencia placentaria individualmente pero priorizando el control del brote materno.<br><br>Perla ENARM: \"En mujeres con enfermedad inflamatoria intestinal que están embarazadas o intentando concebir, recomendamos continuar la terapia de mantenimiento con agentes anti-factor de necrosis tumoral durante todo el embarazo para evitar reactivación clínica.\"<br><br>Análisis de Distractores: Cambiar a metotrexato (opción A) está absolutamente contraindicado por riesgo de aborto. Cambiar a corticosteroides (opción B) incrementa el riesgo materno-fetal respecto a mantener la remisión biológica. Suspender empíricamente (opción C) en fases tardías propicia rebrotes severos al término y puerperio.", 
+        source: "Declaración de consenso mundial sobre el tratamiento del embarazo en la enfermedad inflamatoria intestinal, 2025, Medications during pregnancy, Página 15." 
+    },
+    {
+        id: 34, 
+        question: "Para prevenir complicaciones de pérdida ósea en pacientes adultos con enfermedad inflamatoria intestinal, ¿en cuál de los siguientes escenarios está indicada la evaluación temprana mediante densitometría ósea (DXA scan)?", 
+        options: ["Cifras de calprotectina fecal elevadas crónicamente", "Presencia de patrón de distribución colónica izquierda", "Uso concurrente y repetido de corticosteroides sistémicos", "Desarrollo de fístulas perianales complejas y sepsis"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Prevención ACG 2025, los pacientes con EII presentan tasas más elevadas de osteopenia y osteoporosis secundaria a la propia cascada inflamatoria, mala absorción y de manera pronunciada por la yatrogenia derivada del uso histórico o recurrente de glucocorticoides (prednisona/metilprednisolona). Se sugiere realizar despistaje temprano de densidad ósea en ellos para prevenir fracturas por fragilidad.<br><br>Perla ENARM: \"En adultos con enfermedad inflamatoria intestinal y factores de riesgo convencionales para anomalías en la densidad mineral ósea (específicamente uso recurrente o prolongado de corticosteroides), sugerimos el tamizaje para osteoporosis mediante densitometría ósea al momento del diagnóstico o evaluación.\"<br><br>Análisis de Distractores: La calprotectina (opción A), localización distal (opción B) y fenotipo fistulizante (opción D) determinan el control del manejo intestinal primario y no dictan guías directas de tamizaje metabólico óseo.", 
+        source: "ACG 2025 - Atención preventiva en la enfermedad inflamatoria intestinal, 2025, Bone Health, Página 3." 
+    },
+    {
+        id: 35, 
+        question: "Un paciente con fenotipo de enfermedad de Crohn estenosante intraabdominal documentada acude refiriendo distensión, dolor abdominal ocasional tipo cólico y paso disminuido de flatos. En espera de intervención definitiva, ¿cuál medida dietética paliativa disminuye fisiopatológicamente el riesgo de oclusión total?", 
+        options: ["Prescribir una dieta rica en oligosacáridos no fermentables", "Implementar una dieta con aporte hídrico y baja en oxalato", "Instaurar una dieta estrictamente libre de gluten y lácteos", "Recomendar una dieta baja en fibra insoluble formadora de masa"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Consenso Dietético ECCO 2025, aunque no previenen ni reducen la carga fibrótica de la enfermedad estenosante, el fundamento mecanicista sugiere fuertemente prescribir una reducción dietética de fibras insolubles que aportan volumen/residuo (bulking fibre). Esto evita la impactación mecánica intraluminal contra el segmento estenosado que podría precipitar un íleo u obstrucción intestinal quirúrgica inminente.<br><br>Perla ENARM: \"El razonamiento basado en el mecanismo fisiopatológico sugiere que una dieta baja en fibra formadora de volumen (bulking fibre) en personas con enfermedad de Crohn estenosante y síntomas obstructivos podría reducir el riesgo de desarrollar una oclusión intestinal inminente.\"<br><br>Análisis de Distractores: Restringir gluten o lácteos (opción C) no es útil frente a una barrera mecánica. La dieta baja en oxalato (opción B) previene nefrolitiasis pero no impacta en la luz del tubo digestivo. Añadir FODMAP u oligosacáridos (opción A) incrementaría la fermentación gasífera exacerbando el dolor y la distensión proximal al área ocluida.", 
+        source: "Consenso de la ECCO sobre el manejo dietético de la enfermedad inflamatoria intestinal, 2025, Strictures, Página 18." 
+    },
+    {
+        id: 36, 
+        question: "En pacientes sometidos a una resección de íleon distal a causa de estenosis por enfermedad de Crohn, ¿qué fármaco antimicrobiano se encuentra sugerido para usarse como profilaxis posoperatoria en los primeros meses para prevenir la recurrencia anastomótica temprana?", 
+        options: ["Amoxicilina con ácido clavulánico", "Vancomicina administrada por vía oral", "Metronidazol a dosis de 1 a 2 g al día", "Ciprofloxacino en terapia de pulsos semanales"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía clínica del ACG 2025, dentro de las medidas adyuvantes en pacientes sin un perfil de riesgo inminente para biológicos o en transición posoperatoria, los antibióticos del grupo de los imidazoles (especialmente el metronidazol) han demostrado reducir moderadamente la carga bacteriana luminal y la disbiosis en el sitio de la anastomosis, disminuyendo las tasas de recurrencia clínica posoperatoria inicial, aunque limitados por el advenimiento de toxicidad periférica y neurológica a largo plazo.<br><br>Perla ENARM: \"Sugerimos el uso de antibióticos imidazólicos (metronidazol) a dosis entre 1 y 2 g diarios después de una resección de intestino delgado en pacientes con enfermedad de Crohn como medida adyuvante para prevenir la recurrencia.\"<br><br>Análisis de Distractores: Vancomicina oral (opción B) se usa estrictamente para Clostridioides difficile. Amoxicilina (opción A) y Ciprofloxacino en monoterapia pulsátil (opción D) no tienen aval prospectivo sólido en la modulación del microbioma para profilaxis estructurada de la enfermedad de Crohn.", 
+        source: "Guía clínica del ACG, Manejo de la enfermedad de Crohn en adultos, 2025, Postoperative Medical Therapy, Página 260." 
+    },
+    {
+        id: 37, 
+        question: "¿Cuál de las siguientes terapias intervencionistas está explícitamente NO recomendada en el tratamiento primario y definitivo de las fístulas perianales complejas en la enfermedad de Crohn debido a sus decepcionantes resultados curativos a largo plazo?", 
+        options: ["Instalación de tapones biológicos de fibrina (fibrin glue)", "Colocación inicial de setones no cortantes para sepsis", "Ligadura del trayecto interesfintérico de la fístula (LIFT)", "Cobertura con colgajo de avance endorrectal sin proctitis"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Guía Quirúrgica ECCO 2024, a pesar de tener un excelente perfil de seguridad, el uso de pegamentos de fibrina o tapones biológicos en cavidades fistulosas crónicas de Crohn tiene una tasa de cicatrización a largo plazo muy pobre con recurrencia temprana, ya que la fibrina se expulsa o se sobreinfecta si el tracto sigue inflamado y en continua supuración patológica, dictando las guías en contra de su uso primario.<br><br>Perla ENARM: \"Recomendamos en contra del uso de pegamento de fibrina (fibrin glue) o tapones de colágeno en el tratamiento de pacientes con fístulas perianales complejas de enfermedad de Crohn debido a las altas tasas de falla documentadas.\"<br><br>Análisis de Distractores: El setón no cortante (opción B) es indispensable para el manejo inicial séptico. Las técnicas de LIFT (opción C) y el colgajo de avance (opción D) son las terapias resectivas de preservación esfinteriana aceptadas para buscar curación en fístulas complejas en ausencia de proctitis y control inflamatorio óptimo.", 
+        source: "Directrices de la ECCO sobre la terapéutica en la enfermedad de Crohn. Tratamiento quirúrgico, 2024, Local treatment options, Página 1560." 
+    },
+    {
+        id: 38, 
+        question: "Para estandarizar la evaluación de la recurrencia posoperatoria temprana en enfermedad de Crohn tras una resección ileocólica, la endoscopia emplea un sistema de puntuación para diferenciar úlceras de la línea anastomótica de úlceras en íleon proximal. ¿A qué sistema corresponde esta estratificación validada?", 
+        options: ["Índice de Lémann modificado (LM)", "Score endoscópico simple de Crohn (SES-CD)", "Puntuación de Rutgeerts modificada (i2a/i2b)", "Índice de severidad de Harvey-Bradshaw"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía ECCO-ESGAR 2025 Parte 2, la evaluación posoperatoria a los 6-12 meses se basa en la puntuación de Rutgeerts. Sin embargo, su versión original fallaba en predecir progresiones si solo había pequeñas lesiones en el anillo isquémico-quirúrgico. La modificación reciente distingue entre el \"i2a\", donde las lesiones están confinadas estrictamente a la anastomosis ileocólica con bajo riesgo de progresión, y el \"i2b\", con múltiples úlceras en el neoterminal ileal, presagiando alto riesgo inminente de recidiva y ameritando biológicos.<br><br>Perla ENARM: \"La puntuación modificada de Rutgeerts incluye el estadio i2a para lesiones confinadas a la anastomosis ileocólica y el estadio i2b para lesiones más grandes en el íleon neoterminal, abordando la heterogeneidad de riesgo y progresión del score original.\"<br><br>Análisis de Distractores: El SES-CD (opción B) evalúa la gravedad segmentaria endoscópica global, pero no clasifica predictivamente la anastomosis. Lémann (opción A) evalúa daño estructural por radiología. Harvey-Bradshaw (opción D) es clínico poblacional.", 
+        source: "Guía ECCO-ESGAR-ESP-IBUS sobre diagnóstico y seguimiento de pacientes con EII Parte 2, 2025, Post-operative endoscopic recurrence, Página 218." 
+    },
+    {
+        id: 39, 
+        question: "Un paciente de 48 años con antecedente de enfermedad de Crohn extensa de colon presenta enzimas colestásicas elevadas persistentes y se confirma el diagnóstico de colangitis esclerosante primaria (CEP). Por la interrelación de estas patologías, ¿cuál medida de tamizaje clínico es prioritaria y rigurosa en su seguimiento?", 
+        options: ["Realizar escrutinio genético de mutaciones TPMT bianualmente", "Efectuar enteroresonancia magnética de protocolo cada 6 meses", "Programar colonoscopia anual para escrutinio de cáncer colorrectal", "Obtener concentraciones séricas de calprotectina mensual"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía Clínica del ACG 2025 / ECCO, la coexistencia de enfermedad inflamatoria intestinal con compromiso colónico y la colangitis esclerosante primaria impone el riesgo más alto e inminente en gastroenterología para el desarrollo de displasia y cáncer colorrectal avanzado en adultos jóvenes. Para estos pacientes específicos se elimina la ventana habitual de espera de 8 a 10 años, exigiendo colonoscopias profilácticas y toma sistemática de biopsias desde el diagnóstico de la CEP de forma anual.<br><br>Perla ENARM: \"Recomendamos vigilancia endoscópica de rutina anual para cáncer colorrectal en pacientes con colitis de Crohn y comorbilidad de colangitis esclerosante primaria, con el fin de asegurar una supervivencia libre de neoplasia.\"<br><br>Análisis de Distractores: Las RM cada 6 meses (opción B) y calprotectina mensual (opción D) sobreutilizan recursos para actividad luminal y no enfocan en displasia, que es silente. Las pruebas genéticas TPMT (opción A) se realizan pre-medicación, no de seguimiento en CEP.", 
+        source: "Guía ECCO-ESGAR-ESP-IBUS sobre diagnóstico y seguimiento de pacientes con EII Parte 1, 2025, Cancer risk in IBD, Página 223 / ACG Clinical Guidelines." 
+    },
+    {
+        id: 40, 
+        question: "Aunque clásicamente documentado para colitis ulcerativa, en escenarios de enfermedad de Crohn colónica severa fulminante y refractaria (con toxicidad sistémica y sin respuesta tras de 3 a 5 días de corticosteroides intravenosos), ¿cuál de las siguientes opciones constituye la terapia de rescate de segunda línea sugerida por las guías en pacientes hospitalizados antes de proceder a la cirugía de urgencia?", 
+        options: ["Azatioprina 2.5 mg/kg vía oral cada 24 horas", "Terapia anti-TNF con infliximab intravenoso", "Mesalazina tópica y oral a dosis superiores a 4 gramos", "Incremento a metilprednisolona 1 gramo en bolo"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025 y Guía ACG 2025, para pacientes internados con colitis fulminante refractaria que no muestran respuesta a dosis máximas de esteroides intravenosos (evaluados al día 3 o 5), se debe activar una terapia de rescate biológica urgente o inmunomodulación agresiva. El infliximab intravenoso (o alternativamente ciclosporina IV en CU) ofrece un control inmunológico potente para intentar evitar una colectomía de emergencia u otras catástrofes estructurales inminentes.<br><br>Perla ENARM: \"Sugerimos que los pacientes que no respondan a al menos 3 a 5 días de corticosteroides intravenosos deben ser tratados con terapia médica de rescate intensiva en forma de infliximab o ciclosporina intravenosa.\"<br><br>Análisis de Distractores: La azatioprina (opción A) requiere semanas para iniciar su latencia. Los derivados de 5-ASA (opción C) son fútiles para controlar cuadros fulminantes que amenazan la vida y la toxicidad gástrica previene la dosis. Seguir escalando esteroides y metilprednisolona en megadosis (opción D) no revertirá el daño molecular subyacente y aumentará riesgos isquémicos u oportunistas.", 
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Acute Severe Colitis, Página 183." 
+    },
+    {
+        id: 41,
+        question: "¿Cuál es la definición estandarizada del concepto de \"remisión profunda\" (deep remission) en los pacientes con enfermedad de Crohn?",
+        options: ["Remisión clínica, curación de la mucosa y suspensión de corticosteroides por ≥8 semanas", "Ausencia de síntomas, calprotectina fecal <40 µg/g y PCR en rangos de normalidad", "Resolución de fístulas perianales y cierre del trayecto evaluado por resonancia magnética", "Curación transmural documentada por ultrasonido y remisión clínica sostenida por 12 meses"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025, el concepto emergente de remisión profunda va más allá de la simple ausencia de síntomas e incorpora objetivos biológicos estructurados. Su impacto clínico, derivado de estudios como el CALM, radica en que los pacientes que cumplen estos tres criterios reducen drásticamente el riesgo de progresión y daño estructural.<br><br>Perla ENARM: \"El concepto emergente de remisión profunda se refiere a la presencia tanto de remisión clínica como de curación de la mucosa, acompañadas de la ausencia de terapia con corticosteroides por un lapso ≥8 semanas.\"<br><br>Análisis de Distractores: La opción B representa una remisión clínica y bioquímica, pero omite la confirmación endoscópica (curación mucosa). La opción C describe remisión de la enfermedad fistulizante, no el constructo global de \"remisión profunda\". La opción D menciona la curación transmural, la cual es un objetivo emergente y deseable, pero actualmente la definición estandarizada de remisión profunda se basa en la evaluación mucosa (endoscópica) y clínica libre de esteroides.",
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Endoscopy, Página 161."
+    },
+    {
+        id: 42,
+        question: "En mujeres con enfermedad de Crohn en edad reproductiva, ¿cuál de las siguientes clases de fármacos se encuentra absolutamente contraindicada durante la concepción, el embarazo y la lactancia debido a malformaciones graves documentadas?",
+        options: ["Antagonistas del factor de necrosis tumoral alfa", "Moduladores de los receptores de esfingosina-1-fosfato", "Bloqueadores de la subunidad p19 de la interleucina-23", "Anticuerpos monoclonales anti-integrina alfa4-beta7"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al documento Consenso mundial embarazo en EII 2025, las pequeñas moléculas como los moduladores del receptor de esfingosina-1-fosfato (Ozanimod, Etrasimod) y los inhibidores de la Janus Cinasa (Tofacitinib, Upadacitinib) tienen advertencias estrictas de teratogenicidad basadas en estudios animales y están formalmente contraindicadas. Se deben suspender semanas o meses previos a la concepción.<br><br>Perla ENARM: \"Tofacitinib, filgotinib, upadacitinib, ozanimod y etrasimod están contraindicados durante la concepción, el embarazo y la lactancia debido a malformaciones graves encontradas en estudios con animales.\"<br><br>Análisis de Distractores: Las opciones A, C y D corresponden a terapias biológicas (Infliximab, Risankizumab, Vedolizumab) que, a pesar de atravesar la placenta en distintos grados, han demostrado ser seguras y se recomienda fuertemente continuarlas durante todo el embarazo para evitar la reactivación letal de la enfermedad.",
+        source: "Declaración de consenso mundial sobre el tratamiento del embarazo en la enfermedad inflamatoria intestinal, 2025, Table 2 Consensus Statements, Página 6."
+    },
+    {
+        id: 43,
+        question: "En un paciente con enfermedad de Crohn de afectación colónica, ¿en qué momento exacto de la historia natural de la enfermedad se debe iniciar el programa de vigilancia endoscópica sistemática para la detección temprana de cáncer colorrectal?",
+        options: ["A los 3 años del diagnóstico histopatológico", "A los 8 años tras el inicio de los primeros síntomas", "Inmediatamente tras requerir el primer rescate con esteroides", "Al cumplir 50 años de edad, independientemente del diagnóstico"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al documento Guía ECCO-ESGAR 2025 Parte 1, la inflamación crónica del colon predispone al desarrollo de displasia y adenocarcinoma independientemente de si es colitis ulcerativa o enfermedad de Crohn colónica. El riesgo se incrementa exponencialmente tras la primera década de actividad inflamatoria, por lo que el escrutinio debe arrancar puntualmente a los 8 años del inicio clínico.<br><br>Perla ENARM: \"La colonoscopia de tamizaje debe realizarse en todos los pacientes con enfermedad inflamatoria intestinal a los 8 años posteriores a la aparición de los primeros síntomas para evaluar la extensión de la enfermedad y excluir displasia.\"<br><br>Análisis de Distractores: La opción A es demasiado temprana para el fenotipo clásico (salvo que exista colangitis esclerosante primaria concomitante, donde se inicia al diagnóstico de la patología hepática). La opción C no tiene correlación oncológica directa. La opción D (50 años) es la indicación de tamizaje para población general sin factores de riesgo, no para pacientes con EII que frecuentemente debutan jóvenes y requieren tamizaje acelerado.",
+        source: "Guía ECCO-ESGAR-ESP-IBUS sobre diagnóstico y seguimiento de pacientes con EII Parte 1, 2025, Colorectal cancer screening, Página 223."
+    },
+    {
+        id: 44,
+        question: "¿Cuál es el índice validado que tiene como objetivo específico medir integralmente el daño estructural intestinal acumulado a lo largo del tiempo (estenosis, fístulas, resecciones quirúrgicas) en pacientes con enfermedad de Crohn?",
+        options: ["Índice de Lémann (Lémann Index)", "Score endoscópico simple para Crohn (SES-CD)", "Índice de severidad de Harvey-Bradshaw (HBI)", "Puntuación de Rutgeerts modificada (i2b)"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al documento Enfermedad de Crohn - The Lancet 2024, la naturaleza progresiva de la enfermedad de Crohn se caracteriza por un avance inexorable desde la inflamación hacia complicaciones fibróticas o penetrantes. El Lémann Index fue desarrollado y validado prospectivamente para evaluar de manera integral el daño estructural del tracto digestivo, combinando hallazgos clínicos, endoscópicos, quirúrgicos y de imagen transversal.<br><br>Perla ENARM: \"La validación y actualización del índice de Lémann permite medir el daño estructural intestinal acumulativo en la enfermedad de Crohn, evaluando la progresión de la enfermedad más allá de la simple actividad inflamatoria.\"<br><br>Análisis de Distractores: El SES-CD (opción B) mide únicamente inflamación mucosa macroscópica en un momento dado, no daño transmural ni resecciones. El HBI (opción C) es un índice puramente clínico-sintomático. La Puntuación de Rutgeerts (opción D) es de uso exclusivo para evaluar la anastomosis neoterminal postquirúrgica.",
+        source: "Enfermedad de Crohn - The lancet, 2024, Diagnosis and disease monitoring, Página 1184."
+    },
+    {
+        id: 45,
+        question: "En pacientes con exacerbación grave de la enfermedad inflamatoria intestinal que requieren hospitalización y resultan clínicamente refractarios al tratamiento inicial con corticosteroides intravenosos, ¿qué etiología infecciosa debe descartarse obligatoriamente mediante tejido colónico?",
+        options: ["Infección invasiva por Salmonella enterica", "Sobrecrecimiento por Clostridioides difficile", "Infección por citomegalovirus (CMV)", "Reactivación de virus de Epstein-Barr (EBV)"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025, un brote severo que no responde al rescate con esteroides en 3 a 5 días o que empeora paradójicamente debe despertar la alta sospecha de una colitis por inclusión viral. La reactivación de CMV en el tejido inflamado agrava la necrosis mucosa, y su diagnóstico amerita biopsias profundas con inmunohistoquímica o PCR para cambiar el manejo a Ganciclovir.<br><br>Perla ENARM: \"Los pacientes con un brote de EII que requieren hospitalización o con EII refractaria de moderada a severa que no responden a las terapias inmunosupresoras deben enviar tejido colónico para inmunohistoquímica o PCR en búsqueda de citomegalovirus.\"<br><br>Análisis de Distractores: Clostridioides difficile (opción B) y toxinas bacterianas (opción A) deben descartarse al momento del ingreso en urgencias a través de pruebas en heces (coprocultivo, toxinas, PCR fecal), no requiriendo esperar a la refractariedad esteroidea ni tejido biopsiado. El EBV (opción D) preocupa a largo plazo por riesgo de linfoma al iniciar tiopurinas, no como causa de megacolon o colitis fulminante refractaria aguda.",
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Specific infections, Página 186."
+    },
+    {
+        id: 46,
+        question: "En pacientes con enfermedad de Crohn que presentan estenosis ileocolónicas anastomóticas sintomáticas, ¿cuál es el límite de longitud máximo de la lesión para considerar la dilatación endoscópica con balón como un tratamiento inicial apropiado frente a la cirugía?",
+        options: ["<10 cm", "<2 cm", "<4 cm", "<7 cm"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025, la dilatación endoscópica es un tratamiento puente efectivo, menos invasivo que la cirugía, que previene la pérdida de segmento intestinal. Las lesiones ideales para este abordaje son estenosis únicas, no anguladas, libres de fístulas concomitantes y cuya extensión longitudinal no exceda los 4 a 5 cm.<br><br>Perla ENARM: \"Sugerimos que la dilatación endoscópica con balón es un tratamiento apropiado para estenosis anastomóticas ileocolónicas de menos de 4 cm de longitud, sin angulación aguda y sin enfermedad penetrante.\"<br><br>Análisis de Distractores: Una longitud <10 cm (opción A) es el límite para realizar una técnica quirúrgica preservadora como la estenoplastia (Heineke-Mikulicz), pero excede los márgenes seguros para dilatación endoscópica debido al alto riesgo de perforación y fracaso de permeabilidad a corto plazo.",
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Interventional endoscopy, Página 172."
+    },
+    {
+        id: 47,
+        question: "Durante la planificación familiar en mujeres con enfermedad de Crohn, ¿cuál es el periodo mínimo de tiempo recomendado de remisión sostenida libre de esteroides que debe documentarse antes de intentar la concepción para optimizar los resultados materno-fetales?",
+        options: ["1 a 2 meses", "3 a 6 meses", "9 a 12 meses", "18 a 24 meses"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al documento Consenso mundial embarazo en EII 2025, la actividad de la enfermedad al momento de la concepción es el principal factor predictivo de recaída y complicaciones durante el embarazo. La remisión clínica y bioquímica consolidada durante al menos 3 a 6 meses reduce la incidencia de parto pretérmino y restricción del crecimiento intrauterino a tasas comparables con la población general.<br><br>Perla ENARM: \"Las mujeres con enfermedad inflamatoria intestinal deben estar en remisión documentada (clínica y bioquímica) y médicamente optimizadas idealmente de 3 a 6 meses previos a la concepción electiva.\"<br><br>Análisis de Distractores: De 1 a 2 meses (opción A) es el tiempo de suspensión sugerido para fármacos teratogénicos (metotrexato) previo al embarazo, pero no garantiza la estabilidad del control inmunológico de la patología. Tiempos prolongados de 9 a 24 meses (opciones C y D) retrasan innecesariamente el potencial reproductivo de las pacientes en una etapa donde la fertilidad ya declina con la edad.",
+        source: "Declaración de consenso mundial sobre el tratamiento del embarazo en la enfermedad inflamatoria intestinal, 2025, Preconception Disease Optimization, Página 4."
+    },
+    {
+        id: 48,
+        question: "Durante la evaluación mediante ultrasonido intestinal en pacientes adultos con enfermedad de Crohn, ¿a partir de qué grosor de la pared intestinal (BWT) se considera un hallazgo anormal primario indicativo de inflamación transmural activa?",
+        options: [">1.5 mm", ">3.0 mm", ">5.0 mm", ">7.5 mm"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al documento Guía ECCO-ESGAR Parte 2 2025, el ultrasonido intestinal (IUS) permite evaluar rápidamente en el consultorio el daño estructural. En todas las métricas de puntuación validadas (como IBUS-SAS, SUS-CD), un grosor de la pared intestinal (Bowel Wall Thickness, BWT) estrictamente mayor a 3.0 mm se clasifica como el umbral universal de inflamación activa en íleon terminal y colon.<br><br>Perla ENARM: \"En el ultrasonido intestinal, un grosor de la pared intestinal (BWT) ≤3 mm se clasifica como normal, mientras que un grosor >3 mm indica actividad inflamatoria de la enfermedad.\"<br><br>Análisis de Distractores: Medidas mayores a 5.0 mm o 7.5 mm (opciones C y D) ya representan estenosis francas, edema severo o inflamación hiperaguda penetrante, pero el punto de corte diagnóstico base se establece en 3.0 mm. La opción A (1.5 mm) corresponde al grosor fisiológico normal de un intestino sano en distensión.",
+        source: "Guía ECCO-ESGAR-ESP-IBUS sobre diagnóstico y seguimiento de pacientes con EII Parte 2, 2025, Intestinal ultrasound indices, Página 224."
+    },
+    {
+        id: 49,
+        question: "¿Cuál de las siguientes vacunas se recomienda administrar de forma estandarizada a todos los pacientes adultos con enfermedad inflamatoria intestinal al cumplir 50 años, o desde los 18 años si van a iniciar terapia con inhibidores JAK?",
+        options: ["Vacuna recombinante inactiva contra herpes zóster", "Vacuna atenuada de virus vivos contra varicela", "Vacuna conjugada heptavalente contra neumococo", "Vacuna de subunidades contra rotavirus"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025 (y Prevención ACG 2025), el uso de inmunomoduladores y biológicos altera el control de infecciones latentes. Particularmente, los inhibidores de la Janus cinasa (JAK) confieren un riesgo altísimo e independiente de reactivación del virus varicela-zóster. La vacuna recombinante Shingrix (no viva) ha demostrado gran seguridad y es mandataria.<br><br>Perla ENARM: \"La vacunación con zóster recombinante (Shingrix) debe considerarse en todos los pacientes ≥50 años que reciben inmunomoduladores o terapias avanzadas, y en pacientes ≥18 años que inician inhibidores de JAK.\"<br><br>Análisis de Distractores: La vacuna viva contra varicela (opción B) y el rotavirus vivo (opción D) están absolutamente contraindicados en pacientes bajo inmunosupresión activa debido al riesgo de infección diseminada vacunal. El neumococo (opción C) se indica en esquema universal (idealmente PCV20), pero la recomendación imperativa asociada específicamente a edad (50 años) y uso de anti-JAKs es exclusiva para la prevención de herpes zóster.",
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Specific Vaccinations, Página 186."
+    },
+    {
+        id: 50,
+        question: "Para prevenir la preeclampsia pretérmino, una complicación endotelial con mayor incidencia en mujeres embarazadas con enfermedad inflamatoria intestinal, ¿qué intervención profiláctica recomiendan las directrices mundiales implementar entre la semana 12 y 16 de gestación?",
+        options: ["Suplementación de ácido fólico a 5 mg/día", "Inicio de ácido acetilsalicílico a dosis bajas", "Administración de heparina de bajo peso molecular", "Terapia de mantenimiento con sulfasalazina oral"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al documento Consenso mundial embarazo en EII 2025, los estados inflamatorios crónicos como la EII condicionan un ambiente pro-trombótico y disfunción placentaria, elevando los desenlaces adversos como la preeclampsia. Las guías recomiendan estratificar a estas pacientes como de alto riesgo obstétrico y el uso de ácido acetilsalicílico a bajas dosis tempranamente (antes de la semana 16) reduce significativamente la morbilidad mediada por la placenta.<br><br>Perla ENARM: \"Sugerimos que las mujeres embarazadas con enfermedad inflamatoria intestinal tomen dosis bajas de aspirina entre las 12 y 16 semanas de gestación para prevenir la preeclampsia pretérmino.\"<br><br>Análisis de Distractores: El ácido fólico a 5 mg/día (opción A) previene defectos del tubo neural, en particular si usan sulfasalazina, pero no previene preeclampsia. La heparina (opción C) está indicada para tromboprofilaxis venosa si están hospitalizadas o durante brote activo profundo. La sulfasalazina (opción D) es una terapia luminal.",
+        source: "Declaración de consenso mundial sobre el tratamiento del embarazo en la enfermedad inflamatoria intestinal, 2025, Management of Pregnancy, Página 8."
+    },
+    {
+        id: 51,
+        question: "En un paciente posoperado de proctocolectomía total con anastomosis ileoanal con reservorio por colitis (IBD inespecífica / CU) que desarrolla síntomas de inflamación pélvica crónica, ¿qué abordaje inicial está indicado por las guías para diagnosticar y diferenciar \"pouchitis\" aguda de una patología de Crohn de novo del reservorio?",
+        options: ["Tomografía por emisión de positrones, coprocultivo y tránsito intestinal", "Resonancia magnética pélvica, ensayo de Clostridioides y endoscopia del reservorio", "Calprotectina sérica, ultrasonido endorrectal y manometría anorrectal", "Radiografía simple abdominal, perfil de hierro y biopsia de mucosa anal"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025, ante disfunción del \"pouch\" (bolsitis/pouchitis), se debe descartar obligatoriamente causas infecciosas intraluminales (como toxinas de C. difficile), descartar o confirmar complicaciones extraluminales ocultas (como sepsis pélvica, abscesos o fístulas, altamente sugestivas de fenotipo Crohn mediante RM pélvica) y confirmar inflamación mucosa con la pouchoscopia y biopsias de la zona de transición.<br><br>Perla ENARM: \"Los pacientes con síntomas continuos posteriores a la cirugía de reservorio deben someterse a una resonancia magnética pélvica, cultivo de heces y ensayo de Clostridioides difficile, además de una pouchoscopia para evaluar el reservorio y el íleon pre-reservorio.\"<br><br>Análisis de Distractores: Evaluar el reservorio a ciegas o sin descartar complicaciones pélvicas profundas (opciones A, C y D) puede conducir a falla terapéutica e ignorar una fístula o absceso presacro agudo que requeriría drenaje quirúrgico antes del inicio de biológicos. La manometría (opción C) evalúa función esfinteriana, no causa inflamatoria.",
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Pouchitis, Página 154."
+    },
+    {
+        id: 52,
+        question: "En pacientes con enfermedad de Crohn sometidos a resección quirúrgica que presentan un patrón de bajo riesgo para recurrencia (ej. edad >50 años al diagnóstico, no fumador, primera cirugía en segmento corto), ¿cuál es la conducta terapéutica recomendada de primera línea en el posoperatorio inmediato?",
+        options: ["Iniciar profilaxis profiláctica con biológicos top-down", "Prescribir mesalazina oral o derivados 5-ASA a dosis altas", "Administrar tiopurinas como monoterapia continua", "Mantener observación clínica y realizar ileocolonoscopia a los 6 meses"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al documento Guía ACG 2025 (y Consenso Quirúrgico ECCO 2024), exponer a un paciente de \"bajo riesgo\" a toxicidad de inmunosupresores o biológicos sin evidencia de lesión mucosa es injustificado, dado que un porcentaje permanecerá en remisión clínica asintomática por años. Se prescribe la observación sin medicamentos de mantenimiento y endoscopia a los 6 meses (Score de Rutgeerts) para redirigir la terapia en caso de que existan lesiones tempranas.<br><br>Perla ENARM: \"En pacientes con enfermedad de Crohn con bajo riesgo de recurrencia de la enfermedad posoperatoria, sugerimos la observación continua sin terapia médica de mantenimiento inmediato, priorizando la evaluación endoscópica a los 6 a 12 meses.\"<br><br>Análisis de Distractores: Tanto los biológicos preventivos como las tiopurinas (opciones A y C) están estrictamente indicados en el posoperatorio de pacientes con perfil de ALTO riesgo (fumadores empedernidos, cirugías repetidas, variante penetrante). Los aminosalicilatos (opción B) son fútiles para mantener la remisión o prevenir recurrencia.",
+        source: "Guía clínica del ACG, Manejo de la enfermedad de Crohn en adultos, 2025, Postoperative CD, Página 260."
+    },
+    {
+        id: 53,
+        question: "Para los pacientes adultos con enfermedad inflamatoria intestinal que inician terapia de mantenimiento inmunomoduladora con tiopurinas, ¿cuál es el esquema de monitorización paraclínica obligatoria para vigilar complicaciones mielosupresoras durante los primeros 3 meses?",
+        options: ["Biometría hemática y pruebas de función hepática a las semanas 2, 4, 8 y 12", "Calprotectina fecal y proteína C reactiva mensuales por 3 meses", "Niveles séricos de 6-tioguanina y creatinina cada 14 días por 6 meses", "Genotipificación seriada de TPMT cada 4 semanas"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025 (Drug monitoring), la azatioprina y la mercaptopurina conllevan riesgos graves tempranos de leucopenia progresiva, pancitopenia severa y hepatotoxicidad idiosincrásica o dosis-dependiente, de tal forma que las normativas estandarizadas de seguridad clínica exigen revisar la biometría hemática (FBC) y panel hepático (LFT) de manera estrecha a las 2, 4, 8 y 12 semanas tras el inicio, y posteriormente cada 3 meses.<br><br>Perla ENARM: \"Sugerimos monitorizar la biometría hemática completa, electrolitos y pruebas de función hepática a las semanas 2, 4, 8 y 12 posteriores al inicio de tiopurinas y luego, al menos, trimestralmente para detectar mielotoxicidad y hepatotoxicidad.\"<br><br>Análisis de Distractores: La calprotectina (opción B) monitoriza la actividad de la enfermedad mucosa, no la toxicidad hematológica hepática de un fármaco. Los niveles de 6-tioguanina (opción C) son valiosos anualmente o si hay recaída/intolerancia para optimizar dosis. El genotipo de TPMT (opción D) es genético de base, no muta con el tiempo, se realiza una única vez antes del inicio de la droga.",
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Table 10 Drug monitoring, Página 185."
+    },
+    {
+        id: 54,
+        question: "¿Cuál es el umbral estandarizado en el Índice de Actividad de la Enfermedad de Crohn (CDAI) que define clínicamente la ausencia de inflamación sistémica o \"remisión clínica\" en la atención de adultos?",
+        options: ["<50", "<100", "<150", "<220"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al documento Guía BSG 2025, el índice validado histórico y más utilizado en ensayos para medir el control del padecimiento es el CDAI. La barrera clínica universal que indica inactividad clínica asintomática satisfactoria frente a exacerbación se ubica por debajo de 150 puntos. Valores por encima de 450 representan enfermedad severamente activa.<br><br>Perla ENARM: \"La remisión clínica en la enfermedad de Crohn se define por una puntuación en el Índice de Actividad de la Enfermedad de Crohn (CDAI) menor a 150 puntos.\"<br><br>Análisis de Distractores: Puntuaciones entre 150-219 corresponden a enfermedad levemente activa, y 220-450 a moderadamente activa. Un punto de corte de <50 (opción A) o <100 (opción B) no es una división clínica formal del algoritmo de CDAI.",
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Table 5 Crohn’s disease activity index, Página 160."
+    },
+    {
+        id: 55,
+        question: "En pacientes con enfermedad de Crohn, la terapia biológica altamente eficaz con el anticuerpo Ustekinumab ejerce su efecto antiinflamatorio y de curación mucosa profunda interrumpiendo directamente ¿cuál de las siguientes vías de señalización inmunológica?",
+        options: ["Integrina alfa-4 beta-7 (α4β7) en el endotelio", "Subunidad p40 compartida de las interleucinas 12 y 23", "Vía intracelular de la Janus cinasa 1 y 3 (JAK)", "Factor de necrosis tumoral alfa en macrófagos y linfocitos"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al documento Guía Quirúrgica ECCO 2024 / ECCO Médico 2024 (conocimiento cruzado de ensayos de mantenimiento), Ustekinumab es un anticuerpo monoclonal IgG1 kappa totalmente humano que bloquea la subunidad proteica p40, la cual es común a las citoquinas proinflamatorias interleucina-12 e interleucina-23. Esta neutralización suprime la diferenciación de células TH1 y TH17 en la lámina propia mucosa, deteniendo el brote inflamatorio.<br><br>Perla ENARM: \"Ustekinumab, un anticuerpo dirigido a la subunidad p40 de la IL-12/23, es recomendado como terapia de inducción y mantenimiento en enfermedad de Crohn moderada a severa.\"<br><br>Análisis de Distractores: El bloqueo de la integrina alfa-4 beta-7 (opción A) corresponde a Vedolizumab. Los inhibidores intracelulares (opción C) corresponden a las pequeñas moléculas Tofacitinib o Upadacitinib. La opción D denota el mecanismo de Infliximab y Adalimumab. Risankizumab y Mirikizumab, por otro lado, bloquean específicamente la subunidad p19 de la IL-23, siendo fármacos distintos a Ustekinumab.",
+        source: "Directrices de la ECCO sobre la terapéutica en la enfermedad de Crohn. Tratamiento médico, 2024, IL-12/IL-23 inhibitors, Página 1538."
+    },
+    {
+        id: 56,
+        question: "Con base en los consensos dietéticos de vanguardia para la inflamación intestinal, ¿cuál patrón nutricional de moda metabólica carece de evidencia suficiente para ser recomendado como monoterapia de inducción de remisión en la enfermedad de Crohn activa?",
+        options: ["Nutrición enteral exclusiva", "Fórmulas oligopeptídicas (semi-elementales)", "Dieta mediterránea", "Fórmulas enterales poliméricas orales"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al documento Consenso Dietético ECCO 2025, si bien la dieta mediterránea tiene beneficios probados en síndrome metabólico, longevidad y quizás ayude en la Colitis Ulcerativa como adyuvante para mantenimiento, las guías internacionales son claras en que \"no existe evidencia suficiente\" para recomendarla para intentar apagar un brote activo de enfermedad de Crohn como terapia de inducción clínica y endoscópica.<br><br>Perla ENARM: \"No hay evidencia suficiente para recomendar la dieta mediterránea como terapia de inducción para la remisión de la enfermedad de Crohn o la colitis ulcerativa.\"<br><br>Análisis de Distractores: La Nutrición Enteral Exclusiva (opción A) mediante el uso temporal pero total de fórmulas poliméricas (opción D) o semi-elementales (opción B) tiene un nivel de evidencia sólido como la primera línea no farmacológica altamente eficaz para la inducción de la remisión clínica y curación mucosa, predominantemente en enfermedad pediátrica y en adultos para optimización preoperatoria.",
+        source: "Consenso de la ECCO sobre el manejo dietético de la enfermedad inflamatoria intestinal, 2025, The Mediterranean diet, Página 5."
+    },
+    {
+        id: 57,
+        question: "De acuerdo con los registros de neonatología mundial sobre lactancia y biológicos en enfermedad inflamatoria intestinal, ¿cuál es el impacto primario documentado de la lactancia materna exclusiva sobre la historia natural de la enfermedad materna en el periodo posparto?",
+        options: ["Aumenta dramáticamente el riesgo de brote inflamatorio agudo a las 4 semanas", "Modifica la farmacocinética acelerando la eliminación de los anticuerpos biológicos", "No está asociada de ninguna manera con un aumento del riesgo de exacerbación de la enfermedad", "Exige incrementar preventivamente las dosis de corticosteroides sistémicos posparto"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al documento Consenso mundial embarazo en EII 2025, la lactancia natural proporciona ventajas inmensas sobre el desarrollo del microbioma neonatal e inmunidad temprana (limitando la incidencia de EII futura en la descendencia) y es categóricamente segura para la madre sin que la deprivación nutricional o los picos de prolactina / oxitocina provoquen recaídas inmunológicas sistémicas.<br><br>Perla ENARM: \"Recomendamos la lactancia materna ya que NO está asociada con un mayor riesgo de exacerbación clínica de la enfermedad inflamatoria intestinal en la madre.\"<br><br>Análisis de Distractores: Las opciones A y D disuaden de un acto natural e implican toxicidad y agravamiento clínico iatrogénico materno por un fenómeno fisiológico, algo que estudios como PIANO han refutado por completo. Múltiples biológicos pasan en minúsculas concentraciones por la leche, pero su metabolismo gástrico en el recién nacido inactiva los compuestos impidiendo inmunosupresión sistémica perjudicial (opción B es irrelevante fisiológicamente para la madre).",
+        source: "Declaración de consenso mundial sobre el tratamiento del embarazo en la enfermedad inflamatoria intestinal, 2025, Use of IBD Medications During Lactation, Página 11."
+    },
+    {
+        id: 58,
+        question: "En el abordaje integral sobre planeación familiar, ¿cuál es la razón fisiopatológica principal por la cual las tasas globales de fertilidad pueden verse significativamente mermadas en mujeres portadoras de enfermedad de Crohn comparadas con la población sin la enfermedad?",
+        options: ["Destrucción folicular progresiva y directa causada a largo plazo por el uso de biológicos (anti-TNF)", "Inflamación activa pélvica extensa en ovarios, reducción de la reserva ovárica y cirugías previas en pelvis", "Alteración endometrial inducida únicamente por niveles valle tóxicos del ácido 5-aminosalicílico", "Falta de respuesta neuroendocrina hipotalámica-pituitaria por fatiga adrenal asintomática crónica"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al documento Consenso mundial embarazo en EII 2025, las mujeres con enfermedad de Crohn que logran remisión temprana con terapia médica tienen índices de fertilidad equiparables al público general. Sin embargo, en cohortes de pacientes, la fertilidad global decae debido a factores anatómicos (adherencias y cicatrices posquirúrgicas que distorsionan las trompas, o inflamación activa transmural no controlada) y biológicos (reducción de la hormona antimülleriana e impacto en la reserva ovárica).<br><br>Perla ENARM: \"Se debe orientar a que las mujeres con enfermedad inflamatoria intestinal pueden experimentar una reducción en la fertilidad comparada con mujeres sin la enfermedad, atribuido a cirugías previas e inflamación activa que impacta en la reserva ovárica.\"<br><br>Análisis de Distractores: La medicación biológica anti-TNF y aminosalicilatos (opciones A y C) no causan atrofia folicular permanente ni alteran adversamente el estroma uterino, siendo seguras y deseables. Los tratamientos reproductivos como fertilización in vitro (recuperación de ovocitos) no están contraindicados y no aumentan el riesgo de exacerbación.",
+        source: "Declaración de consenso mundial sobre el tratamiento del embarazo en la enfermedad inflamatoria intestinal, 2025, Fertility Consensus Statements, Página 3."
+    },
+    {
+        id: 59,
+        question: "En un paciente adulto con enfermedad inflamatoria intestinal en aparente remisión asintomática que recibe tratamiento estable, se utiliza la monitorización con calprotectina fecal para vigilar inflamación subclínica. ¿A partir de qué límite general estratificado (marcador de alerta) se correlaciona con una baja probabilidad de mantener remisión endoscópica, exigiendo reevaluación estructural?",
+        options: [">40 µg/g", ">100 µg/g", ">150 µg/g", ">250 µg/g"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al documento Biomarcadores fecales 2024 / Guía BSG 2025, en la vigilancia del mantenimiento, los valores oscilantes <100 µg/g confirman curación de la mucosa y remisión; valores entre 100-200 obligan a repetir pruebas seriadas; pero la elevación confirmada sostenida superior a 250 µg/g es el umbral que descarta un evento reactivo leve y exige proceder imperativamente a evaluación endoscópica con escalamiento inminente de la terapia para detener la recaída clínica posterior.<br><br>Perla ENARM: \"En el mantenimiento asintomático, una calprotectina fecal con elevación sostenida por encima de 250 µg/g tiene baja probabilidad de presentar remisión endoscópica subyacente y debe desencadenar optimización de tratamiento o ileocolonoscopia.\"<br><br>Análisis de Distractores: Un valor <40 µg/g (opción A) excluye patología inflamatoria versus funcional de inicio. Un valor alrededor de 100-150 µg/g (opciones B y C) es un área gris \"intermedia\", que en muchos ensayos predice bien respuesta clínica temprana, pero el salto formal inminente a daño estructural reactivado profundo que exige intervenir con imagen y cambio de biológicos está estratificado firmemente >250.",
+        source: "Directrices de la Sociedad Británica de Gastroenterología sobre la enfermedad inflamatoria intestinal en adultos, 2025, Interpretation of calprotectin, Página 159."
+    },
+    {
+        id: 60,
+        question: "Las complicaciones carenciales son críticas tras la afección ileal extensa en la enfermedad de Crohn. ¿Cuál de las siguientes modalidades de terapia de reposición de hierro es la de elección recomendada explícitamente en el paciente que cursa con inflamación intestinal activa y anemia ferropénica concomitante?",
+        options: ["Fumarato ferroso de liberación prolongada vía oral", "Reposición mediante hierro intravenoso sistémico", "Eritropoyetina humana recombinante subcutánea profiláctica", "Sulfato ferroso disuelto en tomas tres veces al día"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al documento Guía ECCO-ESGAR (ECCO EIM / Nutritional 2025), la biodisponibilidad y absorción del hierro oral se encuentran completamente abolidas debido a la elevación de la hepcidina durante la inflamación activa en enfermedad de Crohn. Asimismo, el hierro oral en el lumen agrava el estrés oxidativo intestinal y altera la microbiota, induciendo disbiosis y exacerbación de la diarrea, haciendo de la formulación intravenosa el estándar seguro y de acción rápida.<br><br>Perla ENARM: \"Para los pacientes con enfermedad inflamatoria intestinal crónicamente activa que presentan anemia ferropénica documentada o intolerancia a la vía oral, la administración de hierro intravenoso es el tratamiento de primera línea.\"<br><br>Análisis de Distractores: Las sales orales de sulfato y fumarato ferroso (opciones A y D) están proscritas en la fase inflamatoria aguda grave y en intolerancia severa. La eritropoyetina (opción C) no repone las reservas tisulares vacías y solo se requiere secundariamente ante falla de resíntesis con hierro adecuado en presencia de anemia de enfermedad crónica subyacente profunda con bajo recuento de reticulocitos.",
+        source: "Consenso de la ECCO sobre el manejo dietético de la enfermedad inflamatoria intestinal, 2025, Micronutrient Deficiencies, Página 53."
+    },
+
+
+
+        ];
+
+        // ==========================================
+        // ==========================================
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('CrohnLastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('CrohnProgress');
+                localStorage.removeItem('CrohnLastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-pink-500 shadow-md z-10 border-pink-500 dark:border-pink-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-pink-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-rose-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! UMAE 25 - 2026" : "R4 - UMAE 25 - 2026";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "UMAE 25 - R4";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus las respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="BS06308GYOE.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-pink-100 dark:border-pink-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-pink-50 has-[:checked]:border-pink-400 dark:has-[:checked]:bg-pink-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-pink-600 focus:ring-pink-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-600 dark:hover:bg-pink-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('CrohnProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('CrohnLastQId', currentQuestionId);
+                else localStorage.removeItem('CrohnLastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('CrohnProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB26PT8kuB-0fxyUYgGk51yC1rAsW0dYj0",
+        authDomain: "enarm-lite.firebaseapp.com",
+        projectId: "enarm-lite",
+        storageBucket: "enarm-lite.firebasestorage.app",
+        messagingSenderId: "767032952477",
+        appId: "1:767032952477:web:84347320ed3d376f7e7674",
+        measurementId: "G-PVR3RBVNSV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    //document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "usuarios_autorizados", user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            
+            if(userDocSnap.exists()) {
+                document.body.style.opacity = '1';
+            } else {
+                //window.location.href = "index.html"; 
+            }
+        } else {
+            //window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>
