@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">UMAE</span>
+                    <span class="logo-Lite text-sm">25<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // =========================================================
+        const questionsData = [
+    {
+        id: 1, 
+        question: "¿Cuántas veces es mayor el riesgo de desarrollar cáncer ampular y duodenal en un paciente con Poliposis Adenomatosa Familiar en comparación con la población general?", 
+        options: ["50", "100", "330", "500"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Tumores ampulares Guía Francesa, los pacientes con Poliposis Adenomatosa Familiar (PAF) tienen un riesgo hasta 330 veces mayor de desarrollar cáncer duodenal o ampular, siendo esta la segunda causa principal de muerte en esta población específica. La vigilancia estrecha y la toma de decisiones oportunas previene la progresión a carcinoma invasivo.<br><br>Perla ENARM: \"El riesgo de desarrollar cáncer duodenal/ampular en pacientes con PAF es 330 veces mayor que en la población general\".<br><br>Análisis de Distractores: Las opciones 50, 100 y 500 no corresponden al riesgo relativo documentado en la evidencia epidemiológica para esta patología genética. El riesgo de malignización es extraordinariamente alto, justificando protocolos de tamizaje invasivo en vez de observación clínica convencional.", 
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Epidemiología, Página 466." 
+    },
+    {
+        id: 2, 
+        question: "¿Cuál es el estudio de imagen considerado como el estándar de oro para determinar la profundidad de invasión local y extensión ductal de un adenoma ampular?", 
+        options: ["Tomografía por emisión de positrones", "Ultrasonido endoscópico", "Tomografía axial computarizada", "Resonancia magnética"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Cáncer Ampular, el ultrasonido endoscópico (USE) es el estudio de elección, altamente sensible y obligatorio para determinar la profundidad de la lesión en la pared, la invasión a la capa muscular propia del duodeno y medir objetivamente la extensión intraductal.<br><br>Perla ENARM: \"La ecografía endoscópica (USE) es obligatoria como complemento para descartar invasión pancreática\".<br><br>Análisis de Distractores: La tomografía computarizada y la resonancia magnética carecen de la resolución espacial milimétrica necesaria para distinguir con precisión las capas de la pared duodenal. La tomografía por emisión de positrones carece de utilidad para la estadificación local locorregional de lesiones premalignas en estadio incipiente.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Workup, Página 125." 
+    },
+    {
+        id: 3, 
+        question: "¿Cuál es el porcentaje reportado de falsos negativos para el diagnóstico de adenocarcinoma oculto en las biopsias endoscópicas preoperatorias de adenomas ampulares?", 
+        options: ["<5%", "10 a 15%", "20 a 40%", "60 a 80%"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Cáncer Ampular, las biopsias endoscópicas preoperatorias tienen una alta tasa de muestreo inadecuado, resultando en un 20% a 40% de falsos negativos para focos de adenocarcinoma invasivo oculto dentro del tejido adenomatoso predominante.<br><br>Perla ENARM: \"Existe un alto riesgo de falsos negativos (hasta 20-40%) para focos de adenocarcinoma oculto dentro de un adenoma\".<br><br>Análisis de Distractores: Cifras menores (A, B) subestiman severamente el riesgo clínico que fundamenta la necesidad estricta de resección total (papilectomía) para asegurar el diagnóstico histopatológico definitivo. La opción D sobreestima matemáticamente el fallo diagnóstico de la pinza de biopsia.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Discussion, Página 181." 
+    },
+    {
+        id: 4, 
+        question: "En la clasificación de Spigelman utilizada en la Poliposis Adenomatosa Familiar, ¿cuál de los siguientes hallazgos histológicos otorga el puntaje máximo de severidad (3 puntos)?", 
+        options: ["Adenoma tubular", "Displasia de bajo grado", "Adenoma tubulovelloso", "Adenoma velloso"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Springer Cirugía de Páncreas, la clasificación de Spigelman asigna 3 puntos a los adenomas con arquitectura vellosa pura, al ser el subtipo histológico con el mayor potencial de transformación maligna locorregional documentado en la secuencia adenoma-carcinoma.<br><br>Perla ENARM: \"En la clasificación de Spigelman, la histología se puntúa como Tubular (1 punto), Tubulovelloso (2 puntos), Velloso (3 puntos)\".<br><br>Análisis de Distractores: El adenoma tubular otorga 1 punto y el fenotipo tubulovelloso aporta 2 puntos. La displasia de bajo grado corresponde a la antigua nomenclatura de \"displasia leve\" y únicamente suma 1 punto a la estratificación de riesgo general.", 
+        source: "Benign, Premalignant, and Malignant Duodenal Neoplasms, Springer, 2025, Spigelman Classification, Página 43." 
+    },
+    {
+        id: 5, 
+        question: "¿Qué opción farmacológica ha demostrado reducir de manera significativa la carga de poliposis duodenal tras 6 meses de uso continuo en pacientes con Poliposis Adenomatosa Familiar poscolectomía?", 
+        options: ["Naproxeno", "Celecoxib", "Ácido acetilsalicílico", "Ibuprofeno"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Springer Cirugía de Páncreas, el uso profiláctico del inhibidor selectivo de la COX-2 (Celecoxib) ha comprobado, en ensayos controlados, reducir la proliferación neoplásica y la densidad de pólipos duodenales tras un tratamiento sostenido.<br><br>Perla ENARM: \"El tratamiento con celecoxib ha demostrado una reducción significativa de la poliposis duodenal en pacientes con PAF poscolectomía\".<br><br>Análisis de Distractores: El naproxeno, el ibuprofeno y el ácido acetilsalicílico son antiinflamatorios no esteroideos convencionales que, si bien intervienen en la cascada inflamatoria, no cuentan con el mismo respaldo de evidencia clínica nivel 1 en la regresión medible de pólipos en este síndrome hereditario.", 
+        source: "Benign, Premalignant, and Malignant Duodenal Neoplasms, Springer, 2025, Duodenal Adenomas, Página 41." 
+    },
+    {
+        id: 6, 
+        question: "Según el consenso del Royal College of Pathologists en Europa, ¿cuál es la distancia libre de tumor circunferencial requerida en la pieza patológica para definir una resección R0 tras una pancreatoduodenectomía?", 
+        options: [">0 mm", ">1 mm", ">2 mm", ">5 mm"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Springer Patología, en los protocolos europeos estrictos la resección oncológica R0 se define de manera formal únicamente cuando la distancia celular medida desde el margen invasivo del tumor hasta el borde quirúrgico entintado supera 1 mm de espesor de tejido sano.<br><br>Perla ENARM: \"Para los patólogos europeos y australianos, el margen R1 se define como la presencia de tumor a ≤1 mm del margen quirúrgico\".<br><br>Análisis de Distractores: La regla de >0 mm (A) es el criterio utilizado actualmente en las guías estadounidenses (AJCC/CAP), requiriendo solo ausencia de células en la tinta. Distancias mayores de 2 mm (C) o 5 mm (D) superan las exigencias de cualquier protocolo de estatificación universalmente validado.", 
+        source: "Pathology Reporting of Resected Pancreatic/Periampullary Cancer Specimen, Springer, 2025, Margin Involvement, Página 379." 
+    },
+    {
+        id: 7, 
+        question: "¿Cuál de los siguientes es un criterio anatómico formal para indicar una ampulectomía quirúrgica transduodenal de primera intención en lugar de una papilectomía endoscópica?", 
+        options: ["Tamaño tumoral de 1.5 cm", "Displasia de bajo grado", "Divertículo duodenal yuxtapapilar", "Arquitectura histológica tubular"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Tumores ampulares Guía Francesa, la presencia de alteraciones estructurales complejas como un divertículo duodenal yuxtapapilar es una contraindicación técnica para el manejo endoscópico debido a la alta tasa de perforación y maniobrabilidad reducida, requiriendo abordaje operatorio.<br><br>Perla ENARM: \"Se indicará ampulectomía quirúrgica en presencia de divertículos duodenales que impidan la endoscopia\".<br><br>Análisis de Distractores: Un diámetro de 1.5 cm, la displasia de bajo grado y el patrón tubular confieren un escenario de bajo riesgo, estableciéndolos como los candidatos ideales perfectos para una resección endoscópica curativa curativa ambulatoria.", 
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Surgical Papillectomy, Página 485." 
+    },
+    {
+        id: 8, 
+        question: "En el análisis de inmunohistoquímica del adenocarcinoma ampular, ¿qué proteína de transcripción es típicamente positiva y ayuda a diferenciar y confirmar el subtipo biológico intestinal?", 
+        options: ["CDX2", "MUC1", "CK7", "HER2"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Cáncer Ampular, el fenotipo intestinal manifiesta un perfil biológico idéntico al cáncer de origen colónico, expresando de forma constante inmunorreactividad de membrana para CDX2 y MUC2, permitiendo clasificarlo histopatológicamente.<br><br>Perla ENARM: \"El tipo intestinal típicamente es positivo para CK20, CDX2 o MUC2 y negativo para MUC1\".<br><br>Análisis de Distractores: Los antígenos MUC1 (B) y CK7 (C) orientan inequívocamente al subtipo de diferenciación pancreatobiliar. La amplificación del gen HER2 (D) representa una mutación celular secundaria que no determina el origen epitelial primordial del cáncer.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Pathologic Analysis, Página 139." 
+    },
+    {
+        id: 9, 
+        question: "¿Qué condición eritrocitaria biológica explica la incapacidad celular para elevar los niveles séricos del antígeno carbohidrato 19-9, ocasionando falsos negativos durante el escrutinio de cáncer ampular?", 
+        options: ["Ausencia de antígeno Rh", "Fenotipo Duffy nulo", "Fenotipo Lewis negativo", "Ausencia de antígeno Kell"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Cáncer Ampular, el 5 a 10% de la población general carece del alelo enzimático para sintetizar el antígeno de Lewis (a- b-), resultando biológicamente en la deficiencia absoluta de secreción de CA 19-9, incluso frente a una enorme carga tumoral o carcinomatosis.<br><br>Perla ENARM: \"Aproximadamente el 5% al 10% de la población carece del antígeno de Lewis, incapaces de sintetizar CA 19-9\".<br><br>Análisis de Distractores: Los marcadores de membrana eritrocitaria Rh, Duffy y Kell representan sistemas de aloanticuerpos genéticos irrelevantes que no fungen como precursores bioquímicos para la glucosilación de la cadena del CA 19-9.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Tumor Markers, Discussion, Página 24." 
+    },
+    {
+        id: 10, 
+        question: "En la linfadenectomía reglada de la pancreatoduodenectomía, ¿qué número de estación ganglionar corresponde topográficamente a los ganglios retropancreáticos (pancreaticoduodenales posteriores superiores)?", 
+        options: ["Estación 8a", "Estación 12p", "Estación 13a", "Estación 17b"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Springer Cirugía de Páncreas, según la nomenclatura internacional estandarizada de la Sociedad Japonesa de Páncreas, los relevos linfáticos posteriores y superiores de la arcada pancreaticoduodenal se catalogan como el grupo 13a.<br><br>Perla ENARM: \"La estación 13a agrupa a los ganglios linfáticos pancreaticoduodenales posteriores superiores\".<br><br>Análisis de Distractores: La estación 8a se sitúa a nivel de la arteria hepática común; la estación 12p drena la vena porta posterior al ligamento hepatoduodenal; la estación 17b corresponde anatómicamente a los ganglios pancreaticoduodenales en el surco anterior inferior.", 
+        source: "Japanese Classification and Staging for Pancreatic and Periampullary Cancers, Springer, 2025, Regional Lymph Nodes, Página 302." 
+    },
+    {
+        id: 11, 
+        question: "De acuerdo con los resultados finales del ensayo prospectivo ESPAC-3, ¿qué agente quimioterapéutico intravenoso se estableció como régimen estándar adyuvante para el adenocarcinoma ampular tras resección completa?", 
+        options: ["Nab-paclitaxel", "Gemcitabina", "Irinotecán", "Oxaliplatino"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Cáncer Ampular, el brazo de intervención del estudio pivotal ESPAC-3 comprobó un beneficio contundente en la supervivencia libre de enfermedad posoperatoria al emplear ciclos sistémicos de gemcitabina o bien fluorouracilo.<br><br>Perla ENARM: \"El ensayo ESPAC-3 demostró mejoras significativas en la supervivencia con el uso de gemcitabina posoperatoria o fluorouracilo\".<br><br>Análisis de Distractores: Fármacos como el nab-paclitaxel, el irinotecán y el oxaliplatino forman el núcleo del tratamiento paliativo intensivo multimodal en estadios irresecables, pero la indicación clase I probada en adyuvancia ampular pura se ciñe a la gemcitabina o 5-FU.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Principles of Systemic Therapy, Página 153." 
+    },
+    {
+        id: 12, 
+        question: "Durante la fase de resección en una pancreatoduodenectomía cefálica, ¿en qué vaso aferente es mandatorio aplicar oclusión vascular transitoria (clampeo) para evaluar la pulsatilidad arterial intrahepática antes de su sección definitiva?", 
+        options: ["Arteria hepática común", "Arteria mesentérica superior", "Arteria gastroduodenal", "Arteria gástrica izquierda"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Springer Cirugía de Páncreas, la prueba vascular sobre la arteria gastroduodenal descarta una estenosis oclusiva silente del tronco celíaco. La ausencia de pulso tras el clampeo previene la isquemia hepática aguda mortal intraoperatoria.<br><br>Perla ENARM: \"Antes de ligar la arteria gastroduodenal, es un imperativo quirúrgico comprobar las pulsaciones en la Arteria Hepática Propia\".<br><br>Análisis de Distractores: Aplicar pinzamiento sobre la arteria mesentérica superior sin puenteo causaría isquemia intestinal catastrófica; interrumpir la hepática común sin colaterales suprimiría el flujo de manera irreversible. La gástrica izquierda aporta a la curvatura menor sin relación fisiológica a este test hepático.", 
+        source: "Pancreaticoduodenectomy (Whipple Procedure), Springer, 2025, Surgical Technique, Página 77." 
+    },
+    {
+        id: 13, 
+        question: "Según la estratificación oncológica de la octava edición del sistema TNM (AJCC), ¿cuál hallazgo microscópico de progresión vertical patológica clasifica a un tumor ampular como estadio pT1b?", 
+        options: ["Lesión invasiva a la muscularis propia", "Enfermedad limitada al esfínter de Oddi", "Infiltración directa a tejido peripancreático", "Invasión a la submucosa duodenal"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Cáncer Ampular, la frontera que distingue el estrato pT1b estriba en el franqueamiento tumoral más allá de las fibras musculares intrínsecas papilares penetrando hacia el estroma submucoso de la pared entérica adyacente.<br><br>Perla ENARM: \"T1b: el tumor invade más allá del esfínter de Oddi o hacia la submucosa duodenal\".<br><br>Análisis de Distractores: La lesión exclusivamente intrapapilar o del esfínter (B) engloba el estrato pT1a. El involucro microscópico de la capa muscularis propia (A) eleva la categoría a pT2, mientras que la extensión a la glándula pancreática (C) sitúa a la neoplasia dentro de la variante pT3.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Staging, Página 162." 
+    },
+    {
+        id: 14, 
+        question: "Durante el descenso de la flexura cólica y acceso a la vena mesentérica superior, ¿cuál confluencia anatómica venosa formada por la vena gastroepiploica derecha y la cólica superior se debe controlar cuidadosamente?", 
+        options: ["Tronco mesentérico inferior", "Vena porta principal", "Tronco celíaco", "Tronco gastrocólico de Henle"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Springer Cirugía de Páncreas, la sistematización quirúrgica del abordaje inferior exige la liberación, ligadura y división a ras de la pared de la vena mesentérica superior del tronco de Henle para evitar el desgarro por tracción mecánica.<br><br>Perla ENARM: \"Es mandatorio identificar y ligar el tronco gastrocólico de Henle formado por la vena gastroepiploica derecha y la vena cólica superior\".<br><br>Análisis de Distractores: La vena porta no se conforma por estos afluentes gastroentéricos. El tronco celíaco es una división eminentemente arterial sistémica. La vena mesentérica inferior posee un trayecto independiente ascendente hacia el tronco esplénico retroperitoneal.", 
+        source: "Vascular Supply: Important Arterial and Venous Variants, Springer, 2025, Venous Drainage, Página 283." 
+    },
+    {
+        id: 15, 
+        question: "Con un escrutinio diagnóstico locorregional temprano secundario al deterioro obstructivo biliar, ¿cuál es la tasa representativa de supervivencia global a 5 años del adenocarcinoma ampular con resección R0?", 
+        options: ["<5%", "15 a 20%", "35 a 50%", "70 a 85%"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Cáncer Ampular, la biología menos destructiva localmente y el drenaje biliar frustrado logran intervenciones quirúrgicas antes del compromiso neurovascular masivo, sosteniendo sobrevidas proyectadas francamente superiores al originado en el tejido ductal pancreático.<br><br>Perla ENARM: \"La supervivencia global a 5 años para el cáncer ampular se encuentra entre el 35% y el 50%\".<br><br>Análisis de Distractores: Una sobrevida general a largo plazo del 15% (B) o inferior (A) dibuja la agresividad del adenocarcinoma ductal pancreático invasivo o colangiocarcinoma avanzado. Proyecciones superiores al 70% (D) solo son estadísticamente plausibles en grupos de pólipos pT1a sin nódulos linfáticos.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Overview, Página 169." 
+    },
+    {
+        id: 16, 
+        question: "Durante el escrutinio patológico integral del espécimen de una pancreatoduodenectomía, ¿cuál margen tridimensional es el de mayor incidencia de diseminación celular residual (R1) y predice fuertemente la recaída oncológica?", 
+        options: ["Margen del cuello pancreático", "Margen del conducto biliar común", "Margen retroperitoneal", "Margen digestivo distal"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al documento Springer Cirugía de Páncreas, la disección a nivel de la adventicia lateral derecha de la arteria mesentérica superior (margen de la AMS o retroperitoneal) carece de fascia protectora natural, convirtiéndolo en el lecho anatómico de positividad neoplásica microscópica oculta por excelencia.<br><br>Perla ENARM: \"La disección del proceso uncinado define el margen retroperitoneal, el sitio más frecuente de positividad (R1) en este procedimiento\".<br><br>Análisis de Distractores: El nivel de corte a través del parénquima del cuello (A), el epitelio ductal hepático (B) y la división enteral yeyunal (D) se logran limpiar histológicamente in situ al tener límites visuales más marcados y permitir el corte tangencial de revisión transoperatoria.", 
+        source: "Pathology Reporting of Resected Pancreatic/Periampullary Cancer Specimen, Springer, 2025, Margins, Página 360." 
+    },
+    {
+        id: 17, 
+        question: "Al trazar la evolución clínica temporal de los tumores ampulares malignos, ¿cuál es el signo exploratorio de presentación inaugural que habitualmente se instaura previo al síndrome consuntivo por cáncer?", 
+        options: ["Diarrea osmótica", "Dolor retroperitoneal en cinturón", "Trombosis venosa profunda", "Ictericia obstructiva silente"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento The Lancet Cáncer de Páncreas, debido a que la masa se asienta directamente sobre la convergencia y luz papilar terminal, la colestasis hiperbilirrubinémica indolora debuta muy anticipadamente comparado con las neoplasias de ubicación proximal en la glándula sólida.<br><br>Perla ENARM: \"La ictericia obstructiva indolora se presenta de manera clásica mucho antes que el dolor abdominal o pérdida de peso\".<br><br>Análisis de Distractores: El síndrome álgico agudo de espalda (B), la malabsorción con esteatorrea o diarrea osmótica (A) y los eventos tromboembólicos paraneoplásicos (C) son consecuencias tardías del avance loco-regional y desnutrición severa subyacente.", 
+        source: "Pancreatic cancer SEMINAR The Lancet, 2026, Clinical Presentation, Página 270." 
+    },
+    {
+        id: 18, 
+        question: "Frente al hallazgo endoscópico de un adenoma ampular tubular esporádico de 8 mm con confirmación de displasia de bajo grado en un paciente con Poliposis Adenomatosa Familiar, ¿cuál es la prescripción terapéutica óptima de primera línea?", 
+        options: ["Papilectomía endoscópica radical", "Resección transduodenal abierta", "Procedimiento de Whipple", "Vigilancia endoscópica estricta"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Tumores ampulares Guía Francesa, los pacientes genéticamente comprometidos por PAF con lesiones no fungosas submétricas (menores de 10 mm) ameritan aplazar toda instrumentación resectiva optando por la visualización diferida planificada.<br><br>Perla ENARM: \"En pacientes con PAF, un adenoma ampular < 1 cm con displasia de bajo grado es tributario de vigilancia estricta sin resección inmediata\".<br><br>Análisis de Distractores: Indicar la mucosectomía endoscópica (A) incrementaría innecesariamente la morbilidad por sangrado y estenosis en una lesión subclínica. Plantear la remoción del páncreas cefálico (C) o el abordaje de ampulectomía parietal (B) excede groseramente las metas protectoras.", 
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Surveillance, Página 469." 
+    },
+    {
+        id: 19, 
+        question: "Si un paciente sin síndromes hereditarios concluye exitosamente una papilectomía endoscópica por adenoma ampular con márgenes libres (R0), ¿en qué mes se debe establecer la endoscopia digestiva de control para evaluar remanente?", 
+        options: ["1 a 2 meses", "3 a 6 meses", "12 a 18 meses", "24 a 36 meses"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al documento Tumores ampulares Guía Francesa, las directrices formales asientan que, tras la inducción de la cicatrización del lecho mucoso, la franja de mayor rendimiento para escrutar proliferación aberrante residual precoz son los primeros tres a seis meses posintervención.<br><br>Perla ENARM: \"Tras una resección exitosa, el paciente debe someterse a vigilancia endoscópica inicial a los 3 a 6 meses posoperatorios\".<br><br>Análisis de Distractores: Antes del tercer mes (A), el edema y tejido de granulación confunden la toma óptima de biopsias papilares. Diferir de forma conservadora a plazos mayores de un año calendario (C, D) dilata de manera peligrosa la ventana oncológica segura de recaptura quirúrgica oportuna.", 
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Follow up, Página 488." 
+    },
+    {
+        id: 20, 
+        question: "Al documentarse metástasis hepáticas de un adenocarcinoma ampular histológicamente puro de subtipo intestinal en un adulto con escala de desempeño ECOG 0, ¿qué protocolo quimioterapéutico intravenoso se avala como indicación primaria?", 
+        options: ["Gemcitabina y Nab-paclitaxel", "Erlotinib monoterapia", "FOLFIRINOX modificado", "Régimen CAPOX"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al documento Guía NCCN Cáncer Ampular, el linaje genético y la quimiosensibilidad biológica del adenocarcinoma de fenotipo intestinal comparten paralelismo estricto con el carcinoma colorrectal; justificando en perfiles clínicos altamente funcionales la asimilación del protocolo capecitabina-oxaliplatino (CAPOX).<br><br>Perla ENARM: \"Para el subtipo intestinal con excelente PS (ECOG 0), las opciones sistémicas pueden extrapolarse, recomendando CAPOX o FOLFOX\".<br><br>Análisis de Distractores: La dupla intensificada de Gemcitabina más nab-paclitaxel (A) o el esquema triplete FOLFIRINOX (C) son las armas quimioterapéuticas diseñadas para sofocar citotóxicamente al estirpe pancreatobiliar primario.", 
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Principles of Systemic Therapy, Página 114." 
+    },
+    {
+        id: 21,
+        question: "En la maniobra de Kocher extendida para evaluación de la resecabilidad local de un tumor periampular, ¿qué estructura anatómica define el límite izquierdo de una movilización retroperitoneal óptima?",
+        options: ["Tronco celíaco superior", "Vena porta principal", "Vena renal izquierda", "Arteria gástrica izquierda"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la Guía Libro Cirugía, la disección y levantamiento del complejo duodenopancreático exige una movilización retroperitoneal amplia que debe cruzar la línea media, exponiendo de forma sistemática la vena cava inferior y extendiéndose hasta visualizar claramente la vena renal izquierda y el origen de la arteria mesentérica superior.<br><br>Perla ENARM: \"La disección retroperitoneal debe extenderse hacia la izquierda de la aorta, exponiendo la vena renal izquierda\".<br><br>Análisis de Distractores: El tronco celíaco (A) y la arteria gástrica izquierda (D) son estructuras cefálicas suprapancreáticas que se evalúan en otra fase de la disección. La vena porta principal (B) se diseca superior al borde pancreático a través del ligamento hepatoduodenal y no define el límite lateral izquierdo del levantamiento de Kocher.",
+        source: "Cirugía para el cáncer de páncreas y periampular libro, 2018, Pancreaticoduodenectomy (Whipple Procedure), Página 77."
+    },
+    {
+        id: 22,
+        question: "¿En cuál de los siguientes escenarios clínicos está formalmente indicado el drenaje biliar preoperatorio antes de programar una pancreatoduodenectomía por cáncer ampular?",
+        options: ["Dilatación de la vía biliar asintomática", "Colangitis aguda supurativa", "Ictericia obstructiva silente", "Bilirrubina total >5 mg/dl"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer de Páncreas, la instrumentación de la vía biliar de rutina previa a cirugía curativa incrementa significativamente la tasa de morbimortalidad infecciosa posoperatoria. Su uso debe restringirse estrictamente a pacientes que cursan con un cuadro de sepsis biliar (colangitis), fiebre, prurito intenso intratable o cuando el evento quirúrgico se retrasará por administración de terapia neoadyuvante.<br><br>Perla ENARM: \"El drenaje biliar preoperatorio puede ser considerado para síntomas de colangitis/fiebre o ictericia severa sintomática\".<br><br>Análisis de Distractores: La dilatación biliar asintomática (A) y la ictericia obstructiva silente (C) son las presentaciones oncológicas más clásicas y no justifican un drenaje previo si el paciente irá a cirugía directa. El nivel aislado de bilirrubina >5 mg/dl (D) sin toxicidad sistémica asociada tampoco impone obligatoriedad de instrumentación.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Principles of Obstructive Jaundice, Página 243."
+    },
+    {
+        id: 23,
+        question: "De acuerdo con la octava edición del manual de estadificación TNM del AJCC, ¿qué nivel de progresión patológica vertical clasifica a un carcinoma ampular como estadio pT2?",
+        options: ["Invasión a la submucosa duodenal", "Invasión a tejido peripancreático", "Invasión a la capa muscular propia", "Infiltración del esfínter de Oddi"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, el determinante de infiltración estromal que transita de estadio pT1 a pT2 es el rebasamiento de la submucosa para invadir directamente las fibras del músculo liso de la pared intestinal (capa muscular propia del duodeno).<br><br>Perla ENARM: \"T2: el tumor invade la capa muscular propia del duodeno\".<br><br>Análisis de Distractores: La invasión a la capa submucosa duodenal (A) corresponde biológicamente a un estadio pT1b. La limitación anatómica al esfínter de Oddi (C) enmarca la clasificación pT1a. El involucro del tejido conectivo peripancreático (B) o del parénquima glandular traduce un estadio pT3.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Staging, Página 178."
+    },
+    {
+        id: 24,
+        question: "Al evaluar el fenotipo de un adenocarcinoma ampular mediante estudios de inmunohistoquímica, ¿cuál de las siguientes glucoproteínas transmembrana se expresa de manera característica y confirma la diferenciación pancreatobiliar?",
+        options: ["MUC2", "CK20", "CDX2", "MUC1"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, las neoplasias con linaje pancreatobiliar originadas en el epitelio ductal distal se identifican en el panel inmunohistoquímico por la intensa reactividad celular a MUC1 y CK7, careciendo de los marcadores clásicos del tubo digestivo bajo.<br><br>Perla ENARM: \"El fenotipo pancreatobiliar muestra positividad característica para las tinciones de MUC1 y CK7\".<br><br>Análisis de Distractores: Los anticuerpos MUC2 (A), CK20 (B) y CDX2 (C) forman la triada biológica clásica de expresión obligatoria en los adenocarcinomas ampulares con diferenciación exclusiva de tipo intestinal.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Pathologic Analysis, Página 166."
+    },
+    {
+        id: 25,
+        question: "En el análisis tomográfico de estadificación local, ¿qué grado de relación anatómica con la vena porta define morfológicamente a una neoplasia como \"borderline resecable\" (potencialmente resecable)?",
+        options: ["Contacto tangencial focal ≤90°", "Oclusión tumoral sin blanco de reconstrucción", "Infiltración estromal de la arteria esplénica", "Contacto >180° con opción a reconstrucción vascular"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer de Páncreas, el involucro extenso del eje mesentérico-portal que supera el semicírculo venoso (>180°) cataloga al tumor en el límite de la resecabilidad primaria, pero permite su extirpación franca si existen cabos proximales y distales sanos que admitan interposición de injerto o anastomosis venosa.<br><br>Perla ENARM: \"Contacto >180° sin irregularidad del contorno venoso, pero reconstruible\".<br><br>Análisis de Distractores: El roce menor a 180° sin distorsión (A) clasifica al tumor como puramente resecable. La oclusión cavernosa sin blancos (B) determina enfermedad irresecable localmente avanzada. La afectación de la arteria esplénica (C) afecta la resecabilidad proximal en cuerpo y cola, no en patología periampular.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Resectability Status, Página 245."
+    },
+    {
+        id: 26,
+        question: "En pacientes con adenocarcinoma ampular de fenotipo pancreatobiliar, con enfermedad metastásica y un estado funcional óptimo (ECOG 0), ¿cuál régimen sistémico representa la primera línea de tratamiento recomendada?",
+        options: ["Capecitabina y oxaliplatino", "FOLFIRINOX modificado", "Erlotinib en monoterapia", "Nivolumab exclusivo"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, el comportamiento biológico y la respuesta quimiosensible del fenotipo pancreatobiliar simulan fielmente al cáncer ductal de páncreas. En sujetos sin fragilidad, el esquema poliquimioterapéutico de mFOLFIRINOX o Gemcitabina/Nab-paclitaxel han evidenciado la máxima superioridad en control de enfermedad sistémica.<br><br>Perla ENARM: \"Para el subtipo pancreatobiliar con excelente PS, se recomiendan los regímenes mFOLFIRINOX o Gemcitabina/Nab-paclitaxel\".<br><br>Análisis de Distractores: La dupla de Capecitabina-Oxaliplatino (A) es el protocol de elección para tumores con fenotipo intestinal. El Erlotinib (C) posee utilidad marginal comprobada en terapias de mantenimiento pancreático. El uso de inhibidores de punto de control como Nivolumab (D) solo está avalado ante inestabilidad microsatelital (MSI-H).",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Principles of Systemic Therapy, Página 168."
+    },
+    {
+        id: 27,
+        question: "Al evaluar la anatomía de un adenoma ampular esporádico asintomático, ¿a partir de qué diámetro máximo se establece la indicación formal de realizar una papilectomía quirúrgica por contraindicación técnica al abordaje endoscópico?",
+        options: [">1 cm", ">2 cm", ">3 cm", ">5 cm"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la Guía Intergrupal Francesa Tumores Ampulares, las masas adenomatosas con una expansión superior a los 30 mm imposibilitan mecánicamente lograr un aclaramiento en bloque seguro de la mucosa mediante asa endoscópica sin inducir perforación profunda a la serosa, requiriendo abordaje laparotómico transduodenal.<br><br>Perla ENARM: \"Las indicaciones para papilectomía quirúrgica incluyen adenomas mayores de 3 cm, o con recurrencia local\".<br><br>Análisis de Distractores: Los adenomas de 1 cm (A) y 2 cm (B) son los candidatos ideales para resección submucosa o mucosectomía por CPRE. Una lesión por arriba de los 5 cm (D) es francamente quirúrgica, pero el límite universal del punto de inflexión para escalar la radicalidad se sitúa tajantemente en 3 cm.",
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Surgical Papillectomy, Página 528."
+    },
+    {
+        id: 28,
+        question: "¿Qué agente inhibidor del punto de control inmunitario PD-1 tiene indicación terapéutica comprobada en carcinoma ampular metastásico que confirma inestabilidad microsatelital alta (MSI-H)?",
+        options: ["Trastuzumab", "Cetuximab", "Bevacizumab", "Pembrolizumab"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, los adenocarcinomas de la región periampular portadores de deficiencia en la reparación de emparejamientos erróneos (dMMR) o MSI-H son altamente inmunogénicos. La infusión de pembrolizumab ha demostrado inducir respuestas tumorales sostenidas y profundas en líneas de tratamiento avanzado.<br><br>Perla ENARM: \"Pembrolizumab está recomendado para tumores MSI-H, dMMR o TMB-H\".<br><br>Análisis de Distractores: El trastuzumab (A) bloquea la amplificación de la proteína HER2. El cetuximab (B) interactúa sobre el receptor de crecimiento epidérmico (EGFR) en fenotipos silvestres RAS. El bevacizumab (C) neutraliza el factor de crecimiento del endotelio vascular (VEGF). Ninguno de ellos está supeditado a la medición del estado microsatelital.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Targeted Systemic Therapies, Página 203."
+    },
+    {
+        id: 29,
+        question: "De acuerdo con los estándares europeos contemporáneos, ¿cuál es la recomendación directriz respecto a la aplicación de quimiorradioterapia adyuvante tras una resección R0 por adenocarcinoma ampular localizado?",
+        options: ["No está recomendada de forma rutinaria", "Constituye la terapia estándar universal", "Útil exclusivamente en ganglios negativos", "Indicada para subtipos de bajo grado"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a la Guía Intergrupal Francesa Tumores Ampulares, la evidencia prospectiva rigurosa ha fallado sistemáticamente en demostrar una ventaja numérica en la supervivencia global al añadir ciclos de radiación sobre el lecho posoperatorio, induciendo un riesgo inaceptable de toxicidad digestiva.<br><br>Perla ENARM: \"La quimiorradiación no está recomendada para el tratamiento adyuvante del carcinoma ampular resecado\".<br><br>Análisis de Distractores: A diferencia de otros tumores del tracto digestivo superior, en el conducto ampular la radiación externa carece de rol curativo postoperatorio (B, C, D). Las guías limitan su uso al plano exclusivamente paliativo por compresión sintomática o control hemostático intratable.",
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Adjuvant therapy, Página 530."
+    },
+    {
+        id: 30,
+        question: "Durante el rastreo genético de un carcinoma ampular metastásico extirpado en un adulto, se corrobora la fusión de genes NTRK. ¿Qué inhibidor de tirosina cinasa es la recomendación farmacológica de elección según la NCCN?",
+        options: ["Selpercatinib", "Dabrafenib", "Entrectinib", "Imatinib"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, los pacientes portadores de fusiones patogénicas que involucran a los receptores tirosina cinasa neurotróficos (NTRK) pueden beneficiarse espectacularmente de terapias orales dirigidas como entrectinib o larotrectinib, independientemente del linaje celular primario del tumor.<br><br>Perla ENARM: \"Se recomienda entrectinib o larotrectinib si los tumores son positivos para la fusión del gen NTRK\".<br><br>Análisis de Distractores: El selpercatinib (A) está destinado estrictamente al silenciamiento del rearreglo génico RET. El dabrafenib (B) requiere la documentación de mutaciones puntuales en BRAF V600E. El imatinib (D) actúa en mutaciones constitutivas de c-KIT o PDGFRA, clásicas en tumores del estroma gastrointestinal.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Targeted Systemic Therapies, Página 203."
+    },
+    {
+        id: 31,
+        question: "En la caracterización biológica original de los adenomas ampulares esporádicos, ¿qué porcentaje de las lesiones exhibe un fenotipo histológico primario de origen intestinal?",
+        options: ["11%", "25%", "55%", "89%"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía Libro Cirugía, a nivel mundial casi la novena décima parte de la masa total de los adenomas diagnosticados en el tracto biliar distal proceden de una clona celular secretora intestinal, lo cual rige su comportamiento de bajo grado hacia la metaplasia tubular y vellosa clásica de pólipos colónicos.<br><br>Perla ENARM: \"Los pólipos de tipo intestinal representan el 89% de los casos, y el tipo gástrico compone el 11%\".<br><br>Análisis de Distractores: La prevalencia biológica del 11% (A) engloba a las estirpes de glándulas pilóricas y foveolares de fenotipo gástrico. Las proporciones del 25% (B) y 55% (C) subestiman groseramente el comportamiento histogenético abrumadoramente intestinal en la población sana.",
+        source: "Benign, Premalignant, and Malignant Duodenal Neoplasms, Springer, 2025, Duodenal Adenomas, Página 51."
+    },
+    {
+        id: 32,
+        question: "Durante el mapeo de disección ganglionar de una pancreatoduodenectomía estandarizada, ¿cuál es el conteo linfático absoluto mínimo exigido por los colegios de patología para catalogar la etapificación oncológica como suficiente (pN)?",
+        options: ["6 ganglios linfáticos", "12 ganglios linfáticos", "18 ganglios linfáticos", "24 ganglios linfáticos"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular y las directrices del AJCC, el análisis microscópico de al menos 12 estaciones o nódulos linfáticos recolectados del espécimen retroperitoneal es el umbral que valida la ausencia fidedigna de enfermedad locorregional.<br><br>Perla ENARM: \"Si se examinan menos de 12 ganglios y no hay metástasis linfática, se clasifica como Nx, a menos que el estado permita una estadificación de T mayor\".<br><br>Análisis de Distractores: Una disección y escrutinio celular limitado a 6 ganglios (A) arroja tasas inaceptables de subestadificación en estadios pN1 o pN2. Cuotas obligadas de 18 (C) y 24 (D) nódulos linfáticos exceden el número habitual extraído en una linfadenectomía estándar exenta de complicaciones vasculares complejas.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Staging, Página 514."
+    },
+    {
+        id: 33,
+        question: "Al realizar una evaluación radiológica inicial en un paciente ictérico, ¿qué hallazgo de invasión anatómica sobre la arteria mesentérica superior dicta inequívocamente que el adenocarcinoma de la ampolla es localmente irresecable?",
+        options: ["Contacto venoso sin irregularidad en la pared", "Contacto tangencial sólido focal menor de 90°", "Oclusión tumoral completa de la vena esplénica", "Contacto sólido tumoral >180° circunferencial"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer de Páncreas, a diferencia del sistema venoso de baja presión, la arteria mesentérica superior no permite un injerto vascular primario seguro en tumores ampulares. Una extensión neoplásica que abarca más de la mitad de su contorno perimetral es el criterio primario de irresecabilidad.<br><br>Perla ENARM: \"El contacto tumoral >180° con la arteria mesentérica superior (AMS) clasifica la enfermedad como localmente avanzada e irresecable\".<br><br>Análisis de Distractores: El contacto focal menor a 90° o 180° (A, B) clasifica al enfermo radiológicamente como limítrofe (borderline resecable), sujeto a neoadyuvancia. La trombosis u oclusión de la vena esplénica proximal (C) es irrelevante para dictar la técnica o futilidad de una resección cefálica radical.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Resectability Status, Página 245."
+    },
+    {
+        id: 34,
+        question: "Ante un paciente diagnosticado con carcinoma ampular metastásico y obstrucción completa del vaciamiento gástrico secundario a compresión duodenal, cuyo estado funcional (PS) es pobre o desfavorable, ¿cuál es el procedimiento paliativo indicado?",
+        options: ["Pancreatoduodenectomía reductora de masa", "Gastro yeyuno anastomosis abierta", "Colocación de stent enteral autoexpandible", "Ablación tumoral por radiofrecuencia biliar"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer de Páncreas, en la fase preterminal o con fragilidad general evidente, el sometimiento a trauma anestésico profundo es letal. La vía de menor morbilidad, recomendada para recuperar la ingesta hídrica casi inmediata y atenuar los vómitos, es el implante de prótesis yeyunal transluminal por endoscopia de visión lateral.<br><br>Perla ENARM: \"En pacientes con pobre PS (estado funcional), la colocación de un stent enteral es la opción preferida tras asegurar el drenaje biliar\".<br><br>Análisis de Distractores: La anastomosis derivativa quirúrgica gástrica (B) está indicada en sujetos con esperanza de vida robusta (PS bueno). El abordaje exerético masivo (A) incumple la pauta biológica puramente paliativa. La radiofrecuencia (D) desobstruye los capilares biliares intrahepáticos o terminales, pero no restaura la permeabilidad de la luz digestiva de 4 cm.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Principles of Palliation, Página 175."
+    },
+    {
+        id: 35,
+        question: "¿En qué síndrome oncológico genético se encuentra indicada clásicamente la intervención quirúrgica denominada duodenectomía total con preservación de páncreas (PPTD) para prevenir malignidad periampular difusa?",
+        options: ["Síndrome de Peutz-Jeghers", "Poliposis adenomatosa familiar", "Síndrome de Lynch con fenotipo mutador", "Cáncer gástrico difuso hereditario"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la Guía Libro Cirugía, los enfermos portadores del gen APC mutado desarrollan una proliferación epitelial alfombrada de adenomas en la segunda y tercera porción del duodeno. La técnica PPTD reseca toda la mucosa entérica respetando la glándula sólida subyacente para evadir la diabetes insulino-requiriente o insuficiencia exocrina grave permanente.<br><br>Perla ENARM: \"La FAP sigue siendo la indicación más común para la duodenectomía total con preservación pancreática (PPTD)\".<br><br>Análisis de Distractores: Las poliposis hamartomatosas (Peutz-Jeghers, A) o deficiencias de reparación génica (Lynch, C) ocasionan pólipos habitualmente aislados a lo largo del tracto digestivo, pasibles de vigilancia y resección mucosa local, sin forzar una excisión radical sistemática precoz de todo el campo de absorción proximal.",
+        source: "Pancreas-Sparing Duodenectomy: How I Do It, Springer, 2025, Indications, Página 446."
+    },
+    {
+        id: 36,
+        question: "Durante el tiempo de resección de una operación de Whipple por cáncer ampular, la sección congelada intraoperatoria reporta invasión microscópica por adenocarcinoma en el margen del cuello pancreático. ¿Qué acción técnica rige la cirugía si la disección local es factible?",
+        options: ["Interrumpir la disección oncológica", "Implantar catéteres para braquiterapia", "Extender la resección hacia el cuerpo del páncreas", "Efectuar papilectomía transduodenal aislada"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la Guía Libro Cirugía, la intención resolutiva absoluta de la enfermedad maligna local dictamina lograr cortes limpios entintados mayores de 1 mm. Ante positividad frotis, la regla biológica exige escindir milímetros o centímetros extra de parénquima de cuerpo a cola hasta que el patólogo documente la integridad sin evidencia tumoral.<br><br>Perla ENARM: \"Ante un margen de cuello pancreático positivo, la regla exige extender la resección (tomar una porción adicional o llegar a pancreatectomía total) para lograr R0\".<br><br>Análisis de Distractores: Abandonar el campo de batalla oncológico (A) condena al enfermo a una recaída local segura a muy corto plazo. Trazar braquiterapia (B) carece de soporte clínico demostrable como salvataje focal. Convertir a una ampulectomía (D) contraviene totalmente los principios lógicos en un órgano ya decapitado donde es menester ir en sentido caudal.",
+        source: "Laparoscopic Pancreatoduodenectomy, Springer, 2025, Frozen Section, Página 79."
+    },
+    {
+        id: 37,
+        question: "Al iniciar el tiempo de restitución de la continuidad del tracto gastrointestinal en una pancreatoduodenectomía estándar abierta, ¿qué arquitectura reconstructiva biliar conforma la técnica recomendada universalmente?",
+        options: ["Hepático duodeno anastomosis término terminal", "Hepático yeyuno anastomosis término lateral", "Colédoco yeyuno anastomosis látero lateral", "Colédoco duodeno anastomosis término lateral"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la Guía Libro Cirugía, para restituir fisiológicamente el drenaje colestásico e impedir el flujo biliar a tensión retrogrado, el conducto del remanente hepático o biliar principal alto se anastomosa al asa defuncionalizada yeyunal en patrón términolateral con puntos reabsorbibles, completando clásicamente la triada secuencial de Whipple.<br><br>Perla ENARM: \"La anastomosis hepaticoyeyunal (o coledocoyeyunal) término lateral se realiza con sutura sintética absorbible interrumpida\".<br><br>Análisis de Distractores: Derivar el cauce biliar hacia las paredes de un remanente gástrico o duodenal en asa cerrada (A, D) engendra gastritis química severa intratable y contaminación constante de la papila. La anastomosis latero lateral (C) exige el cierre previo del cabo terminal biliar induciendo isquemia en las ramas de las 3 y 9 en punto.",
+        source: "Laparoscopic Pancreaticoduodenectomy: How I Do It, Springer, 2025, Reconstruction, Página 190."
+    },
+    {
+        id: 38,
+        question: "Tras someter al seguimiento por duodenoscopia a un enfermo con Poliposis Adenomatosa Familiar, el reporte de control dictamina un puntaje entre 9 y 12 puntos en la escala de Spigelman (Estadio IV). ¿Qué plan resolutivo impera en este momento clínico?",
+        options: ["Resección endoscópica mucosal submétrica", "Ablación de radiofrecuencia de mantenimiento", "Aumento empírico de la dosis de Celecoxib", "Derivación a resección quirúrgica profiláctica"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía Intergrupal Francesa Tumores Ampulares, cruzar la frontera al estadio terminal de recuento polipósico confiere una probabilidad de malignización galopante en el corto plazo; ante el agotamiento del rescate por mínima invasión local, es ineludible enviar al individuo al quirófano para pancreatoduodenectomía o duodenectomía peripancreática para frustrar el progreso del cáncer duodenal.<br><br>Perla ENARM: \"El Estadio IV (9-12 puntos) de Spigelman es indicación estricta de envío o derivación para cirugía profiláctica radical\".<br><br>Análisis de Distractores: Las pautas ablativo-térmicas con radiofrecuencia (B) destruyen sin patrón predecible o control de profundidad de daño mucoso. El incremento de agentes anti-COX2 (C) no inhibe la agresividad o displasia desregulada, careciendo de fuerza quimiopreventiva a gran escala estadios avanzados. La mucosectomía (A) ha probado la futilidad en un tapiz mucoso de lesiones multicéntricas asincrónicas conflagradas.",
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Follow Up, Página 514."
+    },
+    {
+        id: 39,
+        question: "En el marco profiláctico y medidas de soporte vital posoperatorio para enfermos admitidos por adenocarcinomas periampulares diseminados o irresecables, ¿cuál anticoagulante está avalado para sofocar la morbimortalidad tromboembólica venosa sin mermar la supervivencia?",
+        options: ["Heparina de bajo peso molecular", "Ácido acetilsalicílico", "Warfarina", "Dabigatrán"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer de Páncreas, el estado procoagulante catastrófico subyacente del cáncer diseminado bilio-pancreático induce microtrombosis venosa y embolias recurrentes mortales. El uso en escalamiento profiláctico sistémico a dosis terapéuticas ha afianzado a las heparinas de bajo peso molecular (HBPM) sobre fármacos históricos como los dicumarínicos.<br><br>Perla ENARM: \"Para la enfermedad tromboembólica se prefiere la heparina de bajo peso molecular sobre la warfarina\".<br><br>Análisis de Distractores: La warfarina (C) evidencia extrema labilidad en controles séricos de INR al presentarse interacción farmacocinética competitiva metabólica con múltiples drogas neoplásicas. Los antiagregantes plaquetarios (B) intervienen en el sistema arterial y resultan inanes profilácticamente frente al factor pro-coagulante tisular liberado oncológicamente en la cascada humoral.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Principles of Palliation, Página 175."
+    },
+    {
+        id: 40,
+        question: "Durante la endosonografía (USE) estadificadora de una pequeña masa vegetante asintomática de la ampolla, se corrobora invasión anatómica transmural del parénquima de la glándula periduodenal. ¿Cuál técnica terapéutica rige inequívocamente su futuro oncológico?",
+        options: ["Extirpación laparoscópica transduodenal", "Pancreatoduodenectomía cefálica radical", "Disección endoscópica de la submucosa (ESD)", "Mucosectomía en bloque asistida por ligadura"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, el ecosonograma instilado corrobora milimétricamente el rebasamiento del esfínter y planos peripapilares. Al irrumpir en la compacidad microlobulillar pancreática en su espesor o penetrar más de un estrato histológico, todo recurso exerético por vía local ahorrador de vísceras está proscrito.<br><br>Perla ENARM: \"El USE está recomendado... para excluir invasión pancreática, lo cual obligaría de manera mandatoria a una pancreatoduodenectomía\".<br><br>Análisis de Distractores: Al demostrar contigüidad invasiva en un tejido contiguo ricamente linfático e intersticial extraintestinal, todos los abordajes localizados mucosos y transmurales entéricos focalizados (A, C, D) acarrean riesgo inminente de sembrar lechos cruentos invadidos (márgenes R2 o R1 generalizados), condenando con mortalidad acelerada intra-abdominal al individuo por una técnica de futilidad demostrada.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Workup, Página 145."
+    },
+    {
+        id: 41,
+        question: "¿Qué criterio temporal y clínico establece el retraso del vaciamiento gástrico pospancreatectomía como grado C según la clasificación de severidad estandarizada?",
+        options: ["Sonda nasogástrica necesaria hasta el día 7", "Intolerancia a dieta líquida el día 10", "Sonda nasogástrica requerida más allá del día 14", "Requerimiento de procinéticos orales el día 5"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, el Grupo Internacional de Estudio de Cirugía Pancreática (ISGPS) estandarizó el retraso del vaciamiento gástrico en grados de impacto clínico. El grado C, el más severo y mórbido, se define estrictamente por la incapacidad de retirar la descompresión gástrica más allá de 2 semanas posoperatorias o la incapacidad de tolerar dieta sólida para el día 21.<br><br>Perla ENARM: \"El grado C está presente si la sonda nasogástrica no se puede retirar después del día 14 posoperatorio o si el paciente no tolera una dieta regular para el día 21\".<br><br>Análisis de Distractores: El mantenimiento de la sonda hasta el día 7 (A) corresponde a un grado A de baja morbilidad. La intolerancia en el día 10 (B) o la necesidad de sonda entre los días 8 y 14 se clasifica como grado B. El uso precoz de procinéticos (D) es una medida médica transitoria que no define por sí misma el grado máximo de falla propulsiva.",
+        source: "Surgery for Pancreatic and Periampullary Cancer, 2018, Delayed Gastric Emptying, Página 620."
+    },
+    {
+        id: 42,
+        question: "Según la actualización del Grupo Internacional de Estudio de Cirugía Pancreática (ISGPS), ¿qué nivel de amilasa en el líquido de drenaje a partir del tercer día posoperatorio es el umbral para definir una fístula pancreática?",
+        options: [">3 veces el límite superior normal", ">5 veces el límite superior normal", ">10 veces el límite superior normal", ">2 veces el límite superior normal"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, el pilar diagnóstico universal de la dehiscencia anastomótica pancreática exige la cuantificación de enzimas en el efluente. La fuga bioquímica se consolida matemáticamente cuando la amilasa del drenaje triplica el valor sérico máximo institucional en o después del tercer día de la intervención.<br><br>Perla ENARM: \"Cualquier volumen de líquido de drenaje con un nivel de amilasa >3 veces superior al límite superior de la normalidad define una fístula pancreática posoperatoria\".<br><br>Análisis de Distractores: Utilizar cortes de 5 o 10 veces (B, C) subdiagnosticaría fístulas clínicamente relevantes de bajo débito enzimático pero alto componente inflamatorio. Un corte de 2 veces (D) carece de especificidad, ya que el exudado peritoneal fisiológico inicial concentra amilasa residual transitoria.",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Prevention, Prediction, and Mitigation of Pancreatic Fistula, Página 592."
+    },
+    {
+        id: 43,
+        question: "¿Cuál es el mecanismo fisiopatológico principal responsable de la hemorragia pospancreatectomía de presentación tardía (>24 horas) que condiciona inestabilidad hemodinámica súbita?",
+        options: ["Coagulopatía de consumo inducida", "Trombosis de la vena porta", "Desgarro de la línea de grapas yeyunal", "Formación de un pseudoaneurisma arterial"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, el sangrado temprano suele deberse a fallas hemostáticas mecánicas, pero el sangrado tardío es clásicamente secundario a la erosión química de la pared arterial (habitualmente el muñón de la gastroduodenal) por las enzimas proteolíticas de una fístula pancreática subyacente, generando un pseudoaneurisma friable que se rompe a tensión.<br><br>Perla ENARM: \"La hemorragia tardía se debe frecuentemente a la formación de pseudoaneurismas secundaria a la fuga de secreciones exocrinas y enzimas pancreáticas que erosionan los vasos peripancreáticos\".<br><br>Análisis de Distractores: La coagulopatía de consumo (A) o el sangrado de las líneas de anastomosis (C) son causas de hemorragia temprana (<24 horas). La trombosis portal (B) induce hipertensión esplácnica a mediano plazo, pero no rotura arterial pulsátil fulminante.",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Post-Pancreatectomy Hemorrhage, Página 612."
+    },
+    {
+        id: 44,
+        question: "En la evaluación transoperatoria mediante la Escala de Riesgo de Fístula (FRS), ¿qué característica anatómica de la glándula otorga el mayor peso individual predictivo para dehiscencia anastomótica?",
+        options: ["Parénquima de textura blanda", "Atrofia acinar severa", "Parénquima fibrótico crónico", "Infiltración neoplásica difusa"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, la textura del remanente glandular dicta la capacidad de retención de suturas. Una glándula suave, grasa y rica en acinos secretores activos desgarra la cápsula al anudar y perpetúa la secreción de jugo rico en proteasas, sumando 2 puntos directos en la escala FRS y siendo el factor más letal para la anastomosis.<br><br>Perla ENARM: \"Una textura de glándula blanda (rica en glándulas secretoras activas) es, con diferencia, el escenario más peligroso al coser una anastomosis en comparación con un órgano fibrótico\".<br><br>Análisis de Distractores: El páncreas fibrótico (C) o atrófico (B) tiene alto contenido de colágeno, lo que ancla perfectamente los hilos de sutura y carece de secreción enzimática agresiva (0 puntos en FRS). La infiltración tumoral en el margen de corte (D) compromete el control oncológico, pero la fibrosis peritumoral paradójicamente protege contra fístulas.",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Prevention, Prediction, and Mitigation of Pancreatic Fistula, Página 593."
+    },
+    {
+        id: 45,
+        question: "Durante la disección del ligamento hepatoduodenal, se palpa un pulso aberrante posterolateral al colédoco correspondiente a una arteria hepática derecha reemplazada. ¿Cuál es el origen anatómico de esta variante vascular crítica?",
+        options: ["Arteria gástrica izquierda", "Tronco celíaco principal", "Arteria mesentérica superior", "Arteria esplénica proximal"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, debido a fallas en la regresión embriológica, hasta en un 20% de los pacientes la arteria hepática derecha surge directamente de la arteria mesentérica superior. Su trayecto clásico asciende posterior a la cabeza pancreática y posterolateral a la vía biliar, siendo altamente vulnerable durante la sección del colédoco y la linfadenectomía portal.<br><br>Perla ENARM: \"Una arteria hepática derecha reemplazada se origina típicamente de la arteria mesentérica superior y discurre de forma posterolateral al conducto biliar común\".<br><br>Análisis de Distractores: La arteria hepática izquierda reemplazada surge de la gástrica izquierda (A). El tronco celíaco (B) es el origen normal de la hepática común. La arteria esplénica (D) emite ramas fúndicas y pancreáticas dorsales, pero no suple al lóbulo hepático derecho.",
+        source: "Surgery for Pancreatic and Periampullary Cancer, 2018, Vascular Supply: Important Arterial and Venous Variants, Página 163."
+    },
+    {
+        id: 46,
+        question: "Al ejecutar la linfadenectomía extendida estándar en el componente suprapancreático, ¿a qué estructura vascular primordial corresponde el ganglio de la estación 8a que facilita la exposición quirúrgica secuencial?",
+        options: ["Vena porta anterior", "Tronco mesentérico", "Arteria hepática común", "Vena cava inferior"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, el barrido del tejido conectivo a lo largo del borde superior del páncreas inicia con la escisión de la estación 8a (\"el ganglio de la importancia\"). Su remoción expone la adventicia de la arteria hepática común, sirviendo de guía anatómica infalible para trazar su bifurcación y localizar el origen de la arteria gastroduodenal.<br><br>Perla ENARM: \"La disección del ganglio linfático de la arteria hepática (estación 8a) facilita la exposición de la arteria hepática común, la cual sirve como punto de referencia para el origen de la gastroduodenal\".<br><br>Análisis de Distractores: Los ganglios perimesentéricos corresponden a las estaciones 14 (B). Los ganglios de la vena porta principal caen en la estación 12p (A). Los ganglios interaortocavos o de la vena cava son de la estación 16 (D).",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Open Whipple, Página 333."
+    },
+    {
+        id: 47,
+        question: "En pacientes clasificados con riesgo intermedio/alto de fístula pancreática, ¿qué nivel de amilasa en el líquido de drenaje (DFA) en el día 1 posoperatorio valida retirar el drenaje temprano al tercer día?",
+        options: ["≤15000 U/L", "≤10000 U/L", "≤1000 U/L", "≤5000 U/L"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, los protocolos contemporáneos de recuperación acelerada avalan que si el efluente del drenaje medido en el primer día del posoperatorio se mantiene en cifras controladas (≤5000 U/L), el riesgo de dehiscencia tardía severa es marginal, permitiendo el retiro precoz en el día 3 para acortar la estancia y evitar la colonización ascendente del catéter.<br><br>Perla ENARM: \"Se puede implementar un algoritmo de remoción temprana en el día 3 cuando el valor de amilasa en el drenaje en el día 1 (POD1 DFA) es menor a 5000 U/L\".<br><br>Análisis de Distractores: Cifras de 10000 o 15000 U/L (A, B) reflejan una fuga tisular masiva, requiriendo el mantenimiento obligatorio del drenaje más allá de 3 semanas. Exigir un nivel ≤1000 U/L (C) es demasiado estricto y prolongaría la permanencia de tubos innecesarios en pacientes con evolución biológica favorable.",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Prevention, Prediction, and Mitigation of Pancreatic Fistula, Página 596."
+    },
+    {
+        id: 48,
+        question: "Según las directrices para cáncer ampular, ¿en qué perfil de pacientes con confirmación de adenocarcinoma en la ampolla de Vater está formalmente indicada la prueba genética para mutaciones hereditarias?",
+        options: ["Solo en fenotipos pancreatobiliares", "En todos los pacientes diagnosticados", "Pacientes con poliposis previa", "Menores de 50 años exclusivamente"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, debido a la fuerte asociación del tejido ampular con síndromes de inestabilidad genética silentes y mutaciones reparadoras de ADN (ej. BRCA, Lynch, PAF), el panel dictamina que el escrutinio germinal completo es obligatorio para la totalidad de la población confirmada con carcinoma invasivo, independientemente de la edad o el subtipo.<br><br>Perla ENARM: \"Se recomienda la prueba genética para mutaciones heredadas en todo paciente con adenocarcinoma ampular confirmado o antecedentes familiares positivos\".<br><br>Análisis de Distractores: Restringir el tamizaje genético por edad (D), histología específica (A) o antecedente visible de pólipos (C) privaría del beneficio de terapias dirigidas (inhibidores PARP, inmunoterapia) y consejo familiar a un porcentaje significativo de portadores asintomáticos en vías germinales.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Metastatic Disease, Página 185."
+    },
+    {
+        id: 49,
+        question: "Tras lograr una resección R0 por cáncer ampular de fenotipo intestinal, el comité oncológico autoriza iniciar terapia sistémica adyuvante. ¿Cuál es el tiempo total óptimo de duración de este tratamiento?",
+        options: ["3 meses", "12 meses", "6 meses", "24 meses"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, la pauta oncológica universal para erradicar la micrometástasis tras una pancreatectomía curativa, extrapolada de los ensayos pivote de tubo digestivo, consolida que la máxima eficacia terapéutica sin toxicidad limitante irreversible se alcanza con un régimen consolidado de medio año.<br><br>Perla ENARM: \"El inicio de la terapia sistémica adyuvante se recomienda dentro de las 12 semanas posteriores a la cirugía... La duración total óptima de la terapia sistémica es típicamente de 6 meses\".<br><br>Análisis de Distractores: Ciclos cortos de 3 meses (A) son ineficaces para suprimir la clona celular durmiente en bilio-páncreas. Tratamientos prolongados de 12 a 24 meses (B, D) solo suman toxicidad acumulativa hematológica y neurológica sin impactar la supervivencia global o libre de enfermedad posoperatoria.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Postoperative Adjuvant Treatment, Página 173."
+    },
+    {
+        id: 50,
+        question: "Según estudios de metanálisis, el subtipo histológico pancreatobiliar confiere un pronóstico de sobrevida global significativamente peor. ¿Qué hallazgo histopatológico explica su alta agresividad frente al subtipo intestinal?",
+        options: ["Mayor carga de neoangiogénesis benigna", "Alta tasa de invasión linfovascular", "Crecimiento exofítico intraluminal", "Ausencia de estroma desmoplásico"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al documento Impacto del Tipo Histopatológico 2022 (Metanálisis), las clonas celulares de linaje pancreatobiliar albergan una matriz genética altamente destructiva que se traduce microscópicamente en un asalto contundente a las barreras locales, demostrando frecuencias significativamente superiores de metástasis ganglionar (N+), pobre diferenciación celular y permeación de vasos linfáticos y vainas neurales.<br><br>Perla ENARM: \"Los pacientes con fenotipo PB tuvieron mayores frecuencias de estadio avanzado, metástasis en ganglios linfáticos, tumor pobremente diferenciado, márgenes positivos, e invasión linfovascular y perineural que aquellos con fenotipo INT\".<br><br>Análisis de Distractores: El subtipo pancreatobiliar se caracteriza justamente por poseer un denso estroma desmoplásico fibrótico protector (D), no por carecer de él. El crecimiento predominantemente exofítico intraluminal (C) es el sello de buen pronóstico y diagnóstico temprano de los adenomas de tipo intestinal.",
+        source: "Impacto del tipo histopatológico en el pronóstico del carcinoma ampular una revisión sistemática y un metanálisis, 2022, Abstract & Results, Página 446."
+    },
+    {
+        id: 51,
+        question: "Durante la vigilancia de una fístula pancreática de alto gasto, el paciente desarrolla hipotensión refractaria y sepsis severa. ¿Qué intervención define que esta fístula se clasifique retrospectivamente como grado C?",
+        options: ["Ajuste en la dosis de somatostatina", "Nutrición enteral por sonda avanzada", "Mantenimiento del drenaje original", "Reoperación con lavado intraabdominal"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, el algoritmo ISGPS estratifica la severidad dictaminando que una fístula asciende a la letal categoría C exclusivamente cuando colapsa el estado sistémico del enfermo, forzando al equipo a instituir medidas de rescate vital como el traslado a cuidados intensivos por disfunción multiorgánica o la necesidad de una laparotomía de urgencia (reoperación).<br><br>Perla ENARM: \"Una fístula pancreática grado C incluye reoperación, transferencia a cuidados intensivos por falla multiorgánica o muerte directamente atribuible a la fístula\".<br><br>Análisis de Distractores: El mantenimiento del drenaje quirúrgico primario (C), la optimización del soporte calórico/enteral (B) o el uso de drogas inhibidoras (A) son escalones de manejo conservador resolutivo que encuadran el cuadro en un grado B prolongado pero estable hemodinámicamente.",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Prevention, Prediction, and Mitigation of Pancreatic Fistula, Página 592."
+    },
+    {
+        id: 52,
+        question: "Al resolver de manera conservadora una fístula biliar transitoria posterior a una hepatoyeyunoanastomosis, ¿qué secuela estructural de la vía biliar se incrementa de manera significativa a largo plazo?",
+        options: ["Estenosis de la anastomosis biliar", "Desarrollo de varices pericoledocianas", "Formación de pseudoquistes hepáticos", "Trombosis de la vena porta"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, el escape subagudo de bilis con propiedades detergentes sobre el tejido retroperitoneal y mesentérico promueve una severa respuesta fibrogénica cicatrizal. Con el tiempo, este anillo concéntrico estenosante constriñe la luz del conducto, condicionando colangitis de repetición o ictericia tardía.<br><br>Perla ENARM: \"Las fístulas biliares transitorias sin significancia clínica tras una pancreatoduodenectomía pueden elevar de manera significativa el riesgo de desarrollar una estenosis de la anastomosis biliar a largo plazo\".<br><br>Análisis de Distractores: La trombosis portal (D) es un fenómeno vascular agudo/subagudo secundario a fístula pancreática, no biliar. Los pseudoquistes (C) derivan del acúmulo encapsulado de jugo pancreático. Las varices (B) obedecen a hipertensión portal cirrótica.",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Short-Term Morbidity After Pancreatectomy, Página 574."
+    },
+    {
+        id: 53,
+        question: "En un individuo con poliposis adenomatosa familiar, se evalúa el componente duodenal para decidir tratamiento. ¿Qué diámetro de pólipo otorga el máximo de gravedad (3 puntos) en la clasificación de Spigelman?",
+        options: [">2 mm", ">5 mm", ">8 mm", ">10 mm"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía Intergrupal Francesa, la escala de Spigelman correlaciona el volumen tumoral con la carga mutacional y riesgo de invasión en la submucosa. Las lesiones macroscópicas sólidas cuyo diámetro máximo rebase el umbral de 1 cm (>10 mm) obtienen el tope de 3 puntos en este rubro matemático, inclinando la balanza hacia la resección endoscópica o quirúrgica obligatoria.<br><br>Perla ENARM: \"En la clasificación de Spigelman, el tamaño del pólipo se puntúa: 1-4 mm (1 punto), 5-10 mm (2 puntos), >10 mm (3 puntos)\".<br><br>Análisis de Distractores: Las lesiones de 1 a 4 milímetros (A) son papulas incipientes de displasia leve que suman un solo punto. La cohorte de 5 a 10 milímetros (B, C) representa el crecimiento intermedio asignando 2 puntos, sujetos aún a seguimiento o polipectomía estándar simple.",
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Classification, Página 503."
+    },
+    {
+        id: 54,
+        question: "Según la evidencia de ensayos controlados aleatorizados, ¿cuál es el impacto técnico de construir una anastomosis pancreaticogástrica (PG) frente a una pancreaticoyeyunal (PJ) sobre la tasa de fístula posoperatoria?",
+        options: ["No existe diferencia estadísticamente significativa", "La PG elimina el riesgo de hemorragia tardía", "La PJ disminuye en un 40% la dehiscencia", "La PG aumenta la fístula a más del 50%"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, a pesar de las teorías mecánicas históricas que sugerían que el ambiente ácido gástrico inactivaría el jugo exocrino, los estudios prospectivos globales han frustrado la superioridad de cualquier técnica sobre la otra. La biología de la glándula y no la víscera receptora dictamina el fracaso.<br><br>Perla ENARM: \"Múltiples ensayos controlados aleatorizados concluyeron que no hay una diferencia significativa en las tasas de fístula pancreática posoperatoria entre la anastomosis pancreaticoyeyunal y la pancreaticogástrica\".<br><br>Análisis de Distractores: Afirmar superioridad de la vía gástrica (B) o yeyunal (C) carece de soporte clínico Nivel 1. Ambas vías mantienen rangos institucionales estándar de fuga del 15% al 25%, por lo que la elección depende enteramente de la pericia y escuela quirúrgica del cirujano actuante (D).",
+        source: "Surgery for Pancreatic and Periampullary Cancer, 2018, Operative Complications and Their Management, Página 228."
+    },
+    {
+        id: 55,
+        question: "Al protocolizar a un adulto sano asintomático a quien se le detectó de forma incidental un adenoma ampular con displasia, ¿qué estudio escrutador distante se debe integrar obligatoriamente por riesgo sincrónico?",
+        options: ["Endoscopia por cápsula inalámbrica", "Colonoscopia total completa", "Tomografía por emisión de positrones", "Gammagrafía de vaciamiento gástrico"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la Guía Intergrupal Francesa Tumores Ampulares, existe un notable cruce patogenético del epitelio digestivo de tipo intestinal. Todo sujeto maduro (>50 años) o con displasia ampular demostrada amerita escudriñar la totalidad del marco colónico para desenmascarar neoplasias colorrectales sincrónicas incipientes en fases asintomáticas tempranas.<br><br>Perla ENARM: \"Se indica colonoscopia para descartar neoplasias colorrectales sincrónicas si hay antecedente de PAF, displasia confirmada, o edad >50 años\".<br><br>Análisis de Distractores: La cápsula inalámbrica (A) carece de capacidad terapéutica o toma de biopsia en el intestino delgado. El PET-CT (C) ofrece falsos positivos metabólicos y nula resolución intramucosa de pólipos. La mecánica funcional propulsiva (D) es irrelevante para rastrear focos metaplásicos distales silentes.",
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Initial Assessment, Página 482."
+    },
+    {
+        id: 56,
+        question: "Siguiendo la estatificación patológica TNM (8va edición), ¿qué grado de invasión anatómica en la pieza quirúrgica determina automáticamente que un tumor de la ampolla se asiente en estadio pT3?",
+        options: ["Invasión a la glándula pancreática", "Invasión a la lámina propia papilar", "Afectación de la submucosa duodenal", "Infiltración del esfínter de Oddi"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular y las reglas AJCC, cuando el frente invasivo de la neoplasia rompe los confines entéricos (T2) y penetra directamente hacia los acinos adyacentes del parénquima glandular sólido periduodenal, o tejidos blandos adyacentes, sufre un escalamiento radiológico y biológico mayor.<br><br>Perla ENARM: \"T3a/b: el tumor invade la glándula pancreática, hígado, vesícula biliar o tejidos peripancreáticos\".<br><br>Análisis de Distractores: El confinamiento intra-esfinteriano (D) define el estrato no invasivo profundo pT1a. Alcanzar la interfaz submucosa intestinal (C) es el distintivo pT1b. La progresión patológica enmarca la agresividad local que fundamenta escalar la cirugía de abordaje local a remoción radical multiorgánica.",
+        source: "Japanese Classification and Staging for Pancreatic and Periampullary Cancers, 2025, T-Category, Página 324."
+    },
+    {
+        id: 57,
+        question: "Tras un reporte de pancreatoduodenectomía con bordes afectados microscópicamente (R1) en un cáncer ampular de fenotipo pancreatobiliar, ¿cuál es un esquema adyuvante de alta recomendación según NCCN?",
+        options: ["Gemcitabina con Capecitabina", "Pembrolizumab exclusivo en dosis altas", "Irinotecán y Ciclofosfamida", "Inhibidor MEK en monoterapia"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, ante clonas de linaje pancreático y la presencia de enfermedad residual microscópica de alto riesgo, los dobletes citotóxicos basados en análogos de pirimidinas aseguran una saturación sistémica capaz de esterilizar lechos positivos y microenfermedad en pacientes aptos, figurando en la lista top de opciones quimioterapéuticas.<br><br>Perla ENARM: \"Las opciones de terapia adyuvante para el subtipo pancreatobiliar/mixto incluyen 5-FU/leucovorina, Gemcitabina, Capecitabina, y Capecitabina/Gemcitabina\".<br><br>Análisis de Distractores: Reservamos la inhibición del punto de control inmunitario (B) estrictamente al nicho metastásico inestable (MSI-H). Los alcaloides vegetales e inhibidores moleculares aislados (C, D) carecen de perfil adyuvante curativo validado prospectivamente en guías rectoras para vías biliares tempranas.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Adjuvant Therapy, Página 247."
+    },
+    {
+        id: 58,
+        question: "A los 12 días de una operación de Whipple, el drenaje intraabdominal emite un gasto francamente hemático (sangrado centinela) con hipotensión súbita en el paciente. ¿Cuál es el estudio y manejo de primera línea?",
+        options: ["Endoscopia digestiva superior hemostática", "Radioterapia externa de emergencia", "Trasfusión de plasma fresco y observación", "Angiografía por tomografía y embolización"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer de Páncreas, el sangrado centinela en un lecho quirúrgico infectado traduce la inminente ruptura o fisura de un pseudoaneurisma visceral (habitualmente la gastroduodenal o hepática). La estabilización inicial obliga a trazar un mapa vascular contrastado e instrumentar radiológicamente la arteria con coils u oclusores para evitar una mortalidad masiva fulminante.<br><br>Perla ENARM: \"Ante una hemorragia tardía (posible pseudoaneurisma), obtenga una angiotomografía urgente o pase directamente a angiografía y embolización si el paciente está inestable\".<br><br>Análisis de Distractores: La endoscopia transluminal (A) resulta fútil ya que el defecto sangrante se localiza fuera del tubo digestivo en la matriz retroperitoneal. Abstenerse de la obturación mecánica (C) culmina en un shock hemorrágico irreversible. La energía radiante (B) es inútil para la hemostasia pulsátil de gran calibre.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Bleeding from the primary tumor site, Página 290."
+    },
+    {
+        id: 59,
+        question: "Al calcular prospectivamente el Score de Riesgo de Fístula (FRS) durante la transección del cuello pancreático, ¿qué medición del conducto de Wirsung aporta la calificación más alta (4 puntos)?",
+        options: ["≥5 mm", "3 mm", "2 mm", "≤1 mm"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, la ley de Poiseuille y la mecánica de fluidos establecen que un orificio pancreático puntiforme es técnicamente imposible de anastomosar sin oclusión, incrementando exponencialmente el gradiente de fuga intersticial de proteasas, lo que corona matemáticamente la escala como el peor escenario ductal previsible.<br><br>Perla ENARM: \"Un conducto diminuto de ≤1 mm aporta la mayor probabilidad de riesgo (4 puntos) para que ocurra una fuga\".<br><br>Análisis de Distractores: En el extremo opuesto, los conductos francamente dilatados mayores o iguales a 5 mm (A) acomodan fácilmente suturas y tutores internos, derivando pasivamente el jugo y aportando cero puntos de castigo en el cálculo algorítmico FRS.",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Prevention, Prediction, and Mitigation of Pancreatic Fistula, Página 594."
+    },
+    {
+        id: 60,
+        question: "Un paciente postoperado de pancreatectomía radical y linfadenectomía extendida por cáncer presenta ascitis de aspecto lechoso y depleción inmunológica profunda. ¿La disrupción de qué estructura condicionó este cuadro?",
+        options: ["Ligamento hepatoduodenal posterior", "Cisterna del quilo", "Cápsula de Gerota ipsilateral", "Vena gonadal izquierda"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, el vaciamiento ganglionar exhaustivo retroperitoneal a nivel interaortocavo y raíz mesentérica compromete la delicada red de confluencia linfática troncal retroperitoneal (cisterna chyli), localizada exactamente posterior al lecho pancreático, induciendo fuga quilosa si no se ligan agresivamente los colectores finos en la cirugía abierta.<br><br>Perla ENARM: \"El derrame de quilo posoperatorio suele presentarse tras la disección extendida de los ganglios retroperitoneales debido al daño a la cisterna del quilo, ubicada a nivel del páncreas\".<br><br>Análisis de Distractores: La infiltración o lesión de cubiertas renales (C) o lechos venosos gonadales/portales (A, D) generará ascitis serosa simple, quilomicrones séricos o sangrado franco venoso, respectivamente, pero jamás el exudado lipídico trigliceridémico patognomónico de los capilares lácteos.",
+        source: "Surgery for Pancreatic and Periampullary Cancer, 2018, Operative Complications and Their Management, Página 406."
+    },
+    {
+        id: 61,
+        question: "En la reconstrucción pancreática mediante la técnica de Blumgart (anastomosis transpancreática), ¿cuál es la característica técnica principal que la distingue de otras anastomosis invaginantes para reducir la tensión del parénquima?",
+        options: ["Fijación directa al ligamento redondo", "Anastomosis en una sola capa mucosa", "Uso exclusivo de suturas no absorbibles", "Colocación de puntos transpancreáticos en \"U\""],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía Libro Cirugía, la técnica de Blumgart acopla una anastomosis ducto-mucosa con la colocación de puntos transpancreáticos en \"U\" (colchonero horizontal) que atraviesan el grosor de la glándula y anclan la capa seromuscular del yeyuno, logrando una invaginación sin estrangular el tejido blando.<br><br>Perla ENARM: \"El componente crítico del abordaje de Blumgart a través y a través es la colocación cuidadosa de varias suturas transpancreáticas en forma de U\".<br><br>Análisis de Distractores: El uso exclusivo de hilos no absorbibles (C) es erróneo, ya que se prefiere material absorbible trenzado (tipo poliglactina) para evitar isquemia crónica. No se ancla al ligamento redondo hepático (A). Esta reconstrucción se realiza en capas secuenciales estandarizadas, no como un cierre en capa única (B).",
+        source: "Surgery for Pancreatic and Periampullary Cancer, 2018, Blumgart Pancreaticojejunostomy, Página 111."
+    },
+    {
+        id: 62,
+        question: "Durante el procesamiento patológico de la pieza de pancreatoduodenectomía, ¿cuál es la técnica estandarizada exigida para evaluar microscópicamente el margen de la arteria mesentérica superior (margen retroperitoneal)?",
+        options: ["Afeitado perpendicular al margen entintado", "Sección transversal seriada en pan de molde", "Toma de biopsia central cilíndrica", "Muestreo tangencial aleatorio de la serosa"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, el margen retroperitoneal debe evaluarse cortando perpendicularmente a la superficie previamente entintada tras ser afeitado, lo que permite dictaminar con precisión milimétrica la distancia entre el frente invasivo de las células neoplásicas y la tinta de seguridad.<br><br>Perla ENARM: \"El tejido del margen debe ser entintado, afeitado/amputado, y luego seccionado perpendicularmente a la tinta para someterse por completo al examen histológico\".<br><br>Análisis de Distractores: El corte en pan de molde (B) se reserva habitualmente para examinar la relación tridimensional de la ampolla con el duodeno, no para este lecho vascular posterior. Obtener cortes tangenciales aislados (D) o cilindros internos (C) inutiliza la medición de la franja de tejido libre y aumenta la tasa de infradiagnóstico (R1 falsos negativos).",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Pathologic Analysis, Página 170."
+    },
+    {
+        id: 63,
+        question: "En la historia natural de la Poliposis Adenomatosa Familiar, ¿qué porcentaje de los pacientes manifestará adenomas duodenales o en la ampolla de Vater si sobreviven al riesgo colónico inicial?",
+        options: ["30%", "90%", "70%", "50%"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la Guía Intergrupal Francesa Tumores Ampulares, la alteración del gen APC penetra a nivel del intestino anterior de manera constante y agresiva, condicionando que la absoluta mayoría de estos individuos generen proliferaciones adenomatosas en la región periampular, convirtiéndola en su segunda causa de mortalidad general.<br><br>Perla ENARM: \"Hasta el 90% de los pacientes con PAF desarrollan adenomas duodenales o ampulares\".<br><br>Análisis de Distractores: Cifras de 30% (A), 50% (D) o 70% (C) subestiman notablemente el patrón de expresión fenotípica genético en este segmento del tubo digestivo, promoviendo una peligrosa laxitud en los cronogramas de tamizaje endoscópico rutinario.",
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Epidemiology, Página 466."
+    },
+    {
+        id: 64,
+        question: "En la evaluación por colangiopancreatografía por resonancia magnética (CPRM), ¿qué hallazgo morfológico complementa al signo del doble conducto apoyando el diagnóstico de adenocarcinoma periampular infiltrante?",
+        options: ["Invasión de cuatro segmentos venosos portomesentéricos", "Dilatación quística de cuatro conductos accesorios", "Obstrucción abrupta del colédoco, Wirsung y dilatación supraadyacente", "Realce segmentario concéntrico en fases tardías"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la Guía Libro Cirugía, el clásico signo del doble conducto secundario a la compresión papilar terminal genera dilatación de la porción biliar y pancreática por encima de la masa, sumado al colapso de los segmentos distales, lo que en radiología se ha descrito formalmente como el \"signo de los cuatro segmentos\".<br><br>Perla ENARM: \"Se puede ver un signo de cuatro segmentos en muchos casos, sumado al clásico signo del doble conducto con corte abrupto\".<br><br>Análisis de Distractores: Las invasiones de estirpe vascular venosa (A) modifican el pronóstico de resecabilidad pero no producen una señal ductal de cuatro segmentos. La neovascularización nodular excéntrica (D) es un comportamiento de tumores neuroendocrinos. Las variantes de ramificaciones accesorias quísticas (B) corresponden a neoplasias intraductales papilares mucinosas fenotipo rama lateral.",
+        source: "Surgery for Pancreatic and Periampullary Cancer, 2018, Imaging Evaluation, Página 257."
+    },
+    {
+        id: 65,
+        question: "Según el sistema de estatificación TNM del AJCC para neoplasias ampulares, ¿cuál conteo de ganglios linfáticos metastásicos positivos fundamenta clasificar la enfermedad en la categoría pronóstica pN2?",
+        options: ["1 a 2 ganglios", "≥ 4 ganglios", "2 a 3 ganglios", "≥ 6 ganglios"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, el salto biológico que dictamina una carga metastásica linfática locorregional masiva (estadio pN2) se concreta cuando el recuento patológico del espécimen retroperitoneal confirma tejido carcinomatoso en cuatro o más estaciones ganglionares analizadas.<br><br>Perla ENARM: \"N2: Metástasis a cuatro o más ganglios linfáticos regionales\".<br><br>Análisis de Distractores: El hallazgo de 1 a 3 relevos ganglionares afectados confina al paciente a la categoría pN1 (A, C). Exigir topes superiores a los 6 ganglios (D) descarta la estadificación formal universalizada y genera discordancia en la indicación del escalamiento de quimioterapia adyuvante.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Staging, Página 180."
+    },
+    {
+        id: 66,
+        question: "En el abordaje genómico de un adenocarcinoma ampular avanzado, se reporta la variante patogénica BRAF V600E. ¿Qué inhibidor dual se recomienda como esquema dirigido para este perfil mutacional?",
+        options: ["Dabrafenib y Trametinib", "Erlotinib y Bevacizumab", "Pembrolizumab y Lenvatinib", "Trastuzumab y Pertuzumab"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, los tumores de la región biliar distal y pancreática portadores de la mutación BRAF V600E se benefician de manera directa y selectiva de la supresión de la cascada de señalización MAPK mediante esta combinación de inhibidores de tirosina cinasa.<br><br>Perla ENARM: \"Se recomienda Dabrafenib/Trametinib en tumores que son positivos para la mutación BRAF V600E\".<br><br>Análisis de Distractores: La dupla Erlotinib-Bevacizumab (B) modula las vías EGFR/VEGF careciendo de utilidad en clonas BRAF positivas. La combinación Trastuzumab/Pertuzumab (D) ejerce actividad citotóxica mediada por anticuerpos monoclonales únicamente en amplificación genética de HER2.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Targeted Systemic Therapies, Página 178."
+    },
+    {
+        id: 67,
+        question: "De acuerdo a las definiciones técnicas del ISGPS para resecciones venosas durante una pancreatoduodenectomía, ¿qué maniobra establece una reparación vascular Tipo 3?",
+        options: ["Resección tangencial lateral y venorrafia primaria", "Aplicación de parche autólogo peritoneal", "Interposición protésica de politetrafluoroetileno", "Anastomosis primaria término-terminal"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía Libro Cirugía, el ISGPS estandarizó la nomenclatura reconstructiva venosa indicando que el Tipo 3 consiste en la extirpación cilíndrica o segmentaria total del trayecto infiltrado seguido de una anastomosis primaria entre cabos sanos, libre de tensión y sin uso de injertos interpuestos.<br><br>Perla ENARM: \"El cierre mediante anastomosis término-terminal de la vena porta y la VMS se cataloga como resección tipo 3\".<br><br>Análisis de Distractores: La escisión del borde venoso con cierre primario o venorrafia lateral es el Tipo 1 (A). Reconstruir el defecto de la pared con un parche corresponde al Tipo 2 (B). Colocar un segmento autólogo extrínseco o conducto sintético es la variante más compleja, Tipo 4 (C).",
+        source: "Surgery for Pancreatic and Periampullary Cancer, 2018, Portal Vein Resection, Página 144."
+    },
+    {
+        id: 68,
+        question: "En el soporte metabólico posoperatorio de resecciones pancreáticas bajo el programa ERAS, ¿qué alteración fisiológica se busca prevenir al priorizar soluciones cristaloides balanceadas sobre la solución salina al 0.9%?",
+        options: ["Acidosis hiperclorémica", "Hiponatremia dilucional", "Alcalosis respiratoria", "Hipocalcemia celular"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Manual SAGES de Cirugía Pancreática, la administración continua perioperatoria de cloruro de sodio al 0.9% sobrecarga el túbulo renal induciendo una acidosis metabólica de origen hiperclorémico, lo cual reduce el aclaramiento vascular renal y fomenta el edema tisular esplácnico limitante para la recuperación intestinal temprana.<br><br>Perla ENARM: \"El uso de solución salina al 0.9% debe evitarse en favor de soluciones de sal balanceadas para prevenir la acidosis hiperclorémica y sus secuelas sistémicas\".<br><br>Análisis de Distractores: La solución salina 0.9% aporta cargas de sodio suprafisiológicas que protegen de la hiponatremia (B). La repercusión en la concentración hidrogeniónica plasmática deriva hacia la acidez, descartando la alcalosis (C). El flujo masivo de soluciones no altera el metabolismo paratiroideo u óseo de forma directa (D).",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Postoperative Management, Página 244."
+    },
+    {
+        id: 69,
+        question: "Durante la estratificación de riesgo nutricional preoperatorio (PG-SGA SF), ¿qué factor clínico limitante para la ingesta calórica se evalúa específicamente en el recuadro 3 de este instrumento de tamizaje?",
+        options: ["Capacidad funcional y fatiga", "Fluctuaciones en el peso", "Síntomas que afectan la ingesta oral", "Estimación cuantitativa de calorías"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Manual SAGES de Cirugía Pancreática, el formulario corto asienta las bases de la prehabilitación separando los dominios limitantes de asimilación; el recuadro 3 suma la carga de las barreras gastrointestinales (dolor, náusea, disfagia, diarrea) que impiden a un paciente oncológico mantener una fisiología entérica adecuada de forma activa.<br><br>Perla ENARM: \"El PG-SGA SF consta de cuatro recuadros: recuadro 1, peso; recuadro 2, ingesta; recuadro 3, síntomas que afectan la ingesta oral; y recuadro 4, función\".<br><br>Análisis de Distractores: La cuantificación dietética se plasma en el módulo 2 (D). La medición o interrogatorio sobre peso perdido reside en la primera sección basal (B). El rendimiento para las actividades habituales y postración de desgaste evalúan la sarcopenia en el recuadro 4 (A).",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Preoperative Risk Stratification, Página 546."
+    },
+    {
+        id: 70,
+        question: "Tras la cirugía con fines curativos de un adenocarcinoma ampular esporádico resecado (R0), ¿con qué periodicidad dictan las guías europeas realizar el seguimiento de imagen tomográfica durante los primeros 2 años?",
+        options: ["Cada 3 meses", "Exclusivamente ante alteración clínica", "Cada 12 meses", "Cada 6 meses"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía Intergrupal Francesa Tumores Ampulares, el periodo de recurrencia máxima en neoplasias con linaje pancreatobiliar e intestinal exige visualizar de forma protocolizada los lechos hepáticos, pulmonares y mesentéricos dos veces por año calendario (cada 6 meses), antes de espaciar la ventana oncológica a lapsos anuales.<br><br>Perla ENARM: \"La tomografía computarizada con contraste se recomienda cada 6 meses durante los primeros dos años tras la resección del adenocarcinoma ampular\".<br><br>Análisis de Distractores: El empleo de escáneres trimestrales (A) carece de soporte clínico útil elevando el gasto y toxicidad renal por contraste. Desfasar las lecturas a ventanas anuales iniciales (C) o depender únicamente de la sintomatología (B) anula la posibilidad de intervenciones de rescate paliativas dirigidas ante recidivas locorregionales en fase preclínica.",
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Follow up of operated AC, Página 466."
+    },
+    {
+        id: 71,
+        question: "Al orientar macroscópicamente la pieza extirpada de una duodenopancreatectomía cefálica, ¿qué cobertura del tejido adiposo se reconoce como la \"superficie anterior\", indicadora de riesgo local pero no dictaminada formalmente como un margen de transección?",
+        options: ["Parénquima central del cuello pancreático", "Surco vascular portal-mesentérico", "Tejido adiposo peripancreático cubierto por serosa", "Base de inserción del ligamento gastrocólico"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, esta cara anatómica ventral carece de corte frío con el bisturí pues su cubierta biológica peritoneal se encuentra intacta de origen; sin embargo, al alojar siembras focales que rebasan la cápsula, las pautas obligan a escrutarla por su elevado impacto predictivo de recaída carcinomatosa.<br><br>Perla ENARM: \"La superficie anterior es tejido adiposo cubierto por serosa... no es un margen verdadero, pero su reporte cuando es positivo está fuertemente recomendado por su asociación con riesgo de recurrencia\".<br><br>Análisis de Distractores: El parénquima del istmo (A) constituye el margen quirúrgico limpio primordial para la restitución del tránsito del jugo pancreático. El lecho portal posterior o lecho retroperitoneal derecho sí derivan de una labor incisiva cruenta parietal profunda (B, D).",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Pathologic Analysis, Página 174."
+    },
+    {
+        id: 72,
+        question: "Ante el diagnóstico de un paciente de 60 años con cáncer ampular metastásico, buena esperanza de vida (mayor a 6 meses) y obstrucción mecánica duodenal por compresión extrínseca, ¿cuál abordaje ofrece la mejor paliación con menor requerimiento de reintervenciones?",
+        options: ["Gastro yeyuno anastomosis quirúrgica", "Ablación endoscópica de la masa papilar", "Sonda nasoyeyunal distal", "Gastrectomía subtotal abierta"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer de Páncreas, derivar quirúrgicamente el tránsito gástrico hacia un asa sana alejada del tumor central es superior para restaurar un volumen de ingesta normal sin el riesgo predecible de oclusión tisular por crecimiento tumoral invasivo que presentan las prótesis autoexpandibles a los pocos meses.<br><br>Perla ENARM: \"Para la obstrucción de salida gástrica en pacientes con buena esperanza de vida y PS, se prefiere la gastro yeyunostomía abierta o laparoscópica sobre las prótesis\".<br><br>Análisis de Distractores: Tratar de repermeabilizar luz entérica fulgurando ciegamente (B) desencadena perforación térmica sin resultados patentes mecánicos. Proveer alivio transitorio por descompresión con sonda externa (C) impide el egreso a domicilio y la recuperación ponderal. Someter al individuo a una cirugía excisional ablativa (D) es un despropósito paliativo ante masas metastásicas de gran volumen.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Principles of Palliation, Página 175."
+    },
+    {
+        id: 73,
+        question: "Si un cirujano oncológico ejecuta la técnica de pancreatoduodenectomía con preservación pilórica (PPPD), ¿a qué distancia distal del anillo anatómico debe dividirse el lumen duodenal para conservar viabilidad en la reconstrucción?",
+        options: ["0.5 cm", "5 a 6 cm", "Secciona directamente sobre el músculo", "1 a 2 cm"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía Libro Cirugía, el respeto por la vascularización mural dictamina dejar un manguito o ribete duodenal de la primera porción, franja crucial para asegurar que la futura sutura en el montaje gastroentérico tenga soporte aponeurótico seguro, y el esfínter asuma de manera indemnizada la evacuación controlada.<br><br>Perla ENARM: \"Si se va a preservar el píloro, el duodeno se transecciona a 1-2 cm distal al píloro para conservar un manguito vascularizado para la anastomosis\".<br><br>Análisis de Distractores: Segmentos superiores a los 5 cm (B) conservan trayectos neoplásicos latentes que violan el principio oncológico del margen proximal R0. Limitar el manguito a menos de un centímetro (A) o cortar el codo muscular neto (C) devasculariza el asa ciega produciendo dehiscencias a tensión.",
+        source: "Surgery for Pancreatic and Periampullary Cancer, 2018, Pylorus-Preserving Pancreaticoduodenectomy, Página 316."
+    },
+    {
+        id: 74,
+        question: "Dentro del algoritmo predictivo metabólico para cirugía pancreática de la escala FRS, ¿qué medición preoperatoria detecta de forma directa la hiperhidratación y expansión intersticial indicadora de sarcopenia ligada al riesgo de fístula?",
+        options: ["Tomografía funcional", "Pletismografía vascular", "Análisis de vector de bioimpedancia (BIVA)", "Índice de aclaramiento de creatinina"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Manual SAGES de Cirugía Pancreática, la corriente alterna no invasiva arroja vectores hídricos (BIVA) evidenciando fracciones líquidas en compartimentos que el ojo subestima; los balances desequilibrados en expansión acuosa determinan friabilidad celular durante la manipulación de las vísceras elevando drásticamente el gradiente de filtración anastomótica.<br><br>Perla ENARM: \"La adiposidad preoperatoria y la expansión del líquido intersticial evaluada por el análisis de vector de bioimpedancia (BIVA) predice mayor morbilidad y mejora la capacidad predictiva del Score de Fístula (FRS)\".<br><br>Análisis de Distractores: El volumen minuto de depuración renal (D) cuantifica filtrado, no compartimentos tisulares retroperitoneales per se. Las evaluaciones vasculares neumáticas (B) y estudios de perfusión tomográfica (A) no disciernen el porcentaje de agua o de densidad magra intra e intercelular tisular periférica que rige las suturas.",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Perioperative Nutrition, Página 558."
+    },
+    {
+        id: 75,
+        question: "Al diseñar el plan quimioterapéutico de primera línea para un paciente con carcinoma ampular metastásico de tipo pancreatobiliar y adecuado desempeño físico, ¿qué maniobra adapta de manera segura el régimen FOLFIRINOX clásico reduciendo la mielotoxicidad grave?",
+        options: ["Reemplazar la sal de leucovorina", "Administrar el FOLFIRINOX omitiendo el bolo de 5-FU", "Intercambiar irinotecán por epirubicina", "Reducir el oxaliplatino un 50% sistemáticamente"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la Guía Intergrupal Francesa Tumores Ampulares, el bolo endovenoso súbito de pirimidinas contribuye marcadamente al nadir mielosupresivo (neutropenia profunda) y la toxicidad epitelial con diarrea sin ofrecer un aumento numérico proporcional en la sobrevida libre de enfermedad cuando es contrastado frente a infusiones continuas prolongadas (mFOLFIRINOX).<br><br>Perla ENARM: \"Para el subtipo pancreatobiliar o mixto, se puede proponer el FOLFIRINOX modificado sin bolo de 5-FU\".<br><br>Análisis de Distractores: Diluir empíricamente los platinos a mitad de eficacia oncológica (D) compromete de inicio la destrucción del microambiente tumoral periférico. Recambios de familias anthracíclicas irrelevantes (C) o sales (A) carecen de perfil de respuesta objetiva documentada fase 3 para conductos secretores.",
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Unresectable or Metastatic Ampullary Adenocarcinoma, Página 467."
+    },
+    {
+        id: 76,
+        question: "A nivel institucional global, ¿qué sistema de puntuación para medir la respuesta y destrucción morfológica celular postratamiento neoadyuvante ha sido adoptado obligatoriamente en el protocolo del Colegio de Patólogos Americanos (CAP)?",
+        options: ["Sistema de cuatro niveles de Ryan", "Categorización funcional de Evans", "Criterios de regresión estromal de Ishikawa", "Sistema simplificado de fibrosis de Chun"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a la Guía Libro Cirugía, este esquema de base numérica calibra meticulosamente la relación fibro-estromal respecto a islas celulares aberrantes viables; su reproductibilidad sin grandes sesgos de observador dictaminó su unánime selección por encima de otros esquemas patológicos históricos dependientes de la interpretación libre de \"fibrosis hialina o necrosis tumoral\".<br><br>Perla ENARM: \"El CAP recomienda en su protocolo la evaluación de la respuesta a la terapia mediante un sistema de cuatro niveles basado en el de Ryan et al.\".<br><br>Análisis de Distractores: Las rúbricas descritas por Evans (B), Chun (D) e Ishikawa (C), si bien forjaron las bases interpretativas previas, fueron desplazadas por poseer ambigüedades interpretativas sobre el grado exacto de porcentaje celular vivo frente al lecho cicatrizal de colágeno inducido.",
+        source: "Surgery for Pancreatic and Periampullary Cancer, 2018, Pathology Reporting, Página 269."
+    },
+    {
+        id: 77,
+        question: "En la técnica quirúrgica de pancreaticoyeyunostomía propuesta por Peng (anastomosis en \"vaina\" o \"binding\"), ¿cuál es el paso de exclusión extracorpóreo concebido para aislar el flujo exocrino hacia el asa intestinal?",
+        options: ["Colocación de sellante sintético de cianoacrilato", "Inserción biológica de tutores endoluminales permanentes", "Cierre lateral con doble hilera de grapas en V", "Ligadura circunferencial del asa yeyunal sobre el páncreas invaginado"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía Libro Cirugía, el axioma de este procedimiento estriba en empujar el remanente de páncreas desnudo varios centímetros dentro del lumen y amarrar con una cinta o jareta extrínseca desde la serosa intestinal; esta contención mecánica detiene el flujo perianastomótico reduciendo en teoría el riesgo de escurrimiento libre intraperitoneal.<br><br>Perla ENARM: \"A 1.5-2 cm del borde cortado del yeyuno, se hace un lazo circunferencial con un hilo absorbible alrededor del yeyuno junto con el páncreas intususceptado (binding)\".<br><br>Análisis de Distractores: El diseño protésico siliconado o stents ductales (B) rigen las anastomosis ducto a mucosa milimétricas, no los amarres orgánicos en bloque. Sellar con polímeros cianoacrílicos (A) o grapar cierres terminales ciegos (C) excluyen biológicamente la anastomosis del torrente circulatorio de regeneración local.",
+        source: "Surgery for Pancreatic and Periampullary Cancer, 2018, Binding Pancreaticojejunostomy, Página 119."
+    },
+    {
+        id: 78,
+        question: "En el abordaje \"artery first\" o mesentérico de la Arteria Mesentérica Superior (AMS) en una pancreatectomía, ¿qué segmento atómico transicional del tracto gastrointestinal se debe despegar y rotar primariamente a la derecha para lograr una visualización retroperitoneal segura?",
+        options: ["Flexura duodenoyeyunal (Ligamento de Treitz)", "Arco de la curvatura gástrica menor", "Inserción del foramen de Winslow", "Vaina autónoma de la arteria esplénica"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a la Guía Libro Cirugía, la ejecución limpia del control aferente troncal por vía inframesocólica se cimienta en desprender las fijaciones lumbares que suspenden el asa duodenoyeyunal final; retrayendo el mesenterio hacia estribor se transparenta automáticamente el curso venoso mesentérico y permite abordar lateralmente el flujo arterial retro-pancreático desde la base antes del contacto neoplásico.<br><br>Perla ENARM: \"El mesenterio del yeyuno se reseca en la línea entre el ligamento de Treitz y la tercera porción del duodeno para identificar la VMS y la AMS\".<br><br>Análisis de Distractores: La cúpula fúndica gástrica (B) dirige el abordaje de epiplones. El orificio hepatoduodenal transbursal de Winslow (C) comanda la exclusión portal superior de Pringle y no la línea arterial infraduodenal. Navegar vasos esplénicos (D) pertenece a las disecciones corpóreo-caudales como la cirugía RAMPS izquierda.",
+        source: "Surgery for Pancreatic and Periampullary Cancer, 2018, Pancreaticoduodenectomy with SMA Approach, Página 161."
+    },
+    {
+        id: 79,
+        question: "En la instauración de una vía de recuperación posquirúrgica rápida (ERAS) por pancreatectomía cefálica, ¿qué mandato rige estrictamente el aporte oral nutricional durante las primeras 24 horas (Día 1 posoperatorio)?",
+        options: ["Suministro hipercalórico exclusivo por yeyunostomía percutánea", "Líquidos claros y avance a dieta normal sin restricciones según tolerancia", "Sonda nasogástrica abierta y nutrición parenteral total suplementada", "Infusión hídrica estéril seguida de microdietas prebióticas"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Manual SAGES de Cirugía Pancreática, la parálisis entérica funcional es mínima en el yeyuno medio. Romper el paradigma de someter al tubo digestivo a privación hídrica posoperatoria anula los fenómenos catabólicos; inducir la ingesta temprana a criterio y confort del paciente acorta radicalmente el íleo dinámico sin impactar estadísticamente la integridad de las uniones epiteliales.<br><br>Perla ENARM: \"Dieta normal después de la cirugía sin restricciones de acuerdo a la tolerancia. La nutrición artificial debe considerarse solo como un enfoque individual\".<br><br>Análisis de Distractores: Las pautas oncológicas contemporáneas castigan y prohíben la aplicación invasiva percutánea mecánica (A) o parenteral central endovenosa con de privación total por sonda (C) de forma preventiva a pacientes exentos de malnutrición preoperatoria catastrófica debido a la alta morbimortalidad que añaden al perioperatorio.",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Enhanced Recovery Pathways, Página 524."
+    },
+    {
+        id: 80,
+        question: "Durante el análisis de fase arterial tomográfica para estatificar un adenocarcinoma periampular incipiente, ¿cuál de los siguientes hallazgos se clasifica de forma consensuada en la guía NCCN como indicio categórico de irresecabilidad local?",
+        options: ["Extensión focal a rama primaria yeyunal de la arteria mesentérica", "Compresión venosa de VMS y PV reparable con injertos autólogos", "Dilatación extrínseca tangencial de arteria hepática común de 90°", "Extensión tumoral al tronco celíaco con contacto ≥ 180° o afección aórtica"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer de Páncreas, las interfaces del estroma periaórtico o englobamientos que abrazan el semicírculo y suprimen la arteria de irrigación celíaca dictaminan que las hojas neurovasculares mesentéricas primordiales han sido invadidas concéntricamente con nula viabilidad de puenteo reconstructivo in situ por alto riesgo embólico fatal, catalogándose como \"Enfermedad localmente avanzada\".<br><br>Perla ENARM: \"Se clasifica como enfermedad localmente avanzada (irresecable) a un tumor con contacto >180° o cualquier contacto del eje celíaco con involucro de la aorta\".<br><br>Análisis de Distractores: El atrapamiento o deformidad lateral ≤ 180° grados asimétrica sobre hepática común o sus ramas (A, C) facultan al cirujano a derivar de emergencia o intentar control local tras neoadyuvancia (\"Borderline\"), mientras que los contactos sobre lechos lúmenes venosos de baja presión (B) nunca dictan oclusión radical de las posibilidades exeréticas si existen puntos cardinales de puenteo superior e inferior sanos.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Resectability Status, Página 237."
+    },
+    {
+        id: 81,
+        question: "Durante una pancreatoduodenectomía cefálica por un tumor masivo del proceso uncinado, el cirujano requiere una movilización total del intestino medio para exponer y controlar la confluencia venosa y la arteria mesentérica superior. ¿Qué maniobra técnica logra este objetivo al liberar las fijaciones desde el ciego hasta el ligamento de Treitz?",
+        options: ["Maniobra de Kocher extendida", "Maniobra de Mattox", "Maniobra de Cattell-Braasch", "Maniobra de Pringle"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la Guía Libro Cirugía, en tumores que involucran extensamente el proceso uncinado y exigen resección vascular, se requiere la movilización de la totalidad del intestino delgado y el mesenterio del colon derecho hasta el ángulo de Treitz. Esto expone sin tensión todo el eje portomesentérico anterior.<br><br>Perla ENARM: \"Para aproximar mejor los dos extremos venosos sin tensión, la movilización completa de la raíz del mesenterio mediante la maniobra de Cattell-Braasch es un paso fundamental\".<br><br>Análisis de Distractores: La maniobra de Kocher (A) solo moviliza el marco duodenal y la cabeza del páncreas hacia la línea media, sin liberar el mesenterio distal. La maniobra de Mattox (B) corresponde a la movilización visceral izquierda. La maniobra de Pringle (D) controla el flujo de entrada en el ligamento hepatoduodenal y no provee exposición mesentérica.",
+        source: "Surgery for Pancreatic and Periampullary Cancer, Springer, 2018, Pancreaticoduodenectomy with Venous Resection, Página 148."
+    },
+    {
+        id: 82,
+        question: "Según los lineamientos de estatificación TNM (AJCC/Sociedad Japonesa), ¿cuál de los siguientes hallazgos histopatológicos de invasión clasifica obligatoriamente a un carcinoma de la región periampular como estadio pT4?",
+        options: ["Invasión a la vena porta", "Invasión a la vena mesentérica", "Invasión a la arteria gastroduodenal", "Invasión al tronco celíaco"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía Sociedad Japonesa Páncreas, el rebasamiento tumoral de las fascias hacia los ejes arteriales primarios viscerales dicta la clasificación de irresecabilidad anatómica y eleva el tumor al máximo estadio local (pT4).<br><br>Perla ENARM: \"La invasión tumoral al tronco celíaco o la arteria mesentérica superior define biológicamente el estadio pT4 y contraindica una resección primaria sin terapia neoadyuvante\".<br><br>Análisis de Distractores: La infiltración histológica aislada de la vena porta (A) o de la vena mesentérica superior (B) se cataloga dentro de las variantes pT3, ya que los lúmenes venosos son técnicamente resecables y puenteables. La arteria gastroduodenal (C) es ligada sistemáticamente durante la operación y su invasión no define un estadio localmente avanzado irresecable.",
+        source: "Japanese Classification and Staging for Pancreatic and Periampullary Cancers, Springer, 2025, T-Category, Página 34."
+    },
+    {
+        id: 83,
+        question: "En un paciente con adenocarcinoma ampular irresecable, ictericia obstructiva severa y una expectativa de vida funcional proyectada mayor a 6 meses, ¿cuál es el dispositivo de elección para lograr una paliación biliar endoscópica duradera?",
+        options: ["Stent metálico autoexpandible", "Drenaje transhepático percutáneo", "Prótesis plástica de polietileno", "Esfinterotomía endoscópica aislada"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, los metaanálisis de paliación dictaminan que para sujetos no candidatos a cirugía con esperanza de vida prolongada, las endoprótesis metálicas garantizan la permeabilidad prolongada sin el riesgo constante de oclusión por biocapa.<br><br>Perla ENARM: \"En pacientes con expectativa de vida favorable y enfermedad irresecable, se prefiere la colocación de un stent metálico autoexpandible biliar para evitar intervenciones endoscópicas repetidas\".<br><br>Análisis de Distractores: Las prótesis plásticas (C) sufren obstrucción temprana (60 a 200 días) requiriendo reemplazos frecuentes, reservándose para pacientes con sobrevida muy corta. El drenaje percutáneo (B) condena al enfermo a portar catéteres externos, afectando la calidad de vida. La esfinterotomía aislada (D) es ineficaz contra la compresión tumoral extrínseca del conducto intrapancreático.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Palliative and Supportive Care, Página 48."
+    },
+    {
+        id: 84,
+        question: "Para lograr un mapeo milimétrico de un tumor ampular y su relación con los márgenes tras una pancreatoduodenectomía, ¿qué técnica de seccionamiento de la pieza macroscópica es la recomendada en los protocolos de patología estandarizados?",
+        options: ["Bivalva longitudinal a lo largo de los conductos", "Secciones axiales perpendiculares al duodeno", "Secciones coronales paralelas a la luz", "Afeitado tangencial de toda la mucosa"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Libro Patología Cáncer Pancreático, el método anatómico que preserva la visualización concéntrica en 360 grados de la ampolla, el páncreas cefálico y los vasos es el corte en \"pan de molde\" perpendicular al marco intestinal.<br><br>Perla ENARM: \"El seccionamiento axial perpendicular al duodeno es el estándar de oro patológico para medir con precisión la distancia del tumor ampular hacia los márgenes de resección y estructuras adyacentes\".<br><br>Análisis de Distractores: La técnica de apertura en bivalva (A) siguiendo el conducto (método clásico antiguo) distorsiona la anatomía tridimensional e impide valorar con rigor la profundidad radial tumoral. Cortes coronales (C) o tangenciales mucosos (D) inutilizan la estimación milimétrica exigida por los sistemas AJCC y CAP.",
+        source: "Pathology Reporting of Resected Pancreatic/Periampullary Cancer Specimen, Springer, 2025, Handling of the Specimen, Página 255."
+    },
+    {
+        id: 85,
+        question: "Según las guías oncológicas europeas, en un paciente con adenocarcinoma ampular metastásico cuyo perfil molecular revela sobreexpresión documentada del receptor HER2, ¿cuál es el esquema farmacológico de primera línea avalado?",
+        options: ["Erlotinib en monoterapia", "Cetuximab con FOLFIRI", "Terapia anti-HER2 con FOLFOX", "Bevacizumab con Gemcitabina"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la Guía Intergrupal Francesa Tumores Ampulares, basándose en la fuerte homología de ciertos subtipos ampulares con el cáncer gástrico y colorrectal, los tumores con amplificación positiva de HER2 son tributarios de intervención bloqueadora directa sinérgica con citotóxicos basados en platino.<br><br>Perla ENARM: \"La identificación de la amplificación de HER2 en tumores ampulares metastásicos abre la puerta al uso de anticuerpos monoclonales anti-HER2 combinados con regímenes FOLFOX o 5-FU como opción terapéutica sistémica\".<br><br>Análisis de Distractores: El Bevacizumab (D) y el Cetuximab (B) interactúan sobre VEGF y EGFR respectivamente, y no tienen acción específica sobre el receptor HER2 en las guías para tumores ampulares. El Erlotinib (A) inhibe la tirosina cinasa del EGFR y tiene un uso muy marginal en cáncer ductal pancreático, sin indicación en sobreexpresión HER2 pura.",
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Systemic Therapy, Página 11."
+    },
+    {
+        id: 86,
+        question: "En el posoperatorio de una pancreatoduodenectomía, un paciente es diagnosticado con una fuga quilosa asilada de bajo gasto (Grado A) a través del drenaje. ¿Cuál es el tratamiento dietético de primera línea recomendado para el cierre del defecto linfático?",
+        options: ["Ayuno estricto con nutrición parenteral", "Dieta sin grasas con triglicéridos de cadena media", "Nutrición enteral con fórmula polimérica estándar", "Dieta hiperproteica con triglicéridos de cadena larga"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Manual SAGES de Cirugía Pancreática, los triglicéridos de cadena media (MCT) se absorben directamente al sistema venoso portal obviando la formación de quilomicrones y el transporte por la cisterna del quilo.<br><br>Perla ENARM: \"La exclusión de triglicéridos de cadena larga acoplada al uso de MCT colapsa fisiológicamente el flujo linfático retroperitoneal, permitiendo el cierre conservador del 90% de las fístulas quilosas grado A\".<br><br>Análisis de Distractores: Indicar ayuno y nutrición parenteral total (A) está reservado como segunda línea para fugas refractarias de alto débito (Grado B/C). Proveer fórmulas poliméricas regulares (C) o triglicéridos de cadena larga (D) perpetúa el paso masivo de lípidos al árbol linfático esplácnico, exacerbando el volumen del derrame quiloso.",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, 2025, Short-Term Morbidity, Página 581."
+    },
+    {
+        id: 87,
+        question: "Un paciente añoso y no apto para cirugía es sometido a una papilectomía endoscópica por un adenoma ampular. Si en el seguimiento se documenta tejido adenomatoso residual intramucoso en la cicatriz, ¿qué abordaje local de rescate está aceptado en las guías europeas?",
+        options: ["Crioterapia transluminal", "Radioterapia estereotáctica corporal", "Quimioembolización transarterial", "Ablación endobiliar por radiofrecuencia"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la Guía Intergrupal Francesa Tumores Ampulares, en individuos con un riesgo quirúrgico inaceptable donde la endoscopia convencional con asa falla en aclarar completamente los bordes biliares o pancreáticos intraluminales de un adenoma previo, la termoablación focal dirigida sirve como adyuvante para erradicar la displasia mucosales.<br><br>Perla ENARM: \"La radiofrecuencia endobiliar es una herramienta emergente y aceptada para ablacionar tejido adenomatoso papilar residual profundo, evitando la morbimortalidad de una duodenopancreatectomía en sujetos frágiles\".<br><br>Análisis de Distractores: La radioterapia externa (B) y la quimioembolización (C) actúan sobre tumores malignos sólidos invasivos con hipervascularización, no sobre focos epiteliales benignos displásicos de 2 mm. La crioterapia local (A) no ha sido estandarizada formalmente en las vías bilio-pancreáticas debido a necrosis incontrolable.",
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Endoscopic management, Página 8."
+    },
+    {
+        id: 88,
+        question: "En el contexto de un adenocarcinoma de la ampolla de Vater valorado por imagen como \"resecable\", ¿cuál de los siguientes factores de alto riesgo justifica que el equipo multidisciplinario decida iniciar con terapia sistémica neoadyuvante según la NCCN?",
+        options: ["Elevación marcada del CA 19-9", "Edad mayor a 75 años", "Presencia de ictericia indolora", "Ausencia de dilatación del conducto de Wirsung"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, niveles astronómicos de marcadores tumorales en un enfermo sin colangitis traducen biológicamente la probabilidad de enfermedad micrometástasica silente no visualizada en la tomografía, por lo que someterlos a estrés quirúrgico directo resultaría en una recaída precoz fulminante.<br><br>Perla ENARM: \"Una elevación desproporcionada del CA 19-9, en ausencia de obstrucción biliar aguda, es un biomarcador de micrometástasis oculta que dicta el desplazamiento de la cirugía inmediata hacia la neoadyuvancia inicial\".<br><br>Análisis de Distractores: La ictericia obstructiva (C) es la presentación habitual que propicia la detección y no contraindica el abordaje upfront. La edad cronológica avanzada (B) o el colapso del conducto pancreático (D) no son criterios biológicos oncológicos estandarizados para inducir toxicidad con quimioterapia previa si la masa es extirpable.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Management of Resectable Disease, Página 1."
+    },
+    {
+        id: 89,
+        question: "Al presentarse infiltración circunferencial del eje portomesentérico durante una pancreatectomía, las normativas del Grupo Internacional de Estudio de Cirugía Pancreática (ISGPS) catalogan el método de reconstrucción. ¿Qué intervención define la \"Resección Tipo 4\"?",
+        options: ["Parche autólogo de peritoneo", "Venorrafia lateral simple", "Interposición de injerto protésico", "Anastomosis primaria término-terminal"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, cuando la magnitud del defecto vascular resultante excede la posibilidad técnica de aproximar los bordes nativos de la vena (habitualmente brechas mayores de 3 a 5 cm), el escalón de máxima complejidad reconstructiva obliga al uso de conductos externos tubulares.<br><br>Perla ENARM: \"La interposición de un injerto autólogo o de politetrafluoroetileno (PTFE) conforma la Resección Tipo 4, siendo la medida extrema de salvamento cuando el puenteo primario del eje portomesentérico cursa con tensión venosa restrictiva\".<br><br>Análisis de Distractores: El cierre primario del defecto en cuña dictamina el Tipo 1 (B). Usar un parche o domo para ampliar la luz es el Tipo 2 (A). Lograr una sutura vascular término-terminal de los muñones con o sin liberación de la raíz define la Resección Tipo 3 (D).",
+        source: "Surgery for Pancreatic and Periampullary Cancer, Springer, 2018, Portal Vein Resection, Página 145."
+    },
+    {
+        id: 90,
+        question: "Durante la caracterización inicial de la biopsia o pieza patológica de un adenocarcinoma ampular, ¿qué marcadores se recomiendan evaluar universalmente para considerar terapias inmunológicas de punto de control en estadios avanzados?",
+        options: ["Receptores de somatostatina", "Proteínas de reparación de errores de emparejamiento", "Marcadores de transición epitelio-mesénquima", "Expresión de ciclinas dependientes de cinasas"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer Ampular, debido a la elevada asociación con mutaciones germinales (como el síndrome de Lynch), la deficiencia en estas proteínas (dMMR) detectada por inmunohistoquímica valida al tumor como altamente inmunogénico, aprobando formalmente el uso de pembrolizumab.<br><br>Perla ENARM: \"La documentación del estado de las proteínas de reparación de ADN (MMR) es un paso obligatorio en la patología del adenocarcinoma ampular, ya que abre la puerta curativa a la inmunoterapia dirigida con anticuerpos anti-PD-1\".<br><br>Análisis de Distractores: Los análogos a receptores de somatostatina (A) tipifican y tratan los tumores neuroendocrinos pancreáticos (pNET). La transición epitelio-mesénquima (C) y el ciclo de cinasas celulares (D) son focos de investigación traslacional genérica sin un inhibidor clínico de punto de control avalado actualmente en guías rectoras para vías biliares.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Ampullary Adenocarcinoma, 2026, Targeted Systemic Therapies, Página 200."
+    },
+    {
+        id: 91,
+        question: "En la tomografía axial con protocolo pancreático, un tumor ampular contacta la Arteria Hepática Común (CHA) sin envolver el tronco celíaco ni alcanzar la bifurcación hepática. ¿A qué categoría de resecabilidad anatómica corresponde esta morfología?",
+        options: ["Ausencia total de contacto vascular", "Invasión circunferencial completa sin reconstrucción", "Cualquier grado de contacto sólido sin extensión al tronco celíaco", "Contacto exclusivo con la arteria gastroduodenal"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la Guía NCCN Cáncer de Páncreas, las lesiones que contactan las estructuras arteriales aferentes superiores pero mantienen cabos proximales periaórticos y distales hiliares indemnes que permitan un abordaje reconstructivo se definen universalmente como el límite técnico para quimio-reducción operatoria.<br><br>Perla ENARM: \"El contacto tumoral con la arteria hepática común clasifica al paciente como 'borderline resecable', siendo mandataria la neoadyuvancia siempre que las zonas proximal y distal de la arteria admitan una anastomosis vascular segura\".<br><br>Análisis de Distractores: La ausencia de roces arteriales (A) clasifica al enfermo como puramente \"Resecable\". La invasión de la confluencia o tronco celíaco (B) es el criterio radiológico máximo dictaminado como \"Localmente Avanzado / Irresecable\". El contacto de la arteria gastroduodenal (D) se asume en todos los tumores peripapilares de cabeza de páncreas sin conferir mal pronóstico reconstructivo.",
+        source: "NCCN Clinical Practice Guidelines in Oncology: Pancreatic Adenocarcinoma, 2026, Criteria Defining Resectability Status, Página 192."
+    },
+    {
+        id: 92,
+        question: "Con el objetivo de abatir la tasa de morbimortalidad por sepsis intraabdominal en cirugías limpias-contaminadas complejas como la pancreatoduodenectomía, ¿qué insumo quirúrgico ha demostrado evidencia científica prospectiva para disminuir la infección del sitio quirúrgico?",
+        options: ["Drenaje cerrado de succión continua", "Malla de polipropileno profiláctica", "Apósito de presión negativa profiláctico", "Protector de bordes de herida intraoperatorio"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Manual SAGES de Cirugía Pancreática, el contacto constante de vísceras abiertas (estómago, vía biliar y yeyuno) con el tejido celular subcutáneo durante tiempos operatorios prolongados coloniza invariablemente los planos blandos. El aislamiento mecánico circunferencial retractor de la incisión parietal previene de forma objetiva este inóculo bacteriano directo.<br><br>Perla ENARM: \"El uso sistemático de un retractor/protector circunferencial plástico de los bordes de la herida es una medida económica, comprobada y altamente efectiva para reducir la infección de sitio quirúrgico en anastomosis bilio-entéricas\".<br><br>Análisis de Distractores: Los drenajes perianastomóticos (A) mitigan el impacto sistémico de una fístula profunda ya instaurada, pero no reducen la infección de la pared abdominal. Integrar mallas (B) o presión negativa profiláctica generalizada (C) carece de soporte de nivel 1 como estándar preventivo contra inóculos endógenos intraoperatorios directos.",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, Springer, 2025, Short-Term Morbidity, Página 581."
+    },
+    {
+        id: 93,
+        question: "Tras secuenciar el tejido de un adenocarcinoma de ampolla de Vater con enfermedad recurrente a distancia, se descubre que el paciente alberga una fusión genética del receptor del factor de crecimiento de fibroblastos (FGFR2). ¿Qué agente terapéutico dirigido está sustentado por las guías en este caso?",
+        options: ["Inhibidores de FGFR2", "Inhibidores de PARP", "Anticuerpos monoclonales anti-VEGF", "Inhibidores de tirosina cinasa de Bruton"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a la Guía Intergrupal Francesa Tumores Ampulares, en el nicho de tumores de origen del conducto biliar (incluyendo fenotipos pancreatobiliares ampulares) que demuestran rearreglos o fusiones de la familia FGFR, las moléculas antagonistas selectivas proporcionan periodos prolongados de estabilización de la enfermedad.<br><br>Perla ENARM: \"La secuenciación profunda en recaídas metastásicas ampulares permite identificar mutaciones huérfanas como las fusiones FGFR2, habilitando el empleo de terapias orales dirigidas con inhibidores selectivos tras agotar la primera línea\".<br><br>Análisis de Distractores: Las moléculas bloqueadoras de PARP (B) fungen frente a deleciones de recombinación homóloga (BRCA1/2). Los antiangiogénicos contra VEGF (C) poseen muy escaso impacto de supervivencia general en esta topografía. Los inhibidores de la cinasa de Bruton (D) controlan linajes neoplásicos puramente hematológicos (linfomas/leucemias).",
+        source: "Tumores ampulares Guía de práctica clínica intergrupal francesa, 2024, Systemic Therapies, Página 11."
+    },
+    {
+        id: 94,
+        question: "Como parte integral de los lineamientos \"Enhanced Recovery After Surgery\" (ERAS) tras una resección pancreática, ¿qué instrucción debe regir el manejo de la sonda nasogástrica descompresiva?",
+        options: ["Retirar al final de la cirugía sin uso rutinario", "Mantener hasta el quinto día posoperatorio", "Conectar a succión intermitente por 72 horas", "Reemplazar por sonda nasoyeyunal de alimentación"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Manual SAGES de Cirugía Pancreática, la permanencia injustificada de un tubo rígido faríngeo perpetúa la respuesta catabólica inflamatoria, merma la dinámica ventilatoria e impide la tolerancia a la deglución de líquidos claros el mismo día, un pilar fundamental para acortar el íleo paralítico dinámico.<br><br>Perla ENARM: \"El retiro inmediato del tubo nasogástrico al extubar al paciente tras una duodenopancreatectomía es un pilar ERAS obligatorio que previene la neumonía basal, estimula el peristaltismo precoz y reduce la estancia hospitalaria\".<br><br>Análisis de Distractores: Sostener la sonda por varios días (B, C) anula completamente los protocolos de recuperación acelerada promoviendo incomodidad, xerostomía y esofagitis. El uso rutinario de sondas transanastomóticas de alimentación (D) ha demostrado en metaanálisis no superioridad, elevando la incidencia de complicaciones mecánicas silentes.",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, Springer, 2025, Clinical Pathway, Página 400."
+    },
+    {
+        id: 95,
+        question: "En la evaluación por colangiorresonancia o tomografía de una ictericia indolora, ¿qué hallazgo morfológico clásico indica una obstrucción a nivel de la convergencia anatómica en la papila de Vater orientando al diagnóstico de masa ampular?",
+        options: ["Signo del pico de pájaro", "Signo del halo periportal", "Signo del doble conducto", "Signo de la arteria en cuerda"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, el crecimiento de tejido duro intrínseco en la estrecha salida compartida tapona de forma retrograda el flujo exocrino simultáneo de ambos sistemas de drenaje, visualizándose radiológicamente como la dilatación proximal masiva del colédoco y del Wirsung.<br><br>Perla ENARM: \"El signo radiológico del doble conducto en una tomografía o resonancia en un sujeto con ictericia sin antecedentes de litiasis es altamente sugestivo y virtualmente diagnóstico de una neoplasia maligna en la región periampular hasta demostrar lo contrario\".<br><br>Análisis de Distractores: El signo del pico de pájaro (A) describe el afilamiento del esófago distal en la acalasia o en vólvulos colónicos. El halo periportal hídrico (B) denota edema inflamatorio hepático inespecífico. El signo en cuerda (D) asiste a las displasias fibromusculares vasculares sistémicas.",
+        source: "Surgery for Pancreatic and Periampullary Cancer, Springer, 2018, Imaging Evaluation, Página 257."
+    },
+    {
+        id: 96,
+        question: "Durante la génesis molecular de las neoplasias invasivas periampulares, ¿qué precursora microscópica intraductal epitelial de alto grado está fuertemente correlacionada con el desarrollo y agresividad posterior del adenocarcinoma de estirpe pancreatobiliar?",
+        options: ["Neoplasia intraepitelial biliar grado 1", "Neoplasia intraepitelial pancreática de alto grado", "Hiperplasia de glándulas de Brunner", "Adenoma de glándulas pilóricas"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la Guía Springer Patología, el carcinoma invasor no surge de novo, sino que requiere una transición escalonada de cambios mutacionales acinares. La etapa que antecede de manera obligada a la irrupción de la membrana basal y dicta la agresividad del estroma es el estadio PanIN 3 o de alto grado.<br><br>Perla ENARM: \"La presencia de Neoplasia Intraepitelial Pancreática (PanIN) de alto grado en los bordes de resección quirúrgica amerita seguimiento estricto, pues representa el último peldaño biológico antes de la carcinogénesis invasiva pura\".<br><br>Análisis de Distractores: La variante biliar de displasia de bajo grado (BilIN 1, A) carece de capacidad invasiva demostrada inminente. La hiperplasia compensadora de glándulas de Brunner (C) es una entidad puramente benigna submucosa. Los adenomas pilóricos gástricos (D) componen una minoría histológica que rara vez condicionan la estirpe letal pancreatobiliar.",
+        source: "Benign, Premalignant, and Malignant Duodenal Neoplasms, Springer, 2025, Pancreatic Intraepithelial Neoplasia, Página 1."
+    },
+    {
+        id: 97,
+        question: "Al integrar un protocolo de soporte nutricional posoperatorio para pacientes con pancreatoduodenectomía, los estudios metaanalíticos contemporáneos establecen que la colocación rutinaria de yeyunostomías de alimentación profilácticas condiciona un impacto indeseable. ¿Cuál es dicho impacto?",
+        options: ["Aumenta las tasas de retraso del vaciamiento gástrico", "Previene el desarrollo de fístula pancreática", "Disminuye el tiempo de estancia hospitalaria", "Mejora la supervivencia global a 5 años"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, insertar un catéter de cuerpo extraño dentro del asa defuncionalizada induce vólvulos, fuga, irritación local del marcapasos intestinal y anula el beneficio fisiológico entérico, prolongando francamente el íleo gástrico postraumático.<br><br>Perla ENARM: \"El abandono de la yeyunostomía profiláctica de alimentación disminuye la incidencia de complicaciones mecánicas e íleo adinámico en cirugía pancreática; debiendo instituirse precozmente la tolerancia oral de líquidos claros\".<br><br>Análisis de Distractores: Disminuir la estadía (C), proteger anastomosis exocrinas (B) o abatir la recurrencia oncológica de muerte (D) justificaban históricamente el uso de catéteres de yeyuno, dogmas que carecen totalmente de respaldo en la evidencia nivel I actual que prohíbe su uso de manera global.",
+        source: "Surgery for Pancreatic and Periampullary Cancer, Springer, 2018, Mitigation Strategies for DGE, Página 629."
+    },
+    {
+        id: 98,
+        question: "Durante la restitución exocrina en la pancreatoduodenectomía mediante anastomosis pancreatoyeyunal tipo ducto-mucosa, ¿qué objetivo técnico justifica la introducción temporal de un tubo pediátrico de alimentación (stent interno 5 Fr) dentro del Wirsung?",
+        options: ["Derivar el jugo pancreático al exterior", "Dilatar permanentemente el conducto", "Prevenir la isquemia de la mucosa yeyunal", "Evitar la ligadura inadvertida del conducto"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Libro Cirugía de Páncreas, al calibrar luces milimétricas friables y suturar a ciegas la pared posterior, es imperativo interponer un soporte de silicón pasivo inerte que garantice la permeabilidad perimetral del nudo al cerrarse, permitiendo anclaje anatómico exacto.<br><br>Perla ENARM: \"La ferulización endoluminal del conducto de Wirsung con un stent pediátrico facilita enormemente la colocación de la sutura transmural anastomótica e impide el cierre mecánico (estenosis aguda) yatrogénico de la vía exocrina\".<br><br>Análisis de Distractores: Las protecciones para isquemia en las asas digestivas aferentes (C) dependen de la conservación cuidadosa de arcos arteriales marginales perimesentéricos. Drenar al exterior de la pared abdominal (A) aplica para tutores largos transcísticos / transhepáticos biliar, y las paredes biológicas no dilatan crónicamente (B) como los metales vasculares.",
+        source: "Surgery for Pancreatic and Periampullary Cancer, Springer, 2018, Invaginating Pancreaticojejunostomy: How I Do It, Página 104."
+    },
+    {
+        id: 99,
+        question: "Bajo los parámetros estrictos de estadificación del Grupo Internacional de Estudio de Cirugía Pancreática (ISGPS), ¿qué requerimiento o complicación instaurada define inequívocamente a una fuga biliar posoperatoria como \"Grado C\"?",
+        options: ["Mantenimiento del drenaje original", "Tratamiento exclusivo con ayuno", "Re-laparotomía o disfunción orgánica", "Intervención endoscópica sin falla sistémica"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Manual SAGES de Cirugía Pancreática, la graduación estratificada de gravedad biológica asciende al estadio C únicamente cuando el escape fluido detergente e infectado sobrepasa las barreras contenidas, sumergiendo al individuo en un choque refractario y dictaminando su re-ingreso obligado al área quirúrgica o su estancia ventilada en terapia intensiva.<br><br>Perla ENARM: \"Al igual que con la fístula pancreática, la fuga biliar posoperatoria se cataloga como la más letal (Grado C) cuando condiciona disfunción multiorgánica sostenida, requiere laparotomía exploradora de urgencia o resulta en el deceso del paciente\".<br><br>Análisis de Distractores: Las maniobras limitadas al soporte en piso conservador con ayuno (B) engloban la inocuidad fisiológica del Grado A. Emplear medidas terapéuticas invasivas como esfinterotomías o reacomodo de drenajes radiológicos pero logrando estabilidad en el enfermo de base rigen estrictamente la severidad moderada tipo B (A, D).",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, Springer, 2025, Short-Term Morbidity After Pancreatectomy, Página 577."
+    },
+    {
+        id: 100,
+        question: "En el marco de un programa multimodal de prehabilitación previo a cirugía por cáncer de páncreas, ¿qué parámetro cardiopulmonar objetivo se busca incrementar biológicamente a través del entrenamiento aeróbico para proteger contra complicaciones?",
+        options: ["Filtración glomerular renal", "Consumo máximo de oxígeno", "Gasto cardíaco en reposo", "Volumen residual pulmonar"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Manual SAGES de Cirugía Pancreática, la somatización del trauma quirúrgico masivo induce una deuda aguda de perfusión hídrica tisular; el entrenamiento preoperatorio forja una capacidad de reserva muscular que extrae eficientemente mayor porcentaje del gas circulante, blindando a los tejidos contra la injuria sistémica.<br><br>Perla ENARM: \"La meta fisiológica última de someter a un candidato oncológico a rutinas aeróbicas de prehabilitación no es lograr hipertrofia muscular, sino asegurar un consumo máximo de oxígeno celular capaz de solventar la demanda metabólica de curación de grandes resecciones viscerales\".<br><br>Análisis de Distractores: Alterar los volúmenes estáticos atrapados bronquiales (D) denota la progresión degenerativa del enfisema crónico del fumador (EPOC). Modificar la capacidad ultra-filtrante nefronal (A) o enlentecer basalmente la fuerza del marcapaso contráctil auricular en reposo (C) no proporcionan el escudo energético oxigenado que combate a los predictores directos de falla anastomótica periquirúrgica.",
+        source: "The SAGES Manual of Evolving Techniques in Pancreatic Surgery, Springer, 2025, Preoperative Risk Stratification to Prehabilitation, Página 507."
+    }
+        ];
+
+        // ==========================================
+        // ==========================================
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('ampulaeLastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('ampulaeProgress');
+                localStorage.removeItem('ampulaeLastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-pink-500 shadow-md z-10 border-pink-500 dark:border-pink-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-pink-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-rose-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! UMAE 25 - 2026" : "R4 - UMAE 25 - 2026";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "UMAE 25 - R4";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus las respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="BS06308GYOE.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-pink-100 dark:border-pink-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-pink-50 has-[:checked]:border-pink-400 dark:has-[:checked]:bg-pink-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-pink-600 focus:ring-pink-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-600 dark:hover:bg-pink-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('ampulaeProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('ampulaeLastQId', currentQuestionId);
+                else localStorage.removeItem('ampulaeLastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('ampulaeProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB26PT8kuB-0fxyUYgGk51yC1rAsW0dYj0",
+        authDomain: "enarm-lite.firebaseapp.com",
+        projectId: "enarm-lite",
+        storageBucket: "enarm-lite.firebasestorage.app",
+        messagingSenderId: "767032952477",
+        appId: "1:767032952477:web:84347320ed3d376f7e7674",
+        measurementId: "G-PVR3RBVNSV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    //document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "usuarios_autorizados", user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            
+            if(userDocSnap.exists()) {
+                document.body.style.opacity = '1';
+            } else {
+                //window.location.href = "index.html"; 
+            }
+        } else {
+            //window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>
