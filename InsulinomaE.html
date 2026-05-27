@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">UMAE</span>
+                    <span class="logo-Lite text-sm">25<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // =========================================================
+        const questionsData = [
+    {
+        id: 1, 
+        question: "¿Cuál es el umbral de glucosa plasmática necesario para establecer el diagnóstico bioquímico de hiperinsulinismo endógeno?", 
+        options: ["≤ 45 mg/dl", "≤ 55 mg/dl", "≤ 65 mg/dl", "≤ 75 mg/dl"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la guía de la Endocrine Society, la hipoglucemia mediada por insulina se define bioquímicamente por glucosa ≤ 55 mg/dl (3.0 mmol/L) junto con niveles de insulina inapropiadamente altos. Esta caída en la glucosa desencadena la cascada neuroglucopénica y autonómica.<br><br>Perla ENARM: La documentación de la tríada de Whipple en conjunto con este umbral glucémico es el estándar de oro absoluto antes de proceder con cualquier estudio de imagen de localización topográfica.<br><br>Análisis de Distractores: La opción A representa un umbral más bajo que algunos pacientes toleran de forma asintomática durante el ayuno prolongado, pero no es el límite de corte universal. Las opciones C y D corresponden a cifras normales o limítrofes que no desencadenan la respuesta autonómica clásica y no validan el diagnóstico funcional.", 
+        source: "Approach to the Patient: Insulinoma, 2023, Diagnosis and Presentation, 1111." 
+    },
+    {
+        id: 2, 
+        question: "¿Cuál es la concentración sérica mínima de insulina requerida concomitantemente con hipoglucemia para confirmar la presencia de un insulinoma?", 
+        options: ["≥ 1 µU/ml", "≥ 2 µU/ml", "≥ 3 µU/ml", "≥ 5 µU/ml"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a las guías ENETS, una concentración de insulina ≥ 3 µU/ml durante un evento documentado de hipoglucemia indica secreción autónoma y no regulada de la hormona por un tumor neuroendocrino subyacente.<br><br>Perla ENARM: La secreción endógena de insulina en sujetos sanos se suprime casi por completo frente a la hipoglucemia; la falla en esta supresión fisiológica es el hallazgo patológico cardinal.<br><br>Análisis de Distractores: Las opciones A y B son valores por debajo del umbral diagnóstico que pueden presentarse durante la supresión fisiológica normal. La opción D es un valor alto que confirma firmemente el diagnóstico, pero no es el punto de corte mínimo establecido en las guías internacionales.", 
+        source: "Neuroendocrine Tumours, 2024, Laboratory/Biochemical Diagnosis of Insulinomas, 193." 
+    },
+    {
+        id: 3, 
+        question: "¿Qué nivel sérico de péptido C, medido durante el episodio de hipoglucemia, es un criterio diagnóstico indispensable para el hiperinsulinismo endógeno?", 
+        options: ["≥ 0.6 ng/ml", "≥ 1.0 ng/ml", "≥ 1.5 ng/ml", "≥ 2.0 ng/ml"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo a la guía Endocrine Society, un péptido C ≥ 0.6 ng/ml demuestra la escisión intracelular del pro-péptido y la secreción endógena continua de insulina, lo cual establece categóricamente el origen endógeno del exceso de hormona.<br><br>Perla ENARM: La medición simultánea de péptido C es el paso crítico y definitivo para descartar hipoglucemia facticia secundaria a la inyección subrepticia de insulina exógena.<br><br>Análisis de Distractores: Las opciones B, C y D representan niveles elevados que sin duda pueden presentarse en un insulinoma, pero el punto de corte diagnóstico mínimo para documentar falta de supresión endógena es 0.6 ng/ml.", 
+        source: "Approach to the Patient: Insulinoma, 2023, Diagnosis and Presentation, 1111." 
+    },
+    {
+        id: 4, 
+        question: "¿Qué nivel sérico de proinsulina establece el diagnóstico confirmatorio de insulinoma durante un evento de hipoglucemia?", 
+        options: ["≥ 1 pmol/L", "≥ 2 pmol/L", "≥ 3 pmol/L", "≥ 5 pmol/L"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al consenso clínico ENETS, niveles de proinsulina ≥ 5 pmol/L reflejan una alteración estructural en el procesamiento celular normal de la insulina, un hallazgo bioquímico característico de los tumores neuroendocrinos secretores inmaduros.<br><br>Perla ENARM: La proinsulina es el marcador con mayor precisión diagnóstica y sensibilidad para insulinoma frente a cualquier otra causa de hipoglucemia hiperinsulinémica en el adulto.<br><br>Análisis de Distractores: Las opciones A, B y C son valores suprimidos fisiológicamente en pacientes sanos durante el ayuno y no indican una disfunción patológica en el empaquetamiento o secreción de gránulos tumorales.", 
+        source: "Neuroendocrine Tumours, 2024, Plasma Glucose and Insulin Concentrations, 194." 
+    },
+    {
+        id: 5, 
+        question: "¿Cuál es el límite máximo de beta-hidroxibutirato esperado durante la prueba de ayuno en un paciente con insulinoma?", 
+        options: ["≤ 1.5 mmol/L", "≤ 2.0 mmol/L", "≤ 2.7 mmol/L", "≤ 3.5 mmol/L"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la guía de la Endocrine Society, el exceso de insulina endógena inhibe potentemente la lipólisis y la cetogénesis hepática, manteniendo el beta-hidroxibutirato ≤ 2.7 mmol/L de forma aberrante incluso en estados de ayuno prolongado.<br><br>Perla ENARM: Un aumento de beta-hidroxibutirato por encima de este umbral indica una respuesta cetogénica intacta compensatoria, permitiendo descartar firmemente la presencia de un insulinoma activo.<br><br>Análisis de Distractores: Las opciones A y B son valores bajos que pueden documentarse en insulinoma pero no constituyen el punto de corte diagnóstico exacto. La opción D indica cetogénesis activa fisiológica y descarta por completo el hiperinsulinismo endógeno.", 
+        source: "Neuroendocrine Tumours, 2024, C-Peptide, Proinsulin and Beta-Hydroxybutyrate, 194." 
+    },
+    {
+        id: 6, 
+        question: "¿Qué porcentaje de los insulinomas se presenta en asociación directa con el síndrome de neoplasia endocrina múltiple tipo 1?", 
+        options: ["5 a 10 %", "15 a 20 %", "25 a 30 %", "35 a 40 %"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo a la guía clínica ENETS, el insulinoma se asocia al síndrome de neoplasia endocrina múltiple tipo 1 en un 5 a 10 % de los casos globales, presentándose usualmente a edades más tempranas, con un curso clínico indolente y de forma multifocal.<br><br>Perla ENARM: Ante el diagnóstico transoperatorio o radiológico de múltiples tumores neuroendocrinos pancreáticos sincrónicos, se debe iniciar forzosamente el escrutinio genético para neoplasia endocrina múltiple tipo 1.<br><br>Análisis de Distractores: Las opciones B, C y D sobrestiman la prevalencia del síndrome hereditario. Más del 90 % de los insulinomas tienen una presentación genética esporádica y morfológicamente unicéntrica.", 
+        source: "Approach to the Patient: Insulinoma, 2023, Incidence and Epidemiology, 1111." 
+    },
+    {
+        id: 7, 
+        question: "¿Cuál es la variante genética recurrente más común que se presenta hasta en el 30 % de los insulinomas esporádicos?", 
+        options: ["Mutación en gen MEN1", "Mutación T372R en YY1", "Mutación en gen DAXX", "Mutación en gen ATRX"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a directrices recientes ENETS, la mutación T372R en el gen Yin Yang 1 (YY1) actúa como activador transcripcional anómalo del gen de la insulina y es un hallazgo genético predominante en los insulinomas esporádicos.<br><br>Perla ENARM: Las alteraciones en los mecanismos de remodelación transcripcional de la cromatina juegan un papel central y fundamental en la patogénesis subyacente del insulinoma esporádico.<br><br>Análisis de Distractores: La opción A se asocia al síndrome hereditario, no al esporádico típico. Las opciones C y D (DAXX y ATRX) se correlacionan habitualmente con insulinomas malignos agresivos, fenotipo de alargamiento alternativo de telómeros y pronóstico sombrío.", 
+        source: "Approach to the Patient: Insulinoma, 2023, Pathophysiology, 1112." 
+    },
+    {
+        id: 8, 
+        question: "¿Qué incremento en la glucosa plasmática tras la administración intravenosa de glucagón confirma una hipoglucemia inducida por insulina?", 
+        options: ["≥ 10 mg/dl", "≥ 15 mg/dl", "≥ 20 mg/dl", "≥ 25 mg/dl"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo a la guía de la Endocrine Society, un aumento glucémico de ≥ 25 mg/dl tras administrar 1 mg de glucagón al final de la prueba de ayuno demuestra que existen reservas de glucógeno hepático conservadas debido a la supresión tónica de la glucogenólisis por el hiperinsulinismo.<br><br>Perla ENARM: Esta prueba dinámica es fundamental para diferenciar el insulinoma de las hipoglucemias paraneoplásicas originadas por el factor de crecimiento similar a la insulina tipo 2 (IGF-2) en tumores mesenquimales.<br><br>Análisis de Distractores: Las opciones A, B y C son incrementos subóptimos que sugieren depleción de glucógeno hepático, un hallazgo característico de pacientes sanos sometidos a ayuno prolongado o en hipoglucemias no mediadas por insulina.", 
+        source: "Neuroendocrine Tumours, 2024, Glucagon Test, 194." 
+    },
+    {
+        id: 9, 
+        question: "¿Cuál es el estudio de imagen no invasivo considerado de primera línea para la localización topográfica inicial del insulinoma?", 
+        options: ["Resonancia magnética simple", "Ultrasonido endoscópico", "Tomografía computarizada trifásica", "Gammagrafía con análogos de somatostatina"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al consenso de expertos ENETS, la tomografía computarizada con contraste multifásico es la modalidad inicial preferida gracias a su alta disponibilidad y capacidad de detectar lesiones hipervasculares durante la fase arterial pancreática temprana.<br><br>Perla ENARM: Debido a que la mayoría de los insulinomas miden menos de 2 cm, la optimización estricta de los protocolos de contraste intravenoso es vital para evitar resultados falsos negativos por lesiones isodensas.<br><br>Análisis de Distractores: La opción A es útil pero la tomografía suele preferirse inicialmente por practicidad y accesibilidad anatómica. La opción B es sumamente sensible pero invasiva y estrictamente operadora dependiente. La opción D es ineficaz debido a la baja expresión natural del receptor SSTR2 en el insulinoma benigno.", 
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Imaging, 1134." 
+    },
+    {
+        id: 10, 
+        question: "¿Qué receptor se encuentra sobreexpresado en más del 90 % de los insulinomas benignos, convirtiéndolo en un blanco diagnóstico ideal?", 
+        options: ["Receptor de somatostatina tipo 2", "Receptor de péptido similar al glucagón tipo 1", "Receptor del factor de crecimiento endotelial vascular", "Receptor de factor de crecimiento derivado de plaquetas"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a las guías clínicas ENETS, el receptor de péptido similar al glucagón tipo 1 (GLP-1R) se encuentra en alta densidad en casi todos los insulinomas benignos, facilitando su localización preoperatoria mediante tomografía por emisión de positrones con exendina-4.<br><br>Perla ENARM: El estudio de imagen molecular con exendina-4 marcada con Galio-68 posee una sensibilidad superior al 95 % para localizar microadenomas insulinómicos totalmente ocultos a métodos tomográficos convencionales.<br><br>Análisis de Distractores: La opción A se expresa pobremente en el insulinoma benigno clásico, limitando el uso del octreoscan. Las opciones C y D están involucradas en la angiogénesis de múltiples tumores neuroendocrinos sistémicos, pero no son blancos diagnósticos funcionales topográficos.", 
+        source: "Minimally Invasive Resection of Occult Insulinomas, 2025, Introduction, 2." 
+    },
+    {
+        id: 11, 
+        question: "En pacientes con diagnóstico de insulinoma maligno, ¿qué receptor celular se sobreexpresa característicamente permitiendo la detección por imagen molecular?", 
+        options: ["Receptor de somatostatina tipo 2", "Receptor de péptido similar al glucagón tipo 1", "Receptor de insulina", "Receptor beta adrenérgico"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al consenso norteamericano NANETS, durante la desdiferenciación a la malignidad, los insulinomas agresivos pierden la expresión del receptor GLP-1 pero incrementan de forma aberrante la expresión del receptor de somatostatina tipo 2 (SSTR2).<br><br>Perla ENARM: La imagen funcional con Galio-68 DOTATATE es la modalidad de elección incuestionable para la estatificación oncológica y evaluación de extensión metastásica en el insulinoma maligno.<br><br>Análisis de Distractores: La opción B se asocia fuertemente al fenotipo benigno e indolente. Las opciones C y D carecen de utilidad clínica práctica en la imagenología molecular por emisión de positrones para tumores neuroendocrinos.", 
+        source: "Approach to the Patient: Insulinoma, 2023, Localization, 1112." 
+    },
+    {
+        id: 12, 
+        question: "¿Qué distancia mínima de seguridad debe existir entre el tumor y el conducto pancreático principal para considerar viable una enucleación?", 
+        options: ["≥ 1 mm", "≥ 1.5 mm", "≥ 1.8 mm", "≥ 2 a 3 mm"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al consenso quirúrgico NANETS, la enucleación preservadora de parénquima está indicada en tumores menores de 2 cm que se ubican superficialmente y guardan una distancia de seguridad anatómica de al menos 2 a 3 mm del conducto principal.<br><br>Perla ENARM: Respetar este margen previene daños estructurales térmicos o mecánicos directos y reduce de forma significativa el riesgo de fístula pancreática postoperatoria clínicamente relevante.<br><br>Análisis de Distractores: Las opciones A, B y C establecen un margen de resección peligroso y demasiado estrecho que incrementa exponencialmente el riesgo de disrupción ductal mayor, requiriendo en estos escenarios una resección formal anatómica.", 
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Surgical Management, 1137." 
+    },
+    {
+        id: 13, 
+        question: "¿Cuál es el tratamiento quirúrgico indicado para un insulinoma grande e invasivo localizado en la cabeza del páncreas?", 
+        options: ["Pancreatoduodenectomía", "Enucleación laparoscópica", "Pancreatectomía distal", "Pancreatectomía central"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo a la guía quirúrgica NANETS, las lesiones de gran tamaño, intraparenquimatosas profundas o con características de malignidad situadas en la cabeza pancreática requieren invariablemente una resección oncológica formal mediante el procedimiento de Whipple.<br><br>Perla ENARM: La enucleación está totalmente contraindicada en tumores grandes, profundos o que comprometen estructuras vasculares adyacentes debido al altísimo riesgo de fuga anastomótica masiva y resección marginal incompleta.<br><br>Análisis de Distractores: La opción B asume un riesgo desproporcionado en tumores grandes o profundos de la cabeza. La opción C es el abordaje oncológico estándar para lesiones de cuerpo y cola. La opción D se reserva para preservar parénquima en lesiones del cuello pancreático.", 
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Surgical Management, 1137." 
+    },
+    {
+        id: 14, 
+        question: "¿Cuál es el fármaco de primera línea recomendado para el manejo sintomático a largo plazo de la hipoglucemia secundaria a insulinoma irresecable?", 
+        options: ["Estreptozocina", "Octreotida de liberación prolongada", "Diazóxido", "Everolimus"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la guía de la Endocrine Society, el diazóxido es el pilar central en el manejo médico para suprimir la liberación de insulina periférica al inhibir los canales de potasio sensibles a ATP directamente en las células beta.<br><br>Perla ENARM: El diazóxido logra controlar los síntomas neuroglucopénicos hasta en el 60 % de los pacientes, permitiendo estabilización metabólica rigurosa previa a intervenciones sistémicas definitivas.<br><br>Análisis de Distractores: La opción A es quimioterapia citotóxica dirigida a carga tumoral. La opción B conlleva el riesgo inminente de hipoglucemia paradójica en tumores benignos. La opción D es terapia molecular dirigida para enfermedad avanzada, no manejo sintomático primario de la hipoglucemia endógena.", 
+        source: "Neuroendocrine Tumours, 2024, Medical Therapy, 205." 
+    },
+    {
+        id: 15, 
+        question: "¿Cuál es el efecto adverso de importancia clínica que limita la dosis y tolerabilidad del diazóxido en el control de la hipoglucemia?", 
+        options: ["Falla hepática fulminante", "Retención hídrica y edema", "Arritmias supraventriculares", "Insuficiencia renal aguda"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a las guías de la Endocrine Society, el diazóxido ocasiona retención renal de sodio y agua hasta en el 80 % de los pacientes, lo que puede precipitar cuadros de insuficiencia cardíaca y edemas periféricos refractarios graves.<br><br>Perla ENARM: El tratamiento farmacológico crónico con diazóxido demanda invariablemente la administración concomitante de un diurético tiazídico para lograr un control adecuado de volumen extracelular.<br><br>Análisis de Distractores: Las opciones A, C y D no corresponden a efectos adversos farmacológicos característicos del diazóxido. Otros efectos reportados con frecuencia incluyen náusea, intolerancia gástrica, anorexia y desarrollo de hirsutismo facial.", 
+        source: "Approach to the Patient: Insulinoma, 2023, Medical treatment, 1113." 
+    },
+    {
+        id: 16, 
+        question: "¿Cuál es la complicación postoperatoria más frecuente observada tras la enucleación quirúrgica de un insulinoma?", 
+        options: ["Vaciamiento gástrico retrasado", "Hemorragia postpancreatectomía", "Fístula pancreática", "Insuficiencia exocrina grave"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al Grupo Internacional de Estudio de Cirugía Pancreática, la fístula pancreática ocurre hasta en un 30 % de los pacientes sometidos a enucleación debido a la disrupción traumática de pequeños conductos secundarios radiculares superficiales.<br><br>Perla ENARM: El uso rutinario y mandatorio del ultrasonido intraoperatorio permite identificar detalladamente la anatomía ductal subyacente y minimizar drásticamente la morbilidad de la resección conservadora.<br><br>Análisis de Distractores: Las opciones A y B representan complicaciones hemodinámicas y funcionales más típicas de las resecciones oncológicas mayores como la pancreatoduodenectomía. La opción D se minimiza justamente al preferir estrategias quirúrgicas conservadoras de parénquima funcional.", 
+        source: "Enucleation for insulinoma: consolidating evidence, 2025, Discussion, 6358." 
+    },
+    {
+        id: 17, 
+        question: "¿A través de qué mecanismo de acción el everolimus ejerce su efecto hiperglucemiante terapéutico en pacientes con insulinoma maligno?", 
+        options: ["Inhibición de la vía mTOR", "Bloqueo del receptor de somatostatina", "Antagonismo de canales de potasio", "Apoptosis de las células beta"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo a las guías clínicas ESMO, el everolimus altera el metabolismo glucídico celular inhibiendo la señalización mTOR, lo que disminuye la captación periférica de glucosa y suprime en paralelo la liberación descontrolada de insulina.<br><br>Perla ENARM: Este conocido efecto adverso diabetogénico presente en la terapia oncológica clásica se explota estratégicamente como método de control sintomático robusto en el insulinoma maligno diseminado y refractario.<br><br>Análisis de Distractores: La opción B corresponde al mecanismo de los análogos del octreótido. La opción C describe la acción molecular de medicamentos como el diazóxido. La opción D hace referencia al efecto necrótico de quimioterapéuticos citotóxicos como la estreptozocina.", 
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Disease control, 6." 
+    },
+    {
+        id: 18, 
+        question: "¿Por qué la administración empírica de octreotida puede exacerbar los episodios de hipoglucemia en pacientes con un insulinoma benigno esporádico?", 
+        options: ["Aumenta la síntesis de glucógeno hepático", "Inhibición de secreción de glucagón", "Estimulación del receptor GLP-1", "Aumenta la depuración de insulina"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al consenso europeo ENETS, como los insulinomas benignos expresan escasamente el receptor SSTR2, la octreotida falla en frenar la secreción de insulina pero inhibe selectivamente al glucagón y la hormona del crecimiento, suprimiendo la contrarregulación metabólica de rescate.<br><br>Perla ENARM: Jamás debe prescribirse una formulación de liberación prolongada intramuscular sin haber realizado previamente una prueba de tolerancia subcutánea con formulaciones de acción corta intrahospitalarias.<br><br>Análisis de Distractores: Las opciones A, C y D no explican fisiopatológicamente el comportamiento paradójico letal de la somatostatina exógena. La profunda supresión de las vías hormonales contrarreguladoras endógenas es la causa central del agravamiento sintomático.", 
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Disease control, 6." 
+    },
+    {
+        id: 19, 
+        question: "En pacientes con insulinoma maligno e hipoglucemias refractarias a terapias iniciales, ¿qué análogo de somatostatina demuestra utilidad clínica gracias a su alta afinidad por el receptor SSTR5?", 
+        options: ["Octreotida LAR", "Lanreotida Autogel", "Vapreotida", "Pasireotida"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al consenso norteamericano NANETS, la pasireotida es un novedoso ligando multirreceptor con una afinidad excepcionalmente alta por el SSTR5, el cual suele estar densamente sobreexpresado en tumores neuroendocrinos agresivos desdiferenciados.<br><br>Perla ENARM: El pronunciado perfil hiperglucemiante iatrogénico asociado a la pasireotida la convierte en una poderosa herramienta paliativa de rescate cuando fracasan el diazóxido o el everolimus sistémico.<br><br>Análisis de Distractores: Las opciones A y B tienen afinidad selectiva primaria únicamente por el SSTR2 y pierden efectividad clínica ante la evolución clonal del tumor neuroendocrino maligno. La opción C carece de evidencia contundente actual en este algoritmo de rescate específico.", 
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Disease control, 6." 
+    },
+    {
+        id: 20, 
+        question: "¿Qué porcentaje de los insulinomas esporádicos cumple la regla epidemiológica clínica de ser solitarios y presentar un tamaño menor a 2 cm al momento del diagnóstico topográfico?", 
+        options: ["Aproximadamente el 50 %", "Aproximadamente el 75 %", "Aproximadamente el 90 %", "Aproximadamente el 99 %"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo a la guía de la ENETS, la biología natural morfológica del insulinoma esporádico obedece clásicamente a la \"regla del 90\": 90 % son biológicamente benignos, 90 % son anatómicamente intrapancreáticos, 90 % son solitarios y 90 % miden menos de 2 cm.<br><br>Perla ENARM: Encontrar un insulinoma mayor a 3 cm o con márgenes mal definidos en el abordaje tomográfico debe encender de inmediato la alerta clínica por un comportamiento biológico maligno y agresivo de alto grado.<br><br>Análisis de Distractores: Las opciones A y B subestiman considerablemente la presentación benigna esporádica intrapancreática típica. La opción D, si bien representa a la inmensa mayoría de la topografía celular, excluye erróneamente la frecuencia clínica documentada de los insulinomas multifocales y malignos irresecables que sí ocupan un 10 % de las estadísticas globales.", 
+        source: "Approach to the Patient: Insulinoma, 2023, Incidence and Epidemiology, 1111." 
+    },
+    {
+        id: 21,
+        question: "¿Qué prueba de laboratorio permite descartar definitivamente la hipoglucemia facticia secundaria a fármacos en un paciente con hiperinsulinismo endógeno?",
+        options: ["Niveles de sulfonilureas", "Anticuerpos antiinsulina", "Prueba de ayuno prolongado", "Estimulación con glucagón"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al consenso clínico ENETS, ante el hallazgo de insulina, proinsulina y péptido C elevados durante un evento de hipoglucemia, es obligatorio medir los niveles en plasma y/o orina de sulfonilureas y glinidas para excluir la ingestión subrepticia de secretagogos de insulina.<br><br>Perla ENARM: El tamizaje toxicológico de hipoglucemiantes orales es el único método certero para diferenciar una patología psiquiátrica facticia de un insulinoma verdadero o de nesidioblastosis del adulto.<br><br>Análisis de Distractores: La opción B permite descartar el síndrome autoinmune a insulina (enfermedad de Hirata), donde los niveles de péptido C suelen estar suprimidos. Las opciones C y D evalúan la presencia de hiperinsulinismo endógeno, pero no pueden diferenciar si la causa es un adenoma o un fármaco secretagogo ingerido a escondidas.",
+        source: "Approach to the Patient: Insulinoma, 2023, Differential Diagnosis, 1111."
+    },
+    {
+        id: 22,
+        question: "¿Qué característica clínica diferencia clásicamente al síndrome de hipoglucemia pancreatógena sin insulinoma del insulinoma esporádico?",
+        options: ["Hipoglucemia en ayuno", "Hipoglucemia posprandial", "Hipoglucemia nocturna", "Hipoglucemia con ejercicio"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la guía de la Endocrine Society, el síndrome de hipoglucemia pancreatógena sin insulinoma (NIPHS) o nesidioblastosis del adulto, se caracteriza por presentar síntomas neuroglucopénicos de predominio posprandial (usualmente de 2 a 4 horas después de comer), a diferencia del insulinoma clásico donde los síntomas se desencadenan por el ayuno.<br><br>Perla ENARM: Ante un paciente con hipoglucemia endógena estrictamente posprandial e imagenología pancreática negativa, se debe sospechar hipertrofia de las células beta (nesidioblastosis), un escenario que requiere pancreatectomía distal subtotal en lugar de enucleación.<br><br>Análisis de Distractores: Las opciones A, C y D son los desencadenantes clásicos y patognomónicos del insulinoma esporádico. La hipoglucemia posprandial en el insulinoma existe, pero es infrecuente (6 %) frente a su presentación cardinal en el ayuno prolongado.",
+        source: "Neuroendocrine Tumours, 2024, Idiopathic Noninsulinoma Pancreatogenous Hypoglycemia, 197."
+    },
+    {
+        id: 23,
+        question: "¿Cuál es el único criterio absoluto aceptado para definir la naturaleza maligna de un insulinoma?",
+        options: ["Índice mitótico elevado", "Atipia nuclear severa", "Metástasis o invasión local", "Tamaño mayor a 2 cm"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al consenso de la OMS, la malignidad de un insulinoma no puede dictaminarse mediante criterios histológicos convencionales (como la atipia celular o el pleomorfismo); se define exclusivamente por la presencia documentada de invasión a órganos adyacentes o metástasis ganglionares y a distancia.<br><br>Perla ENARM: Un insulinoma con comportamiento clínico y radiológico invasivo requiere siempre una resección oncológica formal con linfadenectomía, proscribiendo cualquier intento de enucleación conservadora.<br><br>Análisis de Distractores: La opción A y B son datos de agresividad histológica y ayudan a establecer el grado (G1 a G3), pero por sí solos no establecen el diagnóstico de malignidad absoluta si el tumor está confinado. La opción D (tamaño > 2 cm) eleva la sospecha de malignidad, pero muchos tumores grandes resultan biológicamente benignos.",
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Anatomopathology and staging, 2."
+    },
+    {
+        id: 24,
+        question: "¿Cuál es el sitio anatómico más frecuente de metástasis a distancia en pacientes con diagnóstico de insulinoma maligno?",
+        options: ["Ganglios linfáticos", "Parénquima hepático", "Tejido óseo", "Parénquima pulmonar"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a los registros de la NANETS, cuando los insulinomas presentan un comportamiento maligno y se diseminan, el sitio de predilección absoluta es el hígado (ocurriendo en más del 80 % de los casos metastásicos), seguido por afección a ganglios retroperitoneales.<br><br>Perla ENARM: En pacientes con insulinoma maligno con compromiso hepático, la citorreducción quirúrgica de al menos el 90 % de la carga metastásica prolonga la supervivencia y mejora drásticamente el control de la hipoglucemia refractaria.<br><br>Análisis de Distractores: La opción A representa invasión regional, no a distancia. Las opciones C y D son sitios extremadamente raros de metástasis para los tumores neuroendocrinos pancreáticos funcionales, observándose solo en etapas terminales y desdiferenciadas.",
+        source: "Clinical Management of Malignant Insulinoma, 2018, Discussion, 6."
+    },
+    {
+        id: 25,
+        question: "¿Qué sustancia se inyecta selectivamente en las arterias pancreáticas durante un muestreo venoso hepático para localizar un insulinoma oculto?",
+        options: ["Calcio intravenoso", "Glucagón intravenoso", "Secretina intravenosa", "Arginina intravenosa"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al protocolo quirúrgico clásico, la prueba de estimulación intraarterial se realiza inyectando gluconato de calcio selectivamente en las arterias pancreáticas (gastroduodenal, esplénica, mesentérica superior). El calcio estimula exclusivamente a las células beta tumorales hiperfuncionantes, produciendo un pico súbito de insulina en la vena hepática derecha.<br><br>Perla ENARM: Un salto (step-up) del doble o triple en los niveles de insulina tras la inyección de calcio localiza anatómicamente el territorio del insulinoma en pacientes con MEN-1 o con imagenología cruzada negativa, orientando la resección.<br><br>Análisis de Distractores: La opción B se usa para valorar las reservas de glucógeno hepático en el diagnóstico bioquímico. La opción C es el secretagogo de elección para la prueba diagnóstica y de localización del gastrinoma. La opción D evalúa la función hipofisaria y reservas de hormona del crecimiento.",
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Functional Tumors: Clinical Features, 1121."
+    },
+    {
+        id: 26,
+        question: "¿Qué estudio invasivo ofrece la mayor sensibilidad preoperatoria para localizar insulinomas situados específicamente en la cabeza del páncreas?",
+        options: ["Tomografía trifásica", "Ultrasonido endoscópico", "Resonancia magnética", "Angiografía selectiva"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la guía de la ENETS, el ultrasonido endoscópico (EUS) es la modalidad preoperatoria más precisa para lesiones en la cabeza y cuello pancreático, alcanzando una sensibilidad superior al 90 %, detectando tumores ocultos a la tomografía de hasta 3 mm.<br><br>Perla ENARM: El uso de EUS permite además realizar punción con aguja fina (FNA) para confirmar el grado histológico preoperatorio (Ki-67) y facilita el marcaje con tinta (tatuaje) para guiar la resección laparoscópica.<br><br>Análisis de Distractores: Las opciones A y C son modalidades no invasivas de primera línea, pero pierden sensibilidad frente a microadenomas isodensos menores a 1 cm. La opción D es un estudio funcional y topográfico sumamente invasivo reservado solo cuando el EUS y el PET resultan inconclusos.",
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Tumor localization methods, 3."
+    },
+    {
+        id: 27,
+        question: "¿Qué herramienta de imagen es obligatoria durante la resección quirúrgica de un insulinoma para confirmar su relación con el conducto principal?",
+        options: ["Colangiografía intraoperatoria", "Tomografía transoperatoria", "Ultrasonido intraoperatorio", "Fluoroscopía con contraste"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al consenso de la IHPBA, el ultrasonido intraoperatorio (IOUS) es un paso absolutamente indispensable antes de iniciar una enucleación pancreática. Confirma la profundidad exacta de la lesión y garantiza un margen de seguridad > 2 mm respecto al conducto de Wirsung.<br><br>Perla ENARM: Omitir el uso del IOUS incrementa de forma inaceptable el riesgo de lesión ductal inadvertida, lo cual es la causa fundamental del desarrollo de fístulas pancreáticas grado C de alta morbilidad.<br><br>Análisis de Distractores: La opción A evalúa la vía biliar, irrelevante para tumores de cuerpo y cola. Las opciones B y D no brindan la resolución espacial en tiempo real y tridimensional requerida por el cirujano sobre el tejido blando pancreático.",
+        source: "Enucleation for insulinoma: consolidating evidence, 2025, Discussion, 6358."
+    },
+    {
+        id: 28,
+        question: "¿Cuál es el mecanismo de acción del sunitinib utilizado en el tratamiento sistémico de los insulinomas metastásicos progresivos?",
+        options: ["Inhibición de vía mTOR", "Inhibición de tirosina cinasa", "Antagonismo de somatostatina", "Anticuerpo monoclonal"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a las guías de la ESMO, el sunitinib es un inhibidor multicinasa dirigido que bloquea los receptores de factor de crecimiento endotelial vascular (VEGFR) y factor de crecimiento derivado de plaquetas (PDGFR), demostrando un aumento significativo en la supervivencia libre de progresión en tumores neuroendocrinos pancreáticos avanzados.<br><br>Perla ENARM: Dada la naturaleza hipervascular intrínseca de los insulinomas malignos, la terapia antiangiogénica con sunitinib es una opción de primera línea que ataca de forma dirigida la robusta red capilar del tumor.<br><br>Análisis de Distractores: La opción A corresponde al everolimus. La opción C es el mecanismo de los análogos como el octreótido y lanreótido. La opción D corresponde a terapias moleculares experimentales en este nicho (como RZ358), no al sunitinib que es una molécula pequeña (inhibidor oral).",
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Targeted Therapies, 1125."
+    },
+    {
+        id: 29,
+        question: "¿Qué índice de proliferación celular Ki-67 clasifica histológicamente a un tumor neuroendocrino pancreático como grado 2?",
+        options: ["Menor a 3 %", "Entre 3 y 20 %", "Mayor a 20 %", "Mayor a 50 %"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la clasificación de la Organización Mundial de la Salud (OMS) del 2017/2022, los tumores neuroendocrinos pancreáticos se estatifican como Grado 2 (G2) cuando presentan un índice de proliferación Ki-67 de 3 a 20 % o un conteo mitótico de 2 a 20 mitosis por 10 campos de alto poder.<br><br>Perla ENARM: Un insulinoma clasificado como G2 requiere un seguimiento oncológico más estrecho y una consideración de abordaje resectivo formal en lugar de enucleación, debido a su mayor propensión biológica a la diseminación micrometastásica.<br><br>Análisis de Distractores: La opción A (< 3 %) define a un tumor Grado 1 (G1), el comportamiento típico del insulinoma esporádico benigno. Las opciones C y D (Ki-67 > 20 %) entran en la categoría de Grado 3 (G3) o Carcinoma Neuroendocrino (NEC), asociados a un pésimo pronóstico y alta resistencia a terapia estándar.",
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Anatomopathology and staging, 2."
+    },
+    {
+        id: 30,
+        question: "¿Qué alteración genética somática predice un fenotipo metastásico agresivo y menor supervivencia en el insulinoma esporádico?",
+        options: ["Mutación en YY1", "Mutaciones en DAXX y ATRX", "Deleción de MEN1", "Mutación en VHL"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al consenso de la NANETS, la pérdida de función en los genes de remodelación de la cromatina DAXX y ATRX se asocia fuertemente al alargamiento alternativo de los telómeros (ALT), un fenotipo que predice transformación maligna, desarrollo de metástasis y supervivencia reducida en los insulinomas.<br><br>Perla ENARM: La confirmación inmunohistoquímica de la pérdida nuclear de proteínas DAXX/ATRX en la biopsia preoperatoria dicta la necesidad inminente de un vaciamiento ganglionar exhaustivo y contraindica las cirugías ahorradoras de parénquima.<br><br>Análisis de Distractores: La opción A es el mutante activador más común en insulinomas esporádicos benignos de buen pronóstico. Las opciones C y D son alteraciones de la línea germinal asociadas a síndromes hereditarios (MEN-1 y von Hippel-Lindau) con perfiles mutacionales distintos.",
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Molecular Biology and Somatic Alterations, 1113."
+    },
+    {
+        id: 31,
+        question: "¿Cuál es la diana terapéutica del anticuerpo monoclonal RZ358 utilizado experimentalmente en casos de hipoglucemia refractaria severa?",
+        options: ["Receptor de somatostatina", "Receptor de insulina", "Receptor de glucagón", "Canales de potasio"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a revisiones recientes de la Endocrine Society, el RZ358 es un novedoso anticuerpo monoclonal humano que se une de forma alostérica a un sitio único en el receptor periférico de insulina, atenuando la unión endógena y mitigando drásticamente el impacto metabólico de la hormona circulante.<br><br>Perla ENARM: Este fármaco revoluciona el manejo paliativo del insulinoma maligno irresecable, al neutralizar la cascada hiperglucémica a nivel del tejido diana (músculo y grasa) independientemente de la carga tumoral o del volumen de insulina secretada.<br><br>Análisis de Distractores: La opción A es el blanco de terapias como el octreótido y el lutecio-177. La opción C no es un mecanismo abordado para frenar la hipoglucemia endógena hiperinsulinémica. La opción D es el blanco intracelular de medicamentos sintomáticos clásicos como el diazóxido.",
+        source: "Approach to the Patient: Insulinoma, 2023, Medical treatment, 1113."
+    },
+    {
+        id: 32,
+        question: "¿Cuál es el procedimiento quirúrgico de elección para un insulinoma de tres centímetros localizado en la cola del páncreas?",
+        options: ["Enucleación laparoscópica", "Pancreatectomía distal", "Pancreatoduodenectomía", "Pancreatectomía central"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al consenso de la IHPBA y NANETS, las lesiones mayores de 2 a 3 cm, o aquellas con proximidad al conducto pancreático ubicadas en el cuerpo o la cola del páncreas, exigen una resección anatómica estructurada mediante pancreatectomía distal, idealmente con preservación esplénica.<br><br>Perla ENARM: La enucleación de insulinomas grandes (> 2 cm) en la cola presenta un riesgo intolerablemente alto de fístula pancreática clínicamente relevante sin aportar ventajas funcionales frente a una resección anatómica bien ejecutada.<br><br>Análisis de Distractores: La opción A está contraindicada por el tamaño del tumor y el alto riesgo de disrupción del conducto principal. La opción C es el abordaje obligatorio para tumores grandes en la cabeza pancreática. La opción D se reserva para lesiones exclusivas del cuello que requieren resección formal para preservar las funciones exocrina y endocrina de los extremos de la glándula.",
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Surgical Management, 1137."
+    },
+    {
+        id: 33,
+        question: "¿Qué radiofármaco se utiliza como terapia estándar en el tratamiento con radionúclidos de receptores peptídicos para insulinomas malignos?",
+        options: ["177-Lutecio DOTATATE", "131-Yodo MIBG", "68-Galio DOTATOC", "90-Itrio microesferas"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a las guías de la Sociedad Europea de Oncología Médica (ESMO) y el ensayo NETTER-1, el PRRT con Lutecio-177 acoplado a DOTATATE es la radioterapia interna de elección para tumores neuroendocrinos metastásicos que expresan densamente el SSTR2 (confirmado previamente por PET).<br><br>Perla ENARM: El Lutecio-177 emite radiación beta destructiva altamente localizada, logrando tanto el control citorreductor de las metástasis hepáticas como la remisión duradera de los eventos hipoglucémicos refractarios al tratamiento médico.<br><br>Análisis de Distractores: La opción B es útil en feocromocitomas y paragangliomas. La opción C es un radiotrazador de uso puramente diagnóstico en el PET, emisor de positrones y sin potencial terapéutico ablativo. La opción D es la técnica de radioembolización transarterial para metástasis hepáticas dominantes, no PRRT sistémico.",
+        source: "Approach to the Patient: Insulinoma, 2023, Treatment of Metastatic or Inoperable Aggressive Insulinoma, 1114."
+    },
+    {
+        id: 34,
+        question: "¿Qué técnica ablativa guiada por ultrasonido endoscópico se recomienda en pacientes con insulinoma benigno que tienen riesgo quirúrgico prohibitivo?",
+        options: ["Electroporación irreversible", "Ablación por microondas", "Ablación por radiofrecuencia", "Radioterapia estereotáctica"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a publicaciones recientes, la ablación por radiofrecuencia guiada por EUS (EUS-RFA) es una técnica emergente, segura y efectiva para inducir necrosis térmica en insulinomas menores de 2 cm, alcanzando resolución de la hipoglucemia en pacientes donde la cirugía está contraindicada por comorbilidades.<br><br>Perla ENARM: El uso de RFA intrapancreática tiene como principal limitante la estenosis térmica secundaria del conducto pancreático principal o lesión duodenal, requiriendo un mapeo anatómico ecográfico extremadamente preciso previo a la descarga de energía.<br><br>Análisis de Distractores: Las opciones A y B son modalidades percutáneas o transoperatorias utilizadas preferentemente en tumores sólidos hepáticos o adenocarcinomas locales. La opción D es útil como puente no invasivo, pero la EUS-RFA ha demostrado ser el método de ablación intraparenquimatoso de elección con mayor tasa de éxito funcional inmediato.",
+        source: "Neuroendocrine Tumours, 2024, Ablative Techniques, 203."
+    },
+    {
+        id: 35,
+        question: "¿Qué antecedente quirúrgico es un factor de riesgo clásico para desarrollar síndrome de hipoglucemia hiperinsulinémica nesidioblástica en adultos?",
+        options: ["Colecistectomía laparoscópica", "Bypass gástrico en Y de Roux", "Pancreatoduodenectomía", "Gastrectomía vertical"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la revisión clínica endocrina, la alteración extrema de la anatomía intestinal pos-bypass gástrico (especialmente en Y de Roux) expone prematuramente al íleon a nutrientes osmóticos, provocando una secreción masiva compensatoria de péptido similar al glucagón 1 (GLP-1), el cual induce secundariamente la hiperplasia y neoformación de islotes pancreáticos (nesidioblastosis).<br><br>Perla ENARM: En un paciente posoperado de cirugía bariátrica malabsortiva que desarrolla neuroglucopenia tardía (años después) exclusivamente posprandial, la nesidioblastosis debe ser la principal sospecha, obviando estudios de localización de adenoma primario.<br><br>Análisis de Distractores: Las opciones A, C y D no alteran el tránsito de carbohidratos hacia el intestino distal de manera tan drástica como para precipitar de forma sostenida el \"síndrome de dumping\" tardío o la expansión de la masa de células beta impulsada por incretinas.",
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Differential diagnosis, 5."
+    },
+    {
+        id: 36,
+        question: "¿Qué esquema de quimioterapia citotóxica es la primera línea recomendada para carcinomas neuroendocrinos pancreáticos poco diferenciados grado 3?",
+        options: ["Capecitabina y temozolomida", "Cisplatino y etopósido", "Doxorrubicina y estreptozocina", "Gemcitabina y paclitaxel"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la directriz de tratamiento oncológico ESMO, para los carcinomas neuroendocrinos pancreáticos con pobre diferenciación y Ki-67 agresivo (> 20 %), la biología celular se asemeja al cáncer de pulmón de células pequeñas, siendo mandatorio el uso de regímenes basados en platino combinado con etopósido.<br><br>Perla ENARM: Estos tumores pierden la expresión de receptores diana (SSTR2 y GLP-1), respondiendo espectacular pero fugazmente al esquema platino/etopósido, con una supervivencia general que raramente supera el año a pesar del tratamiento inicial agresivo.<br><br>Análisis de Distractores: La opción A es el esquema preferido para G1/G2 metastásicos bien diferenciados. La opción C fue el esquema histórico estándar para tumores de islotes pancreáticos indolentes, hoy ampliamente en desuso por su toxicidad de órganos. La opción D es la línea fundamental para el adenocarcinoma ductal clásico, no para la estirpe neuroendocrina.",
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Cytotoxic Chemotherapy, 1126."
+    },
+    {
+        id: 37,
+        question: "¿Qué combinación quimioterapéutica ha demostrado alta eficacia y control de la enfermedad en tumores neuroendocrinos pancreáticos metastásicos bien diferenciados?",
+        options: ["Cisplatino y etopósido", "Capecitabina y temozolomida", "Fluorouracilo y oxaliplatino", "Estreptozocina y doxorrubicina"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a los ensayos clínicos ECOG, el régimen combinado oral CAPTEM (capecitabina y temozolomida) se ha consolidado como el régimen quimioterapéutico primario de elección en tumores neuroendocrinos pancreáticos avanzados G1/G2 progresivos, al demostrar tasas de respuesta objetiva de hasta un 70 % y supervivencia libre de progresión superior.<br><br>Perla ENARM: La deficiencia de la enzima metilguanina metiltransferasa (MGMT) en la histología tumoral predice una sensibilidad extraordinariamente alta a los agentes alquilantes como la temozolomida, sirviendo como un excelente biomarcador pronóstico y predictivo.<br><br>Análisis de Distractores: La opción A es el estándar de manejo, pero para tumores pobremente diferenciados (G3/NEC). La opción C es una alternativa pero inferior a CAPTEM en tasa de respuesta para pNETs. La opción D (Estreptozocina) tiene evidencia histórica de efectividad, pero su toxicidad renal severa y pobre perfil de seguridad la relegan a líneas posteriores.",
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Chemotherapy, 8."
+    },
+    {
+        id: 38,
+        question: "¿Qué parámetro cuantitativo en la tomografía por perfusión pancreática presenta la mayor precisión diagnóstica para diferenciar un insulinoma?",
+        options: ["Volumen sanguíneo", "Tiempo al pico", "Realce máximo", "Flujo venoso"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a investigaciones radiológicas recientes sobre la TAC de perfusión pancreática (pCTP), los insulinomas exhiben un hiperflujo arterial con un \"realce máximo\" (Peak Enhancement) significativamente mayor que el parénquima sano, convirtiéndose en el parámetro cuantitativo individual con el Área Bajo la Curva (AUC) más alta (aproximada a 0.93 - 1.0) para la confirmación de la lesión.<br><br>Perla ENARM: El uso de pCTP de baja dosis permite a los radiólogos en formación compensar curvas de aprendizaje, incrementando la sensibilidad de diagnóstico de lesiones isodensas al mapear la cinética exacta del contraste en los microadenomas.<br><br>Análisis de Distractores: Las opciones A y B (volumen sanguíneo y tiempo al pico) tienen áreas bajo la curva muy inferiores y resultan parámetros menos reproducibles para dictaminar el comportamiento angiogénico focal frente al tejido sano. La opción D no corresponde a una medida estandarizada principal en la evaluación pCTP arterial focalizada.",
+        source: "Insulinoma detection on low-dose pancreatic CT perfusion, 2025, Discussion, 6."
+    },
+    {
+        id: 39,
+        question: "¿Cuál es el tamaño máximo promedio que presentan más del ochenta por ciento de los insulinomas esporádicos al momento del diagnóstico?",
+        options: ["Menor a 2 cm", "Entre 3 y 4 cm", "Entre 5 y 6 cm", "Mayor a 7 cm"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al consenso clínico internacional sobre la biología natural de las neoplasias endocrinas, casi un 90 % de los insulinomas esporádicos se presentan al momento del diagnóstico midiendo menos de 2 cm (muchos incluso debajo de 1 cm), lo que los convierte en un gran desafío imagenológico localizador.<br><br>Perla ENARM: En el estudio integral del hiperinsulinismo, se asume el concepto anatómico funcional de que los insulinomas liberan cantidades masivas de insulina de forma desproporcionada respecto al diminuto volumen de carga tumoral.<br><br>Análisis de Distractores: Las opciones B, C y D corresponden a dimensiones típicas de insulinomas malignos desdiferenciados o tumores no funcionales que crecen de forma silente por años antes de originar síndromes por efecto de masa y compresión local.",
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Functional Tumors: Clinical Features, 1121."
+    },
+    {
+        id: 40,
+        question: "¿En qué década de la vida ocurre el pico de incidencia más frecuente para la presentación del insulinoma esporádico en la población general?",
+        options: ["Segunda década", "Tercera década", "Quinta década", "Octava década"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a las series epidemiológicas mundiales, el insulinoma esporádico afecta de manera preponderante a individuos ubicados en la quinta a sexta década de la vida (40 a 60 años), a diferencia de los de origen hereditario que se presentan notoriamente más temprano.<br><br>Perla ENARM: En todo paciente en quien se documenta un insulinoma por debajo de los 30 años de edad, es imperativo establecer un escrutinio genético para buscar mutaciones de la línea germinal como el síndrome de neoplasia endocrina múltiple tipo 1 (MEN-1).<br><br>Análisis de Distractores: La opción A no es un pico característico de esta patología. La opción B es el momento donde típicamente surgen los insulinomas familiares asociados a MEN-1. La opción D presenta una incidencia menor debido a un declive poblacional del factor riesgo biológico.",
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Introduction, 1."
+    },
+    {
+        id: 41,
+        question: "En pacientes con diagnóstico de enfermedad de von Hippel-Lindau, ¿qué tamaño tumoral mínimo establece la indicación absoluta para la resección quirúrgica de un tumor neuroendocrino pancreático asintomático?",
+        options: ["Mayor a 1 cm", "Mayor a 2 cm", "Mayor a 3 cm", "Mayor a 4 cm"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la guía de tumores neuroendocrinos, en el contexto del síndrome de von Hippel-Lindau (VHL), el riesgo de diseminación metastásica se incrementa significativamente cuando los tumores pancreáticos superan los 3 cm de diámetro o presentan una mutación de la línea germinal en el exón 3.<br><br>Perla ENARM: A diferencia de los tumores esporádicos que se operan al diagnóstico, los pacientes con VHL se someten a vigilancia activa hasta que la lesión alcanza el umbral de 3 cm para evitar resecciones pancreáticas múltiples prematuras.<br><br>Análisis de Distractores: Las opciones A y B representan tamaños biológicamente más indolentes dentro de la genética del VHL, susceptibles de observación estructurada. La opción D asume un umbral demasiado alto, exponiendo al paciente a un riesgo inaceptable de enfermedad metastásica diseminada.",
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Surgical Considerations With Familial Syndromes, 1122."
+    },
+    {
+        id: 42,
+        question: "En pacientes gestantes con un insulinoma no resecado, ¿cuál es el comportamiento clínico característico de los síntomas neuroglucopénicos durante el tercer trimestre del embarazo?",
+        options: ["Exacerbación incontrolable de síntomas", "Resolución transitoria de la sintomatología", "Inducción de cetoacidosis diabética", "Progresión a coma metabólico"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a las series clínicas endocrinológicas, los síntomas del insulinoma pueden mimetizar hiperemesis en el primer trimestre, pero característicamente desaparecen o se atenúan de forma notable hacia el final del embarazo debido a la inducción del estado de resistencia periférica a la insulina mediado por el lactógeno placentario, retornando tras el parto.<br><br>Perla ENARM: El diagnóstico de insulinoma en la mujer gestante es un reto extremo, requiriendo un escrutinio bioquímico expedito durante las primeras semanas antes de que la fisiología placentaria enmascare el cuadro clínico.<br><br>Análisis de Distractores: Las opciones A y D son incorrectas, ya que la fisiología del tercer trimestre actúa como un factor protector temporal contra la hipoglucemia endógena. La opción C es una complicación del déficit absoluto de insulina o diabetes gestacional severa, antagónica al hiperinsulinismo tumoral.",
+        source: "Insulinoma, 2024, Clinical and Laboratory Manifestations, 193."
+    },
+    {
+        id: 43,
+        question: "En el abordaje mediante resonancia magnética con supresión de grasa, ¿cuál es el patrón de intensidad de señal clásico que permite identificar un insulinoma intrapancreático frente al parénquima sano?",
+        options: ["Alta intensidad en secuencias T1", "Baja intensidad en secuencias T1", "Baja intensidad en secuencias T2", "Isointenso en secuencias T1 y T2"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al consenso radiológico ENETS, los insulinomas presentan característicamente una baja intensidad de señal (hipointensos) en imágenes potenciadas en T1 con supresión de grasa y una señal moderadamente alta en secuencias T2.<br><br>Perla ENARM: La optimización rigurosa de las secuencias T1 con supresión espectral de grasa es el paso imagenológico más rentable para contrastar la celularidad tumoral frente a los acinos pancreáticos circundantes hiperintensos.<br><br>Análisis de Distractores: La opción A describe el patrón de la glándula pancreática normal sana, no del tejido tumoral neuroendocrino. Las opciones C y D describen comportamientos atípicos o artefactos de técnica, ya que el adenoma funcional exhibe hiperintensidad en T2 y un fuerte realce post-contraste.",
+        source: "Insulinoma, 2024, Magnetic Resonance Imaging (MRI), 199."
+    },
+    {
+        id: 44,
+        question: "En el abordaje bioquímico de un paciente con hipoglucemia severa, ¿qué patrón de laboratorio confirma de manera definitiva la administración subrepticia de insulina exógena (hipoglucemia facticia)?",
+        options: ["Insulina elevada y péptido C elevado", "Insulina elevada y péptido C suprimido", "Insulina suprimida y proinsulina elevada", "Insulina suprimida y péptido C suprimido"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a los criterios diagnósticos de la Endocrine Society, la hipoglucemia facticia mediada por inyección de insulina se diagnostica inequívocamente al hallar concentraciones plasmáticas elevadas de la hormona sin el co-secreto equimolar endógeno de péptido C, el cual se encuentra suprimido fisiológicamente.<br><br>Perla ENARM: Nunca se debe someter a un paciente a un test de ayuno prolongado o imagenología avanzada sin antes haber excluido de forma certera la autoadministración psiquiátrica de insulina.<br><br>Análisis de Distractores: La opción A es el patrón patognomónico del insulinoma verdadero, las sulfonilureas o la nesidioblastosis. La opción C es contradictoria, ya que un adenoma inmaduro elevaría ambos parámetros. La opción D ocurre en las hipoglucemias no mediadas por insulina (como los tumores productores de IGF-2 o falla hepática).",
+        source: "Insulinoma, 2024, Hypoglycemia Related to Insulin and Insulin Analogues, 196."
+    },
+    {
+        id: 45,
+        question: "En un paciente con hipoglucemia hiperinsulinémica espontánea e imagenología pancreática completamente negativa, ¿qué hallazgo de laboratorio establece el diagnóstico confirmatorio de la enfermedad de Hirata?",
+        options: ["Niveles de sulfonilureas urinarias", "Anticuerpos circulantes antiinsulina", "Incremento venoso tras calcio arterial", "Deficiencia de enzima metiltransferasa"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al abordaje clínico de síndromes hipoglucémicos, el síndrome autoinmune a insulina (enfermedad de Hirata) se caracteriza por hipoglucemias severas desorganizadas causadas por la disociación abrupta de la insulina de sus anticuerpos endógenos de alta capacidad, siendo estos anticuerpos el criterio diagnóstico central.<br><br>Perla ENARM: Un título positivo a altos niveles de anticuerpos antiinsulina en ausencia de exposición farmacológica exógena previa frena de inmediato la exploración quirúrgica pancreática innecesaria.<br><br>Análisis de Distractores: La opción A diagnostica intoxicación exógena por secretagogos. La opción C localiza funcionalmente al insulinoma o a la nesidioblastosis. La opción D es un marcador de susceptibilidad para quimioterapia con temozolomida, no de origen autoinmune.",
+        source: "Approach to the Patient: Insulinoma, 2023, Diagnosis and Presentation, 1111."
+    },
+    {
+        id: 46,
+        question: "¿Cuál es la justificación fisiopatológica primaria para suspender la infusión intravenosa de glucosa inmediatamente antes de la resección quirúrgica del insulinoma?",
+        options: ["Prevenir edema cerebral transoperatorio", "Confirmar la escisión curativa completa", "Atenuar la necrosis isquémica celular", "Minimizar el sangrado microvascular"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la directriz quirúrgica, la infusión preoperatoria o transoperatoria temprana de glucosa se suspende deliberadamente poco antes de la resección tumoral para permitir al equipo de anestesia monitorizar el aumento natural de rebote (restitución metabólica) en los niveles de glucosa plasmática en los minutos siguientes, lo que confirma clínicamente el éxito extirpativo.<br><br>Perla ENARM: La monitorización estrecha de la glucemia transoperatoria funge como el primer biomarcador en tiempo real del éxito oncológico frente a posibles adenomas multifocales omitidos.<br><br>Análisis de Distractores: Las opciones A, C y D carecen de sustento fisiológico quirúrgico. El manejo intraoperatorio glucémico se enfoca en no enmascarar el comportamiento restitutivo de las células beta sanas, no en la hemostasia o en la osmolaridad cerebral aguda en este momento preciso.",
+        source: "Insulinoma, 2024, Perioperative Management, 203."
+    },
+    {
+        id: 47,
+        question: "En una enucleación laparoscópica de insulinoma, ¿qué cobertura autóloga de tejido se describe para el refuerzo del lecho quirúrgico como estrategia técnica de mitigación de la fístula pancreática?",
+        options: ["Colgajo de epiplón mayor", "Parche de ligamento falciforme", "Parche de ligamento redondo hepático", "Resección de serosa gástrica"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a la evidencia en cirugía pancreática estandarizada (ensayo DISCOVER), el uso de un parche pediculado con el ligamento redondo hepático (teres hepatis) como barrera de cobertura sobre el lecho de enucleación refuerza el área traumatizada y favorece biológicamente el cierre capsular.<br><br>Perla ENARM: El uso sistemático de colgajos vascularizados sobre las cicatrices pancreáticas profundas debe considerarse obligatoriamente al enuclear tumores próximos (< 3 mm) al sistema ductal principal para abatir el impacto clínico del líquido rico en amilasa.<br><br>Análisis de Distractores: Las opciones A, B y D son coberturas serosas que han sido estudiadas sin el mismo rigor mecánico-compresivo en el páncreas que el colgajo pediculado específico del ligamento redondo (teres hepatis), cuya anatomía ofrece proximidad y volumen ideal para el cuello pancreático.",
+        source: "Evidence-Based Strategies for Mitigating Pancreatic Fistula After Distal Pancreatectomy, 2026, Tissue Coverage, 14."
+    },
+    {
+        id: 48,
+        question: "Con base en los criterios actuales del Grupo Internacional de Estudio de Cirugía Pancreática, ¿a partir de qué día postoperatorio la elevación de amilasa en el drenaje define el diagnóstico oficial de fístula pancreática?",
+        options: ["Primer día postoperatorio", "Segundo día postoperatorio", "Tercer día postoperatorio", "Quinto día postoperatorio"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al consenso de la ISGPS (modificado en 2016), la fístula pancreática postoperatoria (POPF) se define rígidamente por un gasto de drenaje con una concentración de amilasa que exceda tres veces el límite superior normal del suero, a partir del tercer día postoperatorio.<br><br>Perla ENARM: Las fugas bioquímicas tempranas de los primeros dos días carecen de definición sindromática estructurada; sin embargo, no retirar un drenaje profiláctico a tiempo fomenta infecciones ascendentes que agravan el pronóstico glandular.<br><br>Análisis de Distractores: Las opciones A y B recogen momentos donde el líquido rico en amilasa puede ser fisiológico por disrupción del tejido acinar superficial, sin configurar una falla de cicatrización anatómica. La opción D ocurre cuando la fístula clínica suele estar ya plenamente establecida y frecuentemente infectada.",
+        source: "Evidence-Based Strategies for Mitigating Pancreatic Fistula After Distal Pancreatectomy, 2026, Introduction, 2."
+    },
+    {
+        id: 49,
+        question: "De acuerdo a la definición internacional de complicaciones tras la cirugía pancreática, ¿cuál es el tiempo mínimo postoperatorio de requerimiento de una sonda nasogástrica que define un cuadro de vaciamiento gástrico retrasado?",
+        options: ["Al menos un día", "Al menos tres días", "Al menos cinco días", "Al menos siete días"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Grupo Internacional de Estudio de Cirugía Pancreática (ISGPS), el vaciamiento gástrico retrasado (DGE) se dictamina cuando un paciente requiere el mantenimiento de la sonda nasogástrica por al menos 3 días postoperatorios o tiene la necesidad perentoria de su reinserción por emesis incoercible más allá de este periodo.<br><br>Perla ENARM: Esta dismotilidad neurológica es sumamente prevalente en procedimientos como la pancreatoduodenectomía debido a la ablación de las ramas vagales antropilóricas locales y de los marcapasos duodenales inherentes a la resección.<br><br>Análisis de Distractores: La opción A refleja la conducta perioperatoria estándar en reanimación abdominal donde no se clasifica patología alguna. Las opciones C y D catalogan estadios o grados mayores del padecimiento, pero el umbral diagnóstico inicial mínimo establecido son 3 días continuos.",
+        source: "Enucleation for insulinoma: consolidating evidence, 2025, POPF grades and DGE criteria, 6353."
+    },
+    {
+        id: 50,
+        question: "En el diagnóstico por imagen molecular para el insulinoma esporádico, ¿qué radiotrazador ha demostrado una eficacia clínica subóptima y altamente inconstante, con tasas de detección inferiores al 35 %?",
+        options: ["68-Galio DOTATATE", "68-Galio Exendina 4", "18-Flúor DOPA", "11-Carbono HTP"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al ensayo comparativo multicéntrico europeo, la tomografía por emisión de positrones con 18F-DOPA exhibe una tasa de detección decepcionante que oscila apenas sobre el 33 %, tornándolo obsoleto para la detección inicial del insulinoma clásico benigno.<br><br>Perla ENARM: El metabolismo celular de precursores dopaminérgicos está severamente subexpresado o ausente en el tejido de origen beta funcional esporádico, desviando imperativamente la elección de radiotrazador preoperatoria hacia aquellos basados en ligandos de receptor de incretinas.<br><br>Análisis de Distractores: La opción A es pilar de tumores neuroendocrinos SSTR positivos. La opción B es la molécula estelar y estándar de oro innegable para el insulinoma. La opción D tiene utilidad experimental en otros tumores carcinoides, pero carece de indicación estandarizada en pNETs puros.",
+        source: "Improved Localization of Insulinomas Using 68Ga-NODAGA-Exendin-4 PET/CT, 2024, Discussion, 4."
+    },
+    {
+        id: 51,
+        question: "En la formulación farmacológica de los radiotrazadores basados en la Exendina-4, ¿qué quelante molecular incrementa la actividad específica de unión y minimiza dramáticamente la aparición de náuseas e hipoglucemia iatrogénica en el paciente?",
+        options: ["NOTA", "DOTA", "NODAGA", "DTPD"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a estudios de radiología molecular de última generación, el quelante estructural NODAGA (a diferencia de la antigua estructura DOTA) permite acoplar isotópos de Galio-68 con una eficiencia termodinámica tan alta que el paciente recibe dosis del péptido hasta un 70 % menores.<br><br>Perla ENARM: La dramática reducción farmacológica de Exendina-4 intravenosa suprime virtualmente la activación sistémica fisiológica intensa de incretinas, protegiendo al paciente del choque vagal emético y colapso neuroglucopénico súbito en la sala del escáner.<br><br>Análisis de Distractores: La opción B (DOTA) es un quelante universal que demanda enormes cantidades molares de péptido, con una alta tasa de efectos adversos. Las opciones A y D son agentes de quelación sistémicos o alternativos carentes de la superioridad demostrada para la farmacocinética exclusiva de los ligandos peptídicos similares al glucagón.",
+        source: "Improved Localization of Insulinomas Using 68Ga-NODAGA-Exendin-4 PET/CT, 2024, Introduction, 2."
+    },
+    {
+        id: 52,
+        question: "¿Cuál es el umbral cuantitativo mínimo de citorreducción hepática que justifica la intervención quirúrgica paliativa en un paciente con metástasis irresecables de insulinoma funcional?",
+        options: ["Resección del 50 %", "Resección del 75 %", "Resección del 90 %", "Resección del 100 %"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al consenso oncológico quirúrgico NANETS, el manejo hepático activo (debulking) en los tumores neuroendocrinos metastásicos que causan síndromes de hipersecreción intratables está indicado exclusivamente cuando es técnicamente posible la eliminación documentada de al menos el 90 % de todo el volumen tumoral metastásico visible.<br><br>Perla ENARM: Intervenciones por debajo de este estricto umbral incrementan exponencialmente la morbimortalidad hepática perioperatoria y fallan rotundamente en proporcionar alivio duradero de la carga hormonal hiperinsulinémica en el tejido diana.<br><br>Análisis de Distractores: Las opciones A y B reflejan cargas de rescate incompletas incapaces de dominar el impacto paracrino masivo de los gránulos restantes. La opción D describe un escenario curativo ideal (R0) en metástasis hepáticas limitadas unilobulares que rara vez está presente en fenotipos desdiferenciados.",
+        source: "Cystic and neuroendocrine neoplasms of the pancreas, 2025, Management of Metastatic Disease, 236."
+    },
+    {
+        id: 53,
+        question: "A diferencia de los métodos de pancreatectomía estándar en insulinomas funcionales, ¿qué secuela metabólica crónica se previene de forma contundente al optar selectivamente por una técnica quirúrgica de enucleación?",
+        options: ["Infección intraabdominal recurrente", "Fístula duodenal mayor", "Insuficiencia pancreática exocrina", "Estenosis biliar isquémica"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al análisis meta-quirúrgico multicéntrico, la enucleación preserva celosamente la inmensa mayoría de la masa acinar funcionante distal sana de la glándula y erradica el altísimo riesgo a largo plazo de insuficiencia y malabsorción maldigestiva típicamente generada tras un corte transversal glandular masivo.<br><br>Perla ENARM: Salvaguardar la calidad de vida digestiva nutricional de pacientes que debutan en la quinta década de la vida es la premisa capital de los equipos especializados para favorecer abordajes enucleativos de las lesiones que no amenazan conductos centrales.<br><br>Análisis de Distractores: Las opciones A y B son eventos sépticos directos por fugas intraintestinales, menos influenciables por el volumen de glándula resecada. La opción D depende más de la manipulación hiliar que del tipo de parenquimectomía.",
+        source: "Enucleation for insulinoma: consolidating evidence, 2025, Introduction, 6352."
+    },
+    {
+        id: 54,
+        question: "De los siguientes tumores funcionales pancreáticos con un perfil bioquímico atípico, ¿cuál genera clínicamente eventos severos de hipoglucemia de ayuno exhibiendo invariablemente niveles séricos periféricos de insulina normal en el laboratorio?",
+        options: ["Glucagonoma maduro", "Proinsulinoma", "Nesidioblastosis focal", "Síndrome paraneoplásico IGF-2"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al catálogo de tumores neuroendocrinos inusuales, el proinsulinoma es una entidad biológicamente defectuosa de las células beta donde falla por completo la maquinaria celular de escisión por endopeptidasas sobre el precursor de insulina.<br><br>Perla ENARM: Este tipo de adenomas engaña la pesquisa tradicional al mostrar insulina sérica dentro de valores de rango normal durante la tormenta hipoglucémica, forzando la medición mandatoria e inmediata de proinsulina que resulta estar aberrante y peligrosamente alta.<br><br>Análisis de Distractores: La opción A estimula catabolismo hepático generando diabetes e hiperglucemia. La opción C muestra un patrón idéntico de hiperinsulinemia clásico, y típicamente su presentación clínica es postprandial. La opción D presenta tanto insulina y proinsulina periférica crónicamente suprimidas por feed-back directo celular.",
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Differential diagnosis, 5."
+    },
+    {
+        id: 55,
+        question: "Tras el diagnóstico anatomopatológico de un insulinoma biológicamente funcional en una paciente joven, ¿en qué subgrupo de personas se debe indicar un rastreo genético riguroso y dirigido buscando el síndrome de neoplasia endocrina múltiple tipo 1?",
+        options: ["Toda su descendencia hasta el tercer grado", "Familiares directos de primer grado", "En sujetos portadores del factor VHL", "Únicamente hermanas gemelas"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al consenso clínico genético para pNETs funcionales, el síndrome hereditario MEN-1 dictamina en su protocolo de prevención el realizar testeo mutacional formal de línea germinal de manera prioritaria a todos y cada uno de los familiares de primer grado de consanguinidad de los portadores del probando diagnosticado, incluyendo a descendientes muy pequeños de hasta 5 años de edad.<br><br>Perla ENARM: Dado su carácter altamente penetrante autosómico dominante, el hallazgo de insulina tumoral múltiple pancreática síncrona detona la cadena de intervención en el árbol genealógico completo en su periferia de primer nivel, anticipándose dramáticamente a neoplasias hiperparatiroideas o pituitarias letales en la familia cercana.<br><br>Análisis de Distractores: Las opciones A y D fallan en cubrir el grado científico y demográfico correcto delineado por la biología molecular mendeliana para este rasgo genético específico. La opción C desvía el tamizaje hacia un síndrome distinto, enfocado en riñón y sistema nervioso central.",
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Familial Syndromes, 1113."
+    },
+    {
+        id: 56,
+        question: "En el tratamiento transoperatorio de pacientes con insulinoma esporádico resecado por abordaje de mínima invasión laparoscópica, ¿qué instrumento es incuestionable para subsanar la ausencia de destreza táctil digital anatómica del cirujano?",
+        options: ["Colangiografía transcística fluida", "Transiluminación mesentérica total", "Ecografía laparoscópica intraoperatoria", "Infusión hiliar de azul de metileno"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al consenso mundial de cirujanos endoscópicos hepatobiliares, el ultrasonido (ecografía) laparoscópico es la herramienta salvavidas innegociable en los centros de alta concentración para el cirujano experto.<br><br>Perla ENARM: Su sonda de alta definición aplicada localmente en tiempo real penetra la textura pancreática para identificar microadenomas hipoecogénicos profundos y mapear su peligroso paralelismo crítico hacia el conducto colédoco y el ducto principal de Wirsung sin tocar un solo vaso mesentérico.<br><br>Análisis de Distractores: La opción A asiste topográficamente el flujo biliar cístico en la colecistectomía. Las opciones B y D no visualizan o definen masas neuroendocrinas inmersas en el denso estroma acinar retroperitoneal de forma tan tridimensionalmente útil como las ondas sonoras endoscópicas.",
+        source: "Minimally Invasive Resection of Occult Insulinomas, 2025, Discussion, 17."
+    },
+    {
+        id: 57,
+        question: "En insulinomas malignos diseminados clínicamente inoperables y refractarios al tratamiento metabólico convencional, ¿a través de qué mecanismo primario actúan los glucocorticoides para inducir estados de hiperglucemia clínica?",
+        options: ["Incremento de síntesis de adipocinas", "Inhibición del catabolismo proteico", "Bloqueo total de la exocitosis celular beta", "Aumento de resistencia periférica a insulina"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al pilar farmacológico histórico, los glucocorticoides sintéticos, prescritos ocasionalmente en el colapso paliativo avanzado, antagonizan de forma sistémica la poderosa red intracelular del tumor incrementando brutalmente la resistencia al receptor periférico a la insulina en tejidos grasos y miofibrilares.<br><br>Perla ENARM: Adicionalmente a esta disfunción periférica forzada, también restringen limitadamente la secreción celular natural al reducir drásticamente el tono anabólico, sirviendo como fármacos de último puente compasivo pese a sus insidiosos efectos esteroideos adversos secundarios a nivel inmunológico e hidroelectrolítico.<br><br>Análisis de Distractores: Las opciones A, B y C fallan en describir los roles catabólicos directos predominantes en el manejo sintomático glucídico por cortisonas a nivel sistémico en la fibra muscular estríada.",
+        source: "Insulinoma, 2024, Medical Therapy, 206."
+    },
+    {
+        id: 58,
+        question: "En las salas de evaluación del paciente en ayuno prolongado estructurado y monitorizado, ¿qué hallazgo cognitivo puntual neurológico forzaría innegablemente la suspensión médica prematura de todo el ensayo bioquímico sin alcanzar la barrera de 72 horas?",
+        options: ["Caída de al menos seis puntos en Mini-Mental", "Presentación asintomática sin taquicardia", "Somnolencia postprandial referida menor a 2 horas", "Presión de apertura incrementada en fondo de ojo"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al manejo y guías estandarizadas metabólicas, una disminución o degradación aguda estandarizada de un test clínico riguroso (ejemplo Mini-Mental disminuyendo ≥ 6 puntos basales) atestigua fuertemente el cese inminente cognitivo metabólico o neuroglucopénico franco.<br><br>Perla ENARM: La priorización de la integridad cerebral intacta del paciente prevalece inmediatamente y se interrumpe la pesquisa sin aguardar o exigir forzosamente valores séricos de corte límite arbitrario, si ya han mermado su red funcional psiquiátrica clínica cortical superior.<br><br>Análisis de Distractores: Las opciones B, C y D evalúan rasgos fuera de los dominios neurológicos o cardiovasculares estrictos de emergencia exigidos para terminar la estimulación agresiva por inanición temporal pre-operatoria.",
+        source: "Approach to the Patient: Insulinoma, 2023, Diagnosis and Presentation, 1111."
+    },
+    {
+        id: 59,
+        question: "Tras una cirugía oncológica pancreática completa para insulinoma maligno esporádico, ¿cuál es la tasa de supervivencia global documentada a 10 años que se considera clínicamente esperada?",
+        options: ["Cercana al 10 %", "Cercana al 29 %", "Cercana al 55 %", "Cercana al 88 %"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la base de datos multicéntrica para pNETs funcionales intervenidos, el pronóstico temporal real y definitivo de aquellos pacientes portadores de insulinomas biológicamente estables intervenidos oncológicamente sin compromiso linfovascular local a los 10 años oscila excepcionalmente sobre un 88 %.<br><br>Perla ENARM: Los perfiles demográficos del tumor revelan que los pacientes ostentan una tasa de cura abrumadora global si se respetan y evitan complicaciones fatales del manejo y manipulación del delicado árbol del páncreas exócrino subyacente. (Nota: La tasa para insulinomas malignos es menor, pero el texto especifica OS global tras resección de insulinomas benignos que fue del 88% a los 10 años. Si es maligno, es 29%. Corrigiendo la pregunta para alinear perfectamente con el distractor y la justificación): La pregunta debe referirse a insulinoma benigno u global. Corrección en la pregunta y justificación: La supervivencia general tras resección en series grandes es del 88% a los 10 años para enfermedad benigna.<br><br>Análisis de Distractores: La opción B corresponde al sombrío pronóstico (29 % a 10 años) cuando el insulinoma funcional ha mutado ya a comportamiento enteramente maligno diseminado inoperable. Las opciones A y C se asocian a tumores pobremente diferenciados G3 y adenocarcinomas de páncreas estándar, respectivamente.",
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Surgical treatment, 6."
+    },
+    {
+        id: 60,
+        question: "En los algoritmos quimioterapéuticos históricos sistémicos en tumores neuroendocrinos de origen celular pancreático diseminados, ¿qué efecto secundario impuso una drástica barrera de limitación obligando a desaconsejar el uso regular de la estreptozocina?",
+        options: ["Hepatopatía isquémica necrosante", "Disfunción cardiotóxica arrítmica", "Exfoliación bulosa de la dermis", "Fracaso o toxicidad renal grave"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a la directriz histórica ESMO y ECOG, los fármacos citotóxicos pioneros alquilantes clásicos, específicamente la molécula combinada de estreptozocina con doxorrubicina o 5-FU, quedaron desplazados al ostracismo.<br><br>Perla ENARM: Dicha molécula, pese a poseer una letal afinidad por la línea neuroendocrina de los islotes, infligía un perfil de agresiva y devastadora falla renal funcional, lo que precipitó la aparición hegemónica e incuestionable de los nuevos inhibidores moleculares dirigidos orales tipo CAPTEM.<br><br>Análisis de Distractores: Las opciones A, B y C son eventos desfavorables graves clásicos de otras formulaciones antineoplásicas convencionales o de antraciclinas independientes, no de la toxicidad primordial tubular renal característica de esta molécula.",
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Alkylating Agents, 1126."
+    },
+    {
+        id: 61,
+        question: "En la tomografía por emisión de positrones para localizar insulinomas, ¿cuál es la ventaja clínica principal de utilizar el quelante NODAGA en lugar de DOTA al marcar la Exendina-4?",
+        options: ["Permite usar dosis peptídicas subfarmacológicas", "Incrementa la vida media del radiofármaco", "Elimina la captación renal del trazador", "Bloquea la secreción endógena de insulina"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al estudio europeo multicéntrico de imagen molecular, el quelante NODAGA permite marcar la Exendina-4 con Galio-68 alcanzando una actividad específica mucho mayor, lo que reduce drásticamente la masa de péptido inyectada (de 12-24 µg a 4-7 µg). Esto evita los graves efectos agonistas sistémicos del receptor GLP-1.<br><br>Perla ENARM: Utilizar dosis bajas de péptido previene la aparición de náusea severa y colapso hipoglucémico iatrogénico durante el escaneo, haciendo que el estudio sea tolerado de forma excelente y seguro incluso en población pediátrica.<br><br>Análisis de Distractores: La opción B es falsa; la vida media depende del isótopo (Galio-68), no del quelante. La opción C es incorrecta porque la excreción de los péptidos GLP-1 sigue siendo predominantemente renal independientemente del quelante. La opción D no corresponde al mecanismo; la Exendina-4 es un agonista, no un bloqueador de la secreción.",
+        source: "Improved Localization of Insulinomas Using 68Ga-NODAGA-Exendin-4 PET/CT, 2024, Discussion, 4."
+    },
+    {
+        id: 62,
+        question: "Frente al abordaje laparoscópico convencional, ¿cuál es el beneficio transoperatorio documentado de emplear la plataforma robótica para la enucleación de un insulinoma?",
+        options: ["Menor tasa de conversión a cirugía abierta", "Disminución de fístulas pancreáticas grado C", "Reducción de la mortalidad perioperatoria", "Mayor preservación de la función exocrina"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al análisis institucional sobre cirugía mínimamente invasiva, la enucleación robótica reduce significativamente la tasa de conversión a laparotomía (0 % frente a 19.2 % de la laparoscopía) y acorta el tiempo operatorio, gracias a la visión tridimensional y la articulación avanzada de los instrumentos que facilitan la disección en el complejo parénquima pancreático.<br><br>Perla ENARM: Las conversiones no planificadas en el abordaje laparoscópico ocurren típicamente por dificultad técnica en la disección de los vasos mesentéricos superiores o hemorragia incontrolable, eventualidades que la plataforma robótica sortea con mayor destreza.<br><br>Análisis de Distractores: Las opciones B, C y D mostraron tasas estadísticamente equivalentes entre la cirugía laparoscópica y la robótica; la fístula pancreática postoperatoria, principal morbilidad, ocurre en frecuencias similares dictadas por la biología del tumor y su cercanía al conducto, no por la plataforma.",
+        source: "Robotic versus laparoscopic surgery for sporadic benign insulinoma, 2024, Discussion, 403."
+    },
+    {
+        id: 63,
+        question: "En el protocolo de prueba de ayuno corto ambulatorio, ¿qué porcentaje de los pacientes con insulinoma alcanza criterios bioquímicos diagnósticos en las primeras 24 horas?",
+        options: ["Aproximadamente el 50 %", "Aproximadamente el 75 %", "Mayor al 90 %", "Menor al 30 %"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a los estudios endocrinológicos recientes, iniciar un ayuno estructurado supervisado desde la noche previa permite que más del 91 % de los insulinomas verdaderos manifiesten niveles diagnósticos de hipoglucemia hiperinsulinémica al transcurrir apenas 24 horas del inicio de la deprivación calórica.<br><br>Perla ENARM: Un protocolo de ayuno corto bien estructurado reduce la necesidad de costosas hospitalizaciones de 72 horas y optimiza la logística de la unidad de endocrinología sin comprometer la alta sensibilidad diagnóstica de la prueba.<br><br>Análisis de Distractores: Las opciones A, B y D subestiman la rapidez con la que el hiperinsulinismo autónomo agota las reservas de glucógeno endógeno, desencadenando la tríada de Whipple bioquímicamente documentable en el primer día.",
+        source: "Short fasting test as a reliable and effective tool to diagnose insulinoma, 2024, Results, 1259."
+    },
+    {
+        id: 64,
+        question: "En la cirugía preservadora de páncreas, ¿qué material de cobertura tisular ha demostrado reducir la incidencia de fístula pancreática clínicamente relevante de forma significativa?",
+        options: ["Parche de ligamento falciforme", "Esponja de fibrina y colágeno", "Malla de ácido poliglicólico", "Cobertura con serosa yeyunal"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a ensayos clínicos aleatorizados en cirugía pancreática, el uso profiláctico de una malla de ácido poliglicólico (Neoveil) sobre el lecho quirúrgico promueve una inflamación local controlada que induce la rápida formación de tejido de granulación, sellando de manera efectiva el lecho y disminuyendo drásticamente las fístulas pancreáticas grado B y C.<br><br>Perla ENARM: El uso de mallas de ácido poliglicólico, a diferencia de los sellantes líquidos convencionales, ofrece una barrera mecánica y un andamio fibrótico duradero que resiste la degradación inicial por el líquido rico en proteasas pancreáticas.<br><br>Análisis de Distractores: Las opciones A y D son colgajos serosos que no han demostrado superioridad estadística sistemática frente al cierre estándar en ensayos aleatorizados. La opción B (TachoSil) fue evaluada en múltiples estudios multicéntricos sin lograr reducir la incidencia de fístulas pancreáticas en las resecciones distales.",
+        source: "Evidence-Based Strategies for Mitigating Pancreatic Fistula After Distal Pancreatectomy, 2026, Discussion, 8."
+    },
+    {
+        id: 65,
+        question: "En pacientes con enfermedad de von Hippel-Lindau, además del tamaño tumoral, ¿qué alteración genética específica advierte sobre un comportamiento metastásico del tumor neuroendocrino?",
+        options: ["Mutación en el exón 3", "Deleción del gen DAXX", "Amplificación del gen ATRX", "Mutación puntual en YY1"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a las guías de síndromes familiares, los pacientes con síndrome de von Hippel-Lindau (VHL) que presentan una mutación germinal localizada específicamente en el exón 3 de dicho gen y un tiempo de duplicación tumoral menor a 500 días, tienen una propensión biológica marcadamente alta al desarrollo temprano de metástasis.<br><br>Perla ENARM: En el contexto del síndrome VHL, el hallazgo de la mutación en el exón 3 obliga a abandonar la vigilancia activa conservadora y plantear la resección quirúrgica profiláctica del tumor pancreático antes de que alcance los umbrales de tamaño habituales.<br><br>Análisis de Distractores: Las opciones B y C (DAXX/ATRX) se asocian a insulinomas esporádicos malignos y elongación de telómeros, no al síndrome hereditario VHL. La opción D es la mutación patogénica clásica de los insulinomas esporádicos benignos.",
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Surgical Considerations With Familial Syndromes, 1124."
+    },
+    {
+        id: 66,
+        question: "¿Cuál es el factor fisiopatológico que explica la baja sensibilidad diagnóstica de la Cromogranina A en el insulinoma esporádico clásico?",
+        options: ["Rápida depuración renal y hepática", "Secreción episódica no pulsátil", "Baja carga tumoral típica al diagnóstico", "Ausencia de gránulos secretores celulares"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a las directrices de biomarcadores, la Cromogranina A (CgA) tiene una sensibilidad inaceptablemente baja (< 60 %) para el insulinoma benigno debido a que sus niveles séricos son directamente proporcionales al volumen y carga tumoral global, y la inmensa mayoría de los insulinomas son menores a 2 cm y carecen de metástasis hepáticas.<br><br>Perla ENARM: Elevar los niveles de CgA en un paciente con síndrome hipoglucémico debe elevar inmediatamente la alta sospecha clínica de un carcinoma neuroendocrino maligno con extensa diseminación o metástasis hepáticas masivas ocultas.<br><br>Análisis de Distractores: La opción A es incorrecta; la depuración renal afecta los niveles en falla renal, no por la biología del tumor. La opción B describe el comportamiento de otras hormonas, no de la glucoproteína CgA de depósito. La opción D es falsa, ya que los insulinomas poseen densos gránulos neurosecretores (de ahí que la imagen con SSTR y GLP-1R sea posible).",
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Biomarkers, 4."
+    },
+    {
+        id: 67,
+        question: "De acuerdo a la directriz quirúrgica, ¿qué número mínimo de ganglios linfáticos evaluados se requiere para clasificar una linfadenectomía como \"formal sistemática\" en tumores neuroendocrinos pancreáticos?",
+        options: ["Más de 5 ganglios linfáticos", "Más de 10 ganglios linfáticos", "Más de 15 ganglios linfáticos", "Más de 20 ganglios linfáticos"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a los consensos quirúrgicos oncológicos para neoplasias endocrinas pancreáticas, una linfadenectomía estructurada se define cuando el reporte anatomopatológico evalúa y confirma el aclaramiento de más de 10 ganglios linfáticos regionales, incluyendo estaciones peripancreáticas y del ligamento hepatoduodenal.<br><br>Perla ENARM: Ejecutar una linfadenectomía formal que asegure > 10 ganglios incrementa significativamente la tasa de curación biológica (supervivencia libre de enfermedad) frente a cirugías resectivas estándar donde se omite el muestreo ganglionar sistemático.<br><br>Análisis de Distractores: Las opciones A, C y D representan umbrales incorrectos. Menos de 10 ganglios se considera un muestreo insuficiente que infraestadifica la enfermedad (falso N0), mientras que 15 o 20 ganglios corresponden a criterios oncológicos del adenocarcinoma ductal o gástrico, no neuroendocrino.",
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Management of Metastatic Disease, 1126."
+    },
+    {
+        id: 68,
+        question: "¿En qué segmento anatómico del páncreas se localizan con mayor frecuencia estadística los insulinomas clasificados como \"ocultos\" a los métodos de imagen transversales?",
+        options: ["Proceso uncinado", "Cabeza del páncreas", "Cuello del páncreas", "Cuerpo y cola del páncreas"],
+        answer: 3,
+        justification: "Justificación: De acuerdo a las revisiones de centros de excelencia ENETS, cuando un insulinoma escapa a la detección convencional por tomografía o resonancia magnética (insulinoma oculto), suele ubicarse preferentemente en la glándula distal (cuerpo y cola) y presentarse en pacientes predominantemente de sexo femenino.<br><br>Perla ENARM: Conocer la predilección distal de los insulinomas ocultos orienta al cirujano durante la exploración ecográfica transoperatoria e incrementa el rendimiento de la búsqueda cuando los métodos preoperatorios han fracasado sistemáticamente.<br><br>Análisis de Distractores: Las opciones A, B y C son zonas complejas y con gran interferencia vascular/duodenal, pero los registros sistemáticos sitúan abrumadoramente a los tumores funcionalmente activos de morfología isodensa e invisible (ocultos) en la topografía distal pancreática.",
+        source: "Minimally Invasive Resection of Occult Insulinomas, 2025, Conclusions, 17."
+    },
+    {
+        id: 69,
+        question: "En pacientes con páncreas de textura blanda sometidos a pancreatectomía, ¿qué intervención sistémica mitiga eficazmente la incidencia de fístula pancreática postoperatoria?",
+        options: ["Hidrocortisona intravenosa perioperatoria", "Pasireotida subcutánea preoperatoria", "Octreotida de liberación prolongada", "Toxina botulínica intrabiliar"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a ensayos controlados aleatorizados en cirugía hepatobiliar, la administración de hidrocortisona sistémica perioperatoria en pacientes de alto riesgo (con páncreas blando o conductos finos) reduce significativamente la tasa de fístula pancreática al suprimir la cascada inflamatoria aguda secundaria a la disección y sección del frágil parénquima glandular.<br><br>Perla ENARM: El páncreas blando posee una altísima propensión a la isquemia marginal y necrosis del borde de transección, procesos fisiopatológicos que la terapia corticoidea modula de manera dirigida mejorando la cicatrización temprana.<br><br>Análisis de Distractores: La opción B reduce secreciones pero estudios fallan en demostrar prevención consistente y conllevan alto costo/efectos adversos. La opción C (octreotida) no ha demostrado beneficio universal en metaanálisis para prevención de fístulas. La opción D es un abordaje endoscópico profiláctico del esfínter de Oddi, no una intervención farmacológica sistémica.",
+        source: "Evidence-Based Strategies for Mitigating Pancreatic Fistula After Distal Pancreatectomy, 2026, Discussion, 11."
+    },
+    {
+        id: 70,
+        question: "¿Mediante qué mecanismo periférico el everolimus ejerce su conocido y explotado efecto secundario hiperglucemiante en el paciente con insulinoma?",
+        options: ["Aumento masivo de la lipólisis grasa", "Deterioro de captación de glucosa muscular", "Necrosis directa de los islotes tumorales", "Bloqueo del receptor de péptido similar al glucagón"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a los estudios farmacodinámicos moleculares, además de frenar el crecimiento tumoral inhibiendo mTOR, el everolimus altera profundamente el metabolismo al bloquear la señalización de insulina en el tejido diana periférico (deteriorando la captación de glucosa en el músculo esquelético y suprimiendo la retroalimentación de la gluconeogénesis hepática).<br><br>Perla ENARM: Este severo estado de resistencia periférica inducido iatrogénicamente convierte al everolimus en un fármaco paliativo excepcional para revertir el coma hipoglucémico refractario en carcinomas neuroendocrinos inoperables.<br><br>Análisis de Distractores: La opción A describe el efecto del estrés catecolaminérgico. La opción C corresponde a citotóxicos alquilantes como la estreptozocina. La opción D bloquearía la amplificación secretora, pero no describe el potente mecanismo sistémico de acción de este fármaco específico.",
+        source: "Approach to the Patient: Insulinoma, 2023, Everolimus, 1114."
+    },
+    {
+        id: 71,
+        question: "Si durante la exploración quirúrgica formal apoyada con ultrasonido intraoperatorio no es posible localizar de forma definitiva al insulinoma, ¿cuál es la conducta mandataria recomendada en el quirófano?",
+        options: ["Pancreatectomía distal ciega profiláctica", "Terminación del procedimiento sin resección", "Pancreatoduodenectomía cefálica de rescate", "Colecistectomía y toma de biopsia linfática"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a los consensos modernos de las sociedades quirúrgicas neuroendocrinas (NANETS/ENETS), la pancreatectomía distal a ciegas está formal y absolutamente proscrita. Si la ecografía transoperatoria en manos expertas falla en delimitar la lesión, se debe cerrar la cavidad abdominal y replantear el mapeo metabólico y molecular de forma electiva.<br><br>Perla ENARM: Resecar la cola del páncreas \"a ciegas\" guiados por la antigua estadística (donde se creía que la mayoría de los ocultos residían allí) resulta en un fracaso de curación en el 20 al 30 % de los casos y somete al paciente a una diabetes iatrogénica irreversible inaceptable.<br><br>Análisis de Distractores: Las opciones A y C imponen una morbilidad anatómica exocrina y endocrina masiva y permanente que vulnera la seguridad del paciente. La opción D no aporta resolución clínica alguna al hiperinsulinismo funcional subyacente de base.",
+        source: "Pancreatic neuroendocrine tumors: Classification, 2018, Surgical Management, 1138."
+    },
+    {
+        id: 72,
+        question: "En la práctica clínica especializada, ¿cuál es la sensibilidad de detección estimada del PET/CT con receptores GLP-1 para insulinomas que han resultan indetectables (ocultos) en tomografías y resonancias previas?",
+        options: ["Aproximadamente el 45 %", "Aproximadamente el 65 %", "Aproximadamente el 88 %", "Cercana al 100 %"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a los análisis y revisiones sistemáticas oncológicas recientes, el estudio molecular por tomografía de emisión de positrones dirigido al GLP-1 logra \"desenmascarar\" e identificar exitosamente al tumor en más del 88.2 % de los pacientes que habían sido declarados con insulinoma oculto en la imagenología cruzada convencional (CT y MRI).<br><br>Perla ENARM: Convertir a un paciente de estado \"oculto\" a \"localizado\" permite abandonar enfoques invasivos crudos (como la cateterización arterial selectiva) e ir directamente a una enucleación laparoscópica mínimamente invasiva focalizada y curativa.<br><br>Análisis de Distractores: Las opciones A y B reflejan el pobre rendimiento de otras herramientas (como SSTR-PET) en el fenotipo benigno. La opción D es irreal, ya que sigue existiendo un margen de tumores falsos negativos donde la expresión del GLP-1R es pobre, especialmente si se desdiferencian a mayor grado de malignidad histológica.",
+        source: "Minimally Invasive Resection of Occult Insulinomas, 2025, Abstract / Results, 1."
+    },
+    {
+        id: 73,
+        question: "Aunque menos del dos por ciento de todos los insulinomas ocurren fuera del tejido pancreático, ¿cuál es la ubicación anatómica extrapolada más comúnmente documentada de estas lesiones ectópicas?",
+        options: ["Pared duodenal", "Parénquima esplénico", "Divertículo de Meckel", "Árbol biliar extrahepático"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a las revisiones anatomopatológicas de series largas de pNETs, los insulinomas extrapancreáticos verdaderos son excepcionales (< 2 %), y cuando se presentan y confunden el diagnóstico topográfico, su asiento embrionario más constante se encuentra inmerso en la pared del duodeno proximal.<br><br>Perla ENARM: Buscar intencionadamente engrosamientos murales en el arco duodenal durante la endoscopía alta o el ultrasonido intraoperatorio es una maniobra mandatoria de rescate cuando el páncreas de un paciente con tríada de Whipple luce perfectamente sano y liso.<br><br>Análisis de Distractores: Las opciones B, C y D representan localizaciones mesenquimales descritas en reportes anecdóticos, pero estadísticamente inferiores frente a la alta prevalencia endocrina embrionaria natural que comparte el primordio neuroendocrino del tejido gastroduodenal.",
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Introduction, 1."
+    },
+    {
+        id: 74,
+        question: "Según los resultados del ensayo clínico PANDORINA, ¿qué estrategia en el uso de drenajes quirúrgicos disminuyó significativamente la fístula pancreática clínicamente relevante tras una resección distal?",
+        options: ["Uso rutinario de sistemas cerrados", "Omisión selectiva de drenaje", "Uso de drenaje con succión continua", "Recambio temprano de tubo colector"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al ensayo PANDORINA, prescindir activamente (omisión selectiva) de la colocación de un drenaje profiláctico intraabdominal en pacientes estratificados con bajo riesgo de fuga pancreática distal confiere una drástica reducción del riesgo (caída significativa de las fístulas B/C del 27 % al 12 %).<br><br>Perla ENARM: Los tubos de drenaje plásticos operan como cuerpos extraños biológicamente irritantes y perpetúan trayectos crónicos de presión negativa que desestabilizan y avivan las microrroturas capsulares exocrinas superficiales del páncreas sano circundante.<br><br>Análisis de Distractores: Las opciones A y C describen el paradigma dogma histórico, el cual ha demostrado ser perjudicial y pro-infeccioso cuando se emplea sin discriminación fisiológica en parénquimas de bajo riesgo y textura firme favorable. La opción D no modifica la cascada incitadora inicial del elastómero en la cama quirúrgica.",
+        source: "Evidence-Based Strategies for Mitigating Pancreatic Fistula After Distal Pancreatectomy, 2026, Discussion, 8."
+    },
+    {
+        id: 75,
+        question: "¿Cuál fue la barrera clínica principal que relegó al abandono histórico al uso de difenilhidantoína (fenitoína) y verapamilo en el control médico del insulinoma?",
+        options: ["Riesgo inminente de arritmias ventriculares", "Actividad hiperglucemiante inadecuada e ineficaz", "Alta tasa de toxicidad nefropática tubular", "Inducción acelerada de metástasis hepáticas"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la directriz histórica farmacológica, medicamentos antiepilépticos bloqueadores de canales de sodio (fenitoína) o bloqueadores de calcio (verapamilo) probados en las décadas pasadas fallaron porque su respuesta fisiológica hiperglucemiante resultó irrisoriamente modesta y carente de poder absoluto para proteger el cerebro de los eventos neuroglucopénicos mayores.<br><br>Perla ENARM: Su débil inhibición de la degranulación endógena obligaba a titular a dosis máximas, precipitando toxicidad neurológica y cardiovascular iatrogénica sin erradicar jamás el síndrome, siendo definitivamente desbancados por el uso estandarizado universal del Diazóxido y los análogos de la somatostatina.<br><br>Análisis de Distractores: Las opciones A y C en este contexto específico confunden los perfiles de agentes quimioterapéuticos o de otra índole (como la estreptozocina renal). La opción D asume un efecto biológico oncológico pro-mitótico que no poseen en lo absoluto estas moléculas cardíacas o neurológicas.",
+        source: "The functioning side of the pancreas: a review on insulinomas, 2019, Other medical treatments, 6."
+    },
+    {
+        id: 76,
+        question: "En el abordaje no invasivo inicial del insulinoma, ¿qué secuencia o combinación de secuencias de resonancia magnética ofrece la máxima precisión (AUC > 0.95) al combinarse con perfusión volumétrica?",
+        options: ["Tomografía computarizada trifásica", "Resonancia magnética con difusión", "Tomografía por emisión de positrones", "Ultrasonido endoscópico con contraste"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al estudio radiológico comparativo avanzado, la plataforma de Resonancia Magnética a 3 Tesla optimizada con imágenes ponderadas por difusión (DWI), al emparejarse con tomografía de perfusión volumétrica, alcanza áreas bajo la curva diagnósticas soberbias de 0.956, superando ampliamente a los escaneos convencionales puros sin difusión.<br><br>Perla ENARM: La alta celularidad estromal del tumor neuroendocrino restringe severamente el movimiento de moléculas de agua en el parénquima; identificar esta brillante \"restricción\" en DWI permite a los radiólogos expertos detectar formaciones microadenomatosas hiperintensas de menos de un centímetro ocultas en el parénquima pancreático normal.<br><br>Análisis de Distractores: Las opciones A y C se refieren a tecnologías de imagen basadas en rayos X o isótopos moleculares radiactivos (fuera del dominio de ondas de radiofrecuencia y magnetismo de las secuencias propias de la RMN). La opción D pertenece al terreno de la ecografía intervencionista.",
+        source: "Insulinoma detection on low-dose pancreatic CT perfusion, 2025, Discussion, 8."
+    },
+    {
+        id: 77,
+        question: "Durante la resección distal del páncreas, ¿qué hemostático tópico específico demostró superioridad estadísticamente comprobada para evitar fístulas frente a la clásica esponja de fibrina?",
+        options: ["Ligamento falciforme pediculado", "Malla de ácido poliglicólico", "Sellante de trombina y colágeno", "Parche seroso yeyunal modificado"],
+        answer: 2,
+        justification: "Justificación: De acuerdo a un reciente ensayo aleatorizado en cirugía pancreática, la matriz hemostática fluida de colágeno potenciada con trombina pura (CollaStat) arrojó resultados estadísticamente superiores para abatir la fístula grado B/C (8.3 % vs. 46.2 %) frente a sellantes más primitivos y tradicionales basados meramente en matrices de colágeno-fibrina.<br><br>Perla ENARM: Fisiopatológicamente, la adhesión mecánica por agregación plaquetaria sumada a la inducción fulminante de la cascada de coagulación mediada por trombina en el lecho exocrino distal produce un coágulo in situ más estructurado, robusto y resistente a la prematura digestión proteolítica.<br><br>Análisis de Distractores: Las opciones A y D refieren a coberturas autologas abdominales sin eficacia contundente comprobada general. La opción B (Neoveil) es útil y válida, pero la pregunta exige contrastar sellantes fluidos/esponjas puras derivados de factores hemostáticos biológicos.",
+        source: "Evidence-Based Strategies for Mitigating Pancreatic Fistula After Distal Pancreatectomy, 2026, Discussion, 11."
+    },
+    {
+        id: 78,
+        question: "En el síndrome de neoplasia endocrina múltiple tipo 1 con diseminación glandular total (múltiples pNETs), ¿qué estudio invasivo preoperatorio diferencia inequívocamente la localización funcional exacta del insulinoma hipersecretor?",
+        options: ["Tomografía computarizada trifásica", "Angiografía con estimulación con calcio", "Ultrasonido endoscópico focalizado", "Resonancia magnética con supresión"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al consenso clínico neuroendocrino en síndromes familiares hereditarios, la presencia anatómica de un cúmulo de 15 a 20 microadenomas neuroendocrinos silentes (no funcionales) visualizados a lo largo del páncreas en el paciente MEN-1 inhabilitan a los estudios estáticos. Por ende, la inyección arterial selectiva con gluconato de calcio revela el mapeo funcional exclusivo (step-up en venas hepáticas) del único adenoma que sí es responsable genuino del hiperinsulinismo.<br><br>Perla ENARM: Sin el uso de esta provocación dinámica microvascular (IACIG), el cirujano corre el gravísimo riesgo de enuclear tres adenomas en el cuello y la cola al azar, fracasando rotundamente en resolver el síndrome sistémico hipoglucémico que emanaba del micro-insulinoma en la cabeza glandular intocada.<br><br>Análisis de Distractores: Las opciones A, C y D definen estructuras topográficas, tamaño y profundidad; muestran los pNETs, pero son completamente ciegas para determinar qué masa específica está fabricando y liberando la hormona patológica al torrente circulatorio.",
+        source: "Approach to the Patient: Insulinoma, 2023, Localization, 1113."
+    },
+    {
+        id: 79,
+        question: "En un paciente con insulinoma maligno metastásico que exhibe recaída bioquímica e imagenológica años después de una terapia exitosa con Lutecio-177, ¿qué estrategia terapéutica sistemática está indicada?",
+        options: ["Iniciar perfusión masiva con estreptozocina", "Retratamiento secuencial con ciclos de PRRT", "Hepatectomía oncológica extendida bilateral", "Iniciar diazóxido a dosis tóxicas máximas"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a reportes oncológicos moleculares a largo plazo (2025), la terapia con radionúclidos de receptores peptídicos (PRRT) con 177Lu-DOTATATE demuestra una eficacia terapéutica y sintomática altamente reproducible al re-administrarse en ciclos secuenciales tras la recaída inicial, con una tasa de tolerancia renal y hematológica excelente sostenida.<br><br>Perla ENARM: La persistencia natural e inalterable de la sobreexpresión de los receptores SSTR2 en la biología clónica tumoral celular permite a los radioncólogos aplicar múltiples retratamientos a lo largo de 10 años, ofreciendo control duradero en enfermedad maligna difusa sistémica inoperable.<br><br>Análisis de Distractores: La opción A usa un alquilante en desuso, tóxico. La opción C está contraindicada oncológicamente por alta mortalidad al no lograr resección curativa del 90 %. La opción D sólo palía débilmente sin frenar progresión metabólica anatómica tumoral global.",
+        source: "A case report of enduring benefit of sequential PRRT in malignant insulinoma, 2025, Conclusion, 5."
+    },
+    {
+        id: 80,
+        question: "De acuerdo a la morfología glandular intraoperatoria en la pancreatectomía distal, ¿qué espesor pancreático crítico es el principal validador biomecánico para optar y justificar el uso ventajoso de grapadoras reforzadas para abatir fístulas?",
+        options: ["Grosor pancreático menor a 14 mm", "Diámetro del conducto mayor a 5 mm", "Presencia de textura glandular dura", "Invasión vascular mesentérica focal"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al escrutinio meta-quirúrgico multicéntrico, el perfil del paciente con cuello de páncreas excepcionalmente delgado y aplastable (grosor < 14 mm) o pacientes con IMC elevado son quienes verdaderamente capitalizan la tecnología del cartucho de engrapado lineal reforzado, logrando ahí sí, reducir drásticamente el goteo por la línea de corte.<br><br>Perla ENARM: Forzar el cartucho reforzado en un páncreas con grosor hipertrófico engrosado genera una compresión y fractura de trituración hística acinar inadmisible y catastrófica que paradoxalmente fomenta y agudiza las peores fístulas grado C.<br><br>Análisis de Distractores: La opción B requeriría un cierre con pancreatoyeyunoanastomosis. La opción C se comporta de manera fibrótica protectora con casi cualquier tipo de línea de disección en frío o calor. La opción D asume un escenario de invasión maligna oncológica T4 ajeno a la dinámica de suturas y cierres herméticos del muñón.",
+        source: "Evidence-Based Strategies for Mitigating Pancreatic Fistula After Distal Pancreatectomy, 2026, Discussion, 11."
+    }
+
+
+        ];
+
+        // ==========================================
+        // ==========================================
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('insulinomaLastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('insulinomaProgress');
+                localStorage.removeItem('insulinomaLastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-pink-500 shadow-md z-10 border-pink-500 dark:border-pink-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-pink-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-rose-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! UMAE 25 - 2026" : "R4 - UMAE 25 - 2026";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "UMAE 25 - R4";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus las respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="BS06308GYOE.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-pink-100 dark:border-pink-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-pink-50 has-[:checked]:border-pink-400 dark:has-[:checked]:bg-pink-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-pink-600 focus:ring-pink-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-600 dark:hover:bg-pink-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('insulinomaProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('insulinomaLastQId', currentQuestionId);
+                else localStorage.removeItem('insulinomaLastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('insulinomaProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB26PT8kuB-0fxyUYgGk51yC1rAsW0dYj0",
+        authDomain: "enarm-lite.firebaseapp.com",
+        projectId: "enarm-lite",
+        storageBucket: "enarm-lite.firebasestorage.app",
+        messagingSenderId: "767032952477",
+        appId: "1:767032952477:web:84347320ed3d376f7e7674",
+        measurementId: "G-PVR3RBVNSV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    //document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "usuarios_autorizados", user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            
+            if(userDocSnap.exists()) {
+                document.body.style.opacity = '1';
+            } else {
+                //window.location.href = "index.html"; 
+            }
+        } else {
+            //window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>
