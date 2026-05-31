@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen</title>
+    
+    <!-- Tailwind CSS (Framework de diseño) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Tipografía limpia y amigable) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- KaTeX (Para renderizar las fórmulas matemáticas de LaTeX) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Configuración personalizada de Tailwind y CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            blue: '#e0f2fe',    // light blue 100
+                            green: '#dcfce7',   // green 100
+                            yellow: '#fef08a',  // yellow 200
+                            red: '#ffe4e6',     // rose 100
+                            purple: '#f3e8ff',  // purple 100
+                            orange: '#ffedd5',  // orange 100
+                            teal: '#ccfbf1',    // teal 100
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc; /* Fondo gris muy suave */
+            color: #334155;
+        }
+
+        /* Estilos base para listas */
+        ul { list-style-type: none; padding-left: 0; }
+        ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; line-height: 1.6; }
+        ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            line-height: 1;
+            top: -2px;
+        }
+
+        /* ----- CLASES DINÁMICAS PARA SUBRAYADOS (HIGHLIGHTS) ----- */
+        /* Úsalas en cualquier parte del texto envolviéndolo en <mark class="hl-color">Texto</mark> */
+        mark {
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-weight: 700;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .hl-yellow { background-color: #fef08a; color: #854d0e; } /* Advertencias, conceptos */
+        .hl-red    { background-color: #fecdd3; color: #9f1239; } /* Peligro, Contraindicaciones, Severidad */
+        .hl-green  { background-color: #bbf7d0; color: #166534; } /* Tratamientos, Metas */
+        .hl-blue   { background-color: #bae6fd; color: #075985; } /* Tiempos, Definiciones clave */
+        .hl-purple { background-color: #e9d5ff; color: #581c87; } /* Epidemiología, Estadísticas */
+
+        /* ----- EFECTOS DE TARJETAS ----- */
+        .medical-card {
+            transition: all 0.3s ease;
+            border-top-width: 5px;
+            height: 100%;
+        }
+        .medical-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Estilo para las Perlas GPC */
+        .gpc-pearl {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 4px solid #f59e0b;
+            position: relative;
+        }
+        .gpc-pearl::before {
+            content: '\f0eb'; /* Lightbulb icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #f59e0b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-12">
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            
+            <!-- Izquierda: Botón Home y Título App -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <a href="index.html" class="text-slate-400 hover:text-indigo-600 transition-colors flex-shrink-0 bg-slate-50 hover:bg-indigo-50 p-2 sm:p-2.5 rounded-full" title="Ir al inicio">
+                    <i class="fa-solid fa-house text-lg sm:text-xl"></i>
+                </a>
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-100 text-indigo-600 p-2 sm:p-3 rounded-lg hidden sm:flex items-center justify-center">
+                        <i class="fa-solid fa-stethoscope text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-heading font-bold text-lg sm:text-2xl text-slate-800 leading-tight line-clamp-1">Resumen</h1>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Derecha: Tag y Logo ENARM Lite (Recreado con CSS para máxima velocidad/calidad) -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <span class="hidden md:inline-block bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">CDYE</span>
+                
+                <!-- Logo ENARM Lite® -->
+                <div class="border-2 border-slate-200/80 bg-slate-50/50 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 flex items-baseline gap-1 shadow-sm select-none">
+                    <span class="font-sans font-extrabold text-[#004f8f] text-sm sm:text-lg tracking-tight">Surgy</span>
+                    <span class="font-sans font-semibold text-[#64b036] text-sm sm:text-lg">Lite<sup class="text-[9px] sm:text-[11px] font-bold">®</sup></span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+     <!-- aqui -->
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <!-- ENCABEZADO -->
+    <div class="text-center mb-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-gradient-to-br from-indigo-100 to-emerald-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -mb-8 -ml-8 w-32 h-32 bg-gradient-to-tr from-cyan-100 to-teal-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        
+        <h2 class="relative font-heading font-extrabold text-3xl sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-teal-800 via-emerald-600 to-cyan-600 mb-3 tracking-tight leading-tight py-1">
+            Enfermedad Diverticular Colónica
+        </h2>
+        <p class="relative text-base text-slate-600 font-medium mb-3 max-w-3xl mx-auto">
+            Abordaje Médico, Clasificación Tomográfica y Principios de Cirugía Colorectal de Urgencia.
+        </p>
+        <div class="inline-block bg-teal-50 border border-teal-200 text-teal-800 px-4 py-1.5 rounded-full text-sm font-bold mt-1 shadow-sm">
+            <i class="fa-solid fa-ribbon mr-1"></i> Revisión ENARM: AGA 2022, ASCRS 2020, WSES 2020, IDSA & JAMA 2024
+        </div>
+        <div class="w-24 h-1.5 bg-gradient-to-r from-emerald-500 to-cyan-400 mx-auto rounded-full mt-5"></div>
+    </div>
+
+    <!-- CUADRÍCULA PRINCIPAL SIMÉTRICA (18 TARJETAS DE 1 COLUMNA EN DESKTOP) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+
+        <!-- FILA 1: DEFINICIÓN, ESPECTRO CLÍNICO Y EPIDEMIOLOGÍA -->
+        <!-- Tarjeta 1: Definición y Tipos Funcionales -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-disease"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Conceptos Anatómicos</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-3 rounded-r-xl">
+                    <strong class="text-indigo-900 block mb-1">Divertículo:</strong>
+                    <p class="leading-relaxed">Protrusión sacular de la mucosa y submucosa a través de la pared muscular del colon (<strong class="text-slate-900">pseudodivertículos</strong> o falsos divertículos).</p>
+                </div>
+                <div class="bg-white p-3 rounded-xl border shadow-sm leading-relaxed flex-1">
+                    <strong class="text-slate-900 block mb-1">Enfermedad Diverticular:</strong>
+                    Presencia de síntomas o complicaciones relacionadas a divertículos. La <u>Sintomática No Complicada (EDSNC)</u> cursa con dolor o cambios del hábito intestinal en ausencia de inflamación franca.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 2: Diverticulitis Aguda (DACI) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Espectro Inflamatorio</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <strong class="text-slate-900 block mb-1">Aguda No Complicada:</strong>
+                    Inflamación localizada del segmento intestinal y tejido circundante, <strong>sin signos tomográficos</strong> de perforación o abscesos.
+                </div>
+                <div class="bg-red-50 p-3 rounded-xl border border-red-200 text-red-950 flex-1 flex flex-col justify-center">
+                    <strong class="block mb-1 text-red-900"><i class="fa-solid fa-burst text-red-600 mr-1"></i> Aguda Complicada (DACI):</strong>
+                    Proceso inflamatorio que se extiende más allá de la pared colónica. <mark class="bg-red-200 px-1 rounded font-bold text-red-900">Incluye absceso, fístula, obstrucción y peritonitis</mark>.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 3: Epidemiología y Riesgos Demográficos -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Carga Demográfica</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong class="text-slate-900 block mb-1 border-b pb-1">Prevalencia por Edad:</strong>
+                    Linealmente proporcional al envejecimiento. &lt; 5% en menores de 40 años, 60% a los 60 años y alcanza el <strong>65-80% en pacientes &gt; 70-80 años</strong>.
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-200 text-indigo-950 font-semibold">
+                    <i class="fa-solid fa-mars text-indigo-600 mr-1"></i> Jóvenes (&lt; 50 años): Predomina en hombres y cursa con <u>mayor tasa de complicación inicial</u> (24.9%).<br>
+                    <i class="fa-solid fa-venus text-indigo-600 mr-1 mt-2"></i> Ancianos: Femenino.
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA 2: ETIOLOGÍA, RIESGOS MODIFICABLES Y ANATOMÍA -->
+        <!-- Tarjeta 4: Factores Genéticos y Tejido Conectivo -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-dna"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Genética y Colágeno</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Carga Hereditaria (40-50%):</strong>
+                    Variantes en genes ARHGAP15, COLQ y FAM155A que alteran la matriz de colágeno y provocan neurodisfunción colónica.
+                </div>
+                <div class="bg-purple-50 p-3 rounded-lg border border-purple-200">
+                    <strong class="text-purple-900 block mb-1">Enf. del Tejido Conectivo:</strong>
+                    La presencia de <mark class="bg-purple-200 px-1 rounded font-bold text-purple-900">Riñón poliquístico autosómico dominante</mark>, Síndrome de Ehlers-Danlos y Marfan asocian altísimo riesgo de herniación mucosa.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 5: Factores Modificables, Dieta y Fármacos -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-smoking"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Riesgos Modificables</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 shadow-sm">
+                    <strong class="block mb-1"><i class="fa-solid fa-capsules text-red-600 mr-1"></i> Fármacos (Riesgo de Perforación):</strong>
+                    Uso regular de <strong>AINEs</strong> (excepto aspirina preventiva), corticosteroides crónicos y opiáceos incrementan riesgo de perforación y muerte.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <strong class="text-slate-900 block mb-1">Tabaquismo y Dieta:</strong>
+                    Tabaquismo aumenta riesgo de perforación (RR 2.54). <br><span class="text-emerald-700 font-bold border-t border-slate-300 pt-1 mt-1 block">El consumo de nueces, semillas o palomitas NO aumenta el riesgo de diverticulitis.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 6: Anatomía de la Enfermedad y Ley de Laplace -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-diagram-project"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Anatomía (Ley Laplace)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium">
+                <div class="space-y-3">
+                    <div class="bg-white p-3 rounded shadow-sm border border-l-4 border-purple-500 leading-relaxed">
+                        <strong class="text-slate-900 block">Topografía:</strong> Desarrollan en zonas de debilidad (penetración de capilares). Afectan el <strong>colon sigmoides en 95%</strong> de los casos en occidente (asiáticos predominan en colon derecho).
+                    </div>
+                    <div class="bg-purple-50 p-3 rounded border border-purple-200 text-purple-950 font-bold text-center shadow-inner">
+                        Fisiopatología Física: El sigmoides posee el menor diámetro, generando las presiones intracolónicas más extremas que favorecen la herniación (Ley de Laplace).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA 3: CLASIFICACIONES TOMOGRÁFICAS E INFLAMATORIAS -->
+        <!-- Tarjeta 7: Hemorragia Diverticular Fisiopatología -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-droplet"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Hemorragia Colónica</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong class="text-slate-900 block mb-1">Mecanismo Vascular:</strong>
+                    Ruptura asimétrica de los vasos rectos en el <strong>margen antimesentérico</strong> hacia la luz intestinal. Se produce por un traumatismo de las heces <u class="font-bold decoration-cyan-400">sin inflamación activa subyacente</u>.
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 font-bold text-center flex-1 flex flex-col justify-center">
+                    El Colon Derecho es el origen anatómico en el 90% de los episodios de hemorragias masivas. Cede espontáneamente (70-80%).
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 8: Clasificación de Hinchey (Quirúrgica Clásica) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-list-ol"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Hinchey Modificada</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-slate-50 p-3 rounded-lg border">
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center"><span class="font-bold text-slate-800">Estadio 0:</span><span>Clínica leve</span></div>
+                        <div class="flex justify-between items-center"><span class="font-bold text-slate-800">Estadio Ia:</span><span>Flemón confinado</span></div>
+                        <div class="flex justify-between items-center"><span class="font-bold text-slate-800">Estadio Ib:</span><span>Absceso pericólico confinado</span></div>
+                        <div class="flex justify-between items-center"><span class="font-bold text-slate-800">Estadio II:</span><span>Absceso pélvico / a distancia</span></div>
+                    </div>
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200">
+                    <strong class="text-red-900 block border-b border-red-200 pb-1 mb-1">Peritonitis Generalizada:</strong>
+                    <div class="flex justify-between items-center"><span class="font-bold text-red-800">Estadio III:</span><span>Purulenta franca</span></div>
+                    <div class="flex justify-between items-center"><span class="font-bold text-red-950">Estadio IV:</span><span>Fecaloidea (Mayor letalidad)</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 9: Clasificación WSES 2020 (Tomográfica) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-desktop"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">WSES 2020 (Imagen)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium">
+                <p class="mb-2 text-slate-600 border-b pb-1 font-semibold">Grados Tomográficos (Complicada):</p>
+                <div class="space-y-1">
+                    <div class="flex items-center bg-white p-1.5 rounded border"><span class="font-bold text-cyan-700 mr-2">1A:</span><span>Gas o líquido sin absceso (&lt; 5 cm)</span></div>
+                    <div class="flex items-center bg-white p-1.5 rounded border"><span class="font-bold text-cyan-700 mr-2">1B:</span><span>Absceso &le; 4 cm</span></div>
+                    <div class="flex items-center bg-white p-1.5 rounded border"><span class="font-bold text-amber-600 mr-2">2A:</span><span>Absceso &gt; 4 cm</span></div>
+                    <div class="flex items-center bg-white p-1.5 rounded border"><span class="font-bold text-amber-600 mr-2">2B:</span><span>Gas libre a distancia (&gt; 5 cm)</span></div>
+                    <div class="flex items-center bg-red-50 p-1.5 rounded border border-red-200"><span class="font-bold text-red-800 mr-2">3 y 4:</span><span>Líquido difuso sin/con gas a distancia</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA 4: CLÍNICA Y DIAGNÓSTICO ESTÁNDAR DE ORO -->
+        <!-- Tarjeta 10: Manifestaciones Clínicas y Variante Geriátrica -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-person-dots-from-line"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Clínica y Geriátrica</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-emerald-500">
+                    <strong class="text-slate-900 block mb-1">Cuadro Clásico:</strong>
+                    Dolor y sensibilidad exquisita en fosa iliaca izquierda, fiebre, náuseas y cambios en hábito intestinal.
+                </div>
+                <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 text-amber-950 font-bold leading-relaxed">
+                    <i class="fa-solid fa-user-clock text-amber-600 mr-1"></i> Variante Geriátrica (&gt; 80 años):
+                    Tienen tasas extremadamente menores de fiebre (21.4%) y dolor (47.8%), lo que retrasa sistemáticamente el diagnóstico de peritonitis subyacente.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 11: Laboratorios (Proteína C Reactiva Crítica) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-vials"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Laboratorios y PCR</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 shadow-sm leading-relaxed">
+                    <strong class="block mb-1 text-red-900"><i class="fa-solid fa-triangle-exclamation text-red-600 mr-1"></i> Proteína C Reactiva (PCR):</strong>
+                    Valores <mark class="bg-red-200 px-1 rounded font-bold text-red-900">&gt; 150 mg/l o &gt; 170 mg/l</mark> discriminan diverticulitis complicada. Obligan a la realización <u>sistemática de tomografía inmediata</u>.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border">
+                    <strong class="text-slate-900 block mb-1">Mortalidad Quirúrgica:</strong>
+                    La hipoalbuminemia (&lt; 2.5 g/dl) es el predictor independiente más importante de mortalidad a 30 días en pacientes que requieren cirugía urgente.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 12: Estándar de Oro Imagenológico (TC) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-x-ray"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Estándar Radiológico</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-emerald-500 flex-1 flex flex-col justify-center">
+                    <strong class="text-slate-900 block mb-2 text-base text-center">Tomografía Computarizada (TC) Abdomino-pélvica con contraste IV:</strong>
+                    <p class="leading-relaxed">Estudio inicial de elección y el <mark class="bg-emerald-100 px-1 rounded font-bold text-emerald-900">estándar de oro absoluto</mark> (Sensibilidad 98-99%). Identifica engrosamiento mural, grasa reticulada, flemones y estadifica complicaciones.</p>
+                </div>
+                <div class="bg-amber-50 p-2.5 rounded border border-amber-200 text-amber-900 font-bold text-center">
+                    Hallazgos como signo del "hombro" u obstrucción abrupta exigen descartar malignidad sincrónica.
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA 5: MANEJO MÉDICO, ANTIBIÓTICOS Y DRENAJE -->
+        <!-- Tarjeta 13: Manejo No Farmacológico (Sin Antibióticos) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-shield-heart"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Manejo No Farmacológico</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 leading-relaxed shadow-sm">
+                    <strong class="text-slate-900 block mb-2 text-base">Estrategia Conservadora:</strong>
+                    Observación estricta, dieta líquida clara y analgesia exclusiva (paracetamol, ibuprofeno). 
+                    <p class="mt-2 pt-2 border-t font-semibold text-slate-800">Recomendado en diverticulitis <u class="font-bold">no complicada</u>, pacientes hemodinámicamente estables y sin comorbilidades. Revaluar a 7 días.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 14: Antibioticoterapia (Indicaciones y Fármacos) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-pills"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Antibioticoterapia</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Indicaciones Estrictas:</strong>
+                    Enf. complicada, sepsis, fiebre &gt; 38.0 &deg;C, edad &gt; 80 años, falla renal, uso de esteroides o inmunodepresión.
+                </div>
+                <div class="bg-amber-50 p-3 rounded-lg border border-amber-200">
+                    <strong class="text-amber-900 block mb-1">Fármacos Hospitalizados (IV):</strong>
+                    Ceftriaxona + Metronidazol, Piperacilina-Tazobactam o un Carbapenémico en resistencia. 
+                    <span class="text-slate-900 font-bold block mt-1">Regla: Post-control de foco quirúrgico, tratar 4 días y suspender.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 15: Manejo Intervencionista de Abscesos -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-syringe"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Manejo de Abscesos</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-amber-500">
+                    <strong class="text-slate-900 block mb-1">Drenaje Percutáneo (Imagen):</strong>
+                    Indicado categóricamente para <strong>abscesos &gt; 3 cm o &gt; 4 cm</strong> combinado con terapia antimicrobiana intravenosa. Abscesos pequeños solo antibiótico.
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 font-bold shadow-inner">
+                    <i class="fa-solid fa-triangle-exclamation text-red-600 mr-1"></i> Falla Inminente:
+                    Si la colección es multiloculada o se asocia de forma directa a una fístula entérica, el fracaso conservador es inminente y exige cirugía resectiva.
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA 6: CIRUGÍA, SEGUIMIENTO Y CÁNCER -->
+        <!-- Tarjeta 16: Cirugía de Urgencia y Hartmann -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-scalpel"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Técnicas Quirúrgicas</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <strong class="text-slate-900 block mb-1">Anastomosis Primaria:</strong> Elección en pacientes estables. Ofrece mayor supervivencia libre de estoma a 12 meses. (Margen distal <u>siempre en tejido rectal sano</u>).
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 shadow-sm">
+                    <strong class="block mb-1 text-red-900"><i class="fa-solid fa-truck-medical text-red-600 mr-1"></i> Procedimiento de Hartmann:</strong>
+                    Técnica obligatoria para pacientes en choque, inestables o con severas comorbilidades (ASA IV) cursando con peritonitis generalizada.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 17: Complicaciones, Fístulas y Falla Parietal -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-heart-crack"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Complicaciones Severas</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Peritonitis Libre:</strong> Mortalidad aguda hasta 35%. <u class="font-bold">80% ocurren en el primer ataque</u> (debut sin episodios inflamatorios previos crónicos).
+                </div>
+                <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 text-amber-950">
+                    <strong class="block mb-1"><i class="fa-solid fa-route text-amber-600 mr-1"></i> Fístulas (5% de complicados):</strong>
+                    <p class="mb-1"><strong>Colovesical (65%):</strong> Se presenta con neumaturia indolora.</p>
+                    <p><strong>Colovaginal (25%):</strong> Típicamente en mujeres con histerectomía previa.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 18: Riesgo de Recurrencia y Tamizaje Endoscópico -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-fuchsia-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-fuchsia-100 text-fuchsia-800 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-camera-retro"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Recurrencia y Endoscopia</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-fuchsia-500">
+                    <strong class="text-slate-900 block mb-1">Certeza de Recurrencia:</strong>
+                    Tras 1er episodio la recurrencia es baja (13-23%). Incrementa notablemente al 44% luego del segundo episodio. <strong class="text-red-700">Se proscribe operar sistemáticamente a los pacientes tras el segundo ataque.</strong>
+                </div>
+                <div class="bg-fuchsia-50 p-3 rounded-lg border border-fuchsia-200 text-fuchsia-950 font-bold leading-relaxed shadow-inner">
+                    Colonoscopia (6-8 semanas post): Obligatoria tras resolver episodio complicado o primer ataque con clínica atípica para descartar cáncer colorrectal encubierto.
+                </div>
+            </div>
+        </div>
+
+    </div> 
+</main>
+
+      <!-- aqui -->
+
+        <!-- BOTÓN DE SIGUIENTE RESUMEN -->
+        <div class="mt-10 sm:mt-12 mb-4 flex justify-center">
+            <a href="index.html" class="group relative inline-flex items-center justify-center gap-3 px-8 py-3 sm:py-4 font-bold text-white bg-gradient-to-r from-indigo-600 to-teal-500 rounded-full shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-teal-600 transition-all duration-300 transform hover:-translate-y-1">
+                <span class="text-base sm:text-lg tracking-wide">Siguiente Resumen</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform duration-300"></i>
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Script de Inicialización de KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // Configuramos los delimitadores para que acepte el signo $ nativo de tu texto
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false,
+                output: 'html' // para mejor adaptación con fuentes web
+            });
+        });
+    </script>
+</body>
+</html>

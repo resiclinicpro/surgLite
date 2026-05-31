@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen GPC</title>
+    
+    <!-- Tailwind CSS (Framework de diseño) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Tipografía limpia y amigable) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- KaTeX (Para renderizar las fórmulas matemáticas de LaTeX) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Configuración personalizada de Tailwind y CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            blue: '#e0f2fe',    // light blue 100
+                            green: '#dcfce7',   // green 100
+                            yellow: '#fef08a',  // yellow 200
+                            red: '#ffe4e6',     // rose 100
+                            purple: '#f3e8ff',  // purple 100
+                            orange: '#ffedd5',  // orange 100
+                            teal: '#ccfbf1',    // teal 100
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc; /* Fondo gris muy suave */
+            color: #334155;
+        }
+
+        /* Estilos base para listas */
+        ul { list-style-type: none; padding-left: 0; }
+        ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; line-height: 1.6; }
+        ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            line-height: 1;
+            top: -2px;
+        }
+
+        /* ----- CLASES DINÁMICAS PARA SUBRAYADOS (HIGHLIGHTS) ----- */
+        /* Úsalas en cualquier parte del texto envolviéndolo en <mark class="hl-color">Texto</mark> */
+        mark {
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-weight: 700;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .hl-yellow { background-color: #fef08a; color: #854d0e; } /* Advertencias, conceptos */
+        .hl-red    { background-color: #fecdd3; color: #9f1239; } /* Peligro, Contraindicaciones, Severidad */
+        .hl-green  { background-color: #bbf7d0; color: #166534; } /* Tratamientos, Metas */
+        .hl-blue   { background-color: #bae6fd; color: #075985; } /* Tiempos, Definiciones clave */
+        .hl-purple { background-color: #e9d5ff; color: #581c87; } /* Epidemiología, Estadísticas */
+
+        /* ----- EFECTOS DE TARJETAS ----- */
+        .medical-card {
+            transition: all 0.3s ease;
+            border-top-width: 5px;
+            height: 100%;
+        }
+        .medical-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Estilo para las Perlas GPC */
+        .gpc-pearl {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 4px solid #f59e0b;
+            position: relative;
+        }
+        .gpc-pearl::before {
+            content: '\f0eb'; /* Lightbulb icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #f59e0b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-12">
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            
+            <!-- Izquierda: Botón Home y Título App -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <a href="index.html" class="text-slate-400 hover:text-indigo-600 transition-colors flex-shrink-0 bg-slate-50 hover:bg-indigo-50 p-2 sm:p-2.5 rounded-full" title="Ir al inicio">
+                    <i class="fa-solid fa-house text-lg sm:text-xl"></i>
+                </a>
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-100 text-indigo-600 p-2 sm:p-3 rounded-lg hidden sm:flex items-center justify-center">
+                        <i class="fa-solid fa-stethoscope text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-heading font-bold text-lg sm:text-2xl text-slate-800 leading-tight line-clamp-1">Resumen</h1>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Derecha: Tag y Logo ENARM Lite (Recreado con CSS para máxima velocidad/calidad) -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <span class="hidden md:inline-block bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">MEDICINA INTERNA</span>
+                
+                <!-- Logo ENARM Lite® -->
+                <div class="border-2 border-slate-200/80 bg-slate-50/50 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 flex items-baseline gap-1 shadow-sm select-none">
+                    <span class="font-sans font-extrabold text-[#004f8f] text-sm sm:text-lg tracking-tight">ENARM</span>
+                    <span class="font-sans font-semibold text-[#64b036] text-sm sm:text-lg">Lite<sup class="text-[9px] sm:text-[11px] font-bold">®</sup></span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+     <!-- aqui -->
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="text-center mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-5 relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-gradient-to-br from-indigo-100 to-purple-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -mb-8 -ml-8 w-24 h-24 bg-gradient-to-tr from-fuchsia-100 to-pink-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        
+        <h2 class="relative font-heading font-extrabold text-2xl sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-800 via-purple-600 to-fuchsia-600 mb-2 tracking-tight leading-tight py-1">
+            Carcinoma de Tiroides (NCCN 2025)
+        </h2>
+        <p class="relative text-sm text-slate-600 font-medium mb-2 max-w-4xl mx-auto">
+            NCCN Clinical Practice Guidelines in Oncology: Thyroid Carcinoma, Version 1.2025 (Año 2025)
+        </p>
+        <div class="inline-block bg-indigo-50 border border-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-bold mt-1">
+            <i class="fa-solid fa-notes-medical mr-1"></i> Plataforma: ENARM Lite | Módulo: Oncología Quirúrgica y Cuello
+        </div>
+        <div class="w-20 sm:w-24 h-1.5 bg-gradient-to-r from-indigo-500 to-fuchsia-400 mx-auto rounded-full mt-4"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
+
+        <!-- ================= FILA 1 ================= -->
+        
+        <!-- 1. DEFINICIÓN, EPIDEMIOLOGÍA Y ETIOLOGÍA (SPAN 2) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-indigo-400 p-5 md:col-span-2 xl:col-span-2 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Definición, Epidemiología y Etiología</h3>
+            </div>
+            <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 text-base text-slate-600">
+                
+                <div class="space-y-4 flex flex-col">
+                    <div class="bg-white border border-slate-200 p-4 rounded-lg shadow-sm flex-1 border-l-4 border-indigo-500">
+                        <p class="font-bold text-slate-800 mb-2 text-sm"><i class="fa-solid fa-book-medical text-indigo-500 mr-1"></i> Concepto Clínico Base:</p>
+                        <div class="text-sm space-y-3 text-slate-800 font-medium">
+                            <div class="flex items-start">
+                                <span class="text-indigo-500 font-bold mr-2 text-lg leading-none">&bull;</span>
+                                <span><strong class="text-slate-900">Nódulo tiroideo:</strong> Hallazgo anatómico frecuente en la glándula tiroides, detectado habitualmente de manera asintomática durante la exploración física o en estudios de imagen, que requiere protocolo diagnóstico para descartar malignidad biológica.</span>
+                            </div>
+                            <div class="flex items-start bg-indigo-50 p-2 rounded border border-indigo-100 mt-2">
+                                <span class="text-indigo-600 font-bold mr-2 text-lg leading-none">&rsaquo;</span>
+                                <span><strong class="text-indigo-900">Prevalencia clínica:</strong> La prevalencia en la población es del <strong class="bg-indigo-200 text-indigo-900 px-1 rounded">5%</strong> al evaluar nódulos palpables en individuos <strong class="bg-slate-200 text-slate-900 px-1 rounded">&ge; 50 años</strong>.</span>
+                            </div>
+                            <div class="flex items-start bg-indigo-50 p-2 rounded border border-indigo-100 mt-1">
+                                <span class="text-indigo-600 font-bold mr-2 text-lg leading-none">&rsaquo;</span>
+                                <span><strong class="text-indigo-900">Prevalencia absoluta:</strong> En estudios de autopsia o mediante ecografía de alta resolución, se encuentran nódulos hasta en el <strong class="bg-indigo-200 text-indigo-900 px-1 rounded">50%</strong> de los individuos, siendo en su mayoría benignos.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4 flex flex-col">
+                    <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-lg flex-1">
+                        <p class="font-bold text-indigo-900 mb-3 text-sm"><i class="fa-solid fa-triangle-exclamation text-indigo-600 mr-1"></i> Causas y Factores de Riesgo:</p>
+                        
+                        <div class="text-sm space-y-3 text-slate-800 font-medium">
+                            <div class="flex items-start gap-2 bg-white p-2 rounded shadow-sm border border-indigo-100">
+                                <i class="fa-solid fa-chart-line text-indigo-500 mt-1 shrink-0"></i>
+                                <span>Presentan un riesgo de aparición del <strong class="bg-indigo-100 text-indigo-900 px-1 rounded">0.1%</strong> anual, pero el riesgo incrementa sustancialmente hasta <strong class="bg-indigo-100 text-indigo-900 px-1 rounded">2%</strong> por año en individuos con exposición a radiación ionizante en cabeza y cuello.</span>
+                            </div>
+                            <div class="flex items-start gap-2 bg-white p-2 rounded shadow-sm border border-indigo-100">
+                                <i class="fa-solid fa-venus text-pink-500 mt-1 shrink-0"></i>
+                                <span>Son <strong class="text-pink-600">4 veces más frecuentes</strong> en mujeres. El riesgo de desarrollar cáncer de tiroides durante la vida es del <strong class="bg-pink-100 text-pink-900 px-1 rounded">1.2%</strong>.</span>
+                            </div>
+                            <div class="flex items-start gap-2 bg-white p-2 rounded shadow-sm border border-indigo-100 border-l-2 border-indigo-400">
+                                <i class="fa-solid fa-dna text-indigo-500 mt-1 shrink-0"></i>
+                                <span><strong class="text-slate-900">Factores y Síndromes:</strong> Historia de exposición a radiación, antecedente familiar de primer grado con cáncer de tiroides y síndromes heredofamiliares como el síndrome de Cowden, Poliposis Adenomatosa Familiar, complejo de Carney y la Neoplasia Endocrina Múltiple <strong class="text-indigo-700">(MEN) tipos 2A o 2B</strong>.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 2. MANIFESTACIONES CLÍNICAS (SPAN 1) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-fuchsia-400 p-5 md:col-span-1 xl:col-span-1 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-fuchsia-100 text-fuchsia-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-stethoscope"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Manifestaciones Clínicas</h3>
+            </div>
+            <div class="text-base text-slate-600 space-y-4 flex-1 flex flex-col justify-center">
+                <div class="bg-fuchsia-50 p-4 rounded-lg border border-fuchsia-200">
+                    
+                    <div class="text-sm space-y-3 leading-relaxed text-slate-800 font-medium">
+                        <div class="flex items-start">
+                            <span class="text-fuchsia-600 font-bold mr-2">&bull;</span>
+                            <span>El cuadro clínico clásico inicial es un <strong class="text-slate-900">nódulo solitario asintomático</strong>; el <strong class="bg-fuchsia-200 text-fuchsia-900 px-1 rounded">50%</strong> se diagnostica de forma incidental.</span>
+                        </div>
+                        <div class="flex items-start bg-white p-3 rounded shadow-sm border-l-4 border-fuchsia-500">
+                            <span class="text-fuchsia-600 font-bold mr-2">&bull;</span>
+                            <span><strong class="text-slate-900">Signos de alta sospecha de malignidad:</strong> Nódulo muy firme, fijo a las estructuras adyacentes, de crecimiento rápido, presencia de linfadenopatía regional cervical.</span>
+                        </div>
+                        <div class="flex items-start bg-white p-3 rounded shadow-sm border-l-4 border-rose-500">
+                            <span class="text-rose-600 font-bold mr-2">&bull;</span>
+                            <span><strong class="text-slate-900">Invasión avanzada:</strong> Síntomas de compresión en el tracto aerodigestivo superior o disfonía por parálisis de las cuerdas vocales.</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= FILA 2 ================= -->
+
+        <!-- 3. CLASIFICACIÓN BETHESDA (SPAN 2) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-purple-400 p-5 md:col-span-1 xl:col-span-2 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-purple-100 text-purple-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-sitemap"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Clasificación: Sistema Bethesda 2023</h3>
+            </div>
+            
+            <p class="text-sm text-slate-600 font-medium mb-4">
+                Herramienta citopatológica fundamental para evaluar el riesgo de malignidad tras el aspirado con aguja fina.
+            </p>
+
+            <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-slate-800 font-medium">
+                
+                <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-center">
+                    <div class="flex items-center mb-1">
+                        <strong class="text-slate-900 w-8">I:</strong> <span>No diagnóstico.</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-3 rounded-lg border border-emerald-200 shadow-sm border-l-4 border-emerald-500 flex flex-col justify-center">
+                    <div class="flex items-center mb-1">
+                        <strong class="text-emerald-900 w-8">II:</strong> <span>Benigno.</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-3 rounded-lg border border-amber-200 shadow-sm border-l-4 border-amber-400 flex flex-col justify-center">
+                    <div class="flex items-start mb-1">
+                        <strong class="text-amber-900 w-8 shrink-0">III:</strong> 
+                        <span>Atipia de significado indeterminado (AUS). Riesgo de malignidad medio del <strong class="bg-amber-100 text-amber-900 px-1 rounded">22%</strong> (<em class="text-xs text-amber-800">13% al 30%</em>).</span>
+                    </div>
+                </div>
+
+                <div class="bg-orange-50 p-3 rounded-lg border border-orange-200 shadow-sm border-l-4 border-orange-500 flex flex-col justify-center">
+                    <div class="flex items-start mb-1">
+                        <strong class="text-orange-900 w-8 shrink-0">IV:</strong> 
+                        <span>Neoplasia folicular u oncocítica. Riesgo de malignidad medio del <strong class="bg-orange-200 text-orange-900 px-1 rounded">30%</strong> (<em class="text-xs text-orange-800">23% al 34%</em>).</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-3 rounded-lg border border-red-200 shadow-sm border-l-4 border-red-500 flex flex-col justify-center">
+                    <div class="flex items-start mb-1">
+                        <strong class="text-red-900 w-8 shrink-0">V:</strong> 
+                        <span>Sospechoso de malignidad. Riesgo de malignidad medio del <strong class="bg-red-100 text-red-900 px-1 rounded">74%</strong> (<em class="text-xs text-red-800">67% al 83%</em>).</span>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 p-3 rounded-lg border border-red-300 shadow-sm border-l-4 border-red-700 flex flex-col justify-center">
+                    <div class="flex items-start mb-1">
+                        <strong class="text-red-950 w-8 shrink-0">VI:</strong> 
+                        <span>Malignidad. Riesgo de malignidad medio del <strong class="bg-red-200 text-red-900 px-1 rounded">97%</strong> (<em class="text-xs text-red-800">97% al 100%</em>).</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 4. DIAGNÓSTICO INTEGRAL (SPAN 1) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-pink-400 p-5 md:col-span-1 xl:col-span-1 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-pink-100 text-pink-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-vial-circle-check"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Diagnóstico Integral y Detección</h3>
+            </div>
+            <div class="text-base text-slate-600 space-y-4 flex-1 flex flex-col justify-center">
+                <div class="bg-pink-50 p-4 rounded-lg border border-pink-200">
+                    
+                    <div class="text-sm space-y-3 leading-relaxed text-slate-800 font-medium">
+                        <div class="flex items-start">
+                            <span class="text-pink-600 font-bold mr-2">&bull;</span>
+                            <span><strong class="text-slate-900">Clínico:</strong> Interrogatorio enfocado en antecedentes familiares y exposición a radiación. Exploración física de cuello palpando la tiroides y los niveles ganglionares. Es obligatorio realizar evaluación de la movilidad de cuerdas vocales (mediante ultrasonido, laringoscopia indirecta o <strong class="text-pink-800">nasofibrolaringoscopia</strong>) ante síntomas como cambios en la voz o sospecha clínica de invasión y fijeza.</span>
+                        </div>
+                        <div class="flex items-start bg-white p-2 rounded shadow-sm border-l-2 border-pink-400">
+                            <span class="text-pink-600 font-bold mr-2">&bull;</span>
+                            <span><strong class="text-slate-900">Laboratorios:</strong> Medición sérica de TSH. Niveles elevados aumentan la probabilidad de malignidad del nódulo. <u class="decoration-pink-400">No se recomienda</u> la medición rutinaria de calcitonina basal como abordaje inicial en todos los nódulos debido a su costo y baja especificidad en ausencia de factores de riesgo.</span>
+                        </div>
+                        <div class="flex items-start bg-white p-2 rounded shadow-sm border-l-2 border-cyan-400">
+                            <span class="text-cyan-600 font-bold mr-2">&bull;</span>
+                            <span><strong class="text-slate-900">Imagen:</strong> El ultrasonido de cuello (evaluando glándula y compartimentos ganglionares centrales y laterales) es el estudio inicial de primera elección. En casos con adenopatías sospechosas o parálisis de cuerdas vocales se indica <strong class="bg-cyan-100 text-cyan-900 px-1 rounded">Tomografía Computarizada (CT) o Resonancia Magnética (MRI) con contraste yodado</strong>.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-pink-600 font-bold mr-2">&bull;</span>
+                            <span><strong class="text-slate-900">Estudio Confirmatorio:</strong> Aspiración con aguja fina (FNA) guiada por ultrasonido. Ante ganglios laterales sospechosos con citología negativa, debe realizarse medición de la <strong class="text-slate-900">Tiroglobulina (Tg)</strong> en el lavado de la aguja.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-pink-600 font-bold mr-2">&bull;</span>
+                            <span><strong class="text-slate-900">Pruebas moleculares:</strong> Deben considerarse para estratificar el riesgo en pacientes con nódulos de citología indeterminada (Bethesda III y IV) buscando la presencia de mutaciones como <strong class="text-slate-700 bg-slate-200 px-1 rounded">BRAF V600E, RET, RAS</strong>.</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= FILA 3 ================= -->
+
+        <!-- 5. TRATAMIENTO Y MANEJO (SPAN 3 - FILA COMPLETA) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-teal-500 p-5 md:col-span-1 xl:col-span-3 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-teal-100 text-teal-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-scalpel-line-dashed"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Tratamiento y Manejo Clínico Quirúrgico</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-600 flex-1">
+                
+                <!-- Columna 1: Quirúrgico -->
+                <div class="bg-teal-50 p-5 rounded-lg border border-teal-200 flex flex-col justify-center">
+                    <p class="font-bold text-teal-900 mb-4 text-base"><i class="fa-solid fa-hand-holding-medical text-teal-600 mr-2"></i> Tratamiento Quirúrgico:</p>
+                    
+                    <div class="space-y-4 text-sm text-slate-800 font-medium">
+                        <div class="flex items-start bg-white p-3 rounded shadow-sm border-l-4 border-teal-500">
+                            <span class="text-teal-600 font-bold mr-2">&bull;</span>
+                            <div>
+                                <strong class="text-slate-900">Lobectomía (con o sin istmectomía):</strong> Procedimiento de elección para carcinomas de bajo riesgo midiendo entre <strong class="bg-teal-100 text-teal-900 px-1 rounded">1 cm y 4 cm</strong>, sin metástasis a distancia, sin invasión extratiroidea evidente ni ganglios cervicales afectados en pacientes sin antecedente de radiación.
+                            </div>
+                        </div>
+                        <div class="flex items-start bg-white p-3 rounded shadow-sm border-l-4 border-indigo-500">
+                            <span class="text-indigo-600 font-bold mr-2">&bull;</span>
+                            <div>
+                                <strong class="text-slate-900">Tiroidectomía total:</strong> Tratamiento de elección en nódulos <strong class="bg-indigo-100 text-indigo-900 px-1 rounded">&gt; 4 cm</strong>, extensión extratiroidea franca, sospecha o comprobación de metástasis locorregionales centrales o laterales, presencia de enfermedad a distancia y en histologías agresivas. En pacientes con diagnóstico de MTC con síndrome de MEN2, se aconseja la <strong class="text-indigo-800">tiroidectomía profiláctica</strong>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna 2: Adyuvancia -->
+                <div class="bg-cyan-50 border border-cyan-200 p-5 rounded-lg shadow-sm flex flex-col justify-center">
+                    <p class="font-bold text-cyan-900 mb-4 text-base"><i class="fa-solid fa-pills text-cyan-600 mr-2"></i> Tratamiento Farmacológico:</p>
+                    
+                    <div class="space-y-4 text-sm text-slate-800 font-medium">
+                        <div class="flex items-start gap-3 bg-white p-4 rounded border-l-4 border-amber-500">
+                            <i class="fa-solid fa-arrow-trend-down text-amber-500 mt-1 shrink-0 text-lg"></i>
+                            <div>
+                                Manejo con levotiroxina para inducir la supresión de TSH. En pacientes con enfermedad residual o riesgo elevado, la meta es una TSH <strong class="bg-amber-100 text-amber-900 px-1 rounded">&lt; 0.1 mU/L</strong>. Para pacientes libres de enfermedad o de muy bajo riesgo, se debe mantener en límites normales o entre <strong class="bg-amber-100 text-amber-900 px-1 rounded">0.1 mU/L y 0.5 mU/L</strong>.
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 bg-white p-4 rounded border border-cyan-100">
+                            <i class="fa-solid fa-radiation text-cyan-600 mt-1 shrink-0 text-lg"></i>
+                            <div>
+                                <strong class="text-slate-900">Ablación con Yodo Radiactivo (RAI) postoperatorio</strong> se recomienda en casos de extensión extratiroidea macroscópica, enfermedad N1b extensa, niveles postoperatorios de Tiroglobulina <strong class="bg-cyan-200 text-cyan-900 px-1 rounded">&gt; 10 ng/mL</strong> no estimulada o invasión vascular (ej. <strong class="bg-cyan-200 text-cyan-900 px-1 rounded">&ge; 4 vasos</strong>).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Columna 3: No farmacológico -->
+                <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-lg shadow-sm flex flex-col justify-center">
+                    <p class="font-bold text-emerald-900 mb-4 text-base"><i class="fa-solid fa-eye text-emerald-600 mr-2"></i> Manejo No Farmacológico:</p>
+                    
+                    <div class="space-y-4 text-sm text-slate-800 font-medium">
+                        <div class="flex items-start gap-3 bg-white p-4 rounded border border-emerald-100 shadow-sm border-l-4 border-emerald-500">
+                            <i class="fa-solid fa-shield-halved text-emerald-600 mt-1 shrink-0 text-lg"></i>
+                            <div>
+                                <strong class="text-slate-900">Vigilancia Activa:</strong> Estrategia aprobada en nódulos <strong class="bg-emerald-100 text-emerald-900 px-1 rounded">&le; 1 cm</strong> (microcarcinomas papilares) considerados de bajo riesgo, sin metástasis ganglionares ni características agresivas (ej. invasión a la cápsula, nervio laríngeo o tráquea).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= FILA 4 ================= -->
+
+        <!-- 6. COMPLICACIONES Y REFERENCIA (SPAN 1) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-red-400 p-5 md:col-span-1 xl:col-span-1 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-truck-medical"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Complicaciones y Referencia</h3>
+            </div>
+            <div class="text-base text-slate-600 space-y-4 flex-1 flex flex-col justify-center">
+                <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                    
+                    <p class="font-bold text-red-900 mb-2 text-sm">Complicaciones quirúrgicas y de supresión:</p>
+                    <div class="text-sm space-y-2 leading-relaxed text-slate-800 font-medium mb-3">
+                        <div class="flex items-start bg-white p-2 rounded shadow-sm border-l-2 border-red-400">
+                            <span class="text-red-600 font-bold mr-2">&rsaquo;</span>
+                            <span>La tiroidectomía extensa puede condicionar lesión directa sobre el <strong class="text-slate-900">nervio laríngeo recurrente</strong> y extirpación inadvertida o desvascularización de las paratiroides (causando hipocalcemia y requiriendo un aporte de <strong class="bg-red-100 text-red-900 px-1 rounded">1200 mg/día</strong> de calcio elemental y vitamina D).</span>
+                        </div>
+                        <div class="flex items-start bg-white p-2 rounded shadow-sm border-l-2 border-orange-400">
+                            <span class="text-orange-600 font-bold mr-2">&rsaquo;</span>
+                            <span>El mantenimiento de una TSH muy suprimida puede derivar en taquiarritmias cardiacas y desmineralización ósea.</span>
+                        </div>
+                    </div>
+
+                    <p class="font-bold text-red-900 mb-2 border-t border-red-200 pt-3 text-sm">Criterios de Referencia:</p>
+                    <div class="text-sm space-y-2 leading-relaxed text-slate-800 font-medium">
+                        <div class="flex items-start">
+                            <span class="text-red-600 font-bold mr-2">&bull;</span>
+                            <span>Pacientes con presentación locorregional agresiva, tumores invasivos visceralmente o cáncer anaplásico de rápido crecimiento, deben ser referidos oportunamente a <strong class="text-red-800">centros de alto volumen con manejo multidisciplinario</strong>.</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. SEGUIMIENTO Y PRONÓSTICO (SPAN 2) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-blue-400 p-5 md:col-span-1 xl:col-span-2 h-full flex flex-col">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-2">
+                <div class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Seguimiento y Pronóstico</h3>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-base text-slate-600 flex-1">
+                
+                <div class="bg-white border border-slate-200 p-5 rounded-lg shadow-sm border-l-4 border-blue-500 flex flex-col justify-center h-full">
+                    <p class="font-bold text-slate-800 mb-4 text-sm"><i class="fa-solid fa-arrows-rotate text-blue-500 mr-2"></i> Protocolos de Seguimiento:</p>
+                    
+                    <div class="text-sm space-y-3 font-medium text-slate-800">
+                        <div class="flex items-start bg-blue-50 p-4 rounded border border-blue-100">
+                            <span class="text-blue-500 font-bold mr-2">&rsaquo;</span>
+                            <span><strong class="text-slate-900">Seguimiento para Vigilancia Activa:</strong> Incluye realización de ultrasonido cervical basal cada <strong class="bg-blue-200 text-blue-900 px-1 rounded">6 meses</strong> durante <strong class="bg-blue-200 text-blue-900 px-1 rounded">1 a 2 años</strong>. Posteriormente, evaluación de forma anual. La resección quirúrgica está indicada si se documenta un crecimiento tumoral absoluto <strong class="bg-blue-200 text-blue-900 px-1 rounded">&ge; 3 mm</strong> en cualquier dimensión o un aumento igual o superior al <strong class="bg-blue-200 text-blue-900 px-1 rounded">50%</strong> del volumen del nódulo.</span>
+                        </div>
+                        <div class="flex items-start bg-slate-50 p-4 rounded border border-slate-200">
+                            <span class="text-slate-500 font-bold mr-2">&rsaquo;</span>
+                            <span><strong class="text-slate-900">Seguimiento postquirúrgico:</strong> Todo paciente requiere evaluación física continua, cuantificación sérica de Tiroglobulina (Tg), Anticuerpos anti-tiroglobulina (Tg ab) y TSH en un lapso de <strong class="bg-slate-200 text-slate-900 px-1 rounded">6 a 12 semanas</strong> postoperatorias. Se indica ultrasonido de cuello de control entre los <strong class="bg-slate-200 text-slate-900 px-1 rounded">6 y 12 meses</strong> posteriores.</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-indigo-50 border border-indigo-200 p-5 rounded-lg shadow-sm flex flex-col justify-center h-full">
+                    <p class="font-bold text-indigo-900 mb-4 text-sm"><i class="fa-solid fa-award text-indigo-600 mr-2"></i> Pronóstico de Supervivencia:</p>
+                    
+                    <div class="text-sm space-y-3 font-medium text-slate-800">
+                        <div class="flex items-start bg-white p-4 rounded border border-indigo-100 shadow-sm">
+                            <span class="text-indigo-500 font-bold mr-2">&bull;</span>
+                            <span>Muy favorable para los estadios iniciales en pacientes jóvenes. Para individuos de <strong class="bg-slate-200 text-slate-900 px-1 rounded">&lt; 40 años</strong>, la supervivencia ligada al diagnóstico se mantiene alrededor del <strong class="bg-emerald-100 text-emerald-900 px-1 rounded">95%</strong> a los 5 años y <strong class="bg-emerald-100 text-emerald-900 px-1 rounded">75%</strong> a los 10 años.</span>
+                        </div>
+                        <div class="flex items-start bg-rose-50 p-4 rounded border border-rose-200 shadow-sm border-l-4 border-red-500">
+                            <span class="text-red-600 font-bold mr-2">&bull;</span>
+                            <span>Sufriendo una caída considerable a tasas de <strong class="bg-red-100 text-red-900 px-1 rounded">65%</strong> y <strong class="bg-red-100 text-red-900 px-1 rounded">50%</strong> en grupos de <strong class="bg-slate-200 text-slate-900 px-1 rounded">&ge; 40 años</strong>.</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div> 
+    
+    <!-- PERLAS GPC / NCCN -->
+    <div class="gpc-pearl rounded-xl p-6 mt-6 w-full bg-amber-50 border border-amber-200">
+        <h3 class="font-heading font-bold text-xl text-amber-800 mb-4"><i class="fa-solid fa-quote-left mr-2 opacity-50"></i> Perlas Quirúrgicas (NCCN 2025)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-amber-900 font-medium">
+            <div class="bg-white/60 p-5 rounded-lg shadow-sm border border-amber-200 flex items-center leading-relaxed">
+                <p>"Use of <mark class="bg-red-200 text-red-900 font-bold px-1 rounded">iodinated contrast</mark> is required for optimal cervical imaging using CT; potential delay in radioactive iodine (RAI) treatment will not cause harm."</p>
+            </div>
+            <div class="bg-white/60 p-5 rounded-lg shadow-sm border border-amber-200 flex items-center leading-relaxed">
+                <p>"Routine prophylactic central neck dissection is <mark class="bg-blue-200 text-blue-900 font-bold px-1 rounded">not indicated</mark> in most papillary thyroid cancers."</p>
+            </div>
+            <div class="bg-white/60 p-5 rounded-lg shadow-sm border border-amber-200 flex items-center leading-relaxed">
+                <p>"<mark class="bg-yellow-200 text-slate-900 font-bold px-1 rounded">Vocal cord mobility should be examined</mark> in patients if clinical concern for involvement, including those with abnormal voice, surgical history involving the recurrent laryngeal or vagus nerves, invasive disease, or bulky disease of the central neck."</p>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+      <!-- aqui -->
+
+        <!-- BOTÓN DE SIGUIENTE RESUMEN -->
+        <div class="mt-10 sm:mt-12 mb-4 flex justify-center">
+            <a href="index.html" class="group relative inline-flex items-center justify-center gap-3 px-8 py-3 sm:py-4 font-bold text-white bg-gradient-to-r from-indigo-600 to-teal-500 rounded-full shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-teal-600 transition-all duration-300 transform hover:-translate-y-1">
+                <span class="text-base sm:text-lg tracking-wide">Siguiente Resumen</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform duration-300"></i>
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Script de Inicialización de KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // Configuramos los delimitadores para que acepte el signo $ nativo de tu texto
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false,
+                output: 'html' // para mejor adaptación con fuentes web
+            });
+        });
+    </script>
+</body>
+</html>
