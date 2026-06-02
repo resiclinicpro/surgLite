@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen</title>
+    
+    <!-- Tailwind CSS (Framework de diseño) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Tipografía limpia y amigable) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- KaTeX (Para renderizar las fórmulas matemáticas de LaTeX) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Configuración personalizada de Tailwind y CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            blue: '#e0f2fe',    // light blue 100
+                            green: '#dcfce7',   // green 100
+                            yellow: '#fef08a',  // yellow 200
+                            red: '#ffe4e6',     // rose 100
+                            purple: '#f3e8ff',  // purple 100
+                            orange: '#ffedd5',  // orange 100
+                            teal: '#ccfbf1',    // teal 100
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc; /* Fondo gris muy suave */
+            color: #334155;
+        }
+
+        /* Estilos base para listas */
+        ul { list-style-type: none; padding-left: 0; }
+        ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; line-height: 1.6; }
+        ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            line-height: 1;
+            top: -2px;
+        }
+
+        /* ----- CLASES DINÁMICAS PARA SUBRAYADOS (HIGHLIGHTS) ----- */
+        /* Úsalas en cualquier parte del texto envolviéndolo en <mark class="hl-color">Texto</mark> */
+        mark {
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-weight: 700;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .hl-yellow { background-color: #fef08a; color: #854d0e; } /* Advertencias, conceptos */
+        .hl-red    { background-color: #fecdd3; color: #9f1239; } /* Peligro, Contraindicaciones, Severidad */
+        .hl-green  { background-color: #bbf7d0; color: #166534; } /* Tratamientos, Metas */
+        .hl-blue   { background-color: #bae6fd; color: #075985; } /* Tiempos, Definiciones clave */
+        .hl-purple { background-color: #e9d5ff; color: #581c87; } /* Epidemiología, Estadísticas */
+
+        /* ----- EFECTOS DE TARJETAS ----- */
+        .medical-card {
+            transition: all 0.3s ease;
+            border-top-width: 5px;
+            height: 100%;
+        }
+        .medical-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Estilo para las Perlas GPC */
+        .gpc-pearl {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 4px solid #f59e0b;
+            position: relative;
+        }
+        .gpc-pearl::before {
+            content: '\f0eb'; /* Lightbulb icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #f59e0b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-12">
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            
+            <!-- Izquierda: Botón Home y Título App -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <a href="index.html" class="text-slate-400 hover:text-indigo-600 transition-colors flex-shrink-0 bg-slate-50 hover:bg-indigo-50 p-2 sm:p-2.5 rounded-full" title="Ir al inicio">
+                    <i class="fa-solid fa-house text-lg sm:text-xl"></i>
+                </a>
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-100 text-indigo-600 p-2 sm:p-3 rounded-lg hidden sm:flex items-center justify-center">
+                        <i class="fa-solid fa-stethoscope text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-heading font-bold text-lg sm:text-2xl text-slate-800 leading-tight line-clamp-1">Resumen</h1>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Derecha: Tag y Logo ENARM Lite (Recreado con CSS para máxima velocidad/calidad) -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <span class="hidden md:inline-block bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">CDYE</span>
+                
+                <!-- Logo ENARM Lite® -->
+                <div class="border-2 border-slate-200/80 bg-slate-50/50 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 flex items-baseline gap-1 shadow-sm select-none">
+                    <span class="font-sans font-extrabold text-[#004f8f] text-sm sm:text-lg tracking-tight">Surgy</span>
+                    <span class="font-sans font-semibold text-[#64b036] text-sm sm:text-lg">Lite<sup class="text-[9px] sm:text-[11px] font-bold">®</sup></span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+     <!-- aqui -->
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <!-- ENCABEZADO -->
+    <div class="text-center mb-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-gradient-to-br from-indigo-100 to-emerald-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -mb-8 -ml-8 w-32 h-32 bg-gradient-to-tr from-cyan-100 to-teal-50 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
+        
+        <h2 class="relative font-heading font-extrabold text-3xl sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-teal-800 via-emerald-600 to-cyan-600 mb-3 tracking-tight leading-tight py-1">
+            Cáncer de Recto Localizado
+        </h2>
+        <p class="relative text-base text-slate-600 font-medium mb-3 max-w-3xl mx-auto">
+            Abordaje Anatómico Quirúrgico, Escisión Mesorrectal, Seguimiento y Pronóstico.
+        </p>
+        <div class="inline-block bg-teal-50 border border-teal-200 text-teal-800 px-4 py-1.5 rounded-full text-sm font-bold mt-1 shadow-sm">
+            <i class="fa-solid fa-ribbon mr-1"></i> Revisión ENARM: NCCN 2026 y ESMO 2025
+        </div>
+        <div class="w-24 h-1.5 bg-gradient-to-r from-emerald-500 to-cyan-400 mx-auto rounded-full mt-5"></div>
+    </div>
+
+    <!-- CUADRÍCULA PRINCIPAL SIMÉTRICA (15 TARJETAS REGULARES + 1 TARJETA EXTENDIDA) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+
+        <!-- FILA 1: BASES ANATÓMICAS Y RIESGOS ESTRUCTURALES -->
+        <!-- Tarjeta 1: Límites Anatómicos -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-ruler-combined"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Límites Anatómicos</h3>
+            </div>
+            <div class="flex-1 flex flex-col space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-3 rounded-r-xl">
+                    <strong class="text-indigo-900 block mb-1">Localización Definida:</strong>
+                    <p class="leading-relaxed">El recto se localiza por debajo de una línea virtual desde el promontorio sacro hasta el borde superior de la sínfisis púbica, determinado por resonancia magnética.</p>
+                </div>
+                <div class="bg-white p-3 rounded-xl border shadow-sm leading-relaxed">
+                    Termina en el borde superior del canal anal funcional, definido como el borde superior palpable del esfínter anal y los músculos puborrectales del anillo anorrectal.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 2: Ausencia de Serosa y Recurrencia -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Ausencia de Serosa</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <strong class="text-slate-900 block mb-1">Condición Estructural:</strong>
+                    Gran parte del recto carece de una superficie serosa (peritoneal).
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950 font-semibold leading-relaxed">
+                    <i class="fa-solid fa-triangle-exclamation text-red-600 mr-1"></i> Esto lo hace susceptible a un <mark class="bg-red-200 px-1 rounded font-bold text-red-900">mayor riesgo de recurrencia locorregional</mark> en comparación con el colon, dificultando la obtención de márgenes quirúrgicos amplios.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 3: Fascia Mesorrectal -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-indigo-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Fascia Mesorrectal</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-xl border shadow-sm border-l-4 border-indigo-500">
+                    <strong class="text-slate-900 block mb-1">Delimitación del CRM:</strong>
+                    Estructura de tejido blando adventicial anatómica fundamental que delimita el <u>margen circunferencial o radial (CRM)</u>.
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-200 text-indigo-950">
+                    Representa el plano de disección quirúrgica retroperitoneal o subperitoneal <strong class="font-bold">más cercano a la penetración máxima del tumor</strong>.
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA 2: ABORDAJE QUIRÚRGICO Y MÁRGENES (TME / PME) -->
+        <!-- Tarjeta 4: Abordaje Quirúrgico por Localización -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-arrows-up-down"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Abordaje por Nivel</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Tercio Superior:</strong>
+                    Radioterapia con beneficio limitado. Suficiente realizar una <mark class="bg-purple-100 px-1 rounded font-bold text-purple-900">Escisión Parcial del Mesorrecto (PME)</mark>, ya que suelen localizarse por encima de la reflexión peritoneal.
+                </div>
+                <div class="bg-purple-50 p-3 rounded-lg border border-purple-200 text-purple-950">
+                    <strong class="block mb-1">Tercio Medio e Inferior:</strong>
+                    Tratamiento estándar exige una proctectomía total con <strong class="font-bold">Escisión Total del Mesorrecto (TME)</strong>.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 5: Margen Quirúrgico Distal -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-arrows-left-right-to-line"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Margen Distal Base</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm leading-relaxed">
+                    <strong>Parámetro Ideal:</strong> Para lograr una escisión mesorrectal adecuada, se prefiere un margen <strong class="text-slate-900">&ge; 5 cm por debajo del borde distal del tumor</strong>.
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-slate-800 leading-relaxed">
+                    <i class="fa-solid fa-check text-emerald-500 mr-1"></i> En tumores del recto distal (&lt; 5 cm del margen anal), un margen negativo en la pared intestinal de <strong>1 a 2 cm es aceptable</strong>.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 6: Influencia de la Neoadyuvancia en el Margen -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-purple-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-pills"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Margen y Neoadyuvancia</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-center space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-purple-50 p-4 rounded-xl border border-purple-200 text-purple-950 leading-relaxed shadow-sm">
+                    <div class="mb-2 border-b border-purple-200 pb-2">
+                        <strong class="block mb-1">Sin Tratamiento Preoperatorio:</strong>
+                        Se exige un margen de resección distal <strong class="text-red-800">&ge; 1 cm</strong>.
+                    </div>
+                    <div>
+                        <strong class="block mb-1">Con Terapia Neoadyuvante:</strong>
+                        Un margen de resección distal <mark class="bg-purple-200 px-1 rounded font-bold">&lt; 1 cm</mark> puede considerarse totalmente aceptable.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA 3: CRM Y TÉCNICAS MESORRECTALES -->
+        <!-- Tarjeta 7: Margen Circunferencial (CRM) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-circle-notch"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Margen Circunferencial (CRM)</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong>Definición CRM Claro:</strong> Distancia <strong class="text-slate-900">&gt; 1 mm</strong> desde fascia mesorrectal y elevadores del ano, sin invadir plano interesfintérico. Evita afección microscópica (R1) o macroscópica (R2).
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950">
+                    <i class="fa-solid fa-ban text-red-600 mr-1"></i> <strong class="font-bold">CRM Positivo:</strong> Cualquier presencia de tumor a <mark class="bg-red-200 px-1 rounded font-bold text-red-900">&le; 1 mm</mark> del margen resecado.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 8: Escisión Total del Mesorrecto (TME) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Técnica TME</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-cyan-500">
+                    <strong class="text-slate-900 block mb-1">Escisión Total (TME):</strong>
+                    Extirpación en bloque de todo el mesorrecto (linfáticos, tejido adiposo y fascia), retirándolo como un <u class="font-bold">"paquete intacto"</u> mediante disección cortante.
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-200 text-emerald-950">
+                    <strong class="block mb-1">Beneficio Oncológico:</strong> Reducción comprobada de las tasas de recurrencia local y de márgenes radiales positivos.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 9: Escisión Parcial del Mesorrecto (PME) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-cyan-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-cyan-100 text-cyan-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-scissors"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Técnica PME</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-center space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-cyan-50 p-4 rounded-xl border border-cyan-200 text-cyan-950 leading-relaxed shadow-sm">
+                    <strong class="text-cyan-900 block mb-2 text-base text-center">Escisión Parcial (PME):</strong>
+                    <p class="text-center">Implica la resección mesorrectal limitada estrictamente al segmento afectado.</p>
+                    <p class="font-bold text-center border-t border-cyan-200 pt-2 mt-2">Procedimiento oncológicamente adecuado exclusivamente para tumores del recto superior.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA 4: COMPLICACIONES Y SEGUIMIENTO CLÍNICO -->
+        <!-- Tarjeta 10: Morbilidad, Toxicidad y Criterios de Referencia -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-hospital-user"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Complicaciones y Referencia</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong>Morbilidad:</strong> Tumores medio/inferior tienen alta propensión a complicaciones por anatomía pélvica. Resecciones abdominoperineales (APR) asocian peores tasas de cicatrización perineal y mayor morbilidad.
+                </div>
+                <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 text-amber-950">
+                    <strong>Equipo Multidisciplinario:</strong> Requisito estricto que cirugía de lesiones avanzadas o con necesidad de resección más allá de TME, sea ejecutada por <u>cirujano con alta experiencia en TME</u>.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 11: Vigilancia Clínica y Marcador CEA -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Vigilancia Clínica / CEA</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <p class="text-slate-500 font-semibold border-b pb-1">Seguimiento tras tratamiento curativo:</p>
+                <div class="bg-white p-3 rounded-lg border shadow-sm border-l-4 border-emerald-500">
+                    <strong class="text-slate-900 block mb-1">Examen Físico e Historia:</strong>
+                    Cada 3 a 6 meses durante 2 años; posteriormente cada 6 meses hasta completar 5 años.
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-200 text-emerald-950">
+                    <strong class="block mb-1">Antígeno Carcinoembrionario (CEA):</strong>
+                    <mark class="bg-emerald-200 px-1 rounded font-bold text-emerald-900">Cada 3 a 6 meses por 2 años</mark>, luego cada 6 meses por un total de 5 años.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 12: Monitoreo Imagenológico (TC) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-emerald-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-x-ray"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Monitoreo Imagenológico</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-center space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 leading-relaxed shadow-sm">
+                    <strong class="text-slate-900 block mb-2 text-base text-center">TC Tórax/Abdomen/Pelvis:</strong>
+                    <div class="space-y-2 mt-2">
+                        <p>&bull; <strong>Estadios II y III:</strong> Realizar cada 6 a 12 meses por 5 años.</p>
+                        <p class="border-t border-slate-200 pt-2">&bull; <strong>Estadio IV:</strong> Cada 3 a 6 meses por los primeros 2 años, seguido de cada 6 a 12 meses hasta los 5 años.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA 5: VIGILANCIA ENDOSCÓPICA Y FACTORES PRONÓSTICOS -->
+        <!-- Tarjeta 13: Vigilancia Endoscópica (Colonoscopia y EUS/RM) -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Vigilancia Endoscópica</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Colonoscopia:</strong> Al año 1 de resección. Si hay adenoma avanzado, repetir al año siguiente. De no haber hallazgos, repetir a los 3 años y después cada 5 años.
+                </div>
+                <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 text-amber-950">
+                    <strong class="block mb-1">Proctoscopia con EUS o RM:</strong>
+                    Indicada <u class="font-bold">exclusivamente</u> para pacientes tratados con escisión local transanal (cada 3-6 meses por 2 años, luego cada 6 meses hasta 5 años).
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 14: Factores de Alto Riesgo Patológico -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-microscope"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Predictores Patológicos</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-center space-y-3 text-sm text-slate-700 font-medium">
+                <div class="bg-white p-4 rounded-xl border shadow-sm border-l-4 border-red-500 leading-relaxed">
+                    <strong class="text-slate-900 block mb-2 text-base">Criterios de Alto Riesgo (Progresión/Mortalidad):</strong>
+                    <ul class="space-y-1">
+                        <li><i class="fa-solid fa-angle-right text-red-500 mr-1"></i> Tumores poco diferenciados e Invasión linfovascular.</li>
+                        <li><i class="fa-solid fa-angle-right text-red-500 mr-1"></i> Obstrucción intestinal clínica o <mark class="bg-red-100 px-1 rounded font-bold text-red-900">recolección &lt; 12 ganglios</mark>.</li>
+                        <li><i class="fa-solid fa-angle-right text-red-500 mr-1"></i> Invasión perineural e histología con gemación tumoral (tumor budding) de alto grado.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 15: Pronóstico, Supervivencia y TRG -->
+        <div class="medical-card bg-white rounded-xl shadow-sm border-t-4 border-amber-500 p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-lg">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-slate-800">Pronóstico y Supervivencia</h3>
+            </div>
+            <div class="flex-1 flex flex-col justify-between text-sm text-slate-700 font-medium space-y-3">
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-950">
+                    <strong class="block mb-1">CRM Positivo:</strong> Tras quimiorradiación neoadyuvante es un predictor altamente negativo de supervivencia y control local.
+                </div>
+                <div class="bg-white p-3 rounded-lg border shadow-sm">
+                    <strong class="text-slate-900 block mb-1">Respuesta Patológica (TRG):</strong>
+                    Pacientes con <mark class="bg-emerald-100 px-1 rounded font-bold text-emerald-900">respuesta completa (TRG 0)</mark> tienen supervivencias &gt; 90%, mientras que pobre regresión tumoral desciende al 58.5%.
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA DE CIERRE COMPARTIDA: TEXTUALES DE DIRECTRICES QUIRÚRGICAS (Abarca las 3 columnas) -->
+        <div class="medical-card bg-slate-50 rounded-xl shadow-sm border border-slate-200 p-6 lg:col-span-3 relative overflow-hidden mt-2">
+            <div class="absolute right-0 top-0 opacity-10 text-slate-400 text-7xl -mt-2 -mr-2">
+                <i class="fa-solid fa-quote-right"></i>
+            </div>
+            <h3 class="font-heading font-bold text-xl text-slate-800 mb-5 relative z-10">
+                <i class="fa-solid fa-lightbulb text-amber-500 mr-2"></i> Perlas Quirúrgicas y Directrices ESMO
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-sm text-slate-700 font-medium relative z-10">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+                    <p class="italic leading-relaxed text-sm">
+                        "Los ganglios linfáticos laterales con un eje corto de <mark class="bg-amber-100 text-amber-900 font-bold px-1 rounded">&ge; 7 mm</mark> deben resecarse después del tratamiento neoadyuvante [IV, A]."
+                    </p>
+                    <p class="italic leading-relaxed text-sm border-t border-slate-100 pt-2">
+                        "En caso de <strong class="text-red-800">MRF+ o T4b</strong>, se recomienda la cirugía más allá de la TME [III, A]."
+                    </p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+                    <p class="italic leading-relaxed text-sm">
+                        "En caso de recrecimiento local (endorrectal) después de un procedimiento de observación y espera, <strong class="text-slate-900">se debe ofrecer resección de rescate a todos los pacientes</strong> [IV, A]."
+                    </p>
+                    <p class="italic leading-relaxed text-sm border-t border-slate-100 pt-2 text-red-900 font-bold">
+                        "La excisión local no se puede recomendar, ya que su valor en este escenario [recrecimiento local tras observación] es incierto [IV, D]."
+                    </p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 flex flex-col justify-center">
+                    <p class="italic leading-relaxed text-sm text-center">
+                        "Se recomiendan tanto la cirugía abierta como los abordajes mínimamente invasivos, ya que <u class="font-bold decoration-slate-400">conducen a resultados oncológicos similares</u> [I, A]."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div> 
+</main>
+
+      <!-- aqui -->
+
+        <!-- BOTÓN DE SIGUIENTE RESUMEN -->
+        <div class="mt-10 sm:mt-12 mb-4 flex justify-center">
+            <a href="index.html" class="group relative inline-flex items-center justify-center gap-3 px-8 py-3 sm:py-4 font-bold text-white bg-gradient-to-r from-indigo-600 to-teal-500 rounded-full shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-teal-600 transition-all duration-300 transform hover:-translate-y-1">
+                <span class="text-base sm:text-lg tracking-wide">Siguiente Resumen</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform duration-300"></i>
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Script de Inicialización de KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // Configuramos los delimitadores para que acepte el signo $ nativo de tu texto
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false,
+                output: 'html' // para mejor adaptación con fuentes web
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">UMAE</span>
+                    <span class="logo-Lite text-sm">25<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // =========================================================
+        const questionsData = [
+    {
+        id: 1,
+        question: "Paciente con diagnóstico de cáncer de recto localizado a 4 cm del margen anal. Se planea resección quirúrgica con intención curativa. ¿Cuál es el margen distal en la pared intestinal clínicamente aceptable en este escenario?",
+        options: ["> 5 cm", "1 a 2 cm", "> 10 mm", "3 a 4 cm"],
+        answer: 1,
+        justification: "Justificación: De acuerdo a la GPC de NCCN Cáncer Rectal, para lograr una escisión mesorrectal adecuada, el estándar es un margen de 4 a 5 cm por debajo del borde distal del tumor. Sin embargo, en tumores del recto distal que se encuentran a menos de 5 cm del margen anal, la exigencia anatómica disminuye para permitir la preservación de los esfínteres.<br><br>Perla ENARM: En cáncer de recto distal, un margen distal negativo en la pared del intestino de 1 a 2 cm es oncológicamente aceptable.<br><br>Análisis de Distractores: A) > 5 cm es el margen ideal general para tumores de recto medio o superior, pero no exigido en recto distal. C) > 10 mm corresponde al margen requerido para lesiones tempranas manejadas mediante escisión local transanal, no para resección transabdominal. D) 3 a 4 cm es una medida arbitraria que no figura como punto de corte en la estratificación anatómica.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Surgery and Locoregional Therapies, REC-C 2 de 9."
+    },
+    {
+        id: 2,
+        question: "Durante la resección oncológica de un adenocarcinoma de colon transverso completamente peritonizado, ¿qué estructura anatómica constituye el único margen circunferencial quirúrgico evaluable?",
+        options: ["Margen mesentérico", "Superficie serosa", "Fascia de Gerota", "Peritoneo parietal"],
+        answer: 0,
+        justification: "Justificación: La superficie serosa peritoneal no se considera un margen quirúrgico en la evaluación patológica. De acuerdo a la GPC de NCCN Cáncer de Colon, en los segmentos del colon que están completamente envueltos por peritoneo, la única zona de fijación retroperitoneal es la raíz del mesenterio.<br><br>Perla ENARM: El margen de resección mesentérico es el único margen circunferencial relevante en segmentos colónicos completamente peritonizados.<br><br>Análisis de Distractores: B) La superficie serosa no representa el margen circunferencial, ya que corresponde a la capa más externa libre en cavidad. C) La fascia de Gerota rodea los riñones y no es un margen estándar para el colon transverso. D) El peritoneo parietal no es parte del bloque de resección visceral directa en ausencia de invasión contigua.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Pathologic and Molecular Review, COL-B 2 de 9."
+    },
+    {
+        id: 3,
+        question: "Paciente con carcinoma escamoso del margen anal etapa T1N0. Se decide manejo quirúrgico conservador mediante escisión local. ¿Qué margen quirúrgico lateral de tejido sano se requiere como objetivo principal?",
+        options: ["2 mm", "5 mm", "1 cm", "3 cm"],
+        answer: 2,
+        justification: "Justificación: Las lesiones tempranas del margen perianal o anal bien seleccionadas pueden prescindir de terapias radicales si logran resecarse por completo. De acuerdo a la GPC de NCCN Cáncer Anal, el abordaje conservador es viable siempre y cuando se respete el margen oncológico.<br><br>Perla ENARM: El carcinoma escamoso del margen anal T1N0 puede ser tratado adecuadamente mediante escisión local con un margen quirúrgico de 1 cm.<br><br>Análisis de Distractores: A) 2 mm es el margen considerado como positivo o inadecuado para extirpaciones locales en el canal anal. B) 5 mm es un margen insuficiente y aumenta la tasa de recurrencia local. D) 3 cm obligaría a un defecto extenso que típicamente requeriría colgajos o comprometería severamente la anatomía perianal sin justificación oncológica.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Anal Carcinoma, 2026, Principles of Surgery, ANAL-A 1 de 2."
+    },
+    {
+        id: 4,
+        question: "En una proctectomía total con intención curativa por cáncer de recto medio, ¿cuántos centímetros por debajo del borde distal del tumor debe extenderse la disección para asegurar una escisión total del mesorrecto adecuada?",
+        options: ["1 a 2 cm", "2 a 3 cm", "4 a 5 cm", "> 10 cm"],
+        answer: 2,
+        justification: "Justificación: La erradicación de los ganglios linfáticos y depósitos tumorales intramesorrectales es el objetivo central de la cirugía. De acuerdo a la GPC de NCCN Cáncer Rectal, la técnica de disección debe englobar todo el tejido adiposo perirrectal hasta su terminación anatómica en el piso pélvico para los tumores de tercio medio e inferior.<br><br>Perla ENARM: Para lograr una escisión mesorrectal adecuada, la resección debe extenderse de 4 a 5 cm por debajo del borde distal del tumor.<br><br>Análisis de Distractores: A) 1 a 2 cm es el margen de pared intestinal aceptable para recto distal, no la longitud de extensión de la fascia mesorrectal a resecar en recto medio. B) 2 a 3 cm subestima la propagación linfática distal intrínseca del mesorrecto en tumores medios. D) > 10 cm es anatómicamente imposible en el hueco pélvico dado que la longitud total del recto es de aproximadamente 15 cm.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Surgery and Locoregional Therapies, REC-C 2 de 9."
+    },
+    {
+        id: 5,
+        question: "Para asegurar una estadificación patológica precisa que determine la necesidad de quimioterapia adyuvante en cáncer de colon, ¿cuál es la cantidad mínima de ganglios linfáticos que deben examinarse en el espécimen quirúrgico?",
+        options: ["6 ganglios", "10 ganglios", "15 ganglios", "12 ganglios"],
+        answer: 3,
+        justification: "Justificación: La disección ganglionar impacta directamente la supervivencia y el estadio de la enfermedad. De acuerdo a la GPC de NCCN Cáncer de Colon, la falla en alcanzar el conteo nodal mínimo infraestadifica al paciente y aumenta el riesgo de recurrencia no tratada.<br><br>Perla ENARM: La recolección de <12 ganglios linfáticos se considera un criterio de alto riesgo y 12 ganglios es el estándar mínimo para estadificación.<br><br>Análisis de Distractores: A) 6 ganglios es una resección ganglionar insuficiente que clasifica la cirugía como inadecuada. B) 10 ganglios es un número subóptimo, común tras neoadyuvancia en recto, pero insuficiente como meta estándar en colon. C) 15 ganglios es un número ideal y frecuentemente alcanzado, pero el límite inferior establecido por consenso internacional es 12.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Pathologic and Molecular Review, COL-B 6 de 9."
+    },
+    {
+        id: 6,
+        question: "Paciente con adenocarcinoma de recto sometido a quimiorradioterapia neoadyuvante. Posteriormente, se realiza resección quirúrgica. ¿Qué margen de resección distal es considerado oncológicamente aceptable debido al efecto del tratamiento previo?",
+        options: ["< 1 cm", "> 2 cm", "> 5 cm", "< 2 mm"],
+        answer: 0,
+        justification: "Justificación: El encogimiento tumoral secundario a la radiación altera los requerimientos anatómicos distales. De acuerdo a la GPC de ESMO Cáncer Rectal, en la ausencia de tratamiento preoperatorio se prefiere un margen de 1 cm, pero las modificaciones tisulares post-radiación justifican un manejo más conservador de la longitud intestinal.<br><br>Perla ENARM: Cuando el paciente ha recibido terapia neoadyuvante, un margen de resección distal < 1 cm puede considerarse aceptable.<br><br>Análisis de Distractores: B) > 2 cm es la regla para tumores en segmentos cólicos o rectales sin neoadyuvancia, pero no es el umbral mínimo aceptado post-tratamiento. C) > 5 cm es la regla para el margen de resección del mesorrecto, no para la pared distal del tubo digestivo tras radiación. D) < 2 mm se define como un margen estrecho o francamente positivo (amenazado) en disecciones locales o evaluaciones de fascia, no es un objetivo quirúrgico.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Surgery, Página 11."
+    },
+    {
+        id: 7,
+        question: "En el abordaje quirúrgico por adenocarcinoma de recto, ¿para qué localización anatómica exclusiva está indicada oncológicamente la realización de una escisión parcial del mesorrecto (PME)?",
+        options: ["Canal anal", "Tercio medio", "Tercio superior", "Tercio inferior"],
+        answer: 2,
+        justification: "Justificación: La extensión de la resección depende estrictamente de la relación del tumor con la reflexión peritoneal. De acuerdo a la GPC de ESMO Cáncer Rectal, las lesiones proximales tienen un patrón de diseminación linfática predominantemente ascendente, haciendo innecesaria la morbilidad de una disección pélvica profunda.<br><br>Perla ENARM: La PME es el procedimiento oncológicamente adecuado exclusivamente para tumores del recto superior.<br><br>Análisis de Distractores: A) El canal anal requiere disecciones radicales distales o resección abdominoperineal (APR). B) El tercio medio exige obligatoriamente una escisión total del mesorrecto (TME) debido al alto riesgo de recurrencia lateral y distal. D) El tercio inferior también es una indicación estricta para TME o amputación abdominoperineal.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Management of localised disease, Página 3 y 11."
+    },
+    {
+        id: 8,
+        question: "Tras la administración de tratamiento neoadyuvante en un paciente con cáncer de recto avanzado, ¿a partir de qué diámetro de eje corto medido por imagen se recomienda la resección quirúrgica de los ganglios linfáticos laterales?",
+        options: ["≥ 10 mm", "≥ 7 mm", "≥ 5 mm", "≥ 3 mm"],
+        answer: 1,
+        justification: "Justificación: La persistencia de adenopatías en el compartimento pélvico lateral después de la neoadyuvancia es un alto predictor de falla locorregional. De acuerdo a la GPC de ESMO Cáncer Rectal, estos ganglios (ilíacos internos y obturatrices) deben considerarse enfermedad metastásica regional activa y extirparse en el mismo tiempo de la TME.<br><br>Perla ENARM: Los ganglios linfáticos laterales con un eje corto de ≥ 7 mm deben resecarse después del tratamiento neoadyuvante.<br><br>Análisis de Distractores: A) ≥ 10 mm es un tamaño que representa enfermedad macroscópica masiva, pero el corte quirúrgico de intervención se establece más bajo. C) ≥ 5 mm se considera reactivo o inflamatorio residual en muchos casos, sin obligar sistemáticamente a morbilidad quirúrgica adicional. D) ≥ 3 mm entra en la categoría de microganglios de comportamiento indeterminado, cuyo manejo es observación.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Recommendations, Página 15."
+    },
+    {
+        id: 9,
+        question: "Paciente con antecedente de cáncer escamoso anal manejado con quimiorradioterapia. Acude por recurrencia tumoral aislada en un ganglio inguinal, confirmada por biopsia. ¿Cuál es la intervención quirúrgica primaria recomendada en este escenario clínico?",
+        options: ["Resección abdominoperineal sola", "Disección de ganglios inguinales", "Escisión local amplia", "Braquiterapia de rescate"],
+        answer: 1,
+        justification: "Justificación: Las recurrencias linfáticas aisladas cambian el algoritmo de supervivencia. De acuerdo a la GPC de NCCN Cáncer Anal, si la enfermedad recae en el territorio inguinal en un paciente que previamente alcanzó dosis máximas de radiación regional, el manejo mecánico es el único curativo disponible.<br><br>Perla ENARM: Para pacientes que presentan una recurrencia inguinal y ya han recibido radiación en la ingle, se debe realizar una disección de ganglios inguinales.<br><br>Análisis de Distractores: A) La resección abdominoperineal (APR) es el tratamiento para la recurrencia local/persistencia del tumor primario en el canal anal, no para rescate inguinal aislado. C) La escisión local amplia no erradica el lecho linfático amenazado, dejando ganglios metastásicos residuales. D) La braquiterapia es una técnica de radiación, la cual está contraindicada o fuertemente limitada si la región ya fue irradiada previamente con dosis plenas.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Anal Carcinoma, 2026, Principles of Surgery, ANAL-A 2 de 2."
+    },
+    {
+        id: 10,
+        question: "En la estadificación imagenológica inicial, ¿qué límite anatómico óseo define por resonancia magnética la transición superior del recto, separándolo del colon sigmoides?",
+        options: ["Sínfisis del pubis", "Cóccix", "Segunda vértebra sacra", "Promontorio sacro"],
+        answer: 3,
+        justification: "Justificación: La definición radiológica es crucial para categorizar la enfermedad y decidir indicaciones de neoadyuvancia. De acuerdo a la GPC de NCCN Cáncer Rectal, este hito anatómico marca la reflexión peritoneal anterior y es el estándar oro en la semiología quirúrgica.<br><br>Perla ENARM: El recto se localiza por debajo de una línea virtual desde el promontorio sacro hasta el borde superior de la sínfisis púbica, determinado por resonancia magnética.<br><br>Análisis de Distractores: A) La sínfisis del pubis es el margen óseo anterior inferior que traza el ángulo de la línea virtual, no el origen espinal superior. B) El cóccix es una estructura demasiado inferior que dejaría gran parte del recto superior fuera de la definición. C) La segunda vértebra sacra es un límite quirúrgico clásico antiguo para la transición rectosigmoidea, pero la resonancia magnética estandarizada actual utiliza el promontorio sacro.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Clinical Presentation, REC-2."
+    },
+    {
+        id: 11,
+        question: "Durante una colonoscopia de tamizaje, se extirpa un pólipo sésil. El reporte histopatológico revela adenocarcinoma. ¿A qué distancia del límite de corte endoscópico se clasifica definitivamente un margen positivo (amenazado)?",
+        options: ["≤ 10 mm", "≤ 5 mm", "≤ 1 mm", "≤ 2 mm"],
+        answer: 2,
+        justification: "Justificación: La evaluación del margen en un pólipo maligno dicta la necesidad de someter al paciente a una resección colónica formal. De acuerdo a la GPC de NCCN Cáncer de Colon, la proximidad de células neoplásicas a la zona de diatermia aumenta drásticamente el riesgo de recurrencia en el lecho.<br><br>Perla ENARM: En pólipos malignos, un margen positivo se define como la presencia de células tumorales a ≤ 1 mm del margen de transección.<br><br>Análisis de Distractores: A) ≤ 10 mm es un margen quirúrgico excelente para seguridad local, no representa positividad patológica. B) ≤ 5 mm es considerado un margen libre y adecuado en resecciones mucosas endoscópicas. D) ≤ 2 mm es el corte de positividad para excisiones locales de lesiones en el canal anal, pero el estándar estricto histológico para pólipos es 1 milímetro.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Pathologic and Molecular Review, COL-B 1 de 9."
+    },
+    {
+        id: 12,
+        question: "En el reporte de patología tras una proctectomía radical, ¿cuál es la distancia de penetración tumoral a la fascia mesorrectal que define universalmente un margen circunferencial (CRM) positivo?",
+        options: ["≤ 1 mm", "≤ 2 mm", "≤ 5 mm", "≤ 10 mm"],
+        answer: 0,
+        justification: "Justificación: El margen radial dicta la posibilidad de recurrencia lateral pélvica y la indicación estricta de adyuvancia. De acuerdo a la GPC de NCCN Cáncer Rectal, la presencia celular macro o microscópica cercana al límite de disección se asocia con diseminación inminente.<br><br>Perla ENARM: Un margen circunferencial positivo se define como cualquier presencia de tumor a ≤ 1 mm del margen resecado o la fascia mesorrectal.<br><br>Análisis de Distractores: B) ≤ 2 mm fue un límite histórico en algunas escuelas europeas, pero el consenso de oncología quirúrgica actual y del CAP estipula 1 mm. C) ≤ 5 mm representa un margen estrecho pero formalmente negativo y oncológicamente curativo. D) ≤ 10 mm es un margen ampliamente negativo de alta seguridad quirúrgica.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Pathologic and Molecular Review, REC-B 1 de 5."
+    },
+    {
+        id: 13,
+        question: "Para garantizar la curación oncológica de un cáncer rectal temprano sometido a disección submucosa endoscópica (ESD), ¿cuál es el límite de profundidad de invasión submucosa exigido?",
+        options: ["< 500 micrómetros", "< 1500 micrómetros", "< 1000 micrómetros", "< 2000 micrómetros"],
+        answer: 2,
+        justification: "Justificación: Las técnicas endoscópicas preservadoras de órgano dependen directamente del riesgo de metástasis ganglionar. De acuerdo a la GPC de NCCN Cáncer Rectal, el estrato submucoso superficial es la barrera biológica donde el plexo linfático tiene baja densidad de invasión.<br><br>Perla ENARM: La resección curativa mediante ESD exige una invasión submucosa profunda < 1000 micrómetros (sm1).<br><br>Análisis de Distractores: A) < 500 micrómetros es un umbral ultra conservador; el tejido hasta los 1000 micrómetros ha demostrado ser estadísticamente seguro. B) < 1500 micrómetros aumenta la penetración a niveles sm2/sm3, disparando la tasa de afección ganglionar regional no tratada. D) < 2000 micrómetros se asocia con un riesgo inaceptable de falla nodal oculta, requiriendo proctectomía formal.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Surgery and Locoregional Therapies, REC-C 5 de 9."
+    },
+    {
+        id: 14,
+        question: "Paciente con adenocarcinoma de recto manejado con estrategia no operatoria tras respuesta clínica completa. Durante su seguimiento desarrolla recrecimiento tumoral endorrectal comprobado. ¿Cuál es la terapia curativa de elección?",
+        options: ["Radioterapia de rescate", "Escisión local transanal", "Braquiterapia endoluminal", "Resección de rescate"],
+        answer: 3,
+        justification: "Justificación: El abordaje de vigilancia activa asume el compromiso de intervenir de manera radical si la biología tumoral recae. De acuerdo a la GPC de ESMO Cáncer Rectal, los intentos menores de control local han demostrado tasas inaceptables de falla en este escenario.<br><br>Perla ENARM: En caso de recrecimiento local endorrectal después de un procedimiento de observación y espera, se debe ofrecer resección de rescate a todos los pacientes.<br><br>Análisis de Distractores: A) La radioterapia de rescate no tiene cabida biológica puesto que el tumor ya ha recibido y tolerado (recidivando) la dosis máxima de tolerancia pélvica. B) La escisión local tiene un valor incierto y está explícitamente no recomendada de forma rutinaria por la alta tasa de diseminación mesorrectal silente. C) La braquiterapia endoluminal solo se usa como refuerzo (boost) inicial, no como curación de una recaída gruesa de la pared intestinal.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Management of localised disease, Página 11 y 15."
+    },
+    {
+        id: 15,
+        question: "Al realizar una resección abdominoperineal (APR) por cáncer anal persistente tras quimiorradioterapia, ¿qué técnica reconstructiva se recomienda para mitigar las complicaciones de la herida pélvica irradiada?",
+        options: ["Colgajo miocutáneo de recto abdominal", "Cierre por segunda intención", "Injerto de piel de espesor total", "Cierre primario simple"],
+        answer: 0,
+        justification: "Justificación: La obliteración del hueco pélvico necrótico inducido por la radiación de rescate requiere tejido sano y bien vascularizado. De acuerdo a la GPC de NCCN Cáncer Anal, los pacientes sometidos a esta intervención presentan una severa propensión a defectos de cicatrización perineal y dehiscencia.<br><br>Perla ENARM: Para pacientes que se someten a una APR, se debe considerar el uso de colgajos de tejido reconstructivo perineal, como el colgajo miocutáneo de recto abdominal vertical.<br><br>Análisis de Distractores: B) El cierre por segunda intención en un periné irradiado perpetúa infecciones crónicas, sepsis pélvica y hernias perineales intratables. C) Los injertos de piel no sobreviven en lechos avasculares y expuestos a daño actínico severo. D) El cierre primario simple cursa con altas tasas de dehiscencia y sinus persistente por la tensión anatómica y el tejido fribrótico rígido preexistente.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Anal Carcinoma, 2026, Principles of Surgery, ANAL-A 1 y 2."
+    },
+    {
+        id: 16,
+        question: "Al evaluar la resonancia magnética pélvica preoperatoria de un cáncer de recto avanzado, ¿qué parámetro exige la planificación de una cirugía extendida más allá de la escisión total del mesorrecto (Beyond TME)?",
+        options: ["Metástasis en ganglios mesentéricos", "Tumor a < 1 mm de la fascia", "Invasión a la submucosa anterior", "Tumor a 3 mm del músculo elevador"],
+        answer: 1,
+        justification: "Justificación: El involucramiento de los límites quirúrgicos primarios obliga al cirujano a resecar órganos pélvicos continuos para garantizar el control macroscópico. De acuerdo a la GPC de ESMO Cáncer Rectal, ignorar esta premisa radiológica perpetúa la realización de cirugías R1 o R2 con mortalidad acelerada.<br><br>Perla ENARM: En caso de MRF positivo o amenazado (fascia mesorrectal a < 1 mm del tumor), se recomienda la cirugía más allá de los planos de la TME.<br><br>Análisis de Distractores: A) Los ganglios mesentéricos metastásicos implican enfermedad sistémica ganglionar (etapa IV u originada en colon proximal), no extensión local pélvica directa. C) La invasión a la submucosa define tumores precoces (T1), susceptibles de cirugías conservadoras sin ir más allá de la fascia. D) Un margen > 1 mm (como 3 mm) asegura un CRM negativo clásico, no requiriendo exenteración ni bloque ampliado.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Surgery, Página 11 y 15."
+    },
+    {
+        id: 17,
+        question: "Durante una resección transabdominal por cáncer de colon, ¿cuál es el paso quirúrgico vascular inicial obligatorio para cumplir con los estándares de extracción en bloque y vaciamiento ganglionar?",
+        options: ["Ligadura distal de venas pericólicas", "Preservación de la arteria mesentérica", "Ligadura proximal del pedículo vascular", "Resección del epiplón mayor"],
+        answer: 2,
+        justification: "Justificación: La erradicación curativa cólica depende de la remoción íntegra del trayecto de fuga linfohemática. De acuerdo a la GPC de NCCN Cáncer de Colon, la técnica idónea asegura que las estaciones ganglionares apicales se envíen para escrutinio patológico.<br><br>Perla ENARM: La técnica quirúrgica requiere la ligadura proximal del pedículo vascular asociado con la extirpación en bloque del segmento colónico y su mesenterio.<br><br>Análisis de Distractores: A) La ligadura distal omite los ganglios linfáticos intermedios y centrales de la base del mesenterio, incurriendo en disección incompleta. B) La preservación vascular arterial no tiene cabida si la arteria irriga el territorio afectado; debe sacrificarse en su origen. D) La resección del epiplón es un procedimiento estandarizado para cánceres gástricos y ováricos, ocasionalmente del colon transverso si hay invasión directa, pero no el principio vascular colónico universal.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Surgery and Locoregional Therapies, COL-C 1 de 7."
+    },
+    {
+        id: 18,
+        question: "En un paciente asintomático sometido a resección quirúrgica curativa por cáncer de recto etapa III, ¿cuál es el intervalo de tiempo normado para realizar la primera colonoscopia de vigilancia?",
+        options: ["A los 6 meses", "A los 3 años", "A los 2 años", "Al 1 año"],
+        answer: 3,
+        justification: "Justificación: El seguimiento endoscópico temprano detecta el desarrollo veloz de adenomas metacrónicos o falla anastomótica mucosa intraluminal. De acuerdo a la GPC de NCCN Cáncer Rectal, la calendarización de la colonoscopia depende estrechamente de los hallazgos al primer año.<br><br>Perla ENARM: Se recomienda realizar colonoscopia a 1 año de la resección quirúrgica; de no haber adenoma avanzado, se repite a los 3 años y después cada 5 años.<br><br>Análisis de Distractores: A) 6 meses es el seguimiento aplicable a la proctoscopia o resonancia tras cirugías ahorradoras de órgano locales (ej. escisión transanal). B) A los 3 años es el momento del segundo escrutinio si el control al primer año demostró intestino sano. C) A los 2 años es un tiempo de evaluación de imágenes seccionales tomográficas, pero no el protocolo validado de colonoscopia.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Surveillance Following Operative Management, REC-10."
+    },
+    {
+        id: 19,
+        question: "Al abordar una lesión maligna rectal T1N0 mediante la técnica de escisión local transanal, ¿qué margen circunferencial de resección es el objetivo oncológico mínimo para evitar radioterapia adyuvante?",
+        options: ["≥ 2 mm", "≥ 5 mm", "≥ 10 mm", "≥ 20 mm"],
+        answer: 2,
+        justification: "Justificación: El tratamiento conservador local carece de barreras anatómicas completas y disección ganglionar, por lo que demanda un amplio buffer hístico horizontal. De acuerdo a la GPC de NCCN Cáncer Rectal, la resección de todo el espesor de la pared previene la falla parietal local.<br><br>Perla ENARM: En la escisión local transanal, se recomienda una técnica quirúrgica de espesor total con el objetivo de lograr un margen de ≥ 10 mm de tejido sano.<br><br>Análisis de Distractores: A) ≥ 2 mm constituye un margen estrecho inaceptable de alto riesgo recidivante. B) ≥ 5 mm es insuficiente, conllevando tasas de fragmentación de margen reportadas prohibitivas. D) ≥ 20 mm suele requerir técnicas de microcirugía que muchas veces deforman la luz tubular y no demuestran mejorar la sobrevida en comparación a los 10 mm.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Surgery and Locoregional Therapies, REC-C 1 de 9."
+    },
+    {
+        id: 20,
+        question: "En la patología de un paciente con cáncer de recto que recibió tratamiento neoadyuvante seguido de cirugía, ¿cuál es el factor de riesgo independiente más fuerte que predice la recurrencia locorregional postoperatoria?",
+        options: ["Margen circunferencial positivo", "Invasión linfovascular focal", "Grado histológico 2", "Edad avanzada"],
+        answer: 0,
+        justification: "Justificación: El estado de los límites anatómicos determina la eficacia curativa del equipo pélvico. De acuerdo a la GPC de NCCN Cáncer Rectal, la presencia de células viables a nivel de la disección fascial después de quimiorradiación indica la resistencia biológica inminente y la imposibilidad de control físico de la enfermedad.<br><br>Perla ENARM: Un margen circunferencial positivo (CRM) es el predictor más fuerte de recurrencia local en pacientes que fueron tratados con terapia neoadyuvante.<br><br>Análisis de Distractores: B) La invasión linfovascular es un rasgo negativo y requiere valoración, pero estadísticamente no supera a un borde macro/microscópico seccionado e involucrado por el tumor activo. C) El grado 2 es una diferenciación moderada, la cual es el hallazgo más común y no representa el tope de gravedad (las histologías mal diferenciadas sí tienen peor peso). D) La edad del paciente rige la tolerancia a quimioterapia o quirúrgica perioperatoria, pero no es un parámetro patológico tisular biológico de fuga tumoral.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Pathologic and Molecular Review, REC-B 1 de 5."
+    },
+    {
+        id: 21,
+        question: "En el tratamiento quirúrgico del adenocarcinoma de recto medio, ¿cuál es el principio técnico fundamental que define a la escisión total del mesorrecto (TME) y confiere su beneficio oncológico?",
+        options: ["Extirpación del paquete mesorrectal intacto", "Resección de la submucosa a 10 mm", "Disección de los ganglios inguinales", "Ligadura distal del pedículo mesentérico"],
+        answer: 0,
+        justification: "Justificación: De acuerdo a la GPC de ESMO Cáncer Rectal, la técnica estándar exige la remoción en bloque de todo el mesorrecto, el cual alberga estructuras linfáticas y tejido adiposo rodeados por la fascia mesorrectal. Extraerlo sin fragmentación previene la diseminación iatrogénica en la cavidad pélvica.<br><br>Perla ENARM: La TME consiste en la extirpación en bloque de todo el mesorrecto retirándolo como un paquete intacto mediante disección cortante, lo cual reduce drásticamente las tasas de recurrencia local.<br><br>Análisis de Distractores: B) La resección submucosa a 10 mm es un parámetro de la escisión local endoscópica, no aplicable a una proctectomía transabdominal radical. C) La disección de ganglios inguinales se reserva para cáncer de canal anal o recurrencias muy específicas de recto inferior, no es el pilar de la TME. D) La ligadura debe ser proximal en el origen vascular, no distal, para asegurar un adecuado vaciamiento ganglionar apical.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Management of localised disease, Página 8."
+    },
+    {
+        id: 22,
+        question: "Al realizar una resección abdominoperineal por recurrencia de carcinoma escamoso del canal anal post-quimiorradiación, ¿cómo debe modificarse el abordaje del límite quirúrgico lateral en comparación con el adenocarcinoma de recto?",
+        options: ["Disección en el plano interesfintérico", "Resección de la sínfisis del pubis", "Márgenes laterales perianales más amplios", "Margen lateral circunferencial < 1 mm"],
+        answer: 2,
+        justification: "Justificación: El comportamiento invasivo del cáncer escamoso anal hacia la piel del periné obliga a un abordaje de rescate mucho más agresivo en la disección inferior que el requerido para las neoplasias glandulares originadas en la mucosa del recto distal. De acuerdo a la GPC de NCCN Cáncer Anal, esta modificación técnica garantiza el aclaramiento microscópico de la enfermedad recurrente.<br><br>Perla ENARM: La cirugía de resección abdominoperineal (APR) para cáncer anal puede requerir márgenes perianales laterales más amplios que los que se requieren para la misma operación en el cáncer de recto.<br><br>Análisis de Distractores: A) La disección en el plano interesfintérico dejaría enfermedad macroscópica lateral en casos de cáncer anal avanzado o recurrente. B) La resección de la sínfisis púbica implicaría una exenteración pélvica anterior completa, la cual no es el cambio anatómico perianal lateral sistemático. D) Un margen < 1 mm se define clínicamente como positivo o amenazado, lo cual es oncologicamente inaceptable.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Anal Carcinoma, 2026, Principles of Surgery, ANAL-A 1 de 2."
+    },
+    {
+        id: 23,
+        question: "En la evaluación patológica de un espécimen de escisión total del mesorrecto por un tumor en el tercio inferior del recto, ¿a qué distancia del músculo elevador del ano se clasifica el margen circunferencial como francamente positivo?",
+        options: ["≤ 2 mm", "≤ 1 mm", "≤ 5 mm", "≤ 10 mm"],
+        answer: 1,
+        justification: "Justificación: En el recto inferior, la fascia mesorrectal se adelgaza y el margen radial pasa a ser delimitado directamente por las fibras musculares del piso pélvico. De acuerdo a la GPC de NCCN Cáncer Rectal, la positividad no discrimina la estructura anatómica que conforma el límite, sino la proximidad micrométrica del tumor a dicho límite.<br><br>Perla ENARM: Un margen circunferencial positivo se define como la presencia de tumor a ≤ 1 mm de la fascia mesorrectal o, para tumores en el tercio inferior, a ≤ 1 mm del músculo elevador del ano.<br><br>Análisis de Distractores: A) ≤ 2 mm es un margen libre muy estrecho pero no se clasifica universalmente como margen circunferencial positivo (R1). C) ≤ 5 mm proporciona un nivel de seguridad local aceptable tras la extirpación en bloque. D) ≤ 10 mm es un objetivo de seguridad oncológica amplia, especialmente en procedimientos de excisión local.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Pathologic and Molecular Review, REC-B 1 de 5."
+    },
+    {
+        id: 24,
+        question: "A diferencia del colon transverso, ¿en qué segmentos anatómicos del colon es oncológicamente obligatorio evaluar el margen radial o circunferencial debido a la ausencia de cobertura serosa completa?",
+        options: ["Flexura esplénica y epiplón", "Ciego y válvula ileocecal", "Colon sigmoides anterior", "Ascendente y descendente posterior"],
+        answer: 3,
+        justification: "Justificación: La superficie serosa peritoneal no es un margen quirúrgico. De acuerdo a la GPC de NCCN Cáncer de Colon, la positividad de márgenes radiales solo puede presentarse en regiones donde el tubo digestivo carece de peritoneo y contacta directamente con el tejido celular retroperitoneal.<br><br>Perla ENARM: El margen radial o circunferencial sólo se evalúa en los segmentos colónicos que carecen de superficies peritonizadas, como la parte posterior del colon ascendente y descendente.<br><br>Análisis de Distractores: A) La flexura esplénica está completamente envuelta por serosa hacia la cavidad libre en la mayoría de la anatomía estándar. B) El ciego suele estar peritonizado en su totalidad y su resección incluye márgenes mesentéricos, no radiales fijos. C) El colon sigmoides tiene un mesenterio libre propio y está cubierto por peritoneo en casi toda su circunferencia, exceptuando la raíz de su meso.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Pathologic and Molecular Review, COL-B 2 de 9."
+    },
+    {
+        id: 25,
+        question: "Paciente con adenocarcinoma de recto localmente avanzado, cuyo reporte de biopsia confirma deficiencia de reparación de desajustes (dMMR). De acuerdo con la evidencia actual, ¿cuál es la terapia neoadyuvante de primera línea recomendada?",
+        options: ["Radioterapia de curso corto", "Quimioterapia con FOLFOX", "Dostarlimab por 6 meses", "Escisión local transanal"],
+        answer: 2,
+        justification: "Justificación: Los tumores con alta inestabilidad microsatelital y deficiencia de proteínas reparadoras responden pobremente a la quimioterapia convencional pero tienen una extraordinaria sensibilidad a la inmunoterapia. De acuerdo a la GPC de ESMO Cáncer Rectal, el bloqueo de PD-1 logra tasas de respuesta clínica completa nunca antes vistas en este subgrupo molecular.<br><br>Perla ENARM: Los pacientes con tumores dMMR o MSI-H localmente avanzados deben recibir dostarlimab con una duración de tratamiento planificada de 6 meses.<br><br>Análisis de Distractores: A) La radioterapia de curso corto (SCRT) era el estándar previo, pero la inmunoterapia de inducción demostró la capacidad de obviar por completo la radiación y la cirugía en la mayoría de estos pacientes. B) La quimioterapia con FOLFOX ofrece tasas de respuesta patológica completa inferiores al 10% en el fenotipo dMMR. D) La escisión local no trata la enfermedad locorregional ganglionar ni aprovecha el potencial de curación sistémica de los inhibidores de puntos de control.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Management of localised disease, Página 13 y 23."
+    },
+    {
+        id: 26,
+        question: "En pacientes con cáncer de recto que logran una respuesta clínica completa y son manejados mediante vigilancia activa (Watch and Wait), ¿en qué periodo de tiempo post-tratamiento ocurre la mayor incidencia de recurrencia local?",
+        options: ["Entre 3 y 5 años", "Después de 5 años", "Primeros 6 meses", "Primeros 2 años"],
+        answer: 3,
+        justification: "Justificación: La preservación del órgano exige un escrutinio intenso inicial dado el comportamiento cronológico de los crecimientos residuales endoluminales. De acuerdo a la GPC de ESMO Cáncer Rectal y la base de datos IWWD, la curva de falla local decae drásticamente después de los 24 a 36 meses.<br><br>Perla ENARM: El 88% de las recurrencias locales en la estrategia \"watch and wait\" ocurren dentro de los primeros 2 años posteriores a alcanzar la respuesta clínica completa.<br><br>Análisis de Distractores: A) Entre 3 y 5 años, la tasa de recaída cae abruptamente, justificando espaciar el intervalo de los estudios de imagen y endoscópicos. B) Después de 5 años, las recaídas locales son eventos excepcionales y el paciente se considera virtualmente curado de recurrencia locorregional. C) Los primeros 6 meses son críticos, pero agrupan solo una fracción de las fallas totales; el periodo de máxima incidencia acumulada abarca los 24 meses.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Management of localised disease, Página 30 y 34."
+    },
+    {
+        id: 27,
+        question: "Paciente sometido a resección curativa por adenocarcinoma de colon etapa III. El perfil molecular revela mutación somática en la vía PI3K (PIK3CA). ¿Qué intervención farmacológica adyuvante diaria se recomienda durante 3 años para reducir el riesgo de recurrencia?",
+        options: ["Clopidogrel 100 mg", "Aspirina 100 a 162 mg", "Celecoxib 200 mg", "Rivaroxabán 10 mg"],
+        answer: 1,
+        justification: "Justificación: La hiperactivación de la vía PI3K confiere sensibilidad a la modulación inflamatoria celular en el microambiente oncológico residual. De acuerdo a la GPC de NCCN Cáncer de Colon, la inhibición enzimática plaquetaria y sistémica demostró un incremento significativo en la supervivencia libre de enfermedad exclusivamente en este subgrupo genómico.<br><br>Perla ENARM: Para estadios II y III con alteraciones somáticas en la vía PI3K, se debe iniciar aspirina de 100 a 162 mg vía oral diariamente por 3 años después de la recuperación quirúrgica.<br><br>Análisis de Distractores: A) El clopidogrel es un antagonista del receptor P2Y12 sin efecto demostrado sobre la fisiopatología inflamatoria oncológica de la vía PIK3CA. C) El celecoxib es un inhibidor selectivo COX-2, pero los ensayos clínicos de fase III (como CALGB/SWOG) fallaron en consolidarlo como estándar universal en contraposición a la relación costo-beneficio de la aspirina. D) El rivaroxabán es un anticoagulante directo sin actividad quimiopreventiva adyuvante comprobada en tumores colorrectales.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Workup and Adjuvant Treatment, COL-4 y COL-13."
+    },
+    {
+        id: 28,
+        question: "Paciente que ingresa a urgencias por oclusión intestinal inminente secundaria a adenocarcinoma rectal irresecable. Si se planea la colocación endoscópica de un stent (endoprótesis) como medida paliativa o puente, ¿en qué localización está indicado?",
+        options: ["Tercio superior", "Tercio medio", "Canal anal", "Tercio inferior"],
+        answer: 0,
+        justification: "Justificación: La instrumentación rígida sobre esfínteres confiere una morbilidad dolorosa intratable. De acuerdo a la GPC de NCCN Cáncer Rectal, los estents autoexpandibles en segmentos distales causan tenesmo severo, migración recurrente y disfunción defecatoria extrema por la rica inervación somática regional.<br><br>Perla ENARM: En cáncer de recto complicado con obstrucción inminente, la colocación de un stent está indicada únicamente para lesiones del recto superior.<br><br>Análisis de Distractores: B) En el tercio medio, el dispositivo invade la ampolla rectal distal irritando crónicamente los mecanoreceptores de distensión. C) En el canal anal está absolutamente contraindicado por el dolor intratable que ocasiona al atravesar la línea pectínea y el complejo esfinteriano. D) El tercio inferior rige bajo las mismas contraindicaciones anatómicas del dolor severo pélvico, optándose mejor por estomas de derivación.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Primary Treatment, REC-7."
+    },
+    {
+        id: 29,
+        question: "Paciente de 55 años, diagnosticado con carcinoma escamoso del canal anal en etapa locorregional. ¿Cuál es el tratamiento sistémico curativo de primera línea de elección que se administra de forma concurrente con la radioterapia?",
+        options: ["FOLFIRINOX y bevacizumab", "Cisplatino y paclitaxel", "Capecitabina y oxaliplatino", "Fluorouracilo y mitomicina"],
+        answer: 3,
+        justification: "Justificación: El cáncer escamoso anal no es biológicamente un cáncer gastrointestinal clásico, por lo que responde al protocolo Nigro modificado. De acuerdo a la GPC de NCCN Cáncer Anal, esta dupla farmacológica es superior en lograr respuestas patológicas completas y preservar el esfínter anal frente al tratamiento quirúrgico primario.<br><br>Perla ENARM: La enfermedad locorregional de cáncer anal (± ganglios paraaórticos) debe tratarse con quimiorradioterapia concurrente basada en Fluorouracilo y Mitomicina o Capecitabina y Mitomicina.<br><br>Análisis de Distractores: A) FOLFIRINOX es un régimen altamente tóxico exclusivo para adenocarcinomas de páncreas o colorrectales metastásicos, ineficaz en histología escamosa anal. B) Cisplatino y paclitaxel conforman esquemas utilizados en líneas avanzadas o carcinomas escamosos de cabeza y cuello/cérvix. C) Capecitabina combinada con oxaliplatino (CAPEOX) es pilar de la terapia colorrectal, no el estándar oro anal de preservación orgánica inicial.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Anal Carcinoma, 2026, Primary Treatment, ANAL-2 y ANAL-B 2 de 5."
+    },
+    {
+        id: 30,
+        question: "Paciente con adenocarcinoma de colon que presenta una metástasis hepática aislada. ¿Para qué tamaño máximo de lesión se considera que la ablación térmica ofrece resultados oncológicos y de supervivencia equivalentes a la resección quirúrgica?",
+        options: ["≤ 3 cm", "≤ 5 cm", "≤ 1 cm", "≤ 7 cm"],
+        answer: 0,
+        justification: "Justificación: La destrucción tisular generada por calor tiene límites físicos radiológicos de penetración efectiva antes de originar un fenómeno de disipación (\"heat sink\"). De acuerdo a la GPC de NCCN Cáncer de Colon, la evidencia de ensayos aleatorizados recientes (COLLISION) valida el cambio de paradigma hacia abordajes menos invasivos.<br><br>Perla ENARM: Para metástasis hepáticas pequeñas de cáncer colorrectal (≤ 3 cm), la ablación térmica es equivalente a la resección quirúrgica en términos de supervivencia y toxicidad.<br><br>Análisis de Distractores: B) Las metástasis de 5 cm tienen altas tasas de progresión local tras la ablación térmica debido al calentamiento incompleto del borde periférico y requieren resección formal. C) ≤ 1 cm es un tamaño donde la ablación es excelente, pero el umbral máximo validado de equivalencia de no-inferioridad se extiende más allá. D) Lesiones > 5 cm (como 7 cm) tienen una indicación absoluta de abordaje resectivo si el remanente hepático lo permite.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Surgery and Locoregional Therapies, COL-C 4 de 7 y 6 de 7."
+    },
+    {
+        id: 31,
+        question: "En el plan de seguimiento de un paciente con cáncer de recto que recibió tratamiento curativo, ¿para qué subgrupo está indicado exclusivamente realizar proctoscopia con ultrasonido endoscópico cada 3 a 6 meses?",
+        options: ["Sometidos a escisión local transanal", "Sometidos a amputación abdominoperineal", "Tratados con dostarlimab exclusivo", "Sometidos a escisión total del mesorrecto"],
+        answer: 0,
+        justification: "Justificación: Las intervenciones que preservan el tubo digestivo tubular carecen de una evaluación patológica de la grasa perirrectal, reteniendo el riesgo de metástasis ganglionares ocultas o intramurales asintomáticas. De acuerdo a la GPC de NCCN Cáncer Rectal, la ecografía provee el escrutinio profundo necesario que el tacto digital no alcanza.<br><br>Perla ENARM: El uso de proctoscopia con ultrasonido endoscópico (EUS) o RM pélvica de seguimiento está indicado exclusivamente para aquellos pacientes tratados mediante escisión local transanal.<br><br>Análisis de Distractores: B) La amputación abdominoperineal (APR) extirpa el esfínter de forma definitiva cerrando el periné, por lo que el acceso proctoscópico es anatómicamente imposible. C) Pacientes tratados de forma exclusiva con inmunoterapia se monitorizan con esquemas de \"watch and wait\" integrales (RM, sigmoidoscopia), no con indicación excluyente de EUS protocolizado sin RM. D) Tras una escisión total del mesorrecto (TME) exitosa, la recurrencia luminal es baja y el tejido linfático local ya fue resecado; la vigilancia se basa en antígeno carcinoembrionario (CEA) y tomografías seccionales.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Surveillance, REC-10."
+    },
+    {
+        id: 32,
+        question: "Anatómicamente, el recto termina en el borde superior del canal anal funcional. ¿Qué hito clínico define este límite distal en la evaluación preoperatoria por resonancia magnética en el cáncer de recto?",
+        options: ["Unión mucocutánea dentada", "Promontorio del sacro", "Reflexión peritoneal anterior", "Borde palpable del anillo anorrectal"],
+        answer: 3,
+        justification: "Justificación: La topografía delimita los abordajes pélvicos de preservación esfinteriana frente a los destructivos. De acuerdo a la GPC de NCCN Cáncer Rectal, la semiología radiológica y física convergen en la musculatura estriada de continencia para demarcar el f in del segmento rectal.<br><br>Perla ENARM: El recto termina en el borde superior del canal anal funcional, definido como el borde superior palpable del esfínter anal y los músculos puborrectales del anillo anorrectal.<br><br>Análisis de Distractores: A) La unión mucocutánea (línea dentada o pectínea) es una subdivisión interna del canal anal que separa drenajes vasculares, no el origen superior anatómico funcional global. B) El promontorio del sacro determina el límite superior anatómico del recto, separándolo del colon sigmoides. C) La reflexión peritoneal marca la transición de las caras anteriores rectales (mesorrecto parcial vs total), pero no define el término inferior del recto pélvico.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Clinical Presentation, REC-2."
+    },
+    {
+        id: 33,
+        question: "Tras la resección quirúrgica transabdominal de un cáncer de recto etapa II, ¿cuál es la periodicidad inicial recomendada para la monitorización del antígeno carcinoembrionario (CEA) sérico?",
+        options: ["Cada 6 a 12 meses por 5 años", "Anualmente por 3 años", "Cada 3 a 6 meses por 2 años", "Cada 1 a 2 meses por 1 año"],
+        answer: 2,
+        justification: "Justificación: La elevación del CEA anticipa a la imagenología en el diagnóstico de la recaída sistémica micrometastásica, en especial la diseminación hepática. De acuerdo a la GPC de NCCN Cáncer Rectal, la cadencia del protocolo de laboratorio se concentra en la ventana temporal de máxima incidencia probabilística de recaída.<br><br>Perla ENARM: El seguimiento sérico del antígeno carcinoembrionario (CEA) debe realizarse cada 3 a 6 meses durante los primeros 2 años, y luego cada 6 meses hasta completar 5 años.<br><br>Análisis de Distractores: A) Cada 6 a 12 meses es el protocolo aceptado para los estudios tomográficos (TAC), no para las determinaciones de laboratorio séricas iniciales. B) Anualmente es una monitorización deficiente e infraestándar que omitiría la ventana terapéutica para metástasis hepáticas resecables tempranas. D) Cada 1 a 2 meses incrementaría falsos positivos por fluctuaciones inflamatorias, elevando la ansiedad del paciente sin mejorar la tasa de resecabilidad curativa a largo plazo.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Surveillance Following Operative Management, REC-10."
+    },
+    {
+        id: 34,
+        question: "Durante el estadiaje pélvico por resonancia magnética de un paciente con cáncer de recto tercio medio, se identifica invasión tumoral de la fascia mesorrectal (MRF amenazada). ¿Qué estrategia de tratamiento sistémico es mandatoria en este escenario?",
+        options: ["Terapia neoadyuvante total (TNT)", "Escisión parcial del mesorrecto", "Quimioterapia adyuvante exclusiva", "Radioterapia postoperatoria"],
+        answer: 0,
+        justification: "Justificación: El compromiso imagenológico de las barreras de resección exige el máximo impacto farmacológico de reducción tumoral previo al evento mecánico quirúgico. De acuerdo a la GPC de ESMO Cáncer Rectal, iniciar con resección o abordajes ligeros frente a una MRF amenazada garantiza márgenes positivos, fallas sistémicas tempranas y muerte local.<br><br>Perla ENARM: Para tumores del tercio medio o inferior, la Terapia Neoadyuvante Total (TNT) debe ofrecerse a pacientes con criterios de alto riesgo, como cT4 o MRF involucrada/amenazada.<br><br>Análisis de Distractores: B) La escisión parcial del mesorrecto (PME) es exclusiva del tercio superior y no impacta como control locorregional lateral inferior amenazado. C) La quimioterapia adyuvante soluciona micrometástasis sistémicas posquirúrgicas, pero no logra contracción del tumor primario pélvico in situ para convertir un margen positivo a uno negativo. D) La radioterapia postoperatoria conlleva toxicidades severas y complicaciones de la herida prohibitivas, relegándose a rescates excepcionales por cirugías incompletas no planeadas.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Recommendations, Página 11 y 21."
+    },
+    {
+        id: 35,
+        question: "En el reporte histopatológico de un espécimen de adenocarcinoma colorrectal, se describe el fenómeno microscópico de gemación tumoral (\"tumor budding\"). ¿A partir de qué número de yemas celulares en un área específica se clasifica de alto grado?",
+        options: ["≥ 3 yemas", "≥ 10 yemas", "≥ 5 yemas", "≥ 15 yemas"],
+        answer: 1,
+        justification: "Justificación: La transición epitelio-mesénquima en la interfase invasiva de los márgenes neoplásicos se asocia fuertemente con invasión ganglionar y pronóstico ominoso en lesiones etapa II. De acuerdo a la GPC de NCCN Cáncer de Colon, la estandarización del Consenso Internacional patológico divide el riesgo en estratos para normar el uso de quimioterapia.<br><br>Perla ENARM: El grado alto de gemación tumoral (\"tumor budding\") se clasifica a partir de la presencia de ≥ 10 yemas celulares o nidos en un área de 0.785 mm² (hot spot).<br><br>Análisis de Distractores: A) ≥ 3 yemas encaja en el grado bajo (0 a 4 yemas) con un comportamiento fenotípico favorable indolente. C) ≥ 5 yemas representa el corte para el grado intermedio (5 a 9 yemas), el cual carece de la contundencia de mortalidad del estrato superior. D) ≥ 15 yemas es un recuento que ya está subsumido y sobrepasa el umbral mínimo validado internacionalmente de 10.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Pathologic and Molecular Review, COL-B 6 de 9."
+    },
+    {
+        id: 36,
+        question: "En el tratamiento de enfermedad metastásica irresecable por cáncer de colon, ¿qué combinación simultánea de fármacos biológicos está estrictamente contraindicada por incremento de toxicidad sin beneficio de supervivencia?",
+        options: ["Dostarlimab y fluorouracilo", "Cetuximab y bevacizumab", "Oxaliplatino y capecitabina", "Irinotecán y panitumumab"],
+        answer: 1,
+        justification: "Justificación: La saturación de múltiples dianas cinasa angiogénicas y de crecimiento epidérmico ha comprobado ser letal. De acuerdo a la GPC de NCCN Cáncer de Colon, en lugar de generar sinergia, los ensayos fase III demostraron acortamientos en la supervivencia libre de progresión ante el colapso tolerogénico del paciente.<br><br>Perla ENARM: El uso concurrente de un agente anti-EGFR (cetuximab o panitumumab) con un agente anti-VEGF (bevacizumab) está contraindicado por el aumento de toxicidad y disminución de la supervivencia.<br><br>Análisis de Distractores: A) Dostarlimab (anti-PD-1) es para deficiencia de MMR y rara vez se combina perjudicialmente con antimetabolitos simples como el 5-FU de base. C) Oxaliplatino y capecitabina es el esquema estándar XELOX/CAPEOX, universalmente seguro y efectivo. D) Irinotecán asociado a panitumumab (esquema FOLFIRI modificado en RAS wild type) es una de las primeras líneas preferidas por alta eficacia, no está contraindicado.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Systemic Therapy for Advanced or Metastatic Disease, COL-D 4 de 17."
+    },
+    {
+        id: 37,
+        question: "Previo al inicio de un esquema de quimioterapia adyuvante con capecitabina por cáncer de colon, ¿qué prueba genética farmacogenómica tiene una advertencia oficial por riesgo de toxicidad hematológica y gastrointestinal severa secundaria a deficiencia enzimática?",
+        options: ["Mutación KRAS", "Amplificación HER2", "Gen UGT1A1", "Gen DPYD"],
+        answer: 3,
+        justification: "Justificación: Los fluoropirimidinas requieren catabolismo hepático para no alcanzar concentraciones plasmáticas letales que paralizan la médula ósea y descaman masivamente la mucosa intestinal. De acuerdo a la GPC de NCCN Cáncer de Colon, un subgrupo de individuos carece de la dihidropirimidina deshidrogenasa, obligando a suspender o titular la dosis.<br><br>Perla ENARM: La FDA ha incluido una advertencia para evaluar el estado del gen DPYD antes de iniciar regímenes basados en fluorouracilo o capecitabina para prevenir toxicidad potencialmente letal.<br><br>Análisis de Distractores: A) La mutación KRAS evalúa la resistencia tumoral predictiva a los inhibidores del EGFR en la etapa metastásica, no es una prueba de toxicidad constitutiva. B) La amplificación HER2 determina el uso de terapia diana bloqueadora dual, sin relación con el metabolismo sistémico de capecitabina. C) El gen UGT1A1 (Síndrome de Gilbert subclínico) se asocia al metabolismo y toxicidad del irinotecán, no directamente a los antimetabolitos orales como capecitabina.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Workup, COL-2 y Principles of Pharmacogenetics COL-I 1 de 1."
+    },
+    {
+        id: 38,
+        question: "Como parte de la vigilancia postoperatoria de un paciente asintomático tras la resección de un cáncer de colon etapa III, ¿cuál es la periodicidad recomendada para realizar la tomografía computarizada de tórax, abdomen y pelvis?",
+        options: ["Cada 3 meses", "Cada 2 años", "Cada 6 a 12 meses", "Anualmente"],
+        answer: 2,
+        justification: "Justificación: El rastreo morfológico toracoabdominal detecta metástasis resecables asintomáticas (generalmente hepáticas o pulmonares) salvando el pronóstico. De acuerdo a la GPC de NCCN Cáncer de Colon, es obligatorio mantener un cerco imagenológico regular que equilibre la detección temprana y la exposición acumulada a radiación.<br><br>Perla ENARM: En enfermedad etapa II y III, se debe realizar tomografía de tórax, abdomen y pelvis cada 6 a 12 meses durante un periodo total de 5 años.<br><br>Análisis de Distractores: A) Cada 3 meses se considera excesivo en estadios operados temprano/intermedio y se reserva exclusivamente para el monitoreo de pacientes metastásicos (etapa IV) durante los primeros 2 años. B) Cada 2 años espacia de manera riesgosa la ventana quirúrgica de oligometástasis de rápido crecimiento. D) Anualmente puede ser apropiado en esquemas laxos tardíos o tras 3 años, pero el algoritmo exige considerar intervalos tan cerrados como los 6 meses en etapas ganglionares (III).",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Surveillance, COL-8."
+    },
+    {
+        id: 39,
+        question: "De acuerdo con la GPC, en pacientes seleccionados con adenocarcinoma de recto en el tercio medio (cT3), ¿qué criterio radiológico por RM permite la omisión segura de la quimiorradioterapia neoadyuvante clásica?",
+        options: ["Invasión linfovascular aparente", "Ganglios presacros > 7 mm", "Margen circunferencial > 1 mm", "Penetración grasa > 5 mm"],
+        answer: 2,
+        justification: "Justificación: La cirugía directa sin radiación previa es oncológicamente lícita si la arquitectura espacial de los márgenes no está biológicamente en riesgo de ser seccionada con bisturí. De acuerdo a la GPC de ESMO Cáncer Rectal (ensayo OCUM), un borde de contención retroperitoneal amplio minimiza dramáticamente el rescate locorregional de un muñón pélvico irradiado.<br><br>Perla ENARM: Los datos del estudio OCUM confirman que la radioterapia neoadyuvante puede omitirse en tumores del tercio medio si la resonancia muestra un margen circunferencial (CRM) claro > 1 mm y ausencia de invasión ganglionar avanzada.<br><br>Análisis de Distractores: A) La invasión linfovascular obliga a elevar la alerta terapéutica sistémica y locorregional, contraindicando abordajes quirúrgicos exclusivos o primarios simples. B) Los ganglios laterales o presacros inflamados (> 7 mm) exigen quimiorradiación intensa y disección nodal extendida obligatoria. D) Una invasión tumoral extensa (> 5 mm en la grasa perirrectal) aumenta la proximidad fascial y dictamina comúnmente protocolos neoadyuvantes radioterápicos.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Management of localised disease, Página 7 y 8."
+    },
+    {
+        id: 40,
+        question: "Durante el análisis de un espécimen colónico, el patólogo no identifica metástasis en los 14 ganglios linfáticos aislados (pN0), pero detecta depósitos tumorales aislados en la grasa del mesenterio. ¿Cómo se clasifica oncológicamente este hallazgo en la subclasificación N?",
+        options: ["N2a", "N1c", "N1a", "N1b"],
+        answer: 1,
+        justification: "Justificación: Los nódulos de tejido perivascular con atipia celular, sin estructura linfoide organizada remanente, reflejan diseminación angiolinfática desestructurada o extensión contigua masiva. De acuerdo a la GPC de NCCN Cáncer de Colon, la simple presencia de estos focos escala al paciente del grado II al grado III de riesgo adyuvante.<br><br>Perla ENARM: Se clasifica como N1c cuando no existen ganglios linfáticos regionales positivos, pero hay presencia de depósitos tumorales en la subserosa, mesenterio o tejido pericolónico no peritonizado.<br><br>Análisis de Distractores: A) N2a corresponde a la afectación tumoral probada en el interior de 4 a 6 verdaderos ganglios linfáticos regionales. C) N1a se define estrictamente por la presencia de infiltración neoplásica en un único (1) ganglio linfático regional documentado. D) N1b abarca el hallazgo morfológico celular afirmativo en el parénquima de 2 a 3 ganglios linfáticos regionales aislados en la disección.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Staging, ST-1 y COL-B 8 de 9."
+    },
+    {
+        id: 41,
+        question: "En el escrutinio de una pieza de hemorroidectomía se diagnostica incidentalmente un carcinoma escamoso superficialmente invasivo (SISCCA). Para que esta lesión temprana sea candidata a escisión local exclusiva con intención curativa, ¿cuál es el criterio estricto de invasión de la membrana basal?",
+        options: ["≤ 1 mm", "≤ 5 mm", "≤ 3 mm", "≤ 7 mm"],
+        answer: 2,
+        justification: "Justificación: La identificación de tumores anales incipientes permite cirugías ahorradoras de esfínter. De acuerdo a la GPC de NCCN Cáncer de Ano, el concepto de SISCCA limita la agresividad biológica a una penetración tisular muy superficial con extensión horizontal controlada.<br><br>Perla ENARM: El carcinoma escamoso superficialmente invasivo (SISCCA) se define como un cáncer anal extirpado por completo con invasión a la membrana basal ≤ 3 mm y una extensión horizontal máxima de ≤ 7 mm.<br><br>Análisis de Distractores: A) ≤ 1 mm es el criterio para márgenes circunferenciales positivos o amenazados en cáncer de recto, no la definición histológica de un SISCCA anal. B) ≤ 5 mm rebasa el límite de seguridad establecido por patología para considerar un potencial metastásico ganglionar nulo. D) ≤ 7 mm corresponde a la dimensión máxima permitida en la extensión de propagación horizontal (eje transversal), no al vector de profundidad (invasión de membrana basal).",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Anal Carcinoma, 2026, Principles of Surgery, ANAL-A 1 de 2."
+    },
+    {
+        id: 42,
+        question: "¿Cuál es la intervención quirúrgica estándar en el cáncer de recto medio e inferior que requiere la extirpación en bloque de las estructuras linfáticas, fascia y tejido adiposo pélvico para disminuir las tasas de recurrencia local y márgenes radiales positivos?",
+        options: ["Resección anterior ultrabaja", "Escisión total del mesorrecto", "Amputación abdominoperineal", "Escisión parcial del mesorrecto"],
+        answer: 1,
+        justification: "Justificación: El manejo oncológico del hueco pélvico depende de erradicar la vía de fuga linfática retrógrada y lateral. De acuerdo a la GPC de NCCN Cáncer Rectal, la técnica quirúrgica impecable mediante disección cortante a través de los planos avasculares pélvicos preserva los nervios autonómicos y confiere la mayor tasa de curación.<br><br>Perla ENARM: La Escisión Total del Mesorrecto (TME) extrae el mesorrecto como un paquete intacto y su beneficio oncológico principal es la reducción de los márgenes radiales positivos y la recurrencia local.<br><br>Análisis de Distractores: A) La resección anterior ultrabaja describe el nivel de la anastomosis en la pared intestinal, pero no denomina la técnica de erradicación ganglionar envolvente. C) La amputación abdominoperineal es la resección que sacrifica el complejo esfinteriano, la cual incluye obligatoriamente una TME, pero el nombre del principio oncológico mesentérico es la TME. D) La escisión parcial se reserva exclusivamente para tumores del tercio superior donde el drenaje linfático inferior no está biológicamente amenazado.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Surgery and Locoregional Therapies, REC-C 2 de 9."
+    },
+    {
+        id: 43,
+        question: "Para un adenocarcinoma del tercio superior del recto, se decide realizar una Escisión Parcial del Mesorrecto (PME). Para asegurar un beneficio oncológico equivalente a la TME en esta topografía, ¿cuántos centímetros por debajo del borde distal del tumor debe transeccionarse el mesorrecto?",
+        options: ["≥ 2 cm", "≥ 1 cm", "≥ 5 cm", "≥ 10 cm"],
+        answer: 2,
+        justification: "Justificación: Los tumores de la porción superior (intraperitoneal) del recto requieren márgenes distales que aseguren la eliminación de micrometástasis linfáticas en el retroperitoneo adyacente. De acuerdo a la GPC de ESMO Cáncer Rectal, seccionarlo antes de esta distancia incrementa el riesgo de dejar depósitos tumorales ocultos.<br><br>Perla ENARM: En la escisión parcial del mesorrecto para cáncer de recto superior, el margen mesorrectal distal preferido debe ser de ≥ 5 cm por debajo del tumor.<br><br>Análisis de Distractores: A) ≥ 2 cm es el margen oncológicamente aceptado para la pared mucosa intestinal en un tumor de recto distal, no para el envoltorio linfático mesorrectal en el recto superior. B) ≥ 1 cm es el margen intramural libre sin neoadyuvancia, completamente insuficiente para el cilindro de grasa perirrectal. D) ≥ 10 cm es anatómicamente innecesario e imposible de alcanzar en la mayoría de las pelvis sin extirpar el mesorrecto inferior intacto completo (TME).",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Surgery, Página 11."
+    },
+    {
+        id: 44,
+        question: "Durante la cirugía oncológica por cáncer de colon, el margen radial es crucial para el pronóstico. Para evitar errores de estadificación patológica en las áreas del colon que carecen de serosa peritoneal, ¿qué acción transoperatoria se recomienda al cirujano?",
+        options: ["Resección del epiplón adherido", "Marcaje con clip o sutura", "Lavado con solución citotóxica", "Toma de biopsias por congelación"],
+        answer: 1,
+        justification: "Justificación: La transición anatómica entre el tejido peritonizado y retroperitoneal se pierde al extraer la pieza a la mesa de patología. De acuerdo a la GPC de NCCN Cáncer de Colon, la demarcación visual precisa ayuda al patólogo a seccionar el espécimen correctamente para medir la verdadera penetración tumoral hacia la fascia de coalescencia.<br><br>Perla ENARM: Es difícil apreciar la demarcación entre la superficie peritonizada y no peritonizada ex vivo, por lo que se recomienda al cirujano marcar el área de superficie no peritonizada con un clip o sutura.<br><br>Análisis de Distractores: A) La resección del epiplón adherido (en bloque) es necesaria si hay invasión local, pero no orienta topográficamente los márgenes radiales retroperitoneales libres. C) El lavado citotóxico no tiene rol estandarizado en la evaluación patológica y distorsiona la citología de la serosa. D) Las biopsias por congelación del margen circunferencial rara vez son precisas en la grasa mesocólica masiva y retrasan innecesariamente el tiempo quirúrgico.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Pathologic and Molecular Review, COL-B 2 de 9."
+    },
+    {
+        id: 45,
+        question: "Al evaluar la técnica quirúrgica para cáncer de colon en estadios I a III, la evidencia reciente respalda la Escisión Mesocólica Completa (CME). En comparación con la resección convencional, ¿qué beneficio oncológico ha demostrado esta técnica en la supervivencia?",
+        options: ["Menor tasa de sangrado quirúrgico", "Recuperación de la motilidad intestinal", "Mayor supervivencia libre de enfermedad", "Ausencia de dehiscencia anastomótica"],
+        answer: 2,
+        justification: "Justificación: La erradicación total del drenaje linfático primario sin violar su fascia visceral reduce las recaídas. De acuerdo a la GPC de NCCN Cáncer de Colon, la técnica de ligadura vascular central con disección en planos embriológicos exactos recupera un mayor volumen ganglionar.<br><br>Perla ENARM: Un enfoque de CME en pacientes con cáncer de colon demostró una diferencia significativa, logrando una supervivencia libre de enfermedad a 4 años del 85.8% frente al 75.9% de la resección convencional.<br><br>Análisis de Distractores: A) La CME puede asociarse a mayor complejidad vascular y no reduce inherentemente el riesgo de sangrado en comparación con la cirugía convencional. B) La recuperación de la motilidad depende del abordaje anestésico y laparoscópico (ERAS), no de la disección vascular extendida central. D) La dehiscencia de anastomosis está mediada por perfusión e isquemia del muñón; la ligadura vascular alta en la CME puede, paradójicamente, estresar la perfusión marginal si no se realiza correctamente.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Surgery and Locoregional Therapies, COL-C 2 de 7 y MS-29."
+    },
+    {
+        id: 46,
+        question: "Tras realizar la resección local de un carcinoma escamoso superficialmente invasivo (SISCCA) de margen anal, ¿qué requerimiento patológico del espécimen es indispensable para omitir tratamientos adyuvantes agresivos?",
+        options: ["Distancia a esfínter > 5 mm", "Ausencia de gemación tumoral", "Invasión submucosa ausente", "Márgenes histológicamente negativos"],
+        answer: 3,
+        justification: "Justificación: La curación local del cáncer anal temprano requiere la extirpación tridimensional sin dejar enfermedad residual. De acuerdo a la GPC de NCCN Cáncer Anal, a diferencia del recto donde se precisan centímetros de seguridad, el canal anal permite márgenes estrechos pero microscópicamente estériles.<br><br>Perla ENARM: Para el SISCCA diagnosticado de forma incidental, si la lesión presenta márgenes histológicamente negativos en pacientes seleccionados, la escisión local aislada representa un tratamiento curativo adecuado.<br><br>Análisis de Distractores: A) La distancia anatómica al esfínter define la técnica (preservación funcional), pero no es un criterio de positividad o negatividad oncológica microscópica intra-espécimen. B) La gemación tumoral (tumor budding) es un factor pronóstico estandarizado en adenocarcinomas colorrectales, no en carcinomas escamosos anales. C) La invasión submucosa es intrínseca a un tumor maligno escamoso invasivo (incluso SISCCA tiene invasión tisular), lo determinante es que se extraiga por completo.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Anal Carcinoma, 2026, Principles of Surgery, ANAL-A 1 de 2."
+    },
+    {
+        id: 47,
+        question: "En el análisis histopatológico de un adenocarcinoma de colon, se reporta la formación de nidos de células tumorales aisladas en el frente de avance de la lesión (tumor budding). ¿Cuál es la cantidad celular máxima que conforma cada una de estas yemas o nidos?",
+        options: ["≤ 4 células", "≤ 10 células", "≤ 2 células", "≤ 8 células"],
+        answer: 0,
+        justification: "Justificación: La gemación refleja la pérdida de cohesión celular y el inicio de la diseminación metastásica biológica activa. De acuerdo a la GPC de NCCN Cáncer de Colon, la Conferencia de Consenso Internacional estandarizó esta definición para homogenizar la lectura de patólogos a nivel mundial.<br><br>Perla ENARM: Una yema tumoral (tumor bud) se define patológicamente como una célula individual o un cúmulo de ≤ 4 células identificadas en el borde de avance del carcinoma invasivo.<br><br>Análisis de Distractores: B) 10 o más yemas (no células) en un área específica clasifican a la gemación tumoral como de alto grado, pero no definen la conformación celular del nido individual. C) ≤ 2 células subestima la definición histológica internacional validada por consenso. D) ≤ 8 células representa un macrogrupo glandular desestructurado, perdiendo la característica morfológica microscópica de una transición epitelio-mesénquima individualizada (yema).",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Pathologic and Molecular Review, COL-B 6 de 9."
+    },
+    {
+        id: 48,
+        question: "Tras completar un esquema de quimiorradioterapia definitiva por un carcinoma del canal anal etapa III, ¿en qué momento exacto se debe realizar el tacto rectal clínico para evaluar de manera definitiva la remisión tumoral?",
+        options: ["4 a 6 semanas post-tratamiento", "2 a 4 semanas post-tratamiento", "8 a 12 semanas post-tratamiento", "6 a 8 meses post-tratamiento"],
+        answer: 2,
+        justification: "Justificación: La respuesta radiobiológica del tejido escamoso anal es retardada y continúa encogiendo el tumor semanas después del último día de radiación. De acuerdo a la GPC de NCCN Cáncer Anal, intervenir quirúrgicamente o declarar falla terapéutica antes de esta ventana condena al paciente a cirugías mutilantes innecesarias.<br><br>Perla ENARM: La reevaluación clínica mediante tacto rectal para clasificar la remisión de la enfermedad debe realizarse entre 8 y 12 semanas después de completar la quimiorradioterapia.<br><br>Análisis de Distractores: A) 4 a 6 semanas expone un tejido agudamente inflamado y ulcerado por radiotoxicidad que simula persistencia tumoral falsa. B) 2 a 4 semanas es el pico máximo de mucositis actínica, contraindicado clínicamente para escrutinio definitivo. D) Esperar 6 a 8 meses incurre en negligencia oncológica permitiendo el redesarrollo masivo de clones radiorresistentes y limitando la viabilidad de rescate quirúrgico.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Anal Carcinoma, 2026, Follow-up Therapy and Surveillance, ANAL-3."
+    },
+    {
+        id: 49,
+        question: "Durante una colonoscopia de tamizaje, se reseca un pólipo sésil. El patólogo lo reporta como fragmentado con diagnóstico de adenocarcinoma, imposibilitando la valoración de los márgenes. ¿Cuál es el tratamiento quirúrgico mandatorio subsecuente?",
+        options: ["Resección endoscópica de espesor total", "Mapeo y tatuaje del lecho ulceroso", "Colectomía con linfadenectomía regional", "Radioterapia pélvica de rescate"],
+        answer: 2,
+        justification: "Justificación: La pérdida de la integridad de la pieza imposibilita asegurar la negatividad oncológica profunda y condena al paciente a un alto riesgo de recurrencia ganglionar local inadvertida. De acuerdo a la GPC de NCCN Cáncer de Colon, la incertidumbre patológica se trata como enfermedad biológicamente activa en la pared remanente.<br><br>Perla ENARM: Ante un espécimen de pólipo maligno fragmentado o márgenes no valorables, está indicada la colectomía con extirpación en bloque de los ganglios linfáticos regionales.<br><br>Análisis de Distractores: A) Una segunda resección local o endoscópica en un tejido cicatricial no garantiza rescatar la submucosa profunda infiltrada ni aclara los ganglios mesentéricos. B) El mapeo topográfico con tinta china es el paso previo a la referencia quirúrgica, pero no constituye el tratamiento oncológico curativo. D) La radioterapia no es parte del arsenal primario de consolidación o rescate en pólipos de la cavidad abdominal (colon libre) por la alta toxicidad a asas intestinales sanas.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Pedunculated or Sessile Polyp, COL-1."
+    },
+    {
+        id: 50,
+        question: "Paciente diagnosticado con cáncer de colon distal sincrónico que se presenta al servicio de urgencias con datos de obstrucción intestinal inminente. El tumor es localmente avanzado. ¿Cuál es el abordaje intervencionista de elección que evita la cirugía de urgencia y permite una colectomía electiva posterior?",
+        options: ["Descompresión endoscópica con tubo de argón", "Ablación térmica por radiofrecuencia local", "Colocación de stent endoluminal", "Radioterapia paliativa de curso corto"],
+        answer: 2,
+        justification: "Justificación: La cirugía de urgencia en colon izquierdo oclidido tiene tasas prohibitivas de mortalidad, infección y requerimiento de ostomía definitiva. De acuerdo a la GPC de NCCN Cáncer de Colon, el puente hacia la cirugía optimiza las condiciones nutricionales y permite la estadificación completa antes de la resección definitiva.<br><br>Perla ENARM: Los stents endoluminales están reservados para lesiones distales que causan obstrucción y sirven como puente a la cirugía para permitir una descompresión proximal y una posterior colostomía/anastomosis electiva.<br><br>Análisis de Distractores: A) La recanalización con argón plasma es hemostática y vaporiza lesiones diminutas sangrantes, pero no canaliza tumores oclusivos circunferenciales voluminosos de urgencia. B) La radiofrecuencia se aplica en metástasis de órganos macizos (hígado/pulmón) y perforaría inmediatamente la pared colónica debilitada. D) La radioterapia requiere semanas para encoger el tumor primario localmente avanzado y no resuelve el cuadro catastrófico de oclusión inminente aguda.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Discussion (Surgery), MS-31."
+    },
+    {
+        id: 51,
+        question: "Durante el tratamiento neoadyuvante de un adenocarcinoma de recto inferior (cT3N1), el paciente logra una respuesta clínica completa (cCR). ¿Qué hallazgo específico en la Resonancia Magnética (secuencia de difusión) confirma este estado de remisión para permitir un protocolo no operatorio?",
+        options: ["Ausencia de restricción de la difusión", "Edema hiperintenso en el mesorrecto", "Realce nodular con gadolinio intramural", "Engrosamiento fibrótico mayor a 5 mm"],
+        answer: 0,
+        justification: "Justificación: La radiología funcional diferencia el tejido desmoplásico estéril del tumor viable residual de alta celularidad. De acuerdo a la GPC de NCCN Cáncer Rectal, la técnica de difusión evalúa el movimiento de las moléculas de agua, el cual se normaliza al destruirse las barreras tumorales densas.<br><br>Perla ENARM: En la resonancia magnética ponderada por difusión, una respuesta clínica completa se caracteriza por una cicatriz fibrótica lineal sin restricción de la difusión.<br><br>Análisis de Distractores: B) El edema persiste por radiotoxicidad, pero no es el parámetro funcional que descarta viabilidad neoplásica (la falta de restricción sí lo hace). C) El realce nodular denota neoangiogénesis persistente, sugiriendo respuesta incompleta o recidiva tumoral temprana. D) Un engrosamiento focal nodular o masa, aun si es fibrótico, requiere exclusión de viabilidad con difusión; la cicatriz ideal post-respuesta completa es aplanada y lineal.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Nonoperative Management, REC-H 1 de 2."
+    },
+    {
+        id: 52,
+        question: "Paciente con adenocarcinoma de recto etapa III (cT3N1M0). Se planifica Terapia Neoadyuvante Total (TNT). ¿Qué esquema de tratamiento sistémico de consolidación o inducción preoperatorio tiene indicación preferente con nivel de evidencia 1 para administrarse en este paciente?",
+        options: ["Capecitabina sola por 6 meses", "FOLFOX o CAPEOX", "Irinotecán y Panitumumab", "Pembrolizumab exclusivo"],
+        answer: 1,
+        justification: "Justificación: La erradicación agresiva de micrometástasis ocultas previene la falla distante temprana y promueve respuestas patológicas completas masivas en la pelvis. De acuerdo a la GPC de NCCN Cáncer Rectal, la quimioterapia intensa trasladada al preoperatorio optimiza el cumplimiento farmacológico del paciente antes del estrés quirúrgico.<br><br>Perla ENARM: La Terapia Neoadyuvante Total (TNT) para cáncer de recto etapa II/III incluye radioterapia y 12 a 16 semanas de quimioterapia preoperatoria con FOLFOX o CAPEOX.<br><br>Análisis de Distractores: A) La capecitabina sola actúa como radiosensibilizador durante la radioterapia pélvica, pero carece de la contundencia sistémica del oxaliplatino requerido en la fase de TNT para control de micrometástasis. C) El irinotecán y agentes biológicos anti-EGFR son exclusivos para rescate en enfermedad metastásica irresecable sistémica (Estadio IV). D) El pembrolizumab está indicado únicamente para tumores con inestabilidad microsatelital alta (dMMR/MSI-H), la cual no se establece en la premisa clínica estándar del enunciado.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Primary Treatment pMMR/MSS, REC-6."
+    },
+    {
+        id: 53,
+        question: "En pacientes con cáncer de colon o recto sometidos a extirpación curativa de metástasis hepáticas limitadas, se contempla la vigilancia intensiva postoperatoria. ¿Qué estudio de imagen no está recomendado rutinariamente durante este seguimiento para detectar recidivas?",
+        options: ["Tomografía de tórax", "Tomografía de abdomen", "Resonancia magnética pélvica", "PET-CT con fluorodesoxiglucosa"],
+        answer: 3,
+        justification: "Justificación: La tomografía por emisión de positrones genera un alto índice de falsos positivos posquirúrgicos y eleva drásticamente los costos sin impactar la sobrevida en pacientes asintomáticos. De acuerdo a la GPC de NCCN Cáncer de Colon, la imagen metabólica se reserva exclusivamente para resolver dilemas anatómicos detectados previamente.<br><br>Perla ENARM: En la vigilancia postratamiento de cáncer de colon y recto, el estudio con PET/CT no está indicado de forma rutinaria y solo debe usarse en caso de hallazgos equívocos en la tomografía convencional.<br><br>Análisis de Distractores: A) La TC de tórax es imperativa para rastrear siembras pulmonares tempranas. B) La TC de abdomen es el estándar de oro semestral para detectar recurrencia hepática u obstrucciones linfáticas periaórticas. C) La RM pélvica es estricta en el control de recaídas locales exclusivas de cáncer de recto, especialmente en vigilancia no operatoria.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Surveillance, COL-8."
+    },
+    {
+        id: 54,
+        question: "Paciente con diagnóstico de carcinoma escamoso de canal anal, etapa clínica T4N1. El oncólogo decide prescribir escalamiento de dosis selectiva de radioterapia modulada. ¿Cuál es el límite máximo de dosis considerado curativo y seguro para el tumor primario en esta etapa localmente avanzada?",
+        options: ["45.0 Gy", "59.4 Gy", "65.0 Gy", "50.4 Gy"],
+        answer: 1,
+        justification: "Justificación: Los tumores voluminosos y profundamente infiltrantes sufren hipoxia central que les confiere resistencia radiorbiológica. De acuerdo a la GPC de NCCN Cáncer Anal, concentrar la dosis mediante modulación de intensidad (IMRT) erradica el volumen primario sin necrosar irreparablemente el complejo elevador del ano o la vejiga urinaria.<br><br>Perla ENARM: Para pacientes con cáncer anal cT3/cT4, se recomienda considerar un escalamiento selectivo de dosis de 53.2 a 59.4 Gy en 28 a 33 fracciones para el tumor primario.<br><br>Análisis de Distractores: A) 45.0 Gy es la dosis profiláctica estandarizada para las cadenas ganglionares electivas microscópicas (riesgo bajo), pero subdosifica gravemente la masa tumoral principal. C) 65.0 Gy sobrepasa el límite de tolerancia de los órganos pélvicos adyacentes, precipitando fístulas rectovaginales, cistitis hemorrágicas irreversibles y necrosis cutánea perineal masiva. D) 50.4 Gy es la dosis radical curativa clásica de rescate histórico y para etapas tempranas T1/T2, pero insuficiente para la penetración en bloque T4.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Anal Carcinoma, 2026, Principles of Radiation Therapy, ANAL-C 3 de 6."
+    },
+    {
+        id: 55,
+        question: "En un paciente sometido a resección quirúrgica por un cáncer de recto distal localmente recurrente tras quimiorradiación, ¿qué margen circunferencial se considera \"amenazado o positivo\" debido a la retracción de la anatomía pélvica por el músculo elevador del ano?",
+        options: ["≤ 5 mm del músculo puborrectal", "≤ 1 mm del músculo elevador del ano", "≤ 2 mm de la fascia presacra", "≤ 10 mm del esfínter externo"],
+        answer: 1,
+        justification: "Justificación: En las lesiones ultra-bajas, el mesorrecto natural desaparece, obligando a que la frontera quirúrgica lateral se defina por los pilares musculares del piso pélvico. De acuerdo a la GPC de NCCN Cáncer Rectal, la penetración celular más allá de este milímetro de seguridad compromete toda la reparación curativa transabdominal.<br><br>Perla ENARM: Un margen circunferencial positivo en el tercio inferior se define como tumor a ≤ 1 mm de la fascia mesorrectal o a ≤ 1 mm del músculo elevador del ano.<br><br>Análisis de Distractores: A) ≤ 5 mm proporciona un margen de seguridad tisular formalmente negativo para la extirpación oncológica macroscópica. C) La fascia presacra determina el margen posterior de los tumores medios y superiores, no es el límite del piso pélvico inferior estricto. D) ≤ 10 mm del esfínter externo se rige por consideraciones de reconstrucción y anastomosis (para no amputar), pero no es la definición universal métrica de positividad patológica.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Pathologic and Molecular Review, REC-B 1 de 5."
+    },
+    {
+        id: 56,
+        question: "Ante un paciente con adenocarcinoma de colon asintomático con confirmación de metástasis pulmonares diseminadas irresecables (enfermedad Estadio IV). ¿Cuál es la indicación absoluta de las guías respecto a la resección quirúrgica paliativa primaria del colon afectado?",
+        options: ["Disminuir la carga tumoral sistémica", "Prevenir la formación de fístulas locales", "Mejorar la eficacia de la quimioterapia", "Riesgo inminente de obstrucción o perforación"],
+        answer: 3,
+        justification: "Justificación: Srometer a un paciente a laparotomía debilita el estado inmunológico y retrasa semanas el inicio del tratamiento farmacológico, permitiendo la progresión letal libre de la enfermedad pulmonar. De acuerdo a la GPC de NCCN Cáncer de Colon, la evidencia de múltiples metaanálisis desaconseja intervenir el tubo digestivo \"ciegamente\".<br><br>Perla ENARM: La resección paliativa rutinaria de un tumor primario sincrónico en presencia de enfermedad irresecable solo debe considerarse si el paciente tiene un riesgo inminente e inequívoco de obstrucción, sangrado significativo o perforación.<br><br>Análisis de Distractores: A) La disminución de masa tumoral macroscópica (debulking R2) en colon nunca ha demostrado prolongar la supervivencia biológica. B) La formación de fístulas es rara (5% de la evolución natural local) y no justifica la morbimortalidad universal sistemática del procedimiento resectivo profiláctico. C) La cicatrización de una gran anastomosis o lecho colónico compite catabólicamente con el paciente, entorpeciendo la tolerancia y empeorando la eficacia de la quimioterapia.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Discussion, MS-29 y MS-32."
+    },
+    {
+        id: 57,
+        question: "Un cirujano realiza una hepatectomía parcial combinada con ablación térmica para erradicar las metástasis hepáticas de un cáncer de colon sincrónico. ¿Cuál es el requisito fisiológico primordial y restrictivo para considerar lícita y curativa (R0) esta resección hepática?",
+        options: ["Ligadura portal preoperatoria bilateral", "Conservación de vesícula biliar intacta", "Mantenimiento de la reserva hepática adecuada", "Ausencia de mutaciones en el gen BRAF"],
+        answer: 2,
+        justification: "Justificación: La curación mecánica requiere un equilibrio crítico entre la agresividad del bisturí para alcanzar márgenes libres y la cantidad de parénquima residual necesario para evitar falla orgánica fulminante (insuficiencia hepática post-hepatectomía). De acuerdo a la GPC de NCCN Cáncer de Colon, esta métrica voluminométrica es sagrada en la evaluación oncoquirúrgica.<br><br>Perla ENARM: La resección completa de metástasis hepáticas debe ser factible por motivos anatómicos y es requisito absoluto el mantenimiento de una reserva y función hepática adecuada.<br><br>Análisis de Distractores: A) La embolización venosa portal (PVE) unilateral se usa condicionalmente para hipertrofiar el lóbulo remanente si este es muy pequeño, pero su aplicación bilateral provocaría necrosis difusa masiva. B) La conservación biliar es irrelevante; de hecho, la colecistectomía es rutinaria e inherente en resecciones de los segmentos hepáticos centrales (IV y V). D) Las mutaciones de BRAF empeoran el pronóstico sistémico y elevan las recidivas, pero en enfermedad oligometastásica técnica y anatómicamente resecable, no contraindican formalmente la citorreducción hepática.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Surgery and Locoregional Therapies, COL-C 4 de 7."
+    },
+    {
+        id: 58,
+        question: "Al realizar la vigilancia endoscópica posoperatoria de un paciente curado de cáncer de recto, se extrae una lesión intraluminal metacrónica. ¿Qué hallazgo histológico define a un adenoma avanzado que obliga a repetir la colonoscopia al año siguiente?",
+        options: ["Tamaño mayor a 1 cm", "Displasia de bajo grado", "Histología tubular simple", "Adenoma menor a 5 mm"],
+        answer: 0,
+        justification: "Justificación: La dinámica de crecimiento de la carcinogénesis metacrónica es biológicamente acelerada en un colon que ya demostró vulnerabilidad neoplásica. De acuerdo a la GPC de NCCN Cáncer Rectal, los endoscopistas dividen el riesgo de recaída según el componente arquitectónico de las vellosidades o el volumen de la displasia.<br><br>Perla ENARM: Si la colonoscopia de control encuentra un adenoma avanzado, definido como pólipo velloso, pólipo > 1 cm, o displasia de alto grado, la vigilancia endoscópica debe repetirse al año.<br><br>Análisis de Distractores: B) La displasia de bajo grado es de progresión muy lenta e indolente, permitiendo que el intervalo seguro de endoscopia de seguimiento sea de 3 años, no uno. C) La arquitectura histológica tubular es la de menor riesgo biológico de transición a adenocarcinoma (comparada con la estructura vellosa). D) Un adenoma de 5 mm constituye una lesión diminuta removida incidentalmente y su presencia dicta vigilancia rutinaria estándar de bajo riesgo.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Surveillance Following Operative Management, REC-10."
+    },
+    {
+        id: 59,
+        question: "Un paciente con antecedente de resección exitosa por carcinoma escamoso superficialmente invasivo (SISCCA) acude a su control semestral de seguimiento en consulta de oncocirugía anal. Según la evidencia, ¿qué hallazgo ginecológico y proctológico amerita un tamizaje cruzado intenso?",
+        options: ["Condilomatosis extensa benigna recurrente", "Lesión intraepitelial escamosa de alto grado", "Prolapso mucoso rectal crónico", "Fístula perianal compleja interesfintérica"],
+        answer: 1,
+        justification: "Justificación: La infección persistente por los genotipos carcinogénicos del Virus del Papiloma Humano (VPH 16 y 18) condiciona un efecto de campo en todo el canal mucocutáneo pélvico inferior, predisponiendo a neoplasias secuenciales in situ. De acuerdo a la GPC de NCCN Cáncer de Ano, el tratamiento primario no esteriliza la virología mucosa basal adyacente.<br><br>Perla ENARM: Estudios observacionales han reportado la detección de Lesiones Intraepiteliales Escamosas de Alto Grado (HSIL) en el 74% de los pacientes diagnosticados durante el seguimiento de una escisión local previa.<br><br>Análisis de Distractores: A) Los condilomas acuminados benignos son causados clásicamente por VPH tipos 6 y 11, cuyo fenotipo patológico primario es proliferativo no maligno, y carecen del nivel de alerta displásica requerida. C) El prolapso es un defecto puramente biomecánico-ligamentario sin vínculo oncogénico a la historia de un cáncer epidermoide resuelto. D) Una fístula criptoglandular es consecuencia infecciosa anatómica estéril oncológicamente (a menos que provenga directamente del tejido tumoral necrótico primario persistente).",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Anal Carcinoma, 2026, Principles of Surgery, ANAL-A 1 de 2."
+    },
+    {
+        id: 60,
+        question: "En pacientes con adenocarcinoma rectal clínico temprano sometidos con intención curativa a Disección Submucosa Endoscópica (ESD), el procedimiento se clasifica como oncológicamente curativo si, entre otras características, la invasión submucosa es <1000 µm y existe ausencia de:",
+        options: ["Displasia de bajo grado superficial", "Focos de inflamación linfocítica", "Márgenes laterales microscópicos menores a 5 mm", "Invasión linfovascular y gemación tumoral"],
+        answer: 3,
+        justification: "Justificación: La microinvasión de capilares y la desagregación epitelial en la submucosa rectal incrementan astronómicamente la migración de microtrombos celulares a los ganglios pélvicos pararectales que el endoscopista no extirpa. De acuerdo a la GPC de NCCN Cáncer Rectal, cuando estos rasgos están presentes (o hay un tumor pobremente diferenciado), la preservación orgánica del recto deja de ser oncológicamente segura.<br><br>Perla ENARM: La resección de lesiones rectales con ESD se considera curativa cuando presenta márgenes profundos y circunferenciales negativos, profundidad < 1000 µm, y ausencia absoluta de invasión linfovascular o gemación tumoral de alto grado.<br><br>Análisis de Distractores: A) La displasia que corona la lesión mucosa ya fue extraída en bloque por la técnica y no influye biológicamente en la curabilidad profunda. B) La inflamación peritumoral es una respuesta inmune del huésped local que puede reflejar pronóstico variable, pero no cancela la radicalidad de la escisión (a veces es favorable, como en MSI-H). C) Mientras el margen microscópico sea negativo (R0, tejido sano interpuesto, sin tumor en borde diatérmico), una distancia estricta de 5 mm laterales en mucosa no dictamina que la cirugía fracasó, la penetración vertical y vascular sí.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Surgery and Locoregional Therapies, REC-C 7 de 9."
+    },
+    {
+        id: 61,
+        question: "Para determinar la viabilidad de una resección quirúrgica o un protocolo de preservación de órgano, ¿cuál es la triada de estudios normada para realizar la reestadificación clínica de un paciente con cáncer de recto tras concluir la terapia neoadyuvante?",
+        options: ["Ultrasonido endorrectal, colonoscopia y antígeno carcinoembrionario", "Resonancia magnética pélvica, endoscopia y tacto rectal", "Tomografía por emisión de positrones, tacto rectal y biopsia escisional", "Tomografía axial computarizada pélvica, rectosigmoidoscopia y biopsia"],
+        answer: 1,
+        justification: "Justificación: La evaluación post-tratamiento exige una caracterización morfológica, mucosa y clínica directa del lecho tumoral residual. De acuerdo a la GPC de ESMO Cáncer Rectal, la biopsia sistemática no se aconseja por inflamación actínica, y la tomografía carece de resolución tisular pélvica.<br><br>Perla ENARM: La reestadificación antes de la cirugía o para determinar la preservación del órgano debe comprender resonancia magnética, endoscopia y examen digital del recto (tacto rectal).<br><br>Análisis de Distractores: A) El ultrasonido endorrectal es inferior a la resonancia magnética posterior a la radiación por la distorsión fibrótica y no está recomendado para reestadificar. C) El PET-CT tiene alta tasa de falsos positivos inflamatorios y la biopsia rutinaria no es obligatoria si los tres pilares son congruentes con respuesta completa. D) La tomografía pélvica subestadifica los planos mesorrectales y el estatus del margen circunferencial en comparación a la resonancia.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Restaging before surgery or organ preservation, Página 11."
+    },
+    {
+        id: 62,
+        question: "En un paciente que fue sometido a quimiorradioterapia preoperatoria por adenocarcinoma rectal, ¿a las cuántas semanas de haber concluido la radiación se concentra la mayor probabilidad cronológica de alcanzar una respuesta patológica completa (pCR)?",
+        options: ["A las 4 semanas", "A las 10 semanas", "A las 16 semanas", "A los 6 meses"],
+        answer: 1,
+        justification: "Justificación: El tejido neoplásico irradiado experimenta una regresión paulatina que continúa mucho después del cese de la radiación. De acuerdo a la GPC de NCCN Cáncer Rectal, operar prematuramente sacrifica el máximo encogimiento tumoral, mientras que retrasar excesivamente puede precipitar una fibrosis pélvica densa.<br><br>Perla ENARM: El mejor momento para alcanzar la respuesta patológica completa se reporta a las 10 semanas después de la quimiorradioterapia neoadyuvante, lapso en el que ocurre el 95% de los eventos de pCR.<br><br>Análisis de Distractores: A) A las 4 semanas el edema inflamatorio por mucositis y daño vascular es máximo, con persistencia celular tumoral que posteriormente morirá por apoptosis retardada. C) A las 16 semanas el tejido entra en una fase de fibrosis severa que incrementa la morbilidad quirúrgica en la disección de los planos avasculares. D) Esperar 6 meses sin evidencia clínica de respuesta completa (cCR) se considera una negligencia que expone al paciente a diseminación metastásica y progresión local inoperable.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Surgery, MS-12."
+    },
+    {
+        id: 63,
+        question: "En el abordaje quirúrgico del cáncer de recto distal que no logró preservación esfinteriana tras neoadyuvancia, se indica una Resección Abdominoperineal (APR). Para evitar recidivas, esta intervención debe incorporar obligatoriamente:",
+        options: ["Escisión Parcial del Mesorrecto", "Disección exclusiva submucosa", "Escisión Total del Mesorrecto", "Anastomosis coloanal ultrabaja"],
+        answer: 2,
+        justification: "Justificación: La amputación del piso pélvico no exime la erradicación del compartimento linfático primario. De acuerdo a la GPC de NCCN Cáncer Rectal, la técnica APR debe ser anatómica y circunferencial, logrando un aclaramiento pélvico idéntico al de una resección anterior pero con cierre perineal definitivo.<br><br>Perla ENARM: Los principios generales para la resección abdominoperineal (APR) incluyen la remoción en bloque del rectosigmoides, recto y ano, y la incorporación obligatoria de la Escisión Total del Mesorrecto (TME).<br><br>Análisis de Distractores: A) La escisión parcial (PME) deja un muñón de mesorrecto inferior el cual en este escenario estaría masivamente infiltrado por la enfermedad. B) La disección submucosa es un procedimiento endoscópico para pólipos o tumores T1 tempranos, no aplicable en una resección pélvica radical mutilante. D) La anastomosis coloanal es fisiológicamente imposible en una APR, ya que el esfínter es extirpado y el paciente requiere una colostomía terminal permanente.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Surgery and Locoregional Therapies, REC-C 2 de 9."
+    },
+    {
+        id: 64,
+        question: "En la cirugía por cáncer de colon, a diferencia del recto, gran parte de la víscera está peritonizada. ¿Cómo se define el margen circunferencial o radial en aquellos segmentos colónicos que están completamente envueltos por la cavidad peritoneal?",
+        options: ["La serosa visceral anterior", "El tejido adiposo epicólico", "El margen de resección mesentérico", "La fascia de Gerota posterior"],
+        answer: 2,
+        justification: "Justificación: La cavidad libre no opone barrera anatómica resecable para el patólogo en tumores colonicos. De acuerdo a la GPC de NCCN Cáncer de Colon, la única zona de fijación retroperitoneal en segmentos móviles es la lámina que transporta los vasos sanguíneos.<br><br>Perla ENARM: En segmentos colónicos completamente encajados por el peritoneo, el margen de resección mesentérico es el único margen circunferencial relevante para el patólogo.<br><br>Análisis de Distractores: A) La serosa visceral corresponde al peritoneo expuesto libre; si el tumor la perfora es T4a, pero la serosa per se no se clasifica como margen quirúrgico transversal. B) El tejido epicólico (apéndices epiploicos) viaja con la pared intestinal pero no delimita el borde radial profundo de extracción en bloque. D) La fascia de Gerota es el límite retroperitoneal para el abordaje posterior, aplicable solo a colon ascendente y descendente (no peritonizados circunferencialmente).",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Pathologic and Molecular Review, COL-B 2 de 9."
+    },
+    {
+        id: 65,
+        question: "Paciente con adenocarcinoma rectal que recibe Terapia Neoadyuvante Total (TNT) con radioterapia de curso corto (SCRT) seguida de quimioterapia. Si se contempla vigilancia no operatoria, ¿en qué momento se debe realizar la primera reestadificación clínica para buscar respuesta completa (cCR)?",
+        options: ["A las 4 semanas del inicio de la RT", "A las 12 semanas del inicio de la RT", "A las 8 semanas del inicio de la RT", "A las 24 semanas del inicio de la RT"],
+        answer: 1,
+        justification: "Justificación: El esquema de curso corto concentra la toxicidad radiorbiológica de forma rápida, pero el aclaramiento tumoral luminal toma tiempo. De acuerdo a la GPC de ESMO Cáncer Rectal, evaluar antes de este umbral genera falsas alarmas de persistencia tumoral y conduce a proctectomías precipitadas e innecesarias.<br><br>Perla ENARM: Para determinar la respuesta clínica completa hacia un abordaje de \"observar y esperar\", la reestadificación está recomendada a las 12 semanas después de iniciar la RT de curso corto (SCRT) o quimiorradioterapia clásica.<br><br>Análisis de Distractores: A) 4 semanas es el tiempo para reevaluar la persistencia aguda o toxicidad tisular si se planeaba cirugía temprana (en abordajes antiguos), no para buscar remisión completa histológica. C) 8 semanas es el tiempo aplicable para evaluar el fin de la quimioterapia de consolidación, pero el reloj general corre desde el impacto de la radiación. D) 24 semanas es el intervalo indicado para la reevaluación secundaria exclusiva de pacientes tratados con inmunoterapia anti-PD1 (dostarlimab) o como consolidación tardía en TNT, pero el primer corte es a las 12 semanas.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Recommendations, Página 21."
+    },
+    {
+        id: 66,
+        question: "En un paciente con cáncer de recto superior sin involucro de la reflexión peritoneal, se decide evitar la Escisión Total del Mesorrecto (TME). ¿Cuál es la principal justificación fisiopatológica para realizar una Escisión Parcial del Mesorrecto (PME) con un margen distal de 5 cm?",
+        options: ["Disminuye el riesgo de fístula estercorácea", "Acelera la recuperación del tránsito intestinal", "El drenaje linfático predominante es ascendente", "Evita el uso de radioterapia preoperatoria"],
+        answer: 2,
+        justification: "Justificación: La agresividad pélvica de la cirugía debe equilibrar la biología oncológica local. De acuerdo a la GPC de ESMO Cáncer Rectal, los tumores ubicados intraperitonealmente rara vez generan metástasis retrógradas (descendentes) en la grasa mesorrectal inferior que se aloja en el piso pélvico.<br><br>Perla ENARM: La PME es oncológicamente suficiente para cáncer de recto superior porque la disección linfática preserva el mesorrecto distal sano, reduciendo morbilidad innecesaria, manteniendo un margen oncológico mesorrectal distal de ≥ 5 cm.<br><br>Análisis de Distractores: A) Las tasas de fístula o dehiscencia anastomótica dependen de la tensión y la isquemia del muñón colónico, no exclusivamente de la PME. B) El tránsito intestinal depende de la manipulación sistémica, del plexo mientérico y la técnica ERAS, no de la preservación de grasa mesorrectal distal estéril. D) La radioterapia preoperatoria se determina por estadios T3/T4 o márgenes amenazados, no por la técnica quirúrgica descendente seleccionada intraoperatoriamente.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Management of localised disease, Página 3."
+    },
+    {
+        id: 67,
+        question: "En una resección anterior baja por un tumor del recto medio, el cirujano evalúa el tejido intestinal sano distal al tumor. ¿Qué longitud de margen distal intramural (pared intestinal) es oncológicamente aceptable si el paciente recibió quimiorradioterapia preoperatoria?",
+        options: ["≥ 5 cm", "≥ 2 cm", "< 1 cm", "≥ 3 cm"],
+        answer: 2,
+        justification: "Justificación: La inducción de muerte celular por la radioterapia esteriliza la pared intestinal microscópicamente y permite anastomosis pélvicas más profundas sin sacrificar la curabilidad. De acuerdo a la GPC de ESMO Cáncer Rectal, la antigua regla de los grandes márgenes de pared ha sido sustituida por cortes más precisos orientados a salvaguardar la continencia.<br><br>Perla ENARM: En ausencia de tratamiento preoperatorio se recomienda un margen de resección distal ≥ 1 cm; después de la terapia neoadyuvante, un margen de resección distal < 1 cm puede considerarse aceptable.<br><br>Análisis de Distractores: A) ≥ 5 cm es la exigencia para el margen mesorrectal distal (la grasa perirrectal extirpada por debajo del tumor), no para la pared intestinal. B) ≥ 2 cm era la regla histórica en tumores no irradiados de recto bajo, pero es excesivamente punitiva post-radiación. D) ≥ 3 cm obligaría casi sistemáticamente a realizar resecciones abdominoperineales en pacientes que podrían haber salvado el esfínter.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Recommendations, Página 21 y 22."
+    },
+    {
+        id: 68,
+        question: "Tras la resección local de un carcinoma del margen anal (perianal) T1N0, el reporte patológico confirma márgenes inadecuados. Si la re-escisión anatómica fallara o estuviese contraindicada, ¿qué abordaje oncológico alternativo establece la evidencia para esterilizar el lecho tumoral?",
+        options: ["Quimioterapia exclusiva con FOLFOX", "Radioterapia pélvica más quimioterapia concurrente", "Resección abdominoperineal electiva", "Braquiterapia de alta tasa de dosis aislada"],
+        answer: 1,
+        justification: "Justificación: La falla en el margen local del carcinoma perianal compromete la supervivencia pero no obliga a una resección mutilante de primera intención. De acuerdo a la GPC de NCCN Cáncer de Ano, el tejido microscópico residual escamoso responde predeciblemente al esquema radiotóxico sensibilizado.<br><br>Perla ENARM: Si los márgenes de una escisión local perianal son inadecuados, la re-escisión es preferida; como alternativa se puede considerar radioterapia local con fluorouracilo/mitomicina o capecitabina/mitomicina.<br><br>Análisis de Distractores: A) La quimioterapia sistémica sola (FOLFOX es para adenocarcinomas, no carcinomas escamosos) no asegura el control espacial local en la zona de disección. C) La resección abdominoperineal (APR) es una cirugía de salvamento para recurrencia o persistencia tras quimiorradiación radical, no es una alternativa inmediata ante un margen microscópico positivo local. D) La braquiterapia puede utilizarse como refuerzo (boost), pero el tratamiento estándar de rescate primario dictamina radioterapia externa acompañada obligatoriamente de agentes quimioterapéuticos radiosensibilizadores.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Anal Carcinoma, 2026, Clinical Presentation, ANAL-1."
+    },
+    {
+        id: 69,
+        question: "Durante la reestadificación a las 12 semanas de un paciente que recibió quimiorradiación por cáncer de recto, se identifica un nódulo mucoso irregular menor de 5 mm y leve eritema, congruente con una respuesta \"casi completa\" (near cCR). Si se desea preservar el órgano, ¿en qué intervalo de tiempo se indica la siguiente evaluación clínica?",
+        options: ["Después de 16 a 20 semanas", "Después de 4 a 8 semanas adicionales", "Después de 12 a 16 semanas adicionales", "Al año posterior a la evaluación"],
+        answer: 1,
+        justification: "Justificación: La consolidación tisular tardía es común y puede convertir un lecho en aparente recaída leve en una escara fibrótica verdadera. De acuerdo a la GPC de ESMO Cáncer Rectal, no se debe intervenir agresivamente un tejido en este estado de transición sin darle una oportunidad fisiológica breve para su cicatrización total.<br><br>Perla ENARM: En pacientes con respuesta clínica casi completa (near cCR) documentada a las 12 semanas, se recomienda una reestadificación adicional después de 4 a 8 semanas para consolidar el protocolo de \"observar y esperar\".<br><br>Análisis de Distractores: A) Retrasar la evaluación de 16 a 20 semanas en un tumor posiblemente activo aumenta el riesgo de crecimiento incontrolable en el intersticio de vigilancia. C) 12 a 16 semanas adicionales se considera un tiempo ciego inaceptable ante un lecho sospechoso nodular que requiere diferenciación temprana entre cicatriz o recidiva aguda. D) Una evaluación al año sería negligencia oncológica, propiciando el desarrollo irrestricto de enfermedad locorregional mortal o escape sistémico ganglionar.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Recommendations, Página 21."
+    },
+    {
+        id: 70,
+        question: "En la patología de un paciente con cáncer de recto que fue catalogado de \"alto riesgo\" clínico (cT4b) y programado para cirugía, la GPC actual indica que la utilización de radioterapia de curso corto (SCRT) frente a la quimiorradioterapia estándar se asocia con un mayor riesgo de:",
+        options: ["Recurrencia locorregional a 5 años", "Metástasis pulmonares aisladas", "Muerte secundaria a toxicidad hematológica", "Obstrucción intestinal aguda postoperatoria"],
+        answer: 0,
+        justification: "Justificación: Las modificaciones recientes en las guías NCCN están dictadas por el seguimiento maduro del estudio RAPIDO. De acuerdo a la GPC de NCCN Cáncer Rectal, los esquemas ultra fraccionados en grandes masas neoplásicas pélvicas fallan en esterilizar adecuadamente el tejido perirrectal, incrementando las recaídas pélvicas laterales y pre-sacras inoperables.<br><br>Perla ENARM: Para el cáncer de recto de alto riesgo (cT4, ganglios laterales o invasión a fascia), el seguimiento a 5 años indica una tasa estadísticamente mayor de recurrencia locorregional con radioterapia de curso corto (SCRT) en comparación con el esquema largo estándar.<br><br>Análisis de Distractores: B) La incidencia de metástasis a distancia es dictada principalmente por la biología del tumor inicial (GEM, estatus RAS/BRAF), y los ensayos no demostraron que SCRT las empeorara en comparación a quimiorradiación. C) La SCRT acorta los días de terapia pero la toxicidad sistémica letal no difiere abruptamente del fraccionamiento largo. D) Las oclusiones por adherencias (bridas) están ligadas a la proctectomía en sí, sin evidencia de que la SCRT genere bridas quirúrgicas agudas superiores a la CRT larga.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Staging and Treatment, REC-3 y REC-6."
+    },
+    {
+        id: 71,
+        question: "Para que la Escisión Total del Mesorrecto (TME) demuestre su máximo beneficio oncológico durante una resección anterior baja, la técnica quirúrgica debe realizarse mediante disección cortante a través de un plano avascular específico para no fragmentar el \"paquete tumoral\". ¿Qué estructura anatómica rige este plano y debe preservarse intacta envolviendo la grasa mesorrectal?",
+        options: ["Fascia de Waldeyer", "Peritoneo parietal posterior", "Fascia mesorrectal (fascia propia)", "Músculo elevador del ano"],
+        answer: 2,
+        justification: "Justificación: La rotura mecánica de esta membrana disemina nidos glandulares latentes por toda la pelvis ósea. De acuerdo a la GPC de NCCN Cáncer Rectal, el patólogo califica la calidad de la TME basándose exclusivamente en la integridad de la fascia, siendo una TME completa aquella con fascia prístina sin desgarros.<br><br>Perla ENARM: La TME requiere la remoción en bloque del mesorrecto, las estructuras linfáticas y la fascia mesorrectal envolvente, manteniendo este plano intacto mediante disección cortante para preservar los nervios autonómicos.<br><br>Análisis de Distractores: A) La fascia de Waldeyer es una condensación fibrosa inferior presacra (fascia rectosacra), no la envoltura total mesentérica rectoscópica circunferencial. B) El peritoneo parietal tapiza la pared abdominal posterior superior y lateral; el recto extraperitoneal carece de peritoneo limitante inferiormente. D) Los músculos elevadores actúan como el límite del tercio inferior y determinan las resecciones extra-elevadoras en un APR, pero no envuelven al mesorrecto en el recto medio superior.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Principles of Pathologic and Molecular Review, REC-B 1 y 2."
+    },
+    {
+        id: 72,
+        question: "Se analiza la resonancia magnética pélvica de un paciente con cáncer rectal recién diagnosticado. El radiólogo reporta la presencia de invasión vascular extramural (EMVI+). ¿Qué implicación terapéutica fundamental tiene este hallazgo para el abordaje sistémico antes de cualquier intervención quirúrgica?",
+        options: ["Se clasifica como enfermedad sistémica metastásica y no se opera", "Se clasifica como criterio de alto riesgo que indica Terapia Neoadyuvante Total", "Condiciona una resección abdominoperineal primaria obligatoria", "Obliga a prescribir bevacizumab más quimioterapia de inducción"],
+        answer: 1,
+        justification: "Justificación: La penetración celular en la macro-vascularización submucosa profunda es un indicador feroz de micro-metástasis silentes y falla pélvica inminente. De acuerdo a la GPC de ESMO Cáncer Rectal, la presencia de invasión vascular extramural detectada por RM exige intensificar el control local y sistémico temprano, relegando las opciones conservadoras.<br><br>Perla ENARM: Los criterios de alto riesgo reportados por resonancia magnética incluyen tumor cT4, fascia mesorrectal involucrada (MRF+) e invasión vascular extramural positiva (EMVI+), todos indicaciones estrictas para Terapia Neoadyuvante Total (TNT).<br><br>Análisis de Distractores: A) La EMVI indica alta probabilidad biológica de micrometástasis, pero en ausencia de lesiones macroscópicas M1 en tomografía, sigue considerándose enfermedad locorregional curable. C) La técnica de resección pélvica (RAB o APR) se decide por la distancia al esfínter y la preservación funcional inferior, no por el tropismo vascular mesorrectal del tumor. D) Los agentes biológicos angiogénicos (bevacizumab) no están indicados en el escenario neoadyuvante de la enfermedad localizada etapificada como etapa II-III pélvica, debido al riesgo de complicaciones sin mejora en la sobrevida libre de enfermedad.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Staging and Risk Assessment, Página 4 y 11."
+    },
+    {
+        id: 73,
+        question: "Paciente con adenocarcinoma de recto con deficiencia en la reparación de desajustes (dMMR), en protocolo de inmunoterapia neoadyuvante con dostarlimab. Tras el inicio del medicamento, la primera reestadificación se programa a las 12 semanas. ¿En qué momento se debe realizar la segunda reestadificación clínica de escrutinio para consolidar la estrategia \"observar y esperar\"?",
+        options: ["A las 16 semanas del inicio", "A las 24 semanas del inicio", "A las 48 semanas del inicio", "A las 36 semanas del inicio"],
+        answer: 1,
+        justification: "Justificación: La erradicación mediada por el rescate linfocitario citotóxico exhibe un patrón de contracción tumoral que, de ser exitoso, borra toda la neoplasia macroscópica en un curso semestral estricto. De acuerdo a la GPC de ESMO Cáncer Rectal, la calendarización para esta etiología molecular es imperativa para evitar cirugías ante respuestas inmunes pseudoprogresivas o tardías.<br><br>Perla ENARM: En pacientes con tumores dMMR o MSI-H tratados con inmunoterapia, se recomiendan reestadificaciones seriadas a las 12 y a las 24 semanas tras el inicio del tratamiento con dostarlimab.<br><br>Análisis de Distractores: A) 16 semanas es el margen superior de respuesta a quimiorradiación clásica estándar, no para el umbral largo validado en estudios como OPRA o dostarlimab dMMR. C) Retrasar la valoración crítica hasta las 48 semanas perdería la ventana de rescate quirúrgico en caso de fallo primario de la inmunoterapia o pseudoresistencia no identificada. D) 36 semanas es el tiempo de valoración post-terapia de consolidación (TNT) para tumores pMMR/MSS según protocolos alternativos, no para esquemas exclusivos de inmunoterapia anti-PD1.",
+        source: "ESMO Clinical Practice Guideline on localised rectal cancer, 2025, Recommendations, Página 21."
+    },
+    {
+        id: 74,
+        question: "Dentro del ensayo clínico multicéntrico (PROSPECT), ¿qué porcentaje mínimo de reducción tumoral evaluada por sigmoidoscopia post-quimioterapia (tras 12 a 16 semanas) es requerido para omitir por completo la quimiorradioterapia pélvica previa a la cirugía transabdominal en cáncer rectal de riesgo intermedio?",
+        options: ["> 10%", "> 50%", "> 20%", "> 30%"],
+        answer: 2,
+        justification: "Justificación: La desescalada del tratamiento oncológico permite eximir de secuelas actínicas a los pacientes con tumores quimiosensibles. De acuerdo a la GPC de NCCN Cáncer Rectal, si el tumor reduce significativamente su diámetro y profundidad visual, su biología permitirá una resección pélvica segura sin la esterilización previa del haz de radiación.<br><br>Perla ENARM: Según el esquema PROSPECT, si tras 12 a 16 semanas de quimioterapia neoadyuvante la reducción tumoral es > 20%, se puede omitir la quimiorradioterapia y proceder directamente a la resección transabdominal.<br><br>Análisis de Distractores: A) > 10% se considera una respuesta biológicamente pobre (minor response) y estipula la necesidad de radioterapia de consolidación obligatoria antes de operar. B) > 50% es una reducción excelente que orienta hacia la respuesta clínica casi completa, pero el corte oficial que legitima la seguridad y factibilidad quirúrgica según el ensayo no exige tal profundidad sistémica. D) > 30% es un valor utilizado en criterios RECIST para lesiones sistémicas metastásicas, no es la métrica local volumétrica adoptada para la radiación de rescate en el estudio mencionado.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Rectal Cancer, 2026, Primary Treatment pMMR/MSS, REC-6 y MS-31."
+    },
+    {
+        id: 75,
+        question: "Durante el abordaje oncológico de una lesión polipoide resecada endoscópicamente que reporta adenocarcinoma colónico invasivo fragmentado con margen no valorable, la GPC recomienda obligatoriamente una colectomía formal. Para garantizar que esta colectomía incluya una linfadenectomía completa, ¿cuál es el paso vascular primario normado por la técnica quirúrgica estándar?",
+        options: ["Ligadura distal selectiva de arterias pericólicas", "Preservación estricta de la vena mesentérica inferior", "Resección extensa de la flexura esplénica contigua", "Ligadura proximal del pedículo vascular asociado"],
+        answer: 3,
+        justification: "Justificación: El flujo de las células neoplásicas en la vía mesentérica avanza hacia la raíz vascular. De acuerdo a la GPC de NCCN Cáncer de Colon, la ligadura epicólica (distal superficial) deja todo el cono ganglionar apical potencialmente infectado dentro del mesenterio del paciente, resultando en un procedimiento R2 funcional.<br><br>Perla ENARM: La técnica quirúrgica oncológica en colon requiere la ligadura proximal del pedículo vascular asociado con la remoción en bloque del segmento colónico y su mesenterio.<br><br>Análisis de Distractores: A) La ligadura distal omite la barrera ganglionar principal del mesenterio, incurriendo en disección incompleta. B) La vena debe cortarse a la par de la arteria en el pedículo originario para asegurar vaciamiento, no se preserva rutinariamente la vena si drena el lecho del cáncer. C) La resección extensa de un órgano o flexura vecina depende exclusivamente si el tumor asienta allí y la invade, no es un paso vascular sistemático curativo general para cualquier pólipo colónico.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Surgery and Locoregional Therapies, COL-C 1 de 7."
+    },
+    {
+        id: 76,
+        question: "En el protocolo de vigilancia postquirúrgica de un paciente de 60 años con cáncer de colon izquierdo etapa III, la colonoscopia al primer año es normal sin adenomas. ¿Cuál es el siguiente intervalo temporal indicado por la GPC para repetir la colonoscopia asumiendo ausencia de síntomas?",
+        options: ["A los 3 años y luego cada 5 años", "Al siguiente año y luego cada 5 años", "Cada 5 años de forma protocolizada", "A los 2 años y luego anualmente"],
+        answer: 0,
+        justification: "Justificación: El escrutinio de cáncer metacrónico en el remanente intestinal requiere vigilar la cascada adenoma-carcinoma, la cual no cursa de la noche a la mañana. De acuerdo a la GPC de NCCN Cáncer de Colon, adelantar innecesariamente los estudios somete al paciente a riesgos perforativos iatrogénicos sin beneficio demostrado, siempre y cuando el lecho original estuviese limpio.<br><br>Perla ENARM: La vigilancia colonoscópica post-resección se realiza al 1 año; si no existe un adenoma avanzado, debe repetirse a los 3 años, y posteriormente cada 5 años.<br><br>Análisis de Distractores: B) Repetir al siguiente año es la indicación estricta obligatoria si durante la endoscopia del primer año se hubiese encontrado un adenoma avanzado (tamaño > 1 cm o displasia alta). C) Cada 5 años es el intervalo final de mantenimiento asintomático tardío, pero debe pasar primero el control de puente a los 3 años tras la negatividad inicial. D) A los 2 años subestima el intervalo seguro, careciendo de validez endoscópica basada en evidencia para pacientes no sindrómicos puros.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Surveillance, COL-8."
+    },
+    {
+        id: 77,
+        question: "Paciente con adenocarcinoma metastásico de colon y perfil molecular pMMR/MSS mutado en la vía KRAS. Se planea tratamiento inicial en primera línea y se consideran dianas biológicas. ¿Qué fármaco tiene contraindicación probada al demostrar toxicidad severa sin beneficio oncológico cuando se combina simultáneamente con Bevacizumab?",
+        options: ["Capecitabina oral", "Irinotecán de infusión continua", "Cetuximab o Panitumumab", "Atezolizumab o Dostarlimab"],
+        answer: 2,
+        justification: "Justificación: La saturación de vías inhibitorias no necesariamente aumenta la apoptosis, en muchas ocasiones colapsa la fisiología orgánica. De acuerdo a la GPC de NCCN Cáncer de Colon, la evidencia proscribe la combinación de bloqueadores de crecimiento epidérmico con inhibidores vasculares. Además, las mutaciones de KRAS anulan el beneficio de los anti-EGFR.<br><br>Perla ENARM: El uso concurrente de un agente anti-EGFR (cetuximab o panitumumab) con un agente anti-VEGF (bevacizumab) está contraindicado por el aumento de toxicidad y disminución de la supervivencia libre de progresión.<br><br>Análisis de Distractores: A) La capecitabina actúa en sinergia universal e inocua con el bevacizumab, conformando regímenes estandarizados como CAPEOX-Bev. B) El irinotecán (en esquema FOLFIRI) combinado con bevacizumab es uno de los regímenes de primera línea más validados y efectivos históricamente (no está contraindicado). D) El bloqueo PD-1 es estéril en genotipos pMMR/MSS (inestabilidad estable), pero la combinación explícitamente tóxica advertida referida a letalidad es la dupla EGFR/VEGF.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Systemic Therapy, COL-D 4 de 17 y MS-28."
+    },
+    {
+        id: 78,
+        question: "En pacientes con diagnóstico simultáneo de cáncer de colon y metástasis hepáticas limitadas, cuya reserva de hígado no permite un abordaje resectivo hepático completo (insuficiencia de volumen de remanente). Previo al uso de quimioterapia para conversión, ¿qué procedimiento intervencionista puede realizarse para hipertrofiar y expandir el futuro remanente hepático y permitir la resección?",
+        options: ["Embolización preoperatoria de la vena portal", "Quimioembolización transarterial con doxorrubicina", "Ligadura quirúrgica de la arteria hepática", "Ablación térmica por microondas secuencial"],
+        answer: 0,
+        justification: "Justificación: La manipulación del flujo sanguíneo hepático redirige factores hepatotróficos hacia el segmento libre de enfermedad, induciendo una hiperplasia compensatoria rápida prequirúrgica. De acuerdo a la GPC de NCCN Cáncer de Colon, esta maniobra radiológica permite alcanzar el umbral de seguridad de masa funcional para resecciones mayores de 3 segmentos.<br><br>Perla ENARM: Cuando la enfermedad metastásica hepática no es óptimamente resecable basado en un volumen remanente insuficiente, la embolización preoperatoria de la vena portal debe considerarse para expandir el futuro remanente hepático.<br><br>Análisis de Distractores: B) La quimioembolización es paliativa para reducción tumoral local, su objetivo biológico produce isquemia e inflamación en la totalidad de la cúpula, dificultando el rescate resectivo seguro o la hipertrofia. C) La ligadura de la arteria hepática produciría necrosis fulminante o isquemia masiva biliar del parénquima funcional que se planea salvar, y ya no se usa oncológicamente por vía quirúrgica oclusiva. D) La ablación por microondas erradica nódulos menores a 3 cm destruyéndolos, pero no hipertrofia el lóbulo hepático restante per se, y no soluciona la falta de masa de filtración hepática postoperatoria de origen de un lóbulo sano residual pequeño.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Surgery and Locoregional Therapies, COL-C 4 de 7 y MS-30."
+    },
+    {
+        id: 79,
+        question: "En la vigilancia postquirúrgica de un paciente que se curó de metástasis hepáticas por cáncer colorrectal, ¿en qué circunstancia clínica específica y excluyente recomienda la GPC utilizar la Tomografía por Emisión de Positrones (FDG-PET/CT)?",
+        options: ["Ante un hallazgo equívoco detectado previamente en tomografía computada", "Como tamizaje anual rutinario durante los primeros 3 años postquirúrgicos", "De forma preoperatoria para la reversión de ileostomía", "De forma semestral junto al monitoreo del Antígeno Carcinoembrionario"],
+        answer: 0,
+        justification: "Justificación: La imagen metabólica provee altas tasas de falsos positivos en intestinos operados inflamados, induciendo ansiedad severa y biopsias innecesarias si se utiliza indiscriminadamente. De acuerdo a la GPC de NCCN Cáncer de Colon, las tomografías seccionales morfológicas son la piedra angular.<br><br>Perla ENARM: El estudio FDG-PET/CT no está indicado rutinariamente en la vigilancia del cáncer colorrectal; su uso se restringe a evaluar hallazgos equívocos en una tomografía computada contrastada o ante una elevación seriada del CEA sin correlato anatómico visible.<br><br>Análisis de Distractores: B) El tamizaje anual se hace con Tomografía Axial Computada de tórax, abdomen y pelvis con contraste, no con medicina nuclear metabólica por los altos costos y dosis de radiación. C) La reversión de ostomías sólo amerita confirmación de la integridad anastomótica distal con contraste hidrosoluble local o endoscopia ligera, no estudios de medicina nuclear sistémicos. D) El PET-CT semestral no prolonga la supervivencia de manera estadísticamente significativa en comparación con el escrutinio tomográfico estándar o marcadores humorales.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Colon Cancer, 2026, Principles of Imaging, COL-A 2 de 5."
+    },
+    {
+        id: 80,
+        question: "Paciente de 45 años con carcinoma espinocelular temprano del margen anal (perianal). Clínicamente se documenta que la lesión no involucra la anatomía del esfínter. El tratamiento primario ideal y oncológicamente adecuado en este escenario es:",
+        options: ["Quimiorradioterapia con régimen de Nigro modificado", "Escisión local quirúrgica con margen de 1 cm", "Resección abdominoperineal electiva", "Braquiterapia de baja tasa de dosis intralesional"],
+        answer: 1,
+        justification: "Justificación: La localización cutánea externa no mucosa confiere una diseminación linfática limitada y un alto potencial de exéresis simple antes de diseminarse. De acuerdo a la GPC de NCCN Cáncer de Ano, abordar con quimiorradiación masas superficiales cutáneas bien delimitadas aumenta la atrofia del piso pélvico innecesariamente.<br><br>Perla ENARM: Las lesiones perianales correspondientes al margen anal etapificadas tempranamente (T1N0 bien o moderadamente diferenciadas), que no involucran los músculos del esfínter, deben tratarse adecuadamente con escisión local y márgenes sanos de 1 cm.<br><br>Análisis de Distractores: A) El régimen de Nigro modificado es el estándar curativo absoluto para tumores del canal anal interno y lesiones perianales T2 avanzadas o infiltrantes, pero es sobretratamiento en una lesión resecable superficial sin riesgo esfinteriano. C) La resección abdominoperineal en primera línea de enfermedad perianal representa una mutilación proscrita por las guías en el mundo moderno. D) La braquiterapia intralesional aislada presenta alta morbilidad mucosa, quemaduras cutáneas locales severas y no ha superado a la exéresis en tumores cutáneos externos menores.",
+        source: "NCCN Clinical Practice Guidelines in Oncology for Anal Carcinoma, 2026, Clinical Presentation, ANAL-1."
+    }
+
+
+        ];
+
+        // ==========================================
+        // ==========================================
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('CarectoTxLastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('CarectoTxProgress');
+                localStorage.removeItem('CarectoTxLastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-pink-500 shadow-md z-10 border-pink-500 dark:border-pink-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-pink-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-rose-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! UMAE 25 - 2026" : "R4 - UMAE 25 - 2026";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "UMAE 25 - R4";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus las respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="BS06308GYOE.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-pink-100 dark:border-pink-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-pink-50 has-[:checked]:border-pink-400 dark:has-[:checked]:bg-pink-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-pink-600 focus:ring-pink-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-600 dark:hover:bg-pink-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('CarectoTxProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('CarectoTxLastQId', currentQuestionId);
+                else localStorage.removeItem('CarectoTxLastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('CarectoTxProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB26PT8kuB-0fxyUYgGk51yC1rAsW0dYj0",
+        authDomain: "enarm-lite.firebaseapp.com",
+        projectId: "enarm-lite",
+        storageBucket: "enarm-lite.firebasestorage.app",
+        messagingSenderId: "767032952477",
+        appId: "1:767032952477:web:84347320ed3d376f7e7674",
+        measurementId: "G-PVR3RBVNSV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    //document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "usuarios_autorizados", user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            
+            if(userDocSnap.exists()) {
+                document.body.style.opacity = '1';
+            } else {
+                //window.location.href = "index.html"; 
+            }
+        } else {
+            //window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>
