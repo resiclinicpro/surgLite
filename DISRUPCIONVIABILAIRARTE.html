@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">UMAE</span>
+                    <span class="logo-Lite text-sm">25<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // =========================================================
+        const questionsData = [
+    {
+        id: 1,
+        question: "¿Cuál es el objetivo principal al realizar una reparación quirúrgica biliar definitiva?",
+        options: ["Drenaje percutáneo prolongado", "Reconstrucción vascular inmediata", "Anastomosis sana libre de tensión", "Anastomosis con tensión moderada"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la restitución del flujo exige un entorno adecuado para asegurar la viabilidad del injerto y evitar fracasos anatómicos.<br><br>Perla Quirúrgica: La reparación quirúrgica tiene como objetivo lograr una anastomosis sana y libre de tensión entre un tejido biliar vascularizado y flexible y un segmento del yeyuno.<br><br>Análisis de Distractores: El drenaje percutáneo es una medida temporal o puente, no el objetivo definitivo. La reconstrucción vascular solo aplica en casos muy específicos de isquemia arterial documentada. Una anastomosis con tensión es el principal factor de riesgo para dehiscencia y estenosis posoperatoria, por lo que debe evitarse.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Introduction, p. 1542."
+    },
+    {
+        id: 2,
+        question: "¿Cuál es la tasa de mortalidad global reportada para la anastomosis bilioentérica asociada a una lesión de la vía biliar?",
+        options: ["0.1% a 1.5%", "10% a 15%", "15% a 20%", "1.7% a 9%"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, aunque la supervivencia ha mejorado en centros especializados, las intervenciones mayores en una vía biliar inflamada conllevan riesgos sistémicos intrínsecos.<br><br>Perla Quirúrgica: La mortalidad global de la anastomosis bilioentérica asociada a lesión de la vía biliar varía entre 1.7% y 9%.<br><br>Análisis de Distractores: Las opciones A, B y C son estimaciones incorrectas que subestiman o sobrestiman el riesgo real de un procedimiento complejo en pacientes que frecuentemente presentan sepsis o colangitis previa.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Introduction, p. 1542."
+    },
+    {
+        id: 3,
+        question: "¿Qué hallazgos clínicos y de laboratorio definen un resultado Grado C según los criterios de McDonald?",
+        options: ["Asintomático con función hepática normal", "Síntomas leves con pruebas alteradas", "Colangitis con dolor y fiebre", "Colangitis que requiere intervención"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la estratificación del éxito a largo plazo se clasifica según la recurrencia de síntomas biliares y alteraciones enzimáticas.<br><br>Perla Quirúrgica: Los resultados Grado C en los criterios de McDonald se constituyen por colangitis con dolor, fiebre y alteración en las pruebas de función hepática.<br><br>Análisis de Distractores: La opción A corresponde al Grado A (excelente). La opción B corresponde al Grado B (bueno). La opción D corresponde al Grado D (pobre), el cual implica falla terapéutica inminente que obliga a instrumentar nuevamente la vía biliar.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 4,
+        question: "¿Cuál fue la incidencia de estenosis biliar recurrente posterior a una hepaticoyeyunostomía definitiva en esta cohorte?",
+        options: ["6.7%", "1.9%", "16%", "28%"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la formación de estenosis tardías es la complicación a largo plazo más temida y depende directamente de la técnica y el terreno isquémico.<br><br>Perla Quirúrgica: La incidencia de estenosis biliar recurrente después de una hepaticoyeyunostomía quirúrgica definitiva fue del 6.7%.<br><br>Análisis de Distractores: 1.9% corresponde a los resultados Grado C. 16% fue la incidencia de fuga biliar temprana. 28% fue el total global de pacientes que presentaron algún tipo de complicación a corto plazo.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Abstract, p. 1542."
+    },
+    {
+        id: 5,
+        question: "¿Cuál fue el procedimiento inicial más común utilizado para el manejo de un biloma antes de la reparación definitiva?",
+        options: ["Laparotomía con lavado", "Drenaje guiado por ultrasonido", "Colangiografía transhepática percutánea", "Colangiopancreatografía endoscópica"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, el control del foco infeccioso y la derivación de la bilis son imperativos de primera línea antes de siquiera planear un abordaje quirúrgico formal.<br><br>Perla Quirúrgica: Los pacientes con biloma fueron sometidos primariamente a drenaje percutáneo guiado por ultrasonido para formar una fístula controlada antes de la reparación diferida.<br><br>Análisis de Distractores: La laparotomía se reservó para casos de peritonitis biliar difusa. La colangiografía transhepática y la CPRE se usaron principalmente como métodos diagnósticos o en fístulas persistentes, no como primer paso ante un biloma no controlado en la mayoría de los pacientes.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 6,
+        question: "¿En qué periodo cicatrizan típicamente las fístulas biliares externas para formar una estenosis en pacientes con manejo conservador?",
+        options: ["1 a 2 semanas", "8 a 10 semanas", "4 a 6 semanas", "12 a 14 semanas"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, el trayecto fistuloso generado tras una lesión biliar tiende a obliterarse gradualmente a medida que la reacción inflamatoria se estabiliza.<br><br>Perla Quirúrgica: La mayoría de las fístulas biliares externas cicatrizan para formar una estenosis a lo largo de 4 a 6 semanas.<br><br>Análisis de Distractores: A la semana 1 o 2, la fístula se encuentra en fase aguda y activa. Más allá de 8 o 12 semanas, la obliteración ya ha concluido y el paciente suele cursar con cuadros de colangitis de repetición o ictericia obstructiva.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 7,
+        question: "¿A partir de qué límite de tiempo se consideró una reparación quirúrgica como \"tardía\" en el contexto de estas lesiones biliares?",
+        options: ["> 1 mes", "> 6 meses", "> 12 meses", "> 3 meses"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la temporalidad de la reconstrucción es crítica para permitir la resolución del daño tisular y favorecer bordes sanos.<br><br>Perla Quirúrgica: La reparación tardía se realizó de manera predominante, definiéndose como aquella intervención llevada a cabo > 3 meses después de ocurrida la lesión.<br><br>Análisis de Distractores: Intervenir al mes 1 suele coincidir con la fase de mayor inflamación periductal. Retrasar hasta los 6 o 12 meses aumenta innecesariamente el riesgo de cirrosis biliar secundaria sin otorgar beneficios adicionales sobre la inflamación aguda.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 8,
+        question: "¿Qué variable demostró ser un predictor independiente asociado al desarrollo de complicaciones posoperatorias a corto plazo?",
+        options: ["Fístula coledocoduodenal", "Edad > 50 años", "Colecistectomía laparoscópica", "Fuga biliar preoperatoria"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, las comunicaciones aberrantes con el tracto digestivo incrementan drásticamente la carga bacteriana en un sistema biliar ya vulnerable.<br><br>Perla Quirúrgica: En el análisis multivariado, el tipo de estenosis y la presencia de fístula coledocoduodenal se asociaron de manera independiente con el desarrollo de complicaciones a corto plazo.<br><br>Análisis de Distractores: La edad y el tipo de colecistectomía inicial (laparoscópica frente a abierta) no mostraron significancia estadística. La fuga biliar preoperatoria es una forma clásica de presentación, pero per se no fue un predictor independiente comparada con la infección ascendente facilitada por fístulas duodenales.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 9,
+        question: "¿Cuál fue la complicación posoperatoria a corto plazo más frecuente tras la reconstrucción bilioentérica?",
+        options: ["Infección del sitio quirúrgico", "Colección intraabdominal", "Colangitis posoperatoria", "Fuga biliar anastomótica"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, a pesar de los esfuerzos por realizar uniones libres de tensión, el endotelio biliar iatrogénicamente isquémico presenta vulnerabilidad temprana.<br><br>Perla Quirúrgica: Durante el posoperatorio temprano, la dehiscencia anastomótica con fuga biliar resultó ser la complicación más común, ocurriendo en el 16% de los pacientes.<br><br>Análisis de Distractores: La infección del sitio quirúrgico y la colangitis ocuparon el segundo y tercer lugar respectivamente. Las colecciones intraabdominales graves fueron estadísticamente raras (2%).",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 10,
+        question: "¿Qué sistema de clasificación anatómica se utilizó para estratificar la lesión biliar mediante estudios de imagen?",
+        options: ["Clavien-Dindo", "Criterios de McDonald", "Sistema de Strasberg-Bismuth", "Escala de Bismuth-Corlette"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, es mandatorio mapear el nivel exacto del daño para planear el asa en Y de Roux y la disección portal requerida.<br><br>Perla Quirúrgica: La lesión del conducto biliar se clasificó universalmente según el sistema de Strasberg-Bismuth definido por diferentes modalidades de imagen.<br><br>Análisis de Distractores: Clavien-Dindo evaluó morbilidad posquirúrgica. McDonald midió éxito clínico a largo plazo. Bismuth-Corlette es específico para colangiocarcinoma perihiliar y no rige las lesiones iatrogénicas benignas en este contexto.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 11,
+        question: "¿Qué porcentaje de los fracasos terapéuticos en términos de re-estenosis ocurrieron dentro de los primeros 5 años de seguimiento?",
+        options: ["20%", "50%", "66%", "80%"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la cicatrización fibrótica progresiva de una anastomosis bilioentérica requiere un periodo prolongado de vigilancia clínica antes de declarar la curación definitiva.<br><br>Perla Quirúrgica: La mediana de seguimiento es vital ya que dos tercios de los fracasos ocurren en los primeros 3 años y el 80% se presentan dentro de los 5 años iniciales.<br><br>Análisis de Distractores: 20% es el porcentaje de fallas atípicas que ocurren después del quinto año. 66% representa las fallas tempranas en los primeros 3 años.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1546."
+    },
+    {
+        id: 12,
+        question: "¿Qué variable se identificó como predictor independiente para la formación de estenosis biliar tardía posoperatoria?",
+        options: ["Colangitis posoperatoria", "Nivel de bilirrubina > 10 mg/dl", "Tipo de colecistectomía inicial", "Absceso intraabdominal"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la infección recurrente en el epitelio biliar detona un proceso fibrótico cíclico que culmina en reducción de la luz anastomótica.<br><br>Perla Quirúrgica: En el análisis multivariado, la colangitis posoperatoria y el tipo de lesión biliar resultaron estar independientemente asociados con estenosis biliar tardía.<br><br>Análisis de Distractores: Los niveles altos de bilirrubina reflejan severidad al momento de presentación pero no predicen falla estructural futura. La colecistectomía inicial (abierta vs laparoscópica) no tuvo impacto, ni tampoco el antecedente aislado de un absceso intraabdominal.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1545."
+    },
+    {
+        id: 13,
+        question: "Durante la hepaticoyeyunostomía en Y de Roux, ¿En qué estructura se realiza rutinariamente la extensión del estoma?",
+        options: ["Conducto cístico remanente", "Conducto hepático común", "Sistema ductal derecho", "Sistema ductal izquierdo"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, el abordaje hiliar exige maximizar la apertura de una mucosa biliar sana. La anatomía del conducto izquierdo ofrece una porción extrahepática más larga y constante para este propósito.<br><br>Perla Quirúrgica: Todos los pacientes se sometieron a una hepaticoyeyunostomía en Y de Roux con extensión del estoma en el sistema ductal izquierdo.<br><br>Análisis de Distractores: El cístico y el hepático común suelen estar comprometidos o resecados debido a la lesión inflamatoria primaria. El sistema ductal derecho tiene un trayecto intrahepático rápido, lo que dificulta una anastomosis segura en comparación con el acceso izquierdo.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 14,
+        question: "¿Qué patrón anatómico de lesión se asoció de manera más fuerte con el desarrollo de re-estenosis posoperatoria?",
+        options: ["Estenosis biliar hiliar", "Estenosis del colédoco distal", "Fístulas biliares externas", "Lesiones del conducto cístico"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, a mayor proximidad hacia la bifurcación, más compleja es la exposición del tejido sano y mayor el riesgo de isquemia microvascular y falla anastomótica.<br><br>Perla Quirúrgica: Los pacientes con lesiones biliares hiliares experimentaron más fracasos después de la cirugía, ubicándose la estenosis proximal a la bifurcación biliar.<br><br>Análisis de Distractores: El colédoco distal y el conducto cístico son de fácil acceso extrahepático y su reparación directa o derivación inferior tienen tasas altísimas de éxito sin re-estenosis.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1546."
+    },
+    {
+        id: 15,
+        question: "¿Qué pacientes con complicación biliar poscolecistectomía fueron excluidos directamente del análisis por considerarse lesiones menores?",
+        options: ["Fugas del lecho vesicular", "Sección del conducto hepático", "Ligadura total del colédoco", "Sección de conductos segmentarios"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, las soluciones de continuidad del conducto de Luschka o pequeños defectos biliares son auto-limitados o ceden a manejo endoscópico rutinario sin requerir reconstrucción mayor.<br><br>Perla Quirúrgica: Los pacientes con fugas menores del conducto cístico o del lecho vesicular, que podían manejarse de manera conservadora, fueron excluidos del análisis.<br><br>Análisis de Distractores: Las lesiones estructurales mayores como sección de la vía biliar principal, ligadura de colédoco o sección de ductos hepáticos segmentarios conforman las lesiones complejas núcleo de este estudio de reconstrucción biliar.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 16,
+        question: "¿Cuál fue la manifestación clínica principal exclusiva en el subgrupo de pacientes con ligadura inadvertida del conducto biliar sin fuga activa?",
+        options: ["Ictericia progresiva", "Fístula biliar externa", "Peritonitis biliar severa", "Colección no controlada"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la oclusión total y súbita de un sistema biliar sin solución de continuidad genera un síndrome colestásico puro y fulminante por retención retrógrada.<br><br>Perla Quirúrgica: La presentación incluyó acúmulos biliares descontrolados con peritonitis, o bien, ictericia progresiva debido a la ligadura inadvertida del colédoco en un 20% de los pacientes.<br><br>Análisis de Distractores: La fístula, peritonitis y colecciones no controladas son producto de fugas abiertas (bilomas o peritonitis) asociadas a secciones o desgarros parciales, mas no a ligaduras herméticas completas.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 17,
+        question: "¿Qué lesión vascular concomitante suele asociarse significativamente con las lesiones de la vía biliar tipo IV?",
+        options: ["Lesión de vena porta", "Lesión de arteria mesentérica", "Lesión de arteria hepática derecha", "Lesión de vena cava inferior"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la anatomía cruzada del triángulo de Calot hace que la necrosis isquémica profunda de las ramas biliares altas provenga frecuentemente de la ligadura arterial inadvertida.<br><br>Perla Quirúrgica: El nivel de la lesión suele asociarse con lesiones vasculares, reportándose que hasta el 64% de los pacientes con estenosis tipo IV cursan con lesión de la arteria hepática derecha.<br><br>Análisis de Distractores: Las venas porta, mesentérica y cava inferior cursan por planos más profundos y posteriores, lo que las hace virtualmente inmunes a ligaduras accidentales durante la disección rutinaria de colecistectomía laparoscópica o abierta.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 18,
+        question: "Según los hallazgos colangiográficos, ¿Cuál fue el tipo de estenosis de Bismuth más frecuente en esta cohorte sometida a reparación?",
+        options: ["Tipo I", "Tipo II", "Tipo III", "Tipo IV"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la tracción excesiva de la vesícula durante la cirugía de extracción suele migrar el nivel de lesión hacia la porción superior de la vía biliar principal pero respetando la confluencia.<br><br>Perla Quirúrgica: Basados en los datos colangiográficos, las estenosis se clasificaron con mayor frecuencia en Bismuth Tipo III en el 41% de los pacientes.<br><br>Análisis de Distractores: Las Tipo I y II se manejan a veces en el posoperatorio inmediato y son de reparación técnicamente más sencilla. Las Tipo IV son muy severas e involucran la bifurcación hepática, pero representaron solo el 14%.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 19,
+        question: "¿Qué modalidad de imagen se utilizó rutinariamente en el 100% de los pacientes como evaluación inicial tras la sospecha de lesión?",
+        options: ["Ultrasonido abdominal", "Tomografía computarizada", "Colangioresonancia magnética", "Colangiografía percutánea"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, el escrutinio primario de cualquier sospecha de fuga, colección o dilatación biliar en urgencias requiere un método rápido y no invasivo como piedra angular de imagenología.<br><br>Perla Quirúrgica: Todos los pacientes sospechosos de lesión de la vía biliar se sometieron universalmente a un ultrasonido abdominal en su presentación inicial.<br><br>Análisis de Distractores: La Tomografía y la Colangioresonancia magnética se utilizaron de manera secundaria (30% y 66% respectivamente) para estatificar fístulas o delimitar el nivel preciso de ligadura previo al acto quirúrgico.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 20,
+        question: "¿Cuál es la justificación fisiopatológica sugerida para retrasar la cirugía reconstructiva más allá de los 3 meses posteriores al trauma?",
+        options: ["Esperar hipertrofia hepática", "Evitar hipertensión portal", "Resolución de isquemia biliar", "Prevenir fístulas entéricas"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la disección en caliente de una vía biliar necrótica condena la sutura al fracaso. La reparación diferida proporciona un \"periodo de enfriamiento\" esencial.<br><br>Perla Quirúrgica: La diferencia en los resultados de fracaso entre reparaciones tempranas y tardías se debe a la resolución gradual de la necrosis ductal isquémica y la inflamación en curso a lo largo de 3 meses.<br><br>Análisis de Distractores: La hipertrofia hepática es un concepto de hepatectomías mayores. La hipertensión portal y fístulas entéricas son procesos disociados del timing de reconstrucción biliar, las cuales no se \"previenen\" con retrasos sino con un drenaje percutáneo adecuado inicial.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 21,
+        question: "¿Cuál es el perfil demográfico predominante en los pacientes sometidos a reconstrucción por lesión biliar poscolecistectomía?",
+        options: ["Masculino en 75%", "Masculino en 60%", "Femenino en 50%", "Femenino en 90%"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la epidemiología de la litiasis vesicular y sus complicaciones quirúrgicas derivadas afectan de manera desproporcionada a las mujeres jóvenes y de mediana edad.<br><br>Perla Quirúrgica: El 90.4% de los pacientes que requirieron reparación de la vía biliar fueron mujeres, con una mediana de edad de 32 años.<br><br>Análisis de Distractores: Las opciones A y B asumen una preponderancia masculina que no corresponde con la epidemiología global de la patología biliar benigna. La opción C subestima significativamente la prevalencia real observada en esta cohorte.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 22,
+        question: "¿Cuál fue el antecedente quirúrgico primario más frecuente asociado a la lesión de la vía biliar en esta población?",
+        options: ["Colecistectomía laparoscópica", "Colecistectomía abierta", "Exploración de vías biliares", "Resección hepática segmentaria"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, en centros con desarrollo tecnológico heterogéneo, la cirugía tradicional sigue siendo prevalente y fuente de morbilidad ductal.<br><br>Perla Quirúrgica: El 78% de los pacientes en este estudio tenían el antecedente de una colecistectomía abierta como procedimiento índice causante de la lesión.<br><br>Análisis de Distractores: Aunque la colecistectomía laparoscópica (opción A) se asocia típicamente a lesiones más complejas, en esta cohorte específica solo representó el 22% de los casos. Las opciones C y D son procedimientos avanzados que no conformaron el origen principal de la iatrogenia en este reporte.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 23,
+        question: "En pacientes con estenosis tipo IV, ¿Qué estudio de imagen se indicó de manera específica para definir la anatomía biliar proximal?",
+        options: ["Tomografía computarizada", "Colangiografía transhepática percutánea", "Ultrasonido endoscópico", "Resonancia magnética simple"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, las lesiones que involucran la bifurcación hiliar requieren un mapeo anatómico exacto de los conductos intrahepáticos derechos e izquierdos aislados para planear los estomas.<br><br>Perla Quirúrgica: En las estenosis tipo IV, se realizó una colangiografía transhepática percutánea para definir con precisión la anatomía biliar proximal y guiar el abordaje quirúrgico.<br><br>Análisis de Distractores: La tomografía evalúa colecciones y atrofia pero carece de la resolución intraluminal dinámica. El ultrasonido endoscópico y la resonancia simple no ofrecen la capacidad de intervención simultánea ni delinean el árbol aislado con la misma nitidez en un entorno fibrótico.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 24,
+        question: "¿Qué modalidad de imagen preoperatoria se indicó invariablemente en todos los pacientes que presentaron ligadura biliar completa?",
+        options: ["Colangiopancreatografía por resonancia", "Tomografía por emisión de positrones", "Colangiografía retrógrada endoscópica", "Ultrasonografía endoscópica biliar"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la oclusión total del conducto requiere un método no invasivo capaz de mapear el árbol biliar retenido sin riesgo de inyectar contraste en un sistema cerrado que podría detonar colangitis.<br><br>Perla Quirúrgica: Todos los pacientes con ligadura biliar completa se sometieron a una colangiopancreatografía por resonancia magnética antes de la reparación quirúrgica.<br><br>Análisis de Distractores: La colangiografía retrógrada endoscópica (opción C) está contraindicada o es inútil si hay desconexión anatómica completa. El ultrasonido endoscópico no brinda un mapa anatómico tridimensional completo. La tomografía por positrones es exclusiva para patología oncológica.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 25,
+        question: "¿Cuál es el método de vigilancia establecido para el seguimiento a largo plazo de los pacientes asintomáticos tras la reconstrucción?",
+        options: ["Biopsia hepática percutánea", "Colangioresonancia magnética", "Pruebas de función hepática", "Colangiografía transhepática"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la permeabilidad anastomótica se refleja metabólicamente antes de dar signos clínicos, mediante la elevación asintomática de fosfatasa alcalina o bilirrubinas.<br><br>Perla Quirúrgica: Tras el alta, los pacientes que permanecieron asintomáticos fueron seguidos con pruebas de función hepática de forma anual.<br><br>Análisis de Distractores: Los estudios de imagen invasivos (opción D) o costosos (opción B) se reservan exclusivamente para cuando existen alteraciones bioquímicas o síntomas de colangitis. La biopsia hepática no tiene rol en el seguimiento rutinario.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 26,
+        question: "¿Cuál es el límite temporal utilizado para clasificar las complicaciones posoperatorias como tempranas frente a tardías?",
+        options: ["≤ 15 días", "≤ 30 días", "≤ 60 días", "≤ 90 días"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la morbilidad inmediata derivada del acto quirúrgico (fugas, infecciones de herida) se manifiesta invariablemente durante el primer mes.<br><br>Perla Quirúrgica: Las complicaciones posoperatorias a corto plazo se definieron como aquellas que ocurrieron dentro de los 30 días posteriores a la cirugía de reparación.<br><br>Análisis de Distractores: 15 días es un margen muy estrecho que omitiría colecciones tardías. 60 o 90 días abarcan ya procesos fibróticos de maduración que entran en la categoría de estenosis a largo plazo.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 27,
+        question: "¿Qué intervención se indicó en pacientes que mantuvieron una fístula biliar externa persistente más allá de 6 a 8 semanas?",
+        options: ["Drenaje biliar transhepático percutáneo", "Esfinterotomía endoscópica urgente", "Cierre primario de la fístula", "Observación clínica ambulatoria"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, una fístula que no cierra sugiere un defecto tisular grave, estenosis distal o infección, exigiendo derivación supraestenótica para controlar la fuga y la colangitis.<br><br>Perla Quirúrgica: En pacientes con fístula controlada persistente más allá de 6 a 8 semanas, se realizó drenaje biliar transhepático percutáneo para controlar la colangitis y la fuga de bilis.<br><br>Análisis de Distractores: La esfinterotomía es ineficaz si hay pérdida de continuidad ductal. El cierre primario directo de una fístula está proscrito por alto riesgo de estenosis o absceso. La observación pasiva perpetúa la depleción hidroelectrolítica.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 28,
+        question: "Después de la fuga anastomótica, ¿Cuál fue la complicación posoperatoria temprana más frecuente?",
+        options: ["Infección del sitio quirúrgico", "Absceso intraabdominal", "Hemorragia intraabdominal", "Colangitis posoperatoria aguda"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la cirugía en un lecho previamente contaminado por bilis o instrumental previo eleva el riesgo de contaminación parietal.<br><br>Perla Quirúrgica: La morbilidad a corto plazo incluyó fuga biliar en primer lugar (16%), seguida de infección de la herida quirúrgica presente en el 13% de los pacientes.<br><br>Análisis de Distractores: La colangitis aguda ocurrió en el 7%. Los abscesos intraabdominales mayores se presentaron en apenas el 2%. La hemorragia intraabdominal no fue una complicación destacada en esta serie estadísticamente.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 29,
+        question: "¿Cuál fue la evolución clínica y terapéutica de la mayoría de los pacientes que presentaron una fuga biliar anastomótica temprana?",
+        options: ["Reintervención quirúrgica urgente", "Cierre espontáneo con manejo conservador", "Desarrollo de peritonitis biliar difusa", "Requerimiento de derivación interna"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, los drenajes colocados preventivamente durante la cirugía logran exteriorizar adecuadamente las fugas menores, permitiendo la cicatrización natural sin instrumentación extra.<br><br>Perla Quirúrgica: De los 17 pacientes con fuga biliar, 14 tuvieron un cierre espontáneo con tratamiento conservador exclusivo.<br><br>Análisis de Distractores: Solo 3 pacientes requirieron apoyo con drenaje percutáneo. La reintervención quirúrgica y la peritonitis se evitan gracias a la función adecuada de los drenajes intraoperatorios de circuito cerrado.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 30,
+        question: "¿Cuál fue la tasa global de éxito a largo plazo sumando los resultados excelentes y buenos?",
+        options: ["71%", "81%", "91%", "99%"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, a pesar de la morbilidad inicial, la restitución con asa de Roux permite a la mayoría de los pacientes llevar una vida asintomática con función hepática preservada.<br><br>Perla Quirúrgica: La tasa de éxito general a largo plazo en esta serie fue del 91%, con un 67.7% de resultados excelentes y un 23.8% de resultados buenos.<br><br>Análisis de Distractores: 71% (opción A) corresponde únicamente al subgrupo de resultados excelentes. 99% es una cifra irrealmente alta para cirugía biliar compleja.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1546."
+    },
+    {
+        id: 31,
+        question: "¿Qué causa específica de mortalidad a largo plazo se observó como consecuencia directa del fracaso de la reconstrucción?",
+        options: ["Insuficiencia hepática por cirrosis", "Infarto agudo de miocardio", "Colangiocarcinoma de novo", "Sepsis por absceso hepático"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la estenosis crónica irreversible induce congestión biliar retrógrada, inflamación portal y fibrosis progresiva que destruye la función hepatocelular.<br><br>Perla Quirúrgica: Dos de las muertes durante el seguimiento a largo plazo ocurrieron por insuficiencia hepática secundaria a cirrosis biliar.<br><br>Análisis de Distractores: Aunque la sepsis y los infartos pueden ocurrir, las muertes registradas directamente atribuibles al fallo orgánico fueron por cirrosis biliar secundaria y una por hemorragia de un pseudoaneurisma. El colangiocarcinoma no se reportó.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 32,
+        question: "¿Qué criterio clínico define de manera estricta a una estenosis anastomótica posoperatoria como \"clínicamente significativa\"?",
+        options: ["Elevación transitoria de transaminasas", "Alteración anatómica en resonancia", "Presencia de síntomas que exigen intervención", "Dilatación radiológica asintomática"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, no todas las estrecheces anatómicas generan obstrucción al flujo biliar. Se debe tratar a los pacientes, no solo a las imágenes.<br><br>Perla Quirúrgica: Una estenosis anastomótica clínicamente significativa se definió como aquella que resultó en signos y síntomas que requirieron intervención quirúrgica o percutánea.<br><br>Análisis de Distractores: La dilatación radiológica aislada y asintomática o las elevaciones enzimáticas transitorias (opciones A, B y D) requieren vigilancia, pero no catalogan automáticamente la falla anastomótica como significativa si no exigen invasión terapéutica.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 33,
+        question: "¿Cuál es la indicación técnica respecto al manejo del lecho quirúrgico al finalizar la anastomosis biliodigestiva?",
+        options: ["Cierre primario sin drenajes", "Drenaje intraoperatorio cerca de la anastomosis", "Drenaje percutáneo transhepático preventivo", "Colocación de sonda en T"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, anticipando el riesgo de dehiscencia microvascular temprana (presente hasta en el 16% de los casos), asegurar una vía de escape para la bilis es obligatorio para evitar colecciones o peritonitis.<br><br>Perla Quirúrgica: En todos los procedimientos, se colocó de manera rutinaria un drenaje intraoperatorio cerca de la anastomosis bilioentérica.<br><br>Análisis de Distractores: El cierre primario sin drenajes es un error técnico grave. La sonda en T se usaba históricamente en coledocostomías, no en reconstrucciones en Y de Roux. Los drenajes percutáneos preventivos son innecesarios si la anastomosis es de buena calidad.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 34,
+        question: "¿Qué alteración fisiopatológica explica la formación tardía de estenosis cuando la reparación quirúrgica se realiza en presencia de colangitis aguda?",
+        options: ["Isquemia aguda de la arteria hepática", "Tejido friable que cicatriza con fibrosis", "Dilatación masiva del conducto biliar", "Obstrucción litiásica intrahepática"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, operar sobre epitelio infectado dificulta el afrontamiento seguro, favoreciendo fugas microscópicas que el cuerpo repara mediante colágena desorganizada y retráctil.<br><br>Perla Quirúrgica: La colangitis causa inflamación aguda; bajo estas circunstancias el tejido ductal es friable, resultando en fugas anastomóticas que curan con tejido cicatrizal fibrótico, causando finalmente estenosis tardía.<br><br>Análisis de Distractores: La isquemia es producto de lesiones vasculares mecánicas, no primariamente de la colangitis posoperatoria. La dilatación o los cálculos son consecuencias anatómicas de la estenosis, no la causa inicial que impide la consolidación correcta del tejido suturado.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 35,
+        question: "¿Cuál es el mecanismo fisiopatológico por el cual una fístula coledocoduodenal preexistente incrementa el riesgo de complicaciones anastomóticas?",
+        options: ["Disminución del flujo biliar distal", "Reflujo de secreción pancreática", "Infección ascendente desde el duodeno", "Obstrucción de la vena porta"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la pérdida del mecanismo valvular fisiológico expone perpetuamente la vía biliar al contenido entérico, colonizando un conducto estenosado y favoreciendo la inflamación crónica.<br><br>Perla Quirúrgica: La alta incidencia de colangitis recurrente resulta de la infección ascendente desde el duodeno, lo que explica el aumento de complicaciones perioperatorias en estos pacientes.<br><br>Análisis de Distractores: El reflujo pancreático puro está más asociado a anomalías de la unión biliopancreática (quistes de colédoco). Las fístulas no provocan oclusión portal (opción D) ni meramente alteran el flujo distal (opción A), sino que introducen bacterias agresivas al árbol.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 36,
+        question: "En el análisis de esta cohorte, ¿Qué impacto tuvo el antecedente de colecistectomía laparoscópica frente a la abierta en el desarrollo de complicaciones post-reconstrucción?",
+        options: ["Mayor incidencia de fuga biliar", "Menor riesgo de estenosis tardía", "No mostró asociación significativa", "Mayor riesgo de cirrosis biliar"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, si bien a nivel global se considera que la laparoscopia puede inducir lesiones más graves por cauterio, en este análisis la técnica índice no dictó el pronóstico del reparo biliar.<br><br>Perla Quirúrgica: Aunque las lesiones por laparoscopia se consideran más severas, este estudio no encontró una asociación significativa entre el tipo de colecistectomía índice y la incidencia de complicaciones posoperatorias.<br><br>Análisis de Distractores: Las opciones A, B y D contradicen directamente el análisis estadístico multivariado del documento, el cual determinó que la vía de abordaje inicial no predijo el fallo anastomótico temprano ni tardío.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1546."
+    },
+    {
+        id: 37,
+        question: "¿Cuál fue el intervalo de tiempo mediano transcurrido entre la lesión inicial y la reparación quirúrgica definitiva?",
+        options: ["1 mes", "2 meses", "4 meses", "12 meses"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, al respetar la política de diferimiento para la resolución de necrosis e inflamación, la gran mayoría de las intervenciones se programan una vez consolidado el daño.<br><br>Perla Quirúrgica: El intervalo mediano entre la colecistectomía índice y la reparación quirúrgica definitiva fue de 4 meses.<br><br>Análisis de Distractores: 1 y 2 meses conforman reparaciones tempranas de alto riesgo por tejido inflamatorio friable. 12 meses representaría un retraso excesivo que expone al paciente a hepatopatía crónica no justificada.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 38,
+        question: "¿Qué hallazgo anatómico define a una lesión de vía biliar como \"compleja\" y tributaria de inclusión para reconstrucción mayor?",
+        options: ["Laceración hepática superficial", "Fugas menores del lecho vesicular", "Desgarros parciales del conducto cístico", "Sección del conducto hepático común"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la interrupción principal de la vía excretora condiciona inviabilidad de las terapias endoscópicas y obliga invariablemente a una restitución con intestino.<br><br>Perla Quirúrgica: Las lesiones biliares complejas incluyeron todas las transecciones o ligaduras del conducto hepático común, colédoco o conductos segmentarios mayores en el hilio hepático.<br><br>Análisis de Distractores: Fugas del lecho, lesiones del cístico y laceraciones hepáticas (opciones A, B, C) se resuelven espontáneamente o responden al manejo conservador/endoscópico, por lo que fueron explícitamente excluidas de la necesidad de reconstrucción.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 39,
+        question: "¿Cuál fue el tiempo mínimo de seguimiento postoperatorio exigido para incluir a los pacientes en el análisis definitivo de resultados?",
+        options: ["6 meses", "1 año", "2 años", "5 años"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, las fallas anastomóticas no se consolidan de inmediato; evaluar antes de este lapso subestimaría críticamente la tasa real de estenosis fibróticas posquirúrgicas.<br><br>Perla Quirúrgica: Los pacientes que se perdieron durante el seguimiento fueron excluidos; el grupo central de este estudio lo conformaron pacientes con un período mínimo de seguimiento de 2 años.<br><br>Análisis de Distractores: Los lapsos de 6 meses o 1 año (A y B) son ineficaces puesto que el pico de re-estenosis ocurre hacia el segundo o tercer año. 5 años es el ideal para capturar el 80% de fallas, pero el mínimo dictado como criterio de inclusión fue 2 años.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 40,
+        question: "¿Qué sistema de clasificación estandarizado se utilizó para graduar la severidad de las complicaciones posoperatorias a corto plazo?",
+        options: ["Criterios de McDonald", "Clasificación de Clavien-Dindo", "Sistema de Strasberg-Bismuth", "Escala de Bismuth-Corlette"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la evaluación objetiva de la morbilidad posquirúrgica requiere un marco validado internacionalmente para estratificar el tipo de manejo (conservador, farmacológico o invasivo) que requirió la complicación.<br><br>Perla Quirúrgica: Las complicaciones posoperatorias a corto plazo ocurridas dentro de los 30 días fueron graduadas de acuerdo al sistema de clasificación de Clavien-Dindo.<br><br>Análisis de Distractores: Los criterios de McDonald clasifican el éxito clínico a largo plazo. El sistema de Strasberg-Bismuth clasifica morfológicamente el tipo de lesión inicial. Bismuth-Corlette estatifica la patología oncológica biliar hiliar.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 41,
+        question: "¿Cuál fue la mediana de edad al momento de la presentación de la lesión biliar poscolecistectomía en esta población?",
+        options: ["19 años", "32 años", "50 años", "68 años"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la epidemiología de la cohorte refleja el pico de incidencia de la litiasis biliar que requiere manejo quirúrgico.<br><br>Perla Quirúrgica: La mediana de edad de los pacientes que requirieron reparación de la vía biliar fue de 32 años, con un rango de 19 a 68 años.<br><br>Análisis de Distractores: 19 y 68 años representan los extremos etarios de la población estudiada, no la mediana. 50 años es el punto de corte utilizado en el análisis estadístico univariado, pero no corresponde al promedio o mediana real.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 42,
+        question: "¿Qué proporción de pacientes presentó evidencia clínica de colangitis al momento de su evaluación inicial preoperatoria?",
+        options: ["10%", "20%", "34%", "48%"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la sepsis biliar es una presentación frecuente que obliga a diferir la reconstrucción hasta lograr el control del foco infeccioso.<br><br>Perla Quirúrgica: En el perfil clínico de presentación, 36 pacientes (34%) tenían evidencia de colangitis previa a la cirugía definitiva.<br><br>Análisis de Distractores: 10% fue la incidencia de estenosis tipo I. 20% correspondió al grupo de pacientes con ligadura de la vía biliar sin fuga. 48% fue el porcentaje de pacientes que debutó con fístula biliar externa.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 43,
+        question: "¿Cuál fue el tipo de derivación biliodigestiva definitiva empleada de forma universal en el 100% de esta cohorte?",
+        options: ["Coledocoduodenostomía latero-lateral", "Hepaticoduodenostomía término-lateral", "Hepaticoyeyunostomía en Y de Roux", "Coledocoyeyunostomía en asa simple"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, el aislamiento intestinal evita el reflujo directo de alimentos a la vía biliar y ofrece la mejor tensión para el afrontamiento tisular hiliar.<br><br>Perla Quirúrgica: Todos los pacientes se sometieron a una hepaticoyeyunostomía en Y de Roux con extensión del estoma en el sistema ductal izquierdo como procedimiento de reparación.<br><br>Análisis de Distractores: La coledocoduodenostomía y hepaticoduodenostomía predisponen a colangitis ascendente grave si hay disfunción. La anastomosis en asa simple (omega) carece del efecto protector anti-reflujo de la configuración en Y de Roux.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 44,
+        question: "¿Cuál fue la mediana de estancia hospitalaria posoperatoria tras la cirugía de reconstrucción biliar definitiva?",
+        options: ["5 días", "9 días", "14 días", "24 días"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, a pesar de la complejidad del procedimiento y el alto índice de morbilidad temprana, el manejo protocolizado permite una recuperación estándar a la segunda semana.<br><br>Perla Quirúrgica: La mediana de duración de la estancia hospitalaria después de la reparación definitiva fue de 9 días.<br><br>Análisis de Distractores: 5 y 24 días representan la estancia hospitalaria mínima y máxima de la cohorte respectivamente, pero no la tendencia central del grupo.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 45,
+        question: "¿Cuál fue la mediana de tiempo de seguimiento posoperatorio global en este grupo de pacientes?",
+        options: ["24 meses", "48 meses", "64 meses", "84 meses"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la vigilancia de la maduración cicatrizal exige plazos largos, ya que el fracaso puede presentarse años después de la intervención inicial.<br><br>Perla Quirúrgica: En esta serie, la mediana de seguimiento posoperatorio fue de 64 meses, superando el estándar mínimo de 5 años sugerido en centros de tercer nivel.<br><br>Análisis de Distractores: 24 meses fue el requisito mínimo estricto de inclusión para el estudio. 48 meses no es un dato destacado. 84 meses representa el límite superior del rango de seguimiento de algunos pacientes.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 46,
+        question: "En el análisis univariado, ¿Qué presentación clínica específica se asoció paradójicamente con un mayor riesgo de complicaciones a corto plazo?",
+        options: ["Ausencia de ictericia", "Dolor crónico", "Bilirrubina > 10 mg/dl", "Ictericia progresiva"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, los pacientes sin ictericia suelen cursar con fugas biliares abiertas, bilomas y fístulas que contaminan tempranamente el campo quirúrgico.<br><br>Perla Quirúrgica: La ausencia de ictericia (p=0.03) se asoció significativamente con un mayor desarrollo de complicaciones a corto plazo, ya que se relaciona con peritonitis y fístulas no controladas.<br><br>Análisis de Distractores: La ictericia progresiva implica una obstrucción completa (ligadura) sin fuga, manteniendo un campo estéril y menor morbilidad temprana. Los niveles elevados de bilirrubina (> 10 mg/dl) no mostraron significancia estadística (p=0.75).",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 47,
+        question: "Según los hallazgos colangiográficos y quirúrgicos, ¿Qué porcentaje de las lesiones correspondió a una estenosis tipo I de Bismuth?",
+        options: ["10%", "14%", "35%", "41%"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, las lesiones muy distales (Tipo I) son menos comunes en la reparación diferida porque suelen tratarse intraoperatoriamente o ceden a la intervención endoscópica inicial.<br><br>Perla Quirúrgica: Las estenosis se clasificaron en Bismuth tipo I únicamente en el 10% de los pacientes (n=10) de esta cohorte.<br><br>Análisis de Distractores: 14% correspondió a estenosis tipo IV. 35% fueron lesiones tipo II. 41% representó al subgrupo más numeroso, las estenosis tipo III.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 48,
+        question: "¿Cuál fue la incidencia global de pseudoaneurismas de la arteria hepática documentada en el preoperatorio de esta serie?",
+        options: ["1%", "3%", "8%", "14%"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la lesión vascular asociada a daño biliar es letal y subdiagnosticada si no se emplea angiografía de forma rutinaria.<br><br>Perla Quirúrgica: Se detectó lesión vascular manifestada como pseudoaneurisma de la arteria hepática en el 3% de los pacientes.<br><br>Análisis de Distractores: 1% y 8% son porcentajes no referidos. 14% correspondió a la incidencia de fugas con estenosis tipo IV, las cuales conllevan el riesgo más alto de lesión vascular concomitante, pero no a la incidencia pura de pseudoaneurismas detectados.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1545."
+    },
+    {
+        id: 49,
+        question: "¿Qué condición clínica principal justificó la realización de una reparación biliar temprana (< 3 meses) en una subpoblación del 20%?",
+        options: ["Oclusión total sin fuga", "Peritonitis biliar difusa", "Fístula biliar persistente", "Absceso intrahepático roto"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, una obstrucción estéril (ligadura simple) permite reconstruir en tejido libre de sepsis aguda, posibilitando una intervención exitosa precoz.<br><br>Perla Quirúrgica: La reparación temprana (< 3 meses) se realizó en el 20% de los pacientes, predominantemente aquellos con oclusión completa del conducto biliar sin fuga de bilis.<br><br>Análisis de Distractores: Las fístulas biliares persistentes o la peritonitis biliar difusa exigen imperativamente drenaje inicial y una intervención diferida o tardía (> 3 meses) para permitir la disminución de la friabilidad del tejido.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 50,
+        question: "¿Cuál fue el tamaño final de la cohorte analizada tras aplicar todos los criterios de inclusión y exclusión por lesiones y pérdidas de seguimiento?",
+        options: ["54 pacientes", "84 pacientes", "105 pacientes", "188 pacientes"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la exclusión de lesiones menores o resueltas por otras vías es fundamental para aislar los factores pronósticos exclusivos de la hepaticoyeyunostomía mayor.<br><br>Perla Quirúrgica: A partir de una base de datos original de 188 casos, se estudiaron 105 pacientes que conformaron el grupo central con seguimiento mínimo y reparación mayor.<br><br>Análisis de Distractores: 188 fue el número inicial crudo. 54 fueron los excluidos por presentar fugas menores o resoluciones endoscópicas. 84 representa el grupo específico de pacientes que requirió reparación tardía (> 3 meses).",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 51,
+        question: "Según los criterios de McDonald, ¿Qué porcentaje de la población estudiada alcanzó un resultado clínico Grado A (excelente)?",
+        options: ["23.8%", "67.7%", "80.0%", "91.0%"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, a pesar de la gravedad del traumatismo, el abordaje estandarizado de la anastomosis asegura curación asintomática y bioquímica en dos tercios de la población.<br><br>Perla Quirúrgica: Durante la mediana de seguimiento, 71 pacientes (67.7%) tuvieron un resultado Grado A, caracterizado por ausencia total de síntomas y pruebas de función hepática normales.<br><br>Análisis de Distractores: 23.8% corresponde a los resultados Grado B. 91.0% es la tasa de éxito combinada global (Grado A + Grado B). 80.0% es el porcentaje de pacientes operados de forma tardía.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Abstract, p. 1542."
+    },
+    {
+        id: 52,
+        question: "¿Qué escenario clínico específico define un fracaso terapéutico Grado D (pobre) según los criterios de McDonald en este contexto?",
+        options: ["Colangitis aguda tratada con antibióticos", "Elevación asintomática de fosfatasa alcalina", "Colangitis recurrente que requiere intervención", "Dolor abdominal leve sin ictericia"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la falla irreversible de la reconstrucción se hace evidente cuando el manejo médico resulta insuficiente y la reestenosis exige manipulación física del área.<br><br>Perla Quirúrgica: Un resultado Grado D incluye colangitis recurrente o ictericia obstructiva que requiere revisión quirúrgica o instrumentación endoscópica/percutánea.<br><br>Análisis de Distractores: La opción A corresponde a un Grado C. La opción B y D se encasillan en un Grado B, al tolerarse la alteración sin ameritar intervencionismo obligado.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 53,
+        question: "¿En qué porcentaje del grupo en estudio se utilizó inicialmente la colangiopancreatografía retrógrada endoscópica como estudio de abordaje diagnóstico?",
+        options: ["5%", "15%", "30%", "66%"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, las secciones y disrupciones de conductos principales inhabilitan funcionalmente el acceso endoscópico desde el ámpula de Vater hacia el sistema hepático proximal.<br><br>Perla Quirúrgica: La evaluación colangiográfica preoperatoria utilizando colangiopancreatografía retrógrada endoscópica se limitó y fue factible solo en el 15% de los pacientes.<br><br>Análisis de Distractores: 5% corresponde al uso preoperatorio de la colangiografía transhepática percutánea (PTC). 30% representó el uso de tomografía computarizada y 66% el uso de la colangioresonancia magnética.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 54,
+        question: "¿Cuál fue el desenlace terapéutico en la minoría de pacientes que desarrollaron una estenosis biliar recurrente clínicamente significativa tras la primera reparación?",
+        options: ["Toleraron derivación percutánea definitiva", "Tuvieron reparación bilioentérica exitosa", "Desarrollaron fístulas biliares crónicas", "Mantuvieron drenaje externo de por vida"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, el fallo a largo plazo no condena automáticamente al paciente a cirrosis si se detecta a tiempo; el re-afrontamiento alto sigue siendo la terapia de rescate estándar.<br><br>Perla Quirúrgica: Tres de los siete pacientes que desarrollaron estenosis del conducto biliar a largo plazo fueron sometidos exitosamente a una re-reparación bilioentérica (redo).<br><br>Análisis de Distractores: Aunque dos pacientes fallecieron por cirrosis de forma tardía, no se adoptó el drenaje percutáneo o externo crónico (opciones A y D) como medida definitiva curativa, sino la reconstrucción quirúrgica de revisión.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 55,
+        question: "¿Cuál fue la incidencia global de hernias incisionales documentadas como complicación a largo plazo en esta serie quirúrgica?",
+        options: ["2%", "6%", "10%", "13%"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, aunque las laparotomías extensas bajo condiciones de estrés fisiológico predisponen a defectos de pared, su prevalencia final no representó el componente principal de la morbilidad tardía.<br><br>Perla Quirúrgica: Como complicación a largo plazo tras la reparación definitiva, se identificó la formación de hernia incisional en el 2% de los pacientes (n=2).<br><br>Análisis de Distractores: 6.7% (redondeado a 6) corresponde a la tasa de re-estenosis biliar. 10% es la suma global de todas las complicaciones a largo plazo. 13% fue la incidencia temprana de infección del sitio quirúrgico.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1545."
+    },
+    {
+        id: 56,
+        question: "¿En qué porcentaje de los pacientes se requirió el uso de tomografía computarizada abdominal preoperatoria para evaluar la sospecha de lesión?",
+        options: ["15%", "30%", "66%", "100%"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, este estudio es útil para detectar líquido libre, atrofia lobar y patología vascular, pero su uso no se estandarizó primariamente en todos los sujetos.<br><br>Perla Quirúrgica: En la presentación inicial, el 30% de los pacientes se sometió a una tomografía computarizada abdominal además de la evaluación ecosonográfica.<br><br>Análisis de Distractores: 15% indica el uso de CPRE. 66% indica el uso de la colangioresonancia magnética. 100% es exclusivo de la ultrasonografía abdominal inicial.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 57,
+        question: "De la base de datos prospectiva original con 188 lesionados, ¿Qué grupo fue excluido del presente estudio por requerir opciones terapéuticas alternas de menor invasión?",
+        options: ["Oclusión total sin ictericia", "Lesiones manejadas con intervención endoscópica", "Lesión de arteria hepática derecha", "Estenosis Bismuth tipo III"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, el abordaje terapéutico discrimina morfológicamente la lesión: fugas accesorias y estenosis parciales benignas no son indicativas primarias de cirugía abierta reconstructiva.<br><br>Perla Quirúrgica: Se excluyeron del análisis a 54 pacientes correspondientes a lesiones que pudieron repararse intraoperatoriamente de inmediato o manejarse de forma resolutiva mediante intervenciones endoscópicas y radiológicas.<br><br>Análisis de Distractores: Las lesiones de arteria hepática, oclusión total y estenosis tipo III representan el escenario clásico adverso que obligatoriamente exige e ingresa al protocolo de hepaticoyeyunostomía.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 58,
+        question: "¿Cuál fue la tasa de mortalidad global posoperatoria calculada durante todo el periodo de vigilancia a largo plazo?",
+        options: ["0%", "2.8%", "6.7%", "9.0%"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la letalidad se relaciona primordialmente con complicaciones irreversibles como la falla hepática crónica o los eventos hemorrágicos letales.<br><br>Perla Quirúrgica: La mortalidad temprana posoperatoria fue nula, sin embargo, la tasa de mortalidad tardía reportada a lo largo del periodo de seguimiento fue del 2.8% (3 pacientes).<br><br>Análisis de Distractores: 0% corresponde únicamente al periodo perioperatorio temprano. 6.7% es la tasa específica de re-estenosis tardía. 9.0% representa el límite máximo de mortalidad histórico citado en la literatura externa, no en este estudio específico.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 59,
+        question: "¿Qué porcentaje de los pacientes quedó catalogado funcionalmente con un resultado Grado B (bueno), caracterizado por alteraciones enzimáticas asintomáticas?",
+        options: ["6.7%", "16.0%", "23.8%", "67.7%"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, un grupo significativo de sujetos presenta estasis metabólica leve o cicatrización madura rígida que eleva la fosfatasa alcalina sin amenazar la vida o requerir cirugía.<br><br>Perla Quirúrgica: Al final del seguimiento, el 23.8% de los individuos exhibieron un resultado clínico Grado B bajo los criterios de McDonald.<br><br>Análisis de Distractores: 6.7% corresponde a pacientes Grado D o fracaso. 16.0% fue el porcentaje de fuga biliar aguda. 67.7% representa el éxito absoluto asintomático y bioquímicamente normal (Grado A).",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Abstract, p. 1542."
+    },
+    {
+        id: 60,
+        question: "Durante el seguimiento clínico global, ¿Cuál fue la causa vascular aislada que produjo el fallecimiento fulminante de un paciente reconstruido?",
+        options: ["Trombosis masiva de la vena porta", "Rotura de varices esofágicas", "Sangrado de la anastomosis biliar", "Hemorragia por pseudoaneurisma de arteria hepática"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, el daño por energía térmica y ligaduras a ciegas en el triángulo de Calot debilita la pared arterial, la cual puede colapsar y romperse letalmente meses después de la injuria inicial.<br><br>Perla Quirúrgica: De las tres muertes tardías presentadas, una ocurrió debido a choque hemorrágico consecuente a la rotura de un pseudoaneurisma de la arteria hepática.<br><br>Análisis de Distractores: Aunque la rotura de várices es posible en cirrosis biliar secundaria, las dos muertes asociadas a cirrosis se catalogaron como insuficiencia hepática pura. La trombosis portal o hemorragias de pared anastomótica no fueron las causas letales documentadas en esta cohorte.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 61,
+        question: "¿Qué porcentaje de los pacientes presentó de manera inicial una fuga biliar descontrolada manifestada como fístula externa o peritonitis?",
+        options: ["20%", "38%", "48%", "80%"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la pérdida de continuidad del árbol biliar drena directamente hacia la cavidad abdominal provocando cuadros agudos si no se interviene.<br><br>Perla Quirúrgica: El 80% de los pacientes (n=84) presentaba una fístula biliar externa o peritonitis biliar al momento de la presentación inicial.<br><br>Análisis de Distractores: 20% correspondió a los sujetos con oclusión completa sin fuga. 38% fue la proporción de individuos que requirió drenaje percutáneo temprano. 48% fue el porcentaje específico de pacientes que cursó exclusivamente con fístula controlada preoperatoria.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 62,
+        question: "En pacientes con sospecha de lesión vascular concomitante, ¿Cuál es el propósito fisiopatológico principal de diferir la reconstrucción biliar?",
+        options: ["Reducir la hipertensión portal", "Demarcar el segmento isquémico", "Prevenir fístulas entéricas", "Promover hipertrofia hepática"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, el tejido que sufre deprivación arterial no se necrosa inmediatamente, por lo que una cirugía precoz corre el riesgo de anastomosar conductos aparentemente sanos que morirán en el posoperatorio.<br><br>Perla Quirúrgica: Se recomienda una anastomosis alta y una reparación tardía, particularmente cuando se sospecha una lesión vascular, ya que esto puede ayudar a demarcar la porción isquémica.<br><br>Análisis de Distractores: La hipertrofia hepática (D) y la hipertensión portal (A) son conceptos disociados del trauma biliar agudo. La prevención de fístulas (C) se maneja con drenajes y no se previene meramente por diferir la cirugía.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 63,
+        question: "¿Qué intervención de urgencia se empleó primariamente en el 23% de los pacientes que presentaron fuga biliar con contaminación descontrolada?",
+        options: ["Colocación de endoprótesis biliar", "Drenaje percutáneo transhepático", "Laparotomía con lavado", "Esfinterotomía endoscópica"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, cuando el volumen de bilis libre genera un cuadro de peritonitis química y bacteriana grave, las medidas percutáneas son insuficientes para esterilizar la cavidad.<br><br>Perla Quirúrgica: Los pacientes con fuga biliar no controlada fueron sometidos a laparotomía con lavado quirúrgico en el 23% de los casos (n=22) antes de la reparación definitiva.<br><br>Análisis de Distractores: El drenaje transhepático se usó en fístulas persistentes ya controladas. La endoprótesis y esfinterotomía asumen continuidad ductal, la cual está ausente en el traumatismo de conductos principales con fuga masiva.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 64,
+        question: "¿Qué combinación clínica y bioquímica define con exactitud un éxito terapéutico Grado A según los criterios de McDonald?",
+        options: ["Síntomas leves con pruebas normales", "Asintomático con pruebas alteradas", "Dolor episódico sin ictericia", "Asintomático con pruebas normales"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la restitución funcional completa de la fisiología hepática implica la erradicación del dolor y la normalización del perfil colestásico de manera permanente.<br><br>Perla Quirúrgica: Un resultado Grado A se define como un paciente completamente asintomático con pruebas de función hepática normales durante el seguimiento.<br><br>Análisis de Distractores: Asintomático con pruebas alteradas, o síntomas leves, se categorizan sistemáticamente como resultados Grado B (buenos pero no excelentes). El dolor episódico amerita revisión de permeabilidad.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 65,
+        question: "Según los criterios de McDonald, ¿Qué hallazgo caracteriza funcionalmente a un paciente clasificado como Grado B en el seguimiento tardío?",
+        options: ["Asintomático con pruebas normales", "Asintomático con alteración bioquímica", "Dolor recurrente con pruebas normales", "Colangitis que amerita intervención"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, las estenosis subclínicas o la cicatrización fibrosa estable pueden generar elevación crónica de fosfatasa alcalina sin que esto repercuta en la calidad de vida o requiera reoperación.<br><br>Perla Quirúrgica: El resultado Grado B incluye a los pacientes que se encuentran asintomáticos o con síntomas leves ocasionales, pero que presentan pruebas de función hepática alteradas.<br><br>Análisis de Distractores: La opción A define el Grado A. La opción D define el Grado D (fracaso terapéutico severo). El dolor recurrente aisaldo (C) sin alteración bioquímica requiere investigar patologías extra-biliares.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 66,
+        question: "¿Qué proporción de la cohorte analizada con lesión iatrogénica de la vía biliar correspondió a pacientes mayores de 50 años?",
+        options: ["10.5%", "21.9%", "34.2%", "43.8%"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la población afectada se concentra fundamentalmente en mujeres en edad reproductiva y laboral activa, siendo inusual la afectación en estratos geriátricos en este centro.<br><br>Perla Quirúrgica: Únicamente 11 pacientes, correspondientes al 10.5% de toda la cohorte de estudio, presentaban una edad superior a los 50 años.<br><br>Análisis de Distractores: 21.9% corresponde a pacientes sometidos a laparoscopia inicial. 34.2% a quienes se presentaron con colangitis. 43.8% a pacientes con ALT baja (<50 UI/L).",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Table 3, p. 1546."
+    },
+    {
+        id: 67,
+        question: "De la base de datos prospectiva original de 188 casos, ¿Cuántos pacientes fueron excluidos de manera específica por pérdida del seguimiento clínico?",
+        options: ["15 pacientes", "21 pacientes", "29 pacientes", "54 pacientes"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, validar el éxito de una hepaticoyeyunostomía requiere un contacto estricto y a largo plazo con el sujeto; sin esta vigilancia, los datos de supervivencia y permeabilidad carecen de poder estadístico.<br><br>Perla Quirúrgica: Veintinueve pacientes que se perdieron durante la etapa de seguimiento fueron excluidos del análisis final.<br><br>Análisis de Distractores: 54 pacientes fueron excluidos por requerir intervenciones endoscópicas menores o radiológicas. 21 representa al grupo que tuvo una reparación quirúrgica temprana (< 3 meses). 15 no es un valor de exclusión reportado.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Methods, p. 1543."
+    },
+    {
+        id: 68,
+        question: "De los pacientes que desarrollaron estenosis tardía como fracaso de la reconstrucción biliar, ¿Cuál fue la ubicación anatómica de la estrechez en la inmensa mayoría?",
+        options: ["Conducto hepático común medio", "Distal a la anastomosis yeyunal", "Proximal a la bifurcación biliar", "Porción intrapancreática del colédoco"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la isquemia ascendente tiende a afectar selectivamente los conductos intrahepáticos de primer orden, comprometiendo la confluencia y haciendo muy compleja la reintervención.<br><br>Perla Quirúrgica: En los fracasos a largo plazo, 6 de los 7 pacientes que presentaron re-estenosis después de la hepaticoyeyunostomía tenían una estrechez localizada proximal a la bifurcación biliar.<br><br>Análisis de Distractores: La porción pancreática (D) y hepática media (A) suelen ser zonas de lesión primaria pero no de re-estenosis anastomótica. El intestino distal (B) mantiene un riego mesentérico redundante inmune a isquemia pos-anastomótica biliar.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1546."
+    },
+    {
+        id: 69,
+        question: "¿Qué fenómeno patológico continuo explica el fracaso constante de las reparaciones tempranas cuando existe una lesión no diagnosticada de la arteria hepática derecha?",
+        options: ["Trombosis de la vena porta", "Necrosis isquémica ductal en curso", "Proliferación bacteriana descontrolada", "Hipertensión biliar retrógrada"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, el árbol biliar alto depende casi un 90% de las ramas de la arteria hepática derecha; su interrupción genera una isquemia asintomática pero incesante en los primeros meses.<br><br>Perla Quirúrgica: La diferencia en los resultados de éxito, asociando lesiones arteriales, se debe a que la necrosis isquémica ductal continúa a lo largo de 3 meses, provocando la falla de la reparación temprana.<br><br>Análisis de Distractores: La proliferación bacteriana se maneja con antibióticos y drenaje, no genera per se falla vascular. La hipertensión retrógrada y la trombosis portal no justifican el deterioro progresivo del tejido anastomosado si la sutura no está isquémica.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 70,
+        question: "En la práctica actual de los autores, ¿Qué estudio de imagen se incorporó rutinariamente en todo paciente previo a la cirugía definitiva para suplir las deficiencias de esta serie retrospectiva?",
+        options: ["Gammagrafía hepatobiliar", "Ultrasonido endoscópico", "Colangiografía transhepática percutánea", "Angiografía por tomografía computarizada"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, prever catástrofes hemorrágicas y mapear isquemia silente mejora radicalmente las tasas de éxito y disminuye la letalidad por pseudoaneurismas no detectados.<br><br>Perla Quirúrgica: En las limitaciones se reconoce que actualmente se realiza angiografía por tomografía computarizada en todos los pacientes con lesión biliar antes de la reparación definitiva.<br><br>Análisis de Distractores: La gammagrafía evalúa función global. La PTC (opción C) se reserva solo para casos específicos de estenosis Bismuth IV. El ultrasonido endoscópico (B) está limitado por la fibrosis hiliar densa preoperatoria.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 71,
+        question: "Al momento de la presentación clínica preoperatoria, ¿Qué porcentaje global de la población estudiada presentó ictericia?",
+        options: ["20%", "48%", "80%", "96%"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, independientemente de si la bilis fluye hacia el peritoneo (biloma) o si hay ligadura completa, el daño hiliar altera significativamente el drenaje normal, provocando hiperbilirrubinemia clínica.<br><br>Perla Quirúrgica: Como síntoma principal de presentación al centro de referencia, el 96% de los pacientes (n=101) cursó con ictericia.<br><br>Análisis de Distractores: 80% es el porcentaje total de pacientes con fístula o peritonitis. 48% es la fracción con fístula biliar controlada específica. 20% es el grupo con ligadura simple sin fuga.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Table 1, p. 1545."
+    },
+    {
+        id: 72,
+        question: "En el análisis estadístico univariado, ¿Qué impacto pronóstico demostró tener un nivel preoperatorio de bilirrubina sérica mayor a 10 mg/dl sobre la morbilidad a corto plazo?",
+        options: ["Aumentó la necesidad de reoperación", "Predijo la aparición de colecciones", "Elevó el riesgo de choque séptico", "Sin asociación estadísticamente significativa"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, un grado profundo de ictericia es un reflejo de oclusión mecánica severa y aguda, pero no compromete intrínsecamente la solidez de la sutura biliar siempre que se realice en el tejido isquémicamente estable.<br><br>Perla Quirúrgica: Los niveles séricos de bilirrubina > 10 mg/dl arrojaron un valor de p=0.75, indicando que no mostraron asociación estadísticamente significativa con las complicaciones a corto plazo.<br><br>Análisis de Distractores: Las colecciones, la reoperación y el choque séptico se asocian a fugas infectadas (bilomas con colangitis aguda) más que a los niveles aislados preoperatorios de retención de pigmento.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Table 3, p. 1546."
+    },
+    {
+        id: 73,
+        question: "En el análisis univariado, ¿Qué relación se identificó entre un nivel preoperatorio de alanino aminotransferasa (ALT) mayor a 50 UI/L y el desarrollo de estenosis tardía?",
+        options: ["Factor predictor independiente de fracaso", "Sin asociación estadísticamente significativa", "Marcador de isquemia ductal inminente", "Fuerte asociación con estenosis hiliar"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la injuria hepatocelular leve secundaria a la obstrucción no predice la calidad del tejido ductal macroscópico ni la tendencia fibrogénica local del estoma bilioentérico.<br><br>Perla Quirúrgica: Un nivel de ALT > 50 UI/L no tuvo impacto estadístico (p=0.4), concluyéndose que cursaba sin asociación estadísticamente significativa para predecir estenosis biliar a largo plazo.<br><br>Análisis de Distractores: La colangitis aguda y el tipo de lesión biliar sí demostraron ser factores predictores independientes y presentar fuerte asociación con la estenosis (opciones A y D).",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Table 4, p. 1547."
+    },
+    {
+        id: 74,
+        question: "¿Cuántas complicaciones posoperatorias a corto plazo se contabilizaron en total entre todos los pacientes afectados en el estudio?",
+        options: ["17 complicaciones", "29 complicaciones", "39 complicaciones", "50 complicaciones"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la gravedad de la patología y la contaminación subyacente provocan que un mismo paciente pueda desarrollar múltiples eventos adversos simultáneos como infección parietal y fuga anastomótica.<br><br>Perla Quirúrgica: Durante el período de 30 días, los 29 pacientes afectados desarrollaron un total de 39 complicaciones posoperatorias a corto plazo.<br><br>Análisis de Distractores: 29 es el número de pacientes individuales que tuvieron al menos un problema clínico. 17 es el número absoluto de sujetos que padecieron la complicación más frecuente (fuga anastomótica). 50 corresponde al número de sujetos con fístula biliar de ingreso.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 75,
+        question: "¿Cuál fue la incidencia preoperatoria absoluta de fístula coledocoduodenal documentada en esta población quirúrgica?",
+        options: ["1.9%", "6.7%", "14.2%", "21.9%"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, las comunicaciones entéricas anómalas por la lesión inicial son raras pero altamente patogénicas, y actúan como factor independiente grave de morbimortalidad posoperatoria.<br><br>Perla Quirúrgica: Se identificó la presencia de fístula coledocoduodenal únicamente en el 6.7% de los pacientes (n=7).<br><br>Análisis de Distractores: 1.9% equivale a los resultados de grado clínico \"Regular\". 14.2% corresponde a la incidencia de lesión Bismuth tipo IV. 21.9% representa la subpoblación con antecedente de colecistectomía laparoscópica.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Table 3, p. 1546."
+    },
+    {
+        id: 76,
+        question: "Según los principios de manejo especializado referidos, ¿Qué elemento institucional es un prerrequisito indispensable para asegurar resultados óptimos de supervivencia en estas lesiones biliares complejas?",
+        options: ["Disponibilidad de litotricia extracorpórea", "Banco de sangre con aféresis de urgencia", "Unidad de cuidados intensivos coronarios", "Equipo médico multidisciplinario"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, el abordaje exclusivo de un cirujano general suele ser insuficiente para el mapeo radiológico, estabilización con drenajes y resolución endoscópica de estas variantes patológicas graves.<br><br>Perla Quirúrgica: Para lograr resultados óptimos de forma constante, es mandatario el manejo mediante un equipo médico multidisciplinario conformado por cirujanos hepatobiliares, endoscopistas y radiólogos intervencionistas.<br><br>Análisis de Distractores: Aunque la reserva de sangre y cuidados intensivos son deseables, el documento resalta enfáticamente la carencia de experiencia integral y la necesidad puntual de un triaje disciplinario en hospitales de alta especialidad.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Introduction, p. 1542."
+    },
+    {
+        id: 77,
+        question: "Durante la preparación preoperatoria de una estenosis tipo IV grave, ¿Cuál es el objetivo técnico de colocar catéteres de drenaje transhepático de forma percutánea y bilateral?",
+        options: ["Prevenir el reflujo pancreatobiliar distal", "Facilitar la identificación de los conductos", "Dilatar pasivamente la estenosis hiliar", "Irrigar antibióticos al árbol intrahepático"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, cuando el conducto común está completamente destruido hasta el hilio, buscar los islotes epiteliales derecho e izquierdo inmersos en tejido fibrótico denso es sumamente riesgoso sin una guía táctil intraluminal.<br><br>Perla Quirúrgica: En la colangiografía transhepática percutánea, se colocan dos catéteres en ambos sistemas biliares (derecho e izquierdo) primariamente para facilitar la identificación de los conductos hepáticos durante la disección quirúrgica.<br><br>Análisis de Distractores: El reflujo pancreático está fisiológicamente abolido tras la desconexión tipo IV. La dilatación y la irrigación local no revierten la obstrucción necrótica mecánica del hilio.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Figure 2 Legend, p. 1544."
+    },
+    {
+        id: 78,
+        question: "Según estudios históricos de referencia citados en la discusión (ej. Pitt et al.), ¿Qué ventana temporal pos-lesión se consideró para definir formalmente una reparación biliar quirúrgica como \"temprana\"?",
+        options: ["1 a 3 días", "2 a 4 semanas", "6 a 8 semanas", "10 a 12 semanas"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, es crítico contrastar las series externas que intentaron intervenir antes de la resolución del proceso inflamatorio sistémico agudo, reportando altas tasas de fracaso por fragilidad del muñón biliar.<br><br>Perla Quirúrgica: La literatura comparativa definió como reparación temprana a aquella realizada en un lapso de 2 a 4 semanas, la cual evidenció una tasa de éxito significativamente menor frente a la reparación tardía.<br><br>Análisis de Distractores: Menos de 3 días constituye un abordaje inmediato intraoperatorio (no diferido o \"temprano\"). Lapsos mayores a 6 semanas se acercan ya a la maduración y a los criterios locales de reparación segura \"tardía\".",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 79,
+        question: "¿Qué porcentaje de los pacientes incluidos requirió manejo inicial puente mediante drenaje percutáneo guiado por ultrasonido antes de ir a cirugía definitiva?",
+        options: ["15%", "21%", "38%", "67%"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la inestabilidad hemodinámica e infecciosa originada por bilomas de gran tamaño imposibilita un afrontamiento directo seguro, requiriendo vaciar la colección como pilar inicial.<br><br>Perla Quirúrgica: Como intervención previa a la cirugía definitiva, el 38% de los pacientes (n=40) fueron abordados con drenaje percutáneo con catéter (PCD).<br><br>Análisis de Distractores: 15% correspondió a los abordados inicialmente por CPRE. 21% (n=22) representó al grupo crítico que requirió laparotomía abierta con lavado. 67% alude al subgrupo con uso de colangioresonancia magnética.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Table 1, p. 1545."
+    },
+    {
+        id: 80,
+        question: "Ante la alta sospecha de alteración microvascular local en el momento de la reparación, ¿Qué configuración técnica biliar es recomendada ampliamente por el grupo de Strasberg para prevenir el fracaso anastomótico?",
+        options: ["Reconstrucción vascular venosa", "Coledocoduodenostomía en asa simple", "Anastomosis biliar alta", "Derivación biliar externa permanente"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, en caso de que la necrosis no esté completamente delimitada, resecar generosamente el tejido hepático distal asegura encontrar un endotelio biliar irrigado por un plexo periductal arterial sano y virgen.<br><br>Perla Quirúrgica: El grupo de Strasberg recomienda tajantemente realizar una anastomosis biliar alta y una reparación tardía para garantizar viabilidad y éxito a largo plazo.<br><br>Análisis de Distractores: Las coledocoduodenostomías (B) se contraindican por alta tasa de colangitis ascendente. La derivación permanente (D) es un fracaso terapéutico o paliación, no un intento curativo óptimo. Las reconstrucciones venosas (A) son irrelevantes pues el daño es clásicamente arterial hepático.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 81,
+        question: "Según los autores, ¿Cuál es la razón principal por la que la colecistectomía abierta sigue siendo la causa predominante de lesión biliar en esta cohorte específica?",
+        options: ["Habilidades laparoscópicas periféricas en evolución", "Alta tasa de litiasis intrahepática primaria", "Preferencia del paciente por cirugía tradicional", "Contraindicaciones anestésicas para neumoperitoneo"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la epidemiología de los daños quirúrgicos refleja las disparidades tecnológicas de la región.<br><br>Perla Quirúrgica: La mayoría de los pacientes se sometió a colecistectomía abierta, lo que refleja el hecho de que las instalaciones y la experiencia en cirugía laparoscópica aún están en evolución en los centros periféricos.<br><br>Análisis de Distractores: Las contraindicaciones anestésicas, la litiasis intrahepática y las preferencias del paciente no fueron los factores determinantes citados. El problema central radica en la curva de aprendizaje y los recursos limitados en hospitales de primer contacto.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1546."
+    },
+    {
+        id: 82,
+        question: "¿Cuál fue la incidencia exacta de colangitis posoperatoria aguda desarrollada dentro de los primeros 30 días tras la reconstrucción?",
+        options: ["2%", "7%", "13%", "16%"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la contaminación bacteriana perioperatoria puede ascender por el asa yeyunal, pero su control suele ser efectivo con antibióticos.<br><br>Perla Quirúrgica: Durante el posoperatorio temprano, la colangitis aguda se presentó como complicación en el 7% de los pacientes (n=7).<br><br>Análisis de Distractores: 2% corresponde a la incidencia de abscesos intraabdominales. 13% fue la tasa de infección de la herida quirúrgica. 16% representa las fugas anastomóticas tempranas.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 83,
+        question: "Según la literatura histórica citada (grupo de Strasberg), ¿Cuál es la tasa esperada de fracaso o estenosis cuando se realiza una anastomosis alta de forma tardía?",
+        options: ["5%", "12%", "20%", "24%"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la referencia a centros de excelencia mundiales valida la táctica de enfriamiento tisular y resección proximal agresiva.<br><br>Perla Quirúrgica: El grupo de Strasberg reportó una tasa de estenosis o fracaso de tan solo el 5% durante un período de seguimiento mediano de 4.9 años utilizando anastomosis alta y reparación tardía.<br><br>Análisis de Distractores: 12% es la tasa de falla reportada por Pitt et al. 20% y 24% (opciones C y D) son las altas tasas de estenosis observadas en estudios de Schmidt y Holte cuando se intentaban reparaciones tempranas.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 84,
+        question: "¿Cuál fue la incidencia de cirrosis biliar secundaria observada como complicación irreversible a largo plazo en este estudio?",
+        options: ["2%", "6.7%", "10%", "16%"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la hepatopatía terminal es el desenlace natural de una obstrucción no resuelta, culminando invariablemente en insuficiencia orgánica.<br><br>Perla Quirúrgica: Como complicación a largo plazo, el 2% de los pacientes (n=2) desarrolló cirrosis biliar secundaria, siendo esta la causa de su fallecimiento.<br><br>Análisis de Distractores: 6.7% es la tasa de pacientes que desarrollaron re-estenosis anastomótica. 10% representa el total global de complicaciones a largo plazo. 16% fue la incidencia temprana de fuga biliar.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 85,
+        question: "A pesar de no realizar angiografía preoperatoria de rutina, ¿Cuántos casos de lesión de la arteria hepática derecha fueron detectados incidentalmente durante la cirugía?",
+        options: ["Ningún paciente", "3 pacientes", "7 pacientes", "15 pacientes"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la exploración vascular minuciosa del hilio es mandatoria, ya que el daño térmico suele comprometer estructuras adyacentes a la vía biliar de forma silente.<br><br>Perla Quirúrgica: Aunque no se realizó angiografía por tomografía computarizada en la mayoría, la lesión de la arteria hepática derecha se detectó intraoperatoriamente en 3 pacientes.<br><br>Análisis de Distractores: 7 pacientes corresponde a los que presentaban fístula coledocoduodenal. 15 pacientes fueron los que cursaron con estenosis tipo IV. Reportar \"ningún paciente\" subestima la realidad anatómica de las lesiones altas.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 86,
+        question: "Con base en los hallazgos colangiográficos, ¿Qué porcentaje exacto de pacientes presentó una estenosis clasificada como Bismuth tipo II?",
+        options: ["10%", "14%", "35%", "41%"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la distribución de la altura de la lesión dicta la complejidad técnica, siendo las lesiones por debajo de la confluencia hiliar muy frecuentes.<br><br>Perla Quirúrgica: Las estenosis se clasificaron morfológicamente en Bismuth tipo II en 37 individuos, correspondiendo al 35% de la cohorte.<br><br>Análisis de Distractores: 10% equivale a las estenosis tipo I. 14% representa a las estenosis tipo IV (las más altas y severas). 41% correspondió al grupo mayoritario con lesiones tipo III.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 87,
+        question: "De acuerdo a la literatura comparativa, ¿Cuál es el rango de éxito histórico a largo plazo para las reconstrucciones bilioentéricas realizadas en centros de referencia terciaria?",
+        options: ["60% a 70%", "70% a 80%", "80% a 95%", "95% a 99%"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la estandarización de la hepaticoyeyunostomía en Y de Roux por cirujanos hepatobiliares garantiza un control definitivo de la enfermedad en la inmensa mayoría de los afectados.<br><br>Perla Quirúrgica: Los resultados excelentes y buenos obtenidos en esta serie (91% global) son plenamente consistentes con las tasas de éxito del 80% al 95% reportadas en la mayoría de las series publicadas de centros de referencia terciaria.<br><br>Análisis de Distractores: Las tasas del 60% al 80% (A y B) reflejan resultados de centros no especializados o de reparaciones tempranas fallidas. Las tasas por encima del 95% (D) son irreales en cirugía biliar reconstructiva por isquemia.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1546."
+    },
+    {
+        id: 88,
+        question: "¿Qué intervención invasiva específica fue requerida para rescatar a los 3 pacientes cuya fuga anastomótica temprana no cerró con manejo conservador?",
+        options: ["Esfinterotomía endoscópica de urgencia", "Drenaje biliar transhepático percutáneo", "Reconstrucción bilioentérica de revisión", "Colocación de prótesis biliar metálica"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, cuando el débito de una dehiscencia no disminuye, se requiere desviar activamente el flujo biliar desde el interior del hígado para quitar presión a la anastomosis y permitir su cierre.<br><br>Perla Quirúrgica: Mientras que 14 pacientes tuvieron cierre espontáneo, 3 pacientes con fuga biliar anastomótica requirieron soporte avanzado mediante drenaje biliar transhepático percutáneo.<br><br>Análisis de Distractores: La esfinterotomía es inútil al no haber continuidad hacia el duodeno. La reconstrucción de revisión temprana (C) en un lecho inflamado es altamente letal. Las prótesis metálicas (D) están proscritas en la patología biliar benigna.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 89,
+        question: "Según los criterios de McDonald, ¿Qué porcentaje exacto de la cohorte culminó con un resultado clínico Grado C (regular) al final del seguimiento?",
+        options: ["1.9%", "6.6%", "23.8%", "67.7%"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, solo una ínfima minoría de pacientes cursa con cuadros febriles y dolorosos esporádicos que alteran su calidad de vida sin requerir obligadamente una reintervención mayor.<br><br>Perla Quirúrgica: Durante la mediana de seguimiento, únicamente 2 pacientes, representando el 1.9%, tuvieron un resultado Grado C de acuerdo al sistema de clasificación de McDonald.<br><br>Análisis de Distractores: 6.6% corresponde al fracaso terapéutico franco (Grado D). 23.8% alude a resultados buenos asintomáticos (Grado B). 67.7% son los resultados excelentes (Grado A).",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Abstract, p. 1542."
+    },
+    {
+        id: 90,
+        question: "En el análisis estadístico univariado, ¿Qué impacto demostró tener el sexo biológico del paciente sobre el desarrollo de complicaciones a corto plazo?",
+        options: ["Riesgo elevado en sexo masculino", "Riesgo elevado en sexo femenino", "Sin asociación estadísticamente significativa", "Factor protector en edad reproductiva"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la morbilidad de la restitución ductal está dictada por factores anatómicos, infecciosos y temporales, mas no por características demográficas per se.<br><br>Perla Quirúrgica: Al comparar a los pacientes con y sin complicaciones a corto plazo, la variable de sexo no mostró asociación estadísticamente significativa, arrojando un valor de p=0.19.<br><br>Análisis de Distractores: Ni el sexo femenino (ampliamente mayoritario) ni el masculino confirieron mayor riesgo anatómico anastomótico. La protección en edad reproductiva no aplica a la fibrosis e isquemia del conducto biliar.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Table 3, p. 1546."
+    },
+    {
+        id: 91,
+        question: "Según el análisis de fallas a largo plazo, ¿Qué porcentaje de los pacientes con estenosis tipo IV desarrolló re-estenosis anastomótica tardía?",
+        options: ["0%", "8.3%", "19.4%", "40%"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la destrucción de la bifurcación principal impone un reto isquémico insuperable en muchos casos, siendo este subgrupo el de peor pronóstico funcional sostenido.<br><br>Perla Quirúrgica: De los 15 pacientes con estenosis tipo IV al ingreso, 6 experimentaron falla anastomótica, lo que representa una altísima tasa de re-estenosis del 40% para este grupo.<br><br>Análisis de Distractores: 0% fue la tasa de falla observada en las estenosis tipo I. 8.3% fue el fallo observado en pacientes que tuvieron fuga preoperatoria. 19.4% fue el porcentaje de falla tardía en pacientes que ingresaron con colangitis activa.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Table 4, p. 1547."
+    },
+    {
+        id: 92,
+        question: "En la literatura comparativa citada (Pitt et al.), ¿Cuál fue la tasa de fracaso específica en lesiones de la vía biliar tratadas quirúrgicamente tras 18 años de vigilancia?",
+        options: ["5%", "12%", "19.6%", "24%"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la validación de la eficacia a largo plazo se apoya en series históricas que demuestran que, a pesar del éxito inicial, un porcentaje sostenido decaerá funcionalmente a lo largo de las décadas.<br><br>Perla Quirúrgica: Otra serie realizada por Pitt et al., en la que 104 pacientes con lesión biliar fueron tratados quirúrgicamente, presentó una tasa de fracaso del 12% a lo largo de 18 años.<br><br>Análisis de Distractores: 5% corresponde a los fracasos de Strasberg. 19.6% y 24% son las tasas inaceptables de falla reportadas por Schmidt y Holte, respectivamente, al ejecutar cirugías tempranas imprudentes.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 93,
+        question: "¿Qué limitación tecnológica reconocieron los autores como la principal causante de subestimar las lesiones arteriales concomitantes en su base de datos?",
+        options: ["Escasez de ultrasonido Doppler intraoperatorio", "Falta de colangioresonancia magnética rutinaria", "Carencia de tomografía computarizada angiográfica", "Inaccesibilidad a gammagrafía hepatobiliar dinámica"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la evolución de los protocolos de imagen ha vuelto imperativa la fase arterial prequirúrgica para anticipar catástrofes hiliares antes de la disección en frío.<br><br>Perla Quirúrgica: El diseño retrospectivo subestimó el número real de casos con lesión arterial, dado que no se realizó rutinariamente una tomografía computarizada angiográfica preoperatoria durante el periodo inicial.<br><br>Análisis de Distractores: La colangioresonancia magnética sí se usó ampliamente (66%) pero evalúa fluidos estáticos, no isquemia arterial viva. El Doppler y la gammagrafía no se mencionan como limitantes sistémicas metodológicas.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 94,
+        question: "¿Qué proporción exacta de pacientes requirió terapia puente mediante colangiopancreatografía retrógrada endoscópica antes de la cirugía definitiva?",
+        options: ["6%", "15%", "21%", "38%"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, aunque la intervención inferior endoscópica es resolutiva para fugas menores, en lesiones mayores solo sirve ocasionalmente para delimitar el límite distal de la transección o tratar cálculos retenidos.<br><br>Perla Quirúrgica: Como intervención temporal previa a la cirugía definitiva, el 15% de los pacientes (n=16) requirió colangiopancreatografía retrógrada endoscópica.<br><br>Análisis de Distractores: 6% fue el requerimiento de derivación percutánea transhepática (PTBD). 21% requirió laparotomía abierta. 38% necesitó drenaje de catéter percutáneo guiado por ecografía primariamente.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Table 1, p. 1545."
+    },
+    {
+        id: 95,
+        question: "¿Cuál fue la incidencia absoluta de abscesos intraabdominales mayores registrados como complicación posoperatoria temprana?",
+        options: ["2%", "7%", "13%", "16%"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la exteriorización pasiva de los exudados bilio-hemáticos mediante drenajes disminuye dramáticamente la formación de colecciones tabicadas infectadas posquirúrgicas.<br><br>Perla Quirúrgica: Los abscesos o colecciones intraabdominales graves representaron una morbilidad a corto plazo inusual, presentándose únicamente en el 2% de los pacientes (n=2).<br><br>Análisis de Distractores: 7% desarrollaron colangitis posoperatoria aguda. 13% presentó infección invasiva del sitio quirúrgico superficial. 16% sufrió dehiscencia anastomótica primaria.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 96,
+        question: "¿Cuál fue el límite temporal superior documentado en el rango de seguimiento clínico para los pacientes de esta cohorte?",
+        options: ["24 meses", "48 meses", "64 meses", "84 meses"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la certeza de una anastomosis indemne exige rastreo a lo largo de casi una década, captando las raras fallas tardías fibróticas.<br><br>Perla Quirúrgica: El seguimiento posoperatorio global tuvo una mediana de 64 meses, abarcando un rango de observación que se extendió desde los 24 hasta un máximo de 84 meses.<br><br>Análisis de Distractores: 24 meses fue el límite mínimo estricto requerido para no ser excluido del estudio. 64 meses fue la mediana estadística, no el límite superior. 48 meses no es un punto de corte metodológico citado.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Results, p. 1544."
+    },
+    {
+        id: 97,
+        question: "¿Cuál fue la prevalencia demográfica exacta del sexo masculino dentro de la cohorte final analizada de 105 pacientes?",
+        options: ["3.8%", "9.5%", "14.2%", "21.9%"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, el espectro de las lesiones iatrogénicas es un reflejo fidedigno de la patología vesicular de base, de carácter abrumadoramente femenino.<br><br>Perla Quirúrgica: Dentro de las características iniciales de la población en estudio, el sexo masculino constituyó únicamente el 9.5% de los pacientes (n=10).<br><br>Análisis de Distractores: 3.8% es el porcentaje de sujetos sin ictericia clínica. 14.2% equivale a la incidencia de lesión alta tipo IV. 21.9% representa la subpoblación de colecistectomías laparoscópicas.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Table 1, p. 1545."
+    },
+    {
+        id: 98,
+        question: "¿Qué parámetro de repercusión importante fue explícitamente excluido del análisis retrospectivo debido a las limitaciones del estudio?",
+        options: ["Carga financiera y calidad de vida", "Nivel de bilirrubina posoperatoria", "Supervivencia global a cinco años", "Frecuencia de colangitis recurrente"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, la pérdida de empleo, morbilidad psicológica y costos de drenajes percutáneos puente constituyen el impacto real de la lesión, el cual escapa a las métricas quirúrgicas simples.<br><br>Perla Quirúrgica: Dentro de las limitaciones declaradas por los autores, se admite que no se analizó la calidad de vida a largo plazo ni las preocupaciones financieras de los pacientes.<br><br>Análisis de Distractores: La colangitis recurrente y las pruebas de función hepática (bilirrubinas) forman la base de los Criterios de McDonald evaluados (opciones B y D). La supervivencia y mortalidad sí fueron reportadas y monitorizadas estrictamente a lo largo de 7 años.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 99,
+        question: "¿Cuál es la indicación quirúrgica clínica y táctica inquebrantable si se diagnostica colangitis aguda activa intraoperatoria pre-anastomosis?",
+        options: ["Administrar antibióticos y anastomosar", "Evitar cualquier intento de reparación", "Realizar derivación biliar interna temporal", "Resecar el tejido hepático perihiliar"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, afrontar epitelio inflamado asegura dehiscencia temprana por friabilidad tisular y condena al paciente a estenosis fibrótica irreversible.<br><br>Perla Quirúrgica: Por lo tanto, debe evitarse de manera categórica cualquier intento de reparar una lesión biliar en presencia de colangitis activa; priorizando únicamente el drenaje del foco infeccioso.<br><br>Análisis de Distractores: Administrar antibióticos y proceder a la sutura (A) garantiza el fracaso cicatrizal. Derivaciones internas o resecciones agresivas en un ambiente purulento aumentan drásticamente la mortalidad y la diseminación séptica en un paciente ya vulnerado.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Discussion, p. 1547."
+    },
+    {
+        id: 100,
+        question: "Según las conclusiones del estudio, ¿Qué entorno institucional es un requisito imperativo para lograr de manera constante los resultados excelentes descritos en la anastomosis biliar?",
+        options: ["Centro de atención de segundo nivel", "Hospital general con unidad endoscópica", "Clínica privada con terapia intensiva", "Centro de atención de tercer nivel"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al Estudio de Reconstrucción Biliar, el rescate de la isquemia ductal y la sepsis biliar exige un abordaje hepatobiliar puro, el cual escapa a los recursos y entrenamiento de las cirugías generales convencionales.<br><br>Perla Quirúrgica: La reparación quirúrgica de las lesiones de las vías biliares puede producir excelentes resultados siempre que se gestione en un centro de atención de tercer nivel donde se priorice la experiencia en la reconstrucción del árbol biliar.<br><br>Análisis de Distractores: Las unidades endoscópicas de hospitales generales (B) o el soporte vital intensivo aislado (C) son insuficientes si no existe un cirujano especializado en anatomía hiliar hepática y radiología intervencionista sincrónica de tercer nivel.",
+        source: "Analysis of outcomes of biliary reconstruction, 2021, Conclusions, p. 1547."
+    },
+        ];
+
+        // ==========================================
+        // ==========================================
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('gyoALastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('gyoAProgress');
+                localStorage.removeItem('gyoALastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-pink-500 shadow-md z-10 border-pink-500 dark:border-pink-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-pink-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-rose-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! UMAE 25 - 2026" : "R4 - UMAE 25 - 2026";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "UMAE 25 - R4";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus las respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="BS06308GYOE.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-pink-100 dark:border-pink-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-pink-50 has-[:checked]:border-pink-400 dark:has-[:checked]:bg-pink-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-pink-600 focus:ring-pink-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-600 dark:hover:bg-pink-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('gyoAProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('gyoALastQId', currentQuestionId);
+                else localStorage.removeItem('gyoALastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('gyoAProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB26PT8kuB-0fxyUYgGk51yC1rAsW0dYj0",
+        authDomain: "enarm-lite.firebaseapp.com",
+        projectId: "enarm-lite",
+        storageBucket: "enarm-lite.firebasestorage.app",
+        messagingSenderId: "767032952477",
+        appId: "1:767032952477:web:84347320ed3d376f7e7674",
+        measurementId: "G-PVR3RBVNSV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    //document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "usuarios_autorizados", user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            
+            if(userDocSnap.exists()) {
+                document.body.style.opacity = '1';
+            } else {
+                //window.location.href = "index.html"; 
+            }
+        } else {
+            //window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>
