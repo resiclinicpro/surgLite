@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">ENARM</span>
+                    <span class="logo-Lite text-sm">Lite<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-blue-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-cyan-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionsData = [
+
+    {
+        id: 1,
+        question: "¿Qué estructura nerviosa autonómica se lesiona con mayor frecuencia al realizar la ligadura alta de la arteria mesentérica inferior, provocando disfunción simpática manifestada como eyaculación retrógrada?",
+        options: ["Plexo hipogástrico superior", "Plexo periprostático", "Nervios erigentes", "Plexo sacro inferior"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, la inervación simpática del recto deriva de los nervios que salen a nivel de L1-L3 y forman el plexo hipogástrico superior, el cual se divide cerca del promontorio sacro. La ligadura alta de la arteria mesentérica inferior puede lesionar este plexo y originar disfunción sexual simpática en el hombre.<br><br>Perla Quirúrgica: Una ligadura alta de la arteria mesentérica inferior que lesione el plexo hipogástrico superior o seccione los nervios hipogástricos cerca del promontorio sacro puede resultar en disfunción simpática caracterizada por eyaculación retrógrada en los hombres.<br><br>Análisis de Distractores: El plexo periprostático (B) y los nervios erigentes (C) (plexo pélvico) proporcionan inervación parasimpática; su lesión causa disfunción eréctil o vejiga atónica, pero se lesionan típicamente en la disección anterior o lateral baja. El plexo sacro inferior (D) es un término anatómico impreciso en este contexto de lesión vascular alta.",
+        source: "52 Colon y Recto, Anatomy of the Colon, Rectum, and Pelvic Floor, Página 17."
+    },
+    {
+        id: 2,
+        question: "En un paciente con falla renal crónica que mantiene concentraciones séricas normales de potasio, ¿qué hormona promueve la secreción colónica compensatoria de este ion?",
+        options: ["Renina", "Vasopresina", "Aldosterona", "Angiotensina II"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, el colon tiene un papel fisiológico crucial en la secreción de potasio frente a estados de retención. Los pacientes urémicos compensan la falta de filtración renal con un aumento de la secreción colónica mediada específicamente por la aldosterona.<br><br>Perla Quirúrgica: La aldosterona promueve la secreción colónica de potasio, y este efecto es bloqueado por la espironolactona.<br><br>Análisis de Distractores: La vasopresina (B) regula la reabsorción de agua libre en los conductos colectores renales, no la secreción de potasio en el colon. La renina (A) y la angiotensina II (D) son pasos previos en el eje neurohumoral, pero la hormona efectora final sobre los canales epiteliales de potasio colónicos es la aldosterona.",
+        source: "52 Colon y Recto, Physiology of the Colon (Secretion), Página 20."
+    },
+    {
+        id: 3,
+        question: "¿Cuál es la evidencia actual respecto al beneficio del uso rutinario de antibióticos en pacientes con diverticulitis aguda no complicada manejados de forma ambulatoria?",
+        options: ["Aceleran el tiempo de recuperación", "No han demostrado acelerar la recuperación", "Previenen la necesidad de cirugía", "Disminuyen el riesgo de abscesos"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, el tratamiento contemporáneo de la diverticulitis no complicada se basa en analgésicos y modificación dietética transitoria. Múltiples metaanálisis han cuestionado el dogma del uso rutinario de antimicrobianos al no encontrar ventajas clínicas.<br><br>Perla Quirúrgica: Una revisión sistemática y metaanálisis que evaluó el efecto de la administración de antibióticos en pacientes con diverticulitis no complicada no ha demostrado que el uso de antibióticos acierte la recuperación o prevenga complicaciones o cirugías subsecuentes.<br><br>Análisis de Distractores: Los estudios no evidencian que los antibióticos acorten la sintomatología o recuperación (A), eviten que progrese a un absceso o complicación (D) ni que alteren la tasa de intervención quirúrgica a futuro (C) en la enfermedad no complicada.",
+        source: "52 Colon y Recto, Diverticular Disease (Uncomplicated Diverticulitis), Página 54."
+    },
+    {
+        id: 4,
+        question: "¿Cuál es el tratamiento inicial de elección para un paciente que se presenta con obstrucción en asa cerrada por un vólvulo sigmoideo sin datos clínicos de peritonitis ni isquemia?",
+        options: ["Resección sigmoidea con anastomosis primaria", "Procedimiento de Hartmann de urgencia", "Cecostomía con tubo descompresivo", "Descompresión endoscópica con sonda rectal"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, el vólvulo sigmoideo representa una obstrucción en asa cerrada que puede causar compromiso vascular rápido. Si el paciente se encuentra estable y sin signos peritoneales, la descompresión endoscópica detorsiona el segmento afectado de forma inmediata y permite planear una cirugía electiva.<br><br>Perla Quirúrgica: En pacientes con vólvulo sigmoideo, la descompresión endoscópica a menudo es exitosa utilizando un sigmoidoscopio rígido o flexible con la colocación de un tubo rectal proximal al punto de torsión.<br><br>Análisis de Distractores: La resección primaria (A) o el procedimiento de Hartmann (B) se reservan para cuando la descompresión endoscópica falla, o si hay evidencia de necrosis/perforación. La cecostomía (C) no tiene utilidad en la obstrucción distal por vólvulo sigmoideo.",
+        source: "52 Colon y Recto, Large Bowel Obstruction (Treatment), Página 64."
+    },
+    {
+        id: 5,
+        question: "En el síndrome de Ogilvie (pseudoobstrucción colónica aguda), ¿a partir de qué diámetro cecal se considera un signo inminente de isquemia colónica o perforación que requiere intervención?",
+        options: ["≥ 12 cm", "≥ 10 cm", "≥ 8 cm", "≥ 6 cm"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, la pseudoobstrucción cursa con una dilatación masiva del marco colónico por un disbalance autonómico. La tensión sobre la pared cecal compromete la perfusión microvascular cuando el diámetro supera los 12 cm.<br><br>Perla Quirúrgica: La sensibilidad abdominal, leucocitosis, fiebre y dilatación cecal de más de 12 cm son signos que pueden ser indicativos de isquemia colónica, perforación o perforación inminente.<br><br>Análisis de Distractores: Diámetros de 6, 8 o 10 cm (B, C, D) representan ectasia o dilatación patológica, pero el valor de corte crítico y universal para riesgo máximo de ruptura cecal en la pseudoobstrucción es de 12 cm.",
+        source: "52 Colon y Recto, Colonic Pseudo-Obstruction (Diagnosis), Página 69."
+    },
+    {
+        id: 6,
+        question: "¿Cuál es el fármaco y posología de primera línea indicado para el tratamiento de un primer episodio de infección por Clostridium difficile de severidad no fulminante?",
+        options: ["Fidaxomicina oral 200 mg cada 12 horas", "Vancomicina oral 125 mg cada 6 horas", "Metronidazol intravenoso 500 mg cada 8 horas", "Rifaximina oral 400 mg cada 12 horas"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, las guías actuales priorizan la terapia dirigida a la luz colónica con mínima absorción sistémica. La vancomicina oral ha reemplazado al metronidazol como primera línea debido a mejores tasas de curación y menor recurrencia.<br><br>Perla Quirúrgica: Tratamiento para el primer episodio: 1. Vancomicina oral 125 mg 4 veces al día O 2. Fidaxomicina 200 mg dos veces al día por 10 días.<br><br>Análisis de Distractores: La fidaxomicina (A) es una opción válida, pero la vancomicina oral (B) es el estándar clásico de primera línea listado como opción primordial. El metronidazol intravenoso (C) es adyuvante solo en enfermedad fulminante con íleo. La rifaximina (D) se usa en recurrencias crónicas, no como terapia de primera línea.",
+        source: "52 Colon y Recto, Infectious Colitis (Table 52.4), Página 110."
+    },
+    {
+        id: 7,
+        question: "¿Qué alteración molecular específica caracteriza a la vía supresora de inestabilidad cromosómica responsable del síndrome de poliposis adenomatosa familiar (FAP)?",
+        options: ["Mutación del gen BRAF", "Inactivación del gen TP53", "Mutación del oncogén KRAS", "Mutación del gen APC"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, la carcinogénesis colorrectal sigue vías distintas. El síndrome clásico de poliposis adenomatosa familiar es impulsado por la alteración germinal del gen APC, el evento iniciador en la vía de inestabilidad cromosómica.<br><br>Perla Quirúrgica: Los eventos moleculares involucrados incluyen mutaciones tempranas del gen APC (adenomatous polyposis coli), mutaciones activadoras subsecuentes en el oncogén KRAS, así como mutaciones resultando en la inactivación del gen supresor tumoral TP53.<br><br>Análisis de Distractores: Las mutaciones de KRAS (C) y la inactivación de TP53 (B) ocurren como pasos tardíos en la misma vía, no como el evento germinal fundacional del síndrome. Las mutaciones de BRAF (A) están típicamente asociadas a la vía de pólipos aserrados, no a la poliposis clásica.",
+        source: "52 Colon y Recto, Neoplasia (Genetics), Página 124."
+    },
+    {
+        id: 8,
+        question: "¿Qué criterio tumoral anatómico es un requisito estricto para considerar la escisión local transanal en el abordaje quirúrgico de un adenocarcinoma de recto temprano?",
+        options: ["Tamaño tumoral < 3 cm", "Invasión a la muscularis propia", "Afección > 50% de la circunferencia", "Presencia de invasión linfovascular"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, la preservación radical de órgano sin linfadenectomía (escisión local) exige tumores con riesgo mínimo de metástasis ganglionares. El tumor debe ser pequeño y móvil.<br><br>Perla Quirúrgica: Criterios para la Exéresis Local de Neoplasia Rectal: Características del Tumor: T0 o T1, < 3 cm de diámetro, < 30% de la circunferencia del lumen, Móvil a la exploración, cN0 en la imagen de etapificación.<br><br>Análisis de Distractores: La invasión a la muscularis propia (B) es contraindicación para la técnica estándar. La afección circunferencial debe ser menor al 30% (C es un exceso). La invasión linfovascular (D) es un hallazgo histopatológico de alto riesgo que contraindica la escisión local por su alta asociación con afección ganglionar.",
+        source: "52 Colon y Recto, Rectal Cancer (Local Excision, Box 1), Página 392."
+    },
+    {
+        id: 9,
+        question: "En el tratamiento de la fisura anal mediante denervación química con toxina botulínica tipo A, ¿en qué sitio anatómico específico se infiltra el medicamento?",
+        options: ["En la base de la hemorroide centinela", "En el lecho cruento de la úlcera mucosa", "En el surco interesfintérico", "En el margen anal externo subcutáneo"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Management of Fissure-In-Ano, el objetivo de la toxina es paralizar temporalmente el músculo esfínter anal interno para romper el espasmo y mejorar el flujo sanguíneo. Para lograrlo anatómicamente, se dirige la aguja a través del surco interesfintérico.<br><br>Perla Quirúrgica: Se inyectan dosis divididas en el surco interesfintérico dirigidas hacia el esfínter anal interno (IAS) en cuatro cuadrantes.<br><br>Análisis de Distractores: La base de la hemorroide centinela (A) y el lecho de la úlcera (B) son tejidos inflamados y fibróticos, no tejido muscular liso diana. El tejido subcutáneo del margen anal externo (D) dispersaría el fármaco sin efecto sobre el esfínter interno.",
+        source: "Management of Fissure-In-Ano, Chemical Denervation, Página 291."
+    },
+    {
+        id: 10,
+        question: "Según la anatomía de los espacios anorrectales, ¿qué estructura ligamentaria divide el espacio postanal en los compartimentos superficial y profundo?",
+        options: ["Músculo puborrectal", "Fascia de Waldeyer", "Músculo esfínter externo", "Ligamento anococcígeo"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al libro de Management of Anorectal Abscess and Fistula, la diseminación de la sepsis ocurre a través de planos de menor resistencia. El espacio postanal (común en abscesos en herradura) está biseccionado por tejido fibroso que une el ano al cóccix.<br><br>Perla Quirúrgica: El espacio postanal se divide en los espacios postanal superficial y profundo por la presencia del ligamento anococcígeo.<br><br>Análisis de Distractores: El músculo puborrectal (A) forma el anillo anorrectal superior. La fascia de Waldeyer (B) se sitúa más cefálica en el compartimento retrorectal profundo. El esfínter externo (C) marca el límite caudal del espacio profundo, pero no lo divide directamente en estos subcompartimentos.",
+        source: "Management of Anorectal Abscess and Fistula, Anorectal Abscess (Etiology), Página 245."
+    },
+    {
+        id: 11,
+        question: "De acuerdo con la regla de Goodsall en la fístula perianal, si un orificio fistuloso externo se localiza anterior a la línea transversal del ano, ¿cuál es el trayecto predecible hacia la cripta infectada?",
+        options: ["Curvo hacia la línea media posterior", "Recto y radial hacia el orificio interno", "Curvo hacia la línea media anterior", "En herradura hacia el lado contralateral"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Management of Anorectal Abscess and Fistula, la regla anatómica predice que las fístulas anteriores drenan directamente al canal anal más cercano, mientras que las posteriores trazan trayectos curvos hacia la cripta de la línea media posterior.<br><br>Perla Quirúrgica: La regla de Goodsall predice que un orificio externo posterior a una línea transversal a través del ano drena a un orificio interno en la línea media posterior, mientras que aquellos que se abren anterior a la línea tienen cursos cortos y radiales hacia el orificio interno.<br><br>Análisis de Distractores: Los trayectos curvos hacia la línea media posterior (A) corresponden a fístulas con orificio externo posterior. El trayecto en herradura (D) ocurre en procesos complejos posteriores. Un trayecto curvo anterior (C) no sigue el patrón clásico de Goodsall.",
+        source: "Management of Anorectal Abscess and Fistula, Fistula-in-Ano (Diagnosis), Página 269."
+    },
+    {
+        id: 12,
+        question: "En la evaluación proctológica, ¿qué hallazgo clínico patognomónico define a las hemorroides internas de grado 3?",
+        options: ["Prolapso que reduce espontáneamente", "Sangrado sin protrusión de tejido", "Prolapso que requiere reducción manual", "Prolapso encarcerado irreductible"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Management of Hemorrhoids, la gradación dicta la terapia quirúrgica o en consultorio. El grado 3 es el punto de inflexión donde el soporte de tejido conectivo falla al grado de requerir asistencia mecánica del paciente para su reposicionamiento.<br><br>Perla Quirúrgica: Grado 3: Prolapso, requiere reducción manual. Síntomas: Sangrado, presión, drenaje mucoide.<br><br>Análisis de Distractores: El grado 1 cursa con sangrado indoloro sin protrusión (B). El grado 2 es un prolapso que se reduce espontáneamente al cesar el pujo (A). El grado 4 es un prolapso permanentemente fuera del canal anal que no puede reducirse manualmente (D).",
+        source: "Management of Hemorrhoids, Table 1, Página 310."
+    },
+    {
+        id: 13,
+        question: "En la cirugía de colgajo hendido (Cleft Lift) para la enfermedad pilonidal, ¿qué referencia anatómica se utiliza para trazar la 'zona segura' preoperatoria?",
+        options: ["Tuberosidad isquiática bilateral", "Punto de contacto glúteo medial", "Margen anal externo superficial", "Fascia presacra profunda"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Management of Pilonidal Disease, el éxito de la operación de Bascom radica en aplanar el pliegue interglúteo y alejar la cicatriz de la zona de fricción. Para planear el colgajo, se presionan los glúteos juntos para delimitar la zona de aplanamiento.<br><br>Perla Quirúrgica: La marca se dibuja donde el tejido de cada lado se toca en la línea media. Las nalgas luego se separan con cinta revelando una marca en forma de 'hueso de los deseos' (wishbone). Esto establece una 'zona segura' más allá de la cual no debe realizarse disección adicional.<br><br>Análisis de Distractores: Las tuberosidades isquiáticas (A) están demasiado laterales. El margen anal externo (C) es el límite inferior a evitar. La fascia presacra (D) es el límite de profundidad en una resección abierta radical, no la marca cutánea superficial en el Cleft Lift.",
+        source: "Management of Pilonidal Disease, Operative Management (Cleft Lift), Página 354."
+    },
+    {
+        id: 14,
+        question: "En el abordaje del paciente con neumatosis intestinal aguda, ¿qué hallazgo de laboratorio predice fuertemente una etiología de catástrofe intraabdominal por isquemia transmural?",
+        options: ["Lactato sérico ≥ 2.0 mmol/L", "Amilasa sérica > 200 U/L", "Bicarbonato sérico < 20 ml/L", "Leucocitosis con desviación izquierda"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Pneumatosis Intestinalis, la hipoperfusión intestinal severa produce metabolismo anaerobio rápido. El lactato por encima de 2.0 mmol/L es el marcador independiente más sensible y pronóstico de necrosis y mortalidad inminente.<br><br>Perla Quirúrgica: El predictor más fuerte de enfermedad patológica y malos resultados en PI (neumatosis intestinal) sigue siendo un lactato sérico ≥ 2.0 mmol/L.<br><br>Análisis de Distractores: La amilasa elevada (B) y el bicarbonato bajo (C) son signos sugestivos pero no ostentan el peso predictivo principal establecido. La leucocitosis (D) es inespecífica y ocurre comúnmente en causas benignas de neumatosis secundaria.",
+        source: "Pneumatosis Intestinalis, Laboratory Findings, Página 426."
+    },
+    {
+        id: 15,
+        question: "¿Cuál es el estudio de imagen de primera línea y mayor sensibilidad para identificar desgarros ocultos o atrofia del complejo esfinteriano en la incontinencia fecal?",
+        options: ["Defecografía por resonancia", "Tomografía computarizada pélvica", "Ultrasonido endoanal", "Manometría anorrectal"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Surgical Management of Fecal Incontinence, el mapeo anatómico exacto de los esfínteres es imperativo para decidir una esfinteroplastia, y el transductor rotatorio intracanal ofrece la mejor resolución tisular de estos músculos planos.<br><br>Perla Quirúrgica: El ultrasonido endoanal es el medio más sensible para confirmar si existe un defecto del esfínter en pacientes con sospecha de lesión del esfínter y determinar el tamaño del defecto.<br><br>Análisis de Distractores: La defecografía por resonancia (A) evalúa dinámica pélvica y prolapsos de órganos, pero no tiene la misma sensibilidad para defectos musculares focales. La tomografía (B) carece de resolución esfinteriana. La manometría (D) evalúa presiones (fisiología), no anatomía morfológica.",
+        source: "Surgical Management of Fecal Incontinence, Diagnostic Evaluation, Página 471."
+    },
+    {
+        id: 16,
+        question: "En una mujer con una fístula rectovaginal simple y de localización baja secundaria a lesión obstétrica, sin compromiso del esfínter externo, ¿cuál es el abordaje quirúrgico de elección?",
+        options: ["Fistulotomía transanal simple", "Resección anterior baja", "Colgajo de avance endorrectal", "Interposición de músculo grácil"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Rectovaginal Fistula, el colgajo de avance rectal moviliza tejido sano para cubrir el orificio de alta presión sin cortar el esfínter anal externo, conservando la continencia fecal intacta.<br><br>Perla Quirúrgica: El colgajo de avance endorrectal (ERAF) es el tratamiento más estándar para las fístulas rectovaginales simples postraumáticas de localización baja. Es un enfoque convincente, especialmente cuando hay preocupación por la incontinencia fecal, ya que no causa ninguna división quirúrgica del músculo esfínter externo.<br><br>Análisis de Distractores: La fistulotomía transanal simple (A) seccionaría el periné anterior y causa alta tasa de incontinencia en mujeres. La resección anterior baja (B) es un exceso mórbido para fístulas bajas simples. El colgajo de grácil (D) se reserva para fístulas complejas o posradiación.",
+        source: "Rectovaginal Fistula, Endorectal Advancement Flap, Página 445."
+    },
+    {
+        id: 17,
+        question: "En el desarrollo de la neoplasia intraepitelial y carcinoma epidermoide del canal anal, ¿qué subtipos del virus del papiloma humano (VPH) representan la causa de hasta el 79% de los casos?",
+        options: ["Subtipos 6 y 11", "Subtipos 31 y 33", "Subtipos 42 y 43", "Subtipos 16 y 18"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al libro de Management of Tumors of the Anal Region, el carcinoma de células escamosas del ano es una enfermedad inducida por oncovirus. La integración del ADN viral de cepas de alto riesgo altera los genes oncosupresores del huésped.<br><br>Perla Quirúrgica: Aunque hay más de 100 subtipos, los subtipos 16 y 18 tienen una fuerte relación con el desarrollo de carcinoma de células escamosas (SCC) anal. Los CDC estiman que estos dos subtipos de VPH representan hasta el 79% de todos los cánceres anales.<br><br>Análisis de Distractores: Los subtipos 6 y 11 (A) causan enfermedad benigna exofítica (Condiloma acuminatum) con mínimo potencial de transformación maligna. Los subtipos 31, 33 (B) y 42, 43 (C) tienen asociación oncogénica, pero en un porcentaje significativamente menor a nivel mundial.",
+        source: "Management of Tumors of the Anal Region, Human Papilloma Virus and Anal Squamous Neoplasia, Página 399."
+    },
+    {
+        id: 18,
+        question: "¿Qué hallazgo histopatológico clásico obtenido por biopsia confirma el diagnóstico de enfermedad de Paget perianal?",
+        options: ["Granulomas no caseificantes", "Células epiteliales de citoplasma claro", "Abscesos crípticos con neutrófilos", "Fibras musculares hipertróficas"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Management of Tumors of the Anal Region, la enfermedad de Paget perianal representa un adenocarcinoma intraepitelial derivado de las glándulas apocrinas locales o de una extensión de malignidad pélvica, mostrando células vacuoladas displásicas.<br><br>Perla Quirúrgica: El hallazgo histológico clásico son las células de Paget, que son células epiteliales glandulares con abundante citoplasma claro.<br><br>Análisis de Distractores: Los granulomas no caseificantes (A) son el sello de la enfermedad de Crohn perianal. Los abscesos crípticos (C) orientan a colitis ulcerosa. Las fibras musculares hipertróficas (D) se observan en el síndrome de úlcera rectal solitaria.",
+        source: "Management of Tumors of the Anal Region, Paget's Disease, Página 412."
+    },
+    {
+        id: 19,
+        question: "¿Cuál es la causa etiológica responsable de hasta el 87% de los casos de estenosis anal anatómica secundaria?",
+        options: ["Infección por Chlamydia", "Cirugía anorrectal previa", "Uso crónico de laxantes", "Radioterapia pélvica previa"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Anal Stenosis, la resección quirúrgica excesiva de la piel y el anodermo (especialmente en hemorroidectomías multicuadrantes) provoca una cicatrización fibrótica circunferencial que disminuye severamente la complianza y el diámetro del canal anal.<br><br>Perla Quirúrgica: La causa más común de estenosis secundaria es la cirugía, ocurriendo con mayor probabilidad tras una hemorroidectomía multicuadrante cuando se eliminan grandes áreas de anodermo. La literatura cita que hasta el 87% de los casos son secundarios a hemorroidectomía.<br><br>Análisis de Distractores: Las infecciones de transmisión sexual (A), el uso de laxantes (C) y la radioterapia (D) son factores causales secundarios documentados, pero representan un porcentaje sumamente minoritario en comparación con la yatrogenia quirúrgica directa del conducto.",
+        source: "Anal Stenosis, Background, Páginas 212-213."
+    },
+    {
+        id: 20,
+        question: "En la fisiopatología del prurito anal idiopático primario, ¿qué estructura nerviosa desempeña un rol fundamental en el mantenimiento del 'ciclo de picazón-rascado'?",
+        options: ["Fibras C no mielinizadas", "Fibras A-delta", "Fibras A-beta", "Fibras B mielinizadas"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Management of Pruritus Ani, la transmisión del picor constante y urente somatosensorial en la región perianal depende de una clase específica de nervios periféricos de conducción lenta, altamente sensibles a mediadores inflamatorios locales.<br><br>Perla Quirúrgica: Se cree que las fibras C, una clase de fibras nerviosas no mielinizadas que se encuentran en el sistema sensorial somático, juegan un papel clave.<br><br>Análisis de Distractores: Las fibras A-delta (B) transmiten dolor agudo y rápido (punzante). Las fibras A-beta (C) se encargan del tacto fino y presión. Las fibras B (D) son preganglionares autonómicas, no intervienen en el circuito somático del prurito cutáneo.",
+        source: "Management of Pruritus Ani, Etiology (Primary/Idiopathic Pruritus Ani), Página 369."
+    },
+    {
+        id: 21,
+        question: "En un paciente con colitis ulcerosa de larga evolución y colangitis esclerosante primaria, ¿cuál es el tratamiento quirúrgico de elección ante el hallazgo endoscópico de una lesión o masa asociada a displasia (DALM)?",
+        options: ["Mucosectomía endoscópica", "Hemicolectomía extendida", "Proctocolectomía total", "Resección segmentaria"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, la transformación neoplásica en la enfermedad inflamatoria intestinal difiere de la vía esporádica adenoma-carcinoma. La displasia suele tener una distribución multifocal en toda la mucosa inflamada cronicamente (efecto de campo), lo que contraindica resecciones parciales.<br><br>Perla Quirúrgica: En pacientes con enfermedad de Crohn, al igual que en la colitis ulcerosa, las áreas de displasia en el colon pueden ser multifocales, y por esta razón, si esto ocurre en el colon, una proctocolectomía total se considera preferible a una resección segmentaria.<br><br>Análisis de Distractores: La resección segmentaria (D) o hemicolectomía (B) deja mucosa en riesgo que puede progresar a neoplasia. La mucosectomía endoscópica (A) es curativa solo para pólipos adenomatosos esporádicos en áreas no afectadas por inflamación crónica (adenoma-like), no para las verdaderas masas DALM.",
+        source: "52 Colon y Recto, Inflammatory Bowel Disease (Indications for Surgery), Página 83."
+    },
+    {
+        id: 22,
+        question: "En el contexto de un brote fulminante de colitis ulcerosa, ¿a partir de qué diámetro transversal de dilatación del colon en la radiografía abdominal se establece el diagnóstico de megacolon tóxico?",
+        options: ["> 10 cm", "> 8 cm", "> 12 cm", "> 5 cm"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, a medida que la mucosa se descama y se absorben las endotoxinas, el paciente desarrolla un estado séptico con un íleo paralítico colónico concomitante. En presencia de colitis inflamatoria difusa severa, la pérdida del tono muscular que expande el colon por arriba de 5 cm marca el umbral inminente para la perforación.<br><br>Perla Quirúrgica: Si la colitis es lo suficientemente severa como para tener un íleo colónico asociado, esto es evidente en una radiografía abdominal con un diámetro aumentado del colon transverso (>5 cm).<br><br>Análisis de Distractores: El umbral de > 12 cm (C) es la medida de riesgo inminente de ruptura para el ciego en el síndrome de Ogilvie (pseudoobstrucción) o en obstrucción distal por vólvulo. Los 8 y 10 cm (A, B) son valores críticos de distensión en intestino grueso para otras causas obstructivas crónicas, mas no para megacolon tóxico.",
+        source: "52 Colon y Recto, Inflammatory Bowel Disease (Indications for Surgery), Páginas 84-85."
+    },
+    {
+        id: 23,
+        question: "Según los criterios clásicos de Amsterdam II para el diagnóstico clínico de cáncer colorrectal hereditario no polipósico (Síndrome de Lynch), ¿cuál es el límite de edad antes del cual al menos uno de los familiares afectados debe haber sido diagnosticado?",
+        options: ["40 años", "50 años", "60 años", "45 años"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, los criterios de Amsterdam II sirven para identificar agrupaciones familiares altamente sospechosas de portar mutaciones en los genes reparadores de desajustes (MMR). Para cumplir la regla, al menos uno de los casos oncológicos debe haber debutado de manera prematura.<br><br>Perla Quirúrgica: Criterios Amsterdam II... El cáncer en uno o más familiares afectados se diagnostica antes de los 50 años de edad.<br><br>Análisis de Distractores: La edad de 60 años (C) es un criterio de corte utilizado dentro de las directrices revisadas de Bethesda para tumores con inestabilidad microsatelital (MSI). Las edades de 40 y 45 años (A, D) son distractores numéricos sin rol definitorio en estos criterios de tamizaje.",
+        source: "52 Colon y Recto, Neoplasia (Box 52.3 Amsterdam II criteria), Página 129."
+    },
+    {
+        id: 24,
+        question: "En el análisis anatomopatológico del espécimen quirúrgico tras una extirpación por cáncer de recto, ¿qué hallazgo macroscópico es el estándar que define una calidad de resección catalogada estrictamente como 'completa'?",
+        options: ["Ausencia de ganglios linfáticos infiltrados", "Margen circunferencial > 2 mm", "Fascia mesorrectal intacta", "Defectos de la fascia < 5 mm"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Management of Rectal Cancer, la técnica de disección del plano de la fascia pélvica visceral y parietal determina la tasa de recidiva local. Si el cirujano siguió el plano avascular, el paquete graso mesorrectal no tendrá desgarros ni divulsiones, previniendo el derrame de células tumorales.<br><br>Perla Quirúrgica: La calidad de la TME se clasifica como completa (fascia mesorrectal intacta), casi completa (defectos pequeños, <5 mm en la fascia mesorrectal), e incompleta (defectos >1 cm o exposición de la muscular propia).<br><br>Análisis de Distractores: Los defectos de < 5 mm (D) degradan el grado técnico a 'casi completa'. El margen circunferencial negativo (B) y la ausencia de metástasis ganglionares (A) dictan el estadiaje oncológico o radicalidad (R0 o pN0), pero no definen el baremo anatómico de la calidad de la Excisión Total del Mesorrecto (TME).",
+        source: "Management of Rectal Cancer, Radical Resection, Página 383."
+    },
+    {
+        id: 25,
+        question: "En el protocolo multidisciplinario del cáncer de recto locorregionalmente avanzado, ¿cuál es una indicación actual aceptada para priorizar la terapia neoadyuvante total (TNT) en lugar del esquema preoperatorio convencional?",
+        options: ["Tumores T2 con invasión linfovascular", "Cáncer en el tercio superior del recto", "Lesiones T3 con margen circunferencial amenazado", "Pacientes asintomáticos mayores de 75 años"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Management of Rectal Cancer, la terapia neoadyuvante total busca erradicar tempranamente micrometástasis y optimizar la erradicación del tumor pélvico antes de la cirugía. Se reserva primariamente para tumores de alto riesgo local o con margen circunferencial en peligro.<br><br>Perla Quirúrgica: Las pautas actuales de la NCCN recomiendan TNT para lesiones T4, lesiones T3 con márgenes amenazados, y aquellos pacientes que son médicamente inoperables.<br><br>Análisis de Distractores: Los tumores del tercio superior (B) y T2 (A) se manejan habitualmente con resección directa si sus márgenes son seguros. Los mayores de 75 años con comorbilidades (D) tienen más riesgo de toxicidad ante la quimioterapia sistémica intensiva preoperatoria del esquema TNT.",
+        source: "Management of Rectal Cancer, Neoadjuvant Therapy, Página 381."
+    },
+    {
+        id: 26,
+        question: "Durante el tratamiento conservador en consultorio para enfermedad hemorroidal interna mediante ligadura con banda elástica, ¿a qué distancia mínima de la línea dentada se debe disparar y estrangular la mucosa para evitar complicaciones somáticas graves?",
+        options: ["2 cm por encima", "Exactamente sobre la línea", "4 cm por encima", "1 cm por debajo"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Management of Hemorrhoids, la inervación de la zona de transición anorrectal distal está comandada por nervios sensitivos somáticos sumamente dolorosos. Colocar el anillo de isquemia alto dentro del epitelio glandular proximal asegura capturar territorio dominado por el sistema autonómico.<br><br>Perla Quirúrgica: La banda de goma se coloca aproximadamente 2 cm por encima de la línea dentada en el ápice de la hemorroide. No hay sensación de dolor somático a este nivel, y muchos pacientes reportan presión pélvica sorda.<br><br>Análisis de Distractores: Colocar la banda por debajo (D) o a nivel de la línea dentada (B) resultará en dolor transfixiante inmediato, retención urinaria refleja o síncope neurocardiogénico. La distancia de 4 cm (C) suele ser demasiado proximal al plexo hemorroidal real, comprometiendo la efectividad terapéutica del procedimiento.",
+        source: "Management of Hemorrhoids, Office Procedures (Rubber Band Ligation), Página 312."
+    },
+    {
+        id: 27,
+        question: "En la reconstrucción plástica de una fístula rectovaginal inferior compleja y multirrecidivante, ¿qué músculo y eje vascular integran el colgajo de interposición de Martius?",
+        options: ["Músculo glúteo mayor y arteria glútea inferior", "Músculo bulbocavernoso y rama perineal de la arteria pudenda", "Músculo recto abdominal y arteria epigástrica inferior", "Músculo grácil y arteria circunfleja femoral medial"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Rectovaginal Fistula, el injerto de Martius utiliza la almohadilla grasa bulboesponjosa de los labios mayores por su proximidad, volumen tisular y rica perfusión pudenda. Al tunelizarse, rellena el tabique rectovaginal y aumenta la distancia anatómica de protección.<br><br>Perla Quirúrgica: El Dr. Heinrich Martius describió por primera vez un colgajo que consiste en un injerto pediculado de almohadilla de grasa muscular bulbocavernosa de cualquiera de los labios mayores basado en la rama perineal de la arteria pudenda.<br><br>Análisis de Distractores: El músculo grácil (D) es el tejido de elección para la graciloplastia, basado en el pedículo circunflejo femoral. El recto abdominal (C) forma el colgajo VRAM para reconstrucciones pélvicas exenterativas mayores. El glúteo mayor (A) se utiliza para avance fasciocutáneo en defectos sacros o perineales amplios por amputación.",
+        source: "Rectovaginal Fistula, Bulbocavernosus (Martius) Flap, Página 448."
+    },
+    {
+        id: 28,
+        question: "En la terapéutica ablativa tópica para condilomas acuminados en el margen anal, ¿qué agente farmacológico está clasificado formalmente como Categoría X y totalmente prohibido en pacientes gestantes?",
+        options: ["Podofilina", "Ácido tricloroacético", "Imiquimod", "Sinecatequinas"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Anal Condyloma, la podofilina interrumpe la mitosis celular y su absorción sistémica accidental a través de la piel fina o mucosa perianal puede tener efectos citotóxicos letales y teratogénicos irreversibles en el feto en desarrollo.<br><br>Perla Quirúrgica: Podofilina (Podocon-25)... Efectos secundarios/Embarazo: Absorción sistémica puede causar efectos secundarios fatales. Embarazo: Categoría X (contraindicado).<br><br>Análisis de Distractores: El ácido tricloroacético (B) causa destrucción química local sin absorción ni toxicidad sistémica, por lo que es seguro en embarazadas. El imiquimod (C) y las sinecatequinas (D) están catalogados como Categoría C (uso bajo precaución estricta), sin ostentar la prohibición absoluta de la podofilina.",
+        source: "Anal Condyloma, Table 1 Common Treatments for Anal Condyloma, Página 406."
+    },
+    {
+        id: 29,
+        question: "En la evaluación de una gran masa coliflor y de lento crecimiento (tumor de Buschke-Lowenstein), ¿qué porcentaje de estas lesiones presenta focos malignos verdaderos a pesar de su patogenia viral primaria?",
+        options: ["50%", "25%", "75%", "10%"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Anal Condyloma, la escisión quirúrgica local de márgenes amplios del condiloma acuminado gigante es obligatoria no solo por la compresión destructiva local, sino por el elevadísimo índice de transformación escamosa infiltrante encubierta.<br><br>Perla Quirúrgica: Originalmente se describió como carente de potencial maligno, sin embargo, ahora se cree que hasta el 50% del GCA (condiloma acuminado gigante) puede contener focos de carcinoma de células escamosas.<br><br>Análisis de Distractores: Un 10% (D) o 25% (B) subestiman drásticamente la tasa de degeneración neoplásica de estos condilomas exofíticos agresivos, lo que arriesgaría un subtratamiento. El 75% (C) sobreestima el fenómeno estadístico.",
+        source: "Anal Condyloma, Giant Condyloma Acuminata, Página 404."
+    },
+    {
+        id: 30,
+        question: "En el esquema actual modificado para el manejo de curación con preservación del esfínter en el cáncer de células escamosas del canal anal, ¿cuál es la dosis de radiación pélvica mínima que se administra en concurrencia con la quimioterapia?",
+        options: ["30 Gy", "45 Gy", "59 Gy", "65 Gy"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Management of Tumors of the Anal Region, el abordaje Nigro sentó las bases para curar el cáncer anal sin colostomía definitiva. El régimen moderno consolidado dicta la infusión de mitomicina y fluorouracilo emparejada a un mínimo de 45 Gy antes de dosis de consolidación.<br><br>Perla Quirúrgica: El estándar de atención actual implica un régimen de mitomicina C y 5-FU o mitomicina C y capecitabina administradas simultáneamente con la radiación. Se utiliza una técnica de múltiples campos para administrar una dosis mínima de radiación de 45 Gy durante un período de 5 semanas.<br><br>Análisis de Distractores: La dosis de 30 Gy (A) era la dosificación preoperatoria descrita originalmente en la publicación histórica de Nigro en 1974. 59 Gy (C) es el límite máximo sumando dosis de consolidación (boost) para tumores grandes. 65 Gy (D) excede la dosis locorregional del esquema estándar.",
+        source: "Management of Tumors of the Anal Region, Treatment, Página 415."
+    },
+    {
+        id: 31,
+        question: "En un paciente adulto joven con enfermedad de Crohn perianal agresiva y trayectos fistulosos crónicos que cambian clínicamente a características induradas o sangrantes, ¿qué neoplasia secundaria es la sospecha obligada?",
+        options: ["Melanoma amelánico primario", "Adenocarcinoma de glándulas anales", "Sarcoma de Kaposi perianal", "Tumor del estroma gastrointestinal"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Management of Tumors of the Anal Region, el epitelio y tejido glandular subyacente que reviste fístulas perpetuadas a lo largo de los años en procesos transmurales autoinmunes sufre una transición neoplásica hacia la morfología de glándulas mucinosas penetrantes.<br><br>Perla Quirúrgica: El tipo de glándula del canal anal tiende a estar asociado con tractos de fístula anal crónica que se ven con mayor frecuencia en pacientes con la enfermedad de Crohn.<br><br>Análisis de Distractores: El melanoma (A) es un tumor agresivo derivado de melanocitos distales, no de inflamación supurativa crónica. El Sarcoma de Kaposi (C) es una entidad definitoria de SIDA y coinfección por HHV-8. Los GIST (D) surgen de las células de Cajal del mesénquima, sin relación etiológica directa con las fístulas.",
+        source: "Management of Tumors of the Anal Region, Columnar Neoplasms (Adenocarcinoma), Página 417."
+    },
+    {
+        id: 32,
+        question: "En una mujer multípara que cursa con incontinencia fecal inmediata por la disrupción franca del esfínter anal externo durante el parto (desgarro tipo III/IV), si el reparo primario fracasa, ¿qué tiempo debe diferirse la esfinteroplastia anterior electiva?",
+        options: ["12 a 18 meses", "1 a 2 meses", "3 a 6 meses", "6 a 12 meses"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Surgical Management of Fecal Incontinence, reintervenir tejidos de manera subaguda garantiza el fracaso de la sutura debido al estado inflamatorio agudo y la friabilidad local; es imperativo esperar hasta que los cabos del músculo estén encapsulados por un tejido cicatricial fibrótico fuerte.<br><br>Perla Quirúrgica: Si el paciente continúa teniendo un defecto del esfínter y síntomas de IF, la intervención quirúrgica definitiva debe retrasarse de 3 a 6 meses para dar tiempo a que disminuya la inflamación y se forme tejido cicatricial.<br><br>Análisis de Distractores: Un abordaje a los 1-2 meses (B) ocurre en plena fase de reorganización proliferativa con alta friabilidad hística. Retrasar de 6 a 18 meses (A, D) expone a la paciente a incapacidad psicosocial innecesaria sin obtener beneficios mecánicos adicionales de cicatrización muscular.",
+        source: "Surgical Management of Fecal Incontinence, Overlapping Anterior Sphincteroplasty, Página 477."
+    },
+    {
+        id: 33,
+        question: "Durante el abordaje transperineal de un prolapso rectal completo (procidencia) en un paciente con alta comorbilidad, ¿cuál es el límite de longitud máxima del asa prolapsada recomendada para aplicar exitosamente el procedimiento de Delorme?",
+        options: ["< 3 cm", "< 5 cm", "< 10 cm", "< 8 cm"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, la técnica de Delorme implica la decorticación de la mucosa prolapsada seguida del plegamiento muscular en acordeón (plicatura). En cilindros prolapsados masivos (>5 cm), el grosor de la musculatura plicada dificulta el retorno al canal pélvico, prefiriéndose la técnica de Altemeier.<br><br>Perla Quirúrgica: Para los pacientes con un prolapso rectal corto (<5 cm), el procedimiento de Delorme puede ser apropiado.<br><br>Análisis de Distractores: Cilindros mayores de 5 cm (C, D) obligan a resección completa de espesor total de la pared (Altemeier) o abordaje laparoscópico abdominal con rectopexia debido a la redundancia inmanejable. La opción A (<3 cm) es segura pero subestima el rango permisible de 5 cm.",
+        source: "52 Colon y Recto, Pelvic Floor Disorders (Surgical Treatment), Página 415."
+    },
+    {
+        id: 34,
+        question: "De acuerdo a los criterios diagnósticos fisiológicos de Roma IV para confirmar el síndrome de estreñimiento crónico funcional puro, ¿por cuánto tiempo cronológico ininterrumpido deben documentarse las manifestaciones defecatorias patológicas?",
+        options: ["Al menos 1 mes", "Al menos 3 meses", "Al menos 6 meses", "Al menos 12 meses"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, el panel internacional de consenso de Roma ha estandarizado la temporalidad para separar síndromes transitorios de padecimientos funcionales neuro-mecánicos verdaderos, indicando que el problema debe afectar más del 25% de las deposiciones en el último trimestre.<br><br>Perla Quirúrgica: Según los criterios de Roma IV, el estreñimiento funcional se diagnostica si (1) hay al menos dos de los siguientes síntomas, durante al menos el 25% de las defecaciones, durante al menos 3 meses...<br><br>Análisis de Distractores: Las pautas temporales de 1 (A), 6 (C) o 12 meses (D) son intervalos erróneos en este estándar de consenso. Para patologías del piso pélvico e intestino, los 3 meses de cronicidad del último trimestre establecen la norma diagnóstica internacional.",
+        source: "52 Colon y Recto, Pelvic Floor Disorders (Constipation), Página 416."
+    },
+    {
+        id: 35,
+        question: "¿Qué parámetro morfológico endoscópico se evalúa obligatoriamente dentro del sistema de clasificación de Spigelman para estratificar y manejar el riesgo en los pólipos duodenales de pacientes con poliposis adenomatosa familiar (PAF)?",
+        options: ["Presencia de invasión linfovascular profunda", "Grado de displasia citológica", "Grado de inflamación criptal activa", "Presencia de células en anillo de sello"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, la estadificación endoscópica duodenal (Spigelman) previene el cáncer periampular, segunda causa de muerte en estos pacientes tras la colectomía. El puntaje evalúa: número de pólipos, tamaño, histología y grado de displasia.<br><br>Perla Quirúrgica: Clasificación de Spigelman para pólipos duodenales... Criterios: Número de pólipos, Tamaño del pólipo (mm), Histología, Displasia (Leve, Moderada, Severa).<br><br>Análisis de Distractores: La invasión linfovascular (A) dicta un manejo oncológico invasivo para carcinoma confirmado, no para estratificación de pólipos precancerosos. La inflamación criptal (C) evalúa actividad en colitis ulcerosa o Crohn. Las células en anillo de sello (D) tipifican patología gástrica maligna difusa.",
+        source: "52 Colon y Recto, Neoplasia (Table 52.8 Spigelman classification), Página 126."
+    },
+    {
+        id: 36,
+        question: "Durante la planificación preoperatoria de una transposición muscular hacia el periné para reparar fístulas masivas, ¿cuál de los siguientes escenarios de la historia clínica representa una contraindicación específica documentada para el colgajo pediculado del músculo grácil?",
+        options: ["Radiación previa a la región pélvica de 50 Gy", "Edad biológica del paciente mayor a 65 años", "Presencia de atrofia muscular o neuropatía motora", "Historial repetido de cirugía anorrectal fallida"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Rectovaginal Fistula, el músculo grácil requiere mantener irrigación robusta por su pedículo principal y tono contráctil para proporcionar volumen sano y tensión curativa al sitio de la fístula. Pacientes que sufren desgaste neurológico o miopatías tendrán pérdida isquémica.<br><br>Perla Quirúrgica: Sin embargo, para la interposición del músculo grácil, se recomienda precaución en pacientes con atrofia muscular, miopatía o movilidad deteriorada.<br><br>Análisis de Distractores: La radiación pélvica previa (A) es la indicación clásica e ideal por la cual las fístulas son irreparables con tejidos locales, forzando la necesidad de importar tejido no irradiado del muslo. Múltiples cirugías fallidas (D) y edad avanzada (B) obligan al uso de colgajos, mas no contraindican la viabilidad del músculo.",
+        source: "Rectovaginal Fistula, Interposition Flaps, Página 450."
+    },
+    {
+        id: 37,
+        question: "En el algoritmo de corrección reconstructiva plástica para la estenosis anal secundaria severa, ¿cuál es el beneficio fisiológico exacto por el cual se prefiere construir un 'colgajo en casa' (House flap) en lugar de la plastía con 'colgajo de avance V-Y'?",
+        options: ["Proporciona tejido no sometido a tensión para curvaturas anteriores", "Evita la creación de un ápice tisular estrecho vulnerable a la isquemia", "Aumenta la contención mediante el anclaje de fibras musculares lumbares", "Evita completamente la dilatación anal mecánica en el intraoperatorio"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Anal Stenosis, la liberación de la estenosis implica introducir anodermis sano al conducto. El 'House Flap' asegura un bloque cuadrado grueso en su base que transita sin reducción cónica de su vascularización hasta el margen libre mucoso (línea dentada), a diferencia del pico puntiagudo isquémico del V-Y.<br><br>Perla Quirúrgica: También evita el ápice estrecho involucrado en los colgajos de avance Y-V, que están sujetos a isquemia. Los colgajos en casa (House flaps) se pueden realizar de forma bilateral y cubrir grandes áreas de estenosis.<br><br>Análisis de Distractores: Todos los colgajos cutáneos perianales aportan tejido anodermis útil, pero la superioridad técnica del House flap estriba puramente en la geometría para la perfusión vascular. Ningún colgajo ancla fibras lumbares musculares (C) ni evita la dilatación intraoperatoria (D).",
+        source: "Anal Stenosis, Operative Management (House Flap), Página 213."
+    },
+    {
+        id: 38,
+        question: "Como parte del arsenal terapéutico para un prurito anal primario refractario e intratable con la terapia higiénico-dietética y ungüentos tópicos, ¿cuál es el mecanismo patogénico directo que se busca inducir localmente con las microinyecciones de azul de metileno subcutáneo?",
+        options: ["Eliminación de dermatofitos y cándida local", "Inhibición selectiva y competitiva de los receptores de bradicinina", "Oclusión fibrótica del drenaje linfático de las glándulas apocrinas", "Destrucción irreversible de las terminaciones nerviosas sensoriales"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al libro de Management of Pruritus Ani, para interrumpir de manera central el ciclo crónico de rascado-isquemia-prurito que destruye el margen perianal en enfermedad idiopática intratable, el agente químico debe anestesiar las terminales de conducción lenta (Fibras tipo C).<br><br>Perla Quirúrgica: Se cree que el azul de metileno destruye las terminaciones nerviosas sensoriales, lo que resulta en hipoestesia de la región perianal.<br><br>Análisis de Distractores: El azul de metileno subcutáneo no tiene rol fungicida o antibacteriano primario en esta afección (A). Su mecanismo es una destrucción química focal citotóxica sobre las terminales libres, no actúa como antagonista competitivo de la bradicinina (B) ni genera oclusión linfática glandular controlada (C).",
+        source: "Management of Pruritus Ani, Medical Treatment, Página 371."
+    },
+    {
+        id: 39,
+        question: "Durante una esfinterotomía interna lateral por técnica cerrada para fisura anal crónica, ¿qué límite anatómico superior demarca la incisión de todas las fibras del músculo esfínter anal interno que garantizan el éxito de la intervención sin comprometer el anillo rectal?",
+        options: ["Por debajo del anillo anorrectal puborrectal", "Por debajo de las valvas y la línea dentada", "Por debajo del septum o surco interesfintérico superior", "Por debajo del borde caudal de la ampolla rectal"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Management of Fissure-In-Ano, es crucial preservar la musculatura lisa por encima de la zona mucosa hemorroidal para prevenir incompetencia para heces líquidas o soiling. El bisturí introducido con guía táctil debe seccionar en dirección distal únicamente hasta el inicio de las criptas.<br><br>Perla Quirúrgica: El corte típicamente incluye todas las fibras por debajo de la línea dentada.<br><br>Análisis de Distractores: Cortar hasta el anillo anorrectal o puborrectal (A), o involucrar estructuras de la pared rectal proximal (C, D), representa una catástrofe quirúrgica que causa incontinencia fecal severa e irreversible por destrucción de la musculatura de continencia mayor.",
+        source: "Management of Fissure-In-Ano, Operative Management (Lateral Internal Sphincterotomy), Página 301."
+    },
+    {
+        id: 40,
+        question: "Tras documentar histopatológicamente un cáncer de colon estadio II (sin invasión a ganglios regionales), ¿qué hallazgo en la pieza quirúrgica extirpada justifica escalar el tratamiento del paciente y ofrecer quimioterapia adyuvante?",
+        options: ["Tamaño tumoral diametral > 3 cm en su eje de mayor expansión", "Márgenes de disección microscópicos radiales > 5 mm", "Tumoración histológica de grado de diferenciación G1", "Evaluación linfadenectómica intraoperatoria de < 12 ganglios"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al libro de 52 Colon y Recto, la subclasificación del Estadio II permite discernir a los pacientes de 'alto riesgo' micrometastásico inadvertido. Una disección que cosecha menos del mínimo aceptable de estaciones linfáticas no garantiza un pN0 fidedigno, obligando a dar tratamiento adyuvante.<br><br>Perla Quirúrgica: En pacientes con cáncer de colon en estadio II, los siguientes factores de riesgo potenciales pueden considerarse como indicaciones relativas para la quimioterapia: cáncer poco diferenciado (G3-4), invasión vascular y perineural, obstrucción, perforación, invasión de órganos adyacentes (pT4), y un número inadecuado de ganglios linfáticos examinados (<12).<br><br>Análisis de Distractores: El grado G1 (C) es un rasgo de bajo riesgo; la adyuvancia se indica en grados mal diferenciados G3-G4. Márgenes radiales amplios >5 mm (B) representan un factor predictivo exitoso de no recurrencia local. El tamaño de 3 cm (A) dicta agresividad local pero el dintel internacional lo marca el conteo ganglionar insuficiente.",
+        source: "52 Colon y Recto, Postoperative Treatment (Stage II), Página 141."
+    }
+        ];
+
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('colonyrectocamerunpregLastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('colonyrectocamerunpregProgress');
+                localStorage.removeItem('colonyrectocamerunpregLastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-blue-500 shadow-md z-10 border-blue-500 dark:border-blue-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-blue-600 hover:to-cyan-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-blue-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-cyan-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! Sabiston" : "Sabiston";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "Colón, Recto y Ano";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="LINKI.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-blue-100 dark:border-blue-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-400 dark:has-[:checked]:bg-blue-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-blue-600 dark:hover:bg-blue-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('colonyrectocamerunpregProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('colonyrectocamerunpregLastQId', currentQuestionId);
+                else localStorage.removeItem('colonyrectocamerunpregLastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('colonyrectocamerunpregProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+
+</body>
+</html>

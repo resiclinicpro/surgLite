@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">ENARM</span>
+                    <span class="logo-Lite text-sm">Lite<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-blue-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-cyan-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionsData = [
+    {
+        id: 1,
+        question: "En la manometría esofágica de la Enfermedad por Reflujo Gastroesofágico, ¿cuál es el valor de presión basal media que define a un esfínter esofágico inferior mecánicamente defectuoso?",
+        options: ["Mayor a 26 mmHg", "Entre 10 y 15 mmHg", "Menor a 6 mmHg", "Menor a 30 mmHg"],
+        answer: 2,
+        justification: "Justificación: El tono basal del esfínter esofágico inferior es el componente primordial de la barrera antirreflujo. De acuerdo al libro de Principios de Cirugía, un esfínter permanentemente defectuoso e incapaz de prevenir el reflujo retrógrado de ácido se caracteriza por una caída drástica de la presión en reposo, perdiendo la contención del gradiente toracoabdominal. Las cifras normales medias se sitúan cerca de 13.8 mmHg.<br><br>Perla Quirúrgica: Un esfínter mecánicamente defectuoso se identifica por tener... una presión promedio del esfínter esofágico inferior menor a 6 mmHg.<br><br>Análisis de Distractores: La opción A define el límite inferior para considerar un esfínter hipertenso (como en la acalasia). La opción B representa el rango normal de presión de un esfínter esofágico competente. La opción D hace referencia a los parámetros de falla de contracción del cuerpo esofágico (motilidad ineficaz), no al tono basal del esfínter anatómico.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Evaluación de la función esofágica, Página 18."
+    },
+    {
+        id: 2,
+        question: "En la evaluación topográfica de la Enfermedad por Reflujo Gastroesofágico, ¿qué longitud intraabdominal se considera criterio de esfínter esofágico inferior permanentemente defectuoso?",
+        options: ["Mayor a 5 cm", "Menor a 3.6 cm", "Mayor a 2 cm", "Menor a 1 cm"],
+        answer: 3,
+        justification: "Justificación: La resistencia esfinteriana depende de la exposición del segmento muscular a la presión intraabdominal positiva. Cuando el esfínter migra hacia el tórax o se acorta, pierde este soporte extrínseco. De acuerdo al libro de Principios de Cirugía, la reducción de esta longitud por debajo del percentil crítico anula la competencia del cardias, constituyendo la causa más frecuente de defecto esfinteriano.<br><br>Perla Quirúrgica: Un esfínter permanentemente defectuoso se define por... una longitud intraabdominal del esfínter menor a 1 cm.<br><br>Análisis de Distractores: La opción A refleja una envoltura excesiva posterior a una funduplicatura hipercorrectora. La opción B corresponde a la longitud global promedio de un esfínter normal, no al segmento abdominal crítico. La opción C es la longitud intraabdominal normal recomendada que previene la disfunción antirreflujo.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Enfermedad por reflujo gastroesofágico, Página 32."
+    },
+    {
+        id: 3,
+        question: "En la historia natural de las hernias hiatales, ¿cuál es la alteración anatómica catastrófica que caracteriza a la etapa terminal o estadio final de los tipos I y II?",
+        options: ["Migración exclusiva del cardias gástrico", "Rotación gástrica de 180 grados", "Herniación de colon transverso", "Formación de anillo de Schatzki"],
+        answer: 1,
+        justification: "Justificación: Las hernias hiatales progresan ensanchando progresivamente el anillo crural. En su etapa definitiva, logran que todo el estómago migre hacia el tórax torciéndose sobre su propio eje, lo que predispone a una urgencia quirúrgica por vólvulo y estrangulación. De acuerdo al libro de Principios de Cirugía, el estómago se vuelve intratorácico al fijarse los puntos cardial y pilórico.<br><br>Perla Quirúrgica: La etapa final de las hernias tipo I y tipo II ocurre cuando todo el estómago migra hacia el tórax girando 180 grados alrededor de su eje longitudinal.<br><br>Análisis de Distractores: La opción Aclara únicamente a la hernia hiatal por deslizamiento temprana (tipo I). La opción C clasifica estrictamente a la hernia hiatal tipo IV, donde otros órganos abdominales se incorporan al defecto. La opción D es una alteración mucosa submucosa anular que genera disfagia, pero no representa el colapso anatómico gástrico final.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Hernias diafragmáticas gigantes, Página 55."
+    },
+    {
+        id: 4,
+        question: "En el abordaje diagnóstico de la Acalasia clásica mediante manometría esofágica de alta resolución, ¿cuál es el criterio de presión basal del esfínter esofágico inferior?",
+        options: ["Mayor o igual a 26 mmHg", "Menor o igual a 6 mmHg", "Mayor o igual a 180 mmHg", "Menor a 10 mmHg"],
+        answer: 0,
+        justification: "Justificación: La patogenia principal de la acalasia radica en la falla inhibitoria mientérica, generando una contracción tónica incesante del esfínter que actúa como obstrucción funcional al tracto de salida. De acuerdo al libro de Principios de Cirugía, la hipertonía en reposo se define al sobrepasar el límite superior de presiones normales.<br><br>Perla Quirúrgica: Características manométricas de la acalasia: presión del esfínter esofágico inferior elevada mayor o igual a 26 mmHg.<br><br>Análisis de Distractores: La opción B diagnostica incompetencia esfinteriana asociada a reflujo grave. La opción C es el umbral para establecer esófago en cascanueces, evaluando el cuerpo y no el esfínter. La opción D es el objetivo terapéutico de presión posoperatoria para aliviar la disfagia tras una miotomía de Heller exitosa.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Trastornos de motilidad, Página 70."
+    },
+    {
+        id: 5,
+        question: "En los trastornos primarios de motilidad, ¿qué amplitud peristáltica distal promedio se requiere para establecer el diagnóstico manométrico de Esófago en Cascanueces?",
+        options: ["Menor a 30 mmHg", "Mayor o igual a 26 mmHg", "Mayor o igual a 180 mmHg", "Entre 100 y 150 mmHg"],
+        answer: 2,
+        justification: "Justificación: El síndrome clínico de esófago en cascanueces (\"nutcracker esophagus\") preserva la secuencia de peristalsis propagada normal, pero cursa con ondas contráctiles de intensidad patológica que originan dolor torácico severo. De acuerdo al libro de Principios de Cirugía, esta contracción hipertensiva se objetiva tras promediar múltiples degluciones de agua en la evaluación de alta resolución.<br><br>Perla Quirúrgica: Esófago en cascanueces: Amplitud peristáltica media en el esófago distal mayor o igual a 180 mmHg.<br><br>Análisis de Distractores: La opción A define a la motilidad esofágica ineficaz. La opción B corresponde al límite para considerar al esfínter inferior como hipertenso, no evaluando la amplitud de la onda propulsiva distal. La opción D refleja la amplitud de contracciones enclavas normales o levemente elevadas, sin cumplir el criterio diagnóstico mayor.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Trastornos de motilidad, Página 70."
+    },
+    {
+        id: 6,
+        question: "En la vigilancia epidemiológica del Esófago de Barrett documentado, ¿cuántas veces se incrementa el riesgo futuro de desarrollar adenocarcinoma en comparación con la población sana?",
+        options: ["Menos de 5 veces", "Más de 10 veces", "Más de 100 veces", "Más de 40 veces"],
+        answer: 3,
+        justification: "Justificación: La transformación epitelial del esófago distal confiere una inestabilidad genómica agresiva. Este riesgo es estadísticamente equivalente al que posee un fumador crónico pesado para desarrollar neoplasia pulmonar. De acuerdo al libro de Principios de Cirugía, el escrutnio endoscópico rutinario es imperativo ante esta escalada del riesgo oncológico.<br><br>Perla Quirúrgica: La detección del esófago de Barrett mediante endoscopia y biopsia aumenta el riesgo futuro de cáncer en más de 40 veces.<br><br>Análisis de Distractores: La opción A minimiza la gravedad de la lesión precancerosa. La opción B subestima la magnitud del riesgo relativo establecido por los consensos oncológicos. La opción C sobreestima estadísticamente la incidencia, ya que la acalasia y los cáusticos confieren un riesgo similar para carcinoma epidermoide, pero no alcanzan 100 veces en la población general para el adenocarcinoma.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Puntos Clave, Página 11."
+    },
+    {
+        id: 7,
+        question: "Durante la exploración endoscópica sistemática de una hernia paraesofágica gigante sintomática, ¿qué lesión mucosa isquémica debe excluirse intencionadamente dentro del saco herniario?",
+        options: ["Úlceras de Cameron", "Anillo de Schatzki", "Úlceras de Cushing", "Desgarro de Mallory-Weiss"],
+        answer: 0,
+        justification: "Justificación: El roce mecánico crónico y la microangiopatía isquémica provocada por la compresión del estómago incarcerado contra los pilares hiatales generan erosiones lineales insidiosas en la mucosa. Como se orienta de acuerdo a la GPC para descartar sangrado oculto, su localización intrasacular obliga a realizar maniobras de retroflexión. De acuerdo al libro de Principios de Cirugía, son la causa primaria de anemia asociada a hernias grandes.<br><br>Perla Quirúrgica: Cuando se observa una hernia paraesofágica, se presta especial atención a excluir úlceras gástricas (de Cameron) dentro de la bolsa.<br><br>Análisis de Distractores: La opción B es un pliegue fibroso distal asociado a hernia por deslizamiento, causante de impactación pero no de úlceras. La opción C corresponde a erosiones de estrés por neurotrauma e hipertensión intracraneal. La opción D ocurre secundario a vómitos de repetición induciendo estiramiento y laceración en la unión, no por defecto compresivo crónico.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Evaluación de la función esofágica, Página 18."
+    },
+    {
+        id: 8,
+        question: "En el estudio histopatológico del Esófago de Barrett, ¿qué hallazgo microscópico es la característica distintiva patognomónica que confirma la metaplasia intestinal?",
+        options: ["Infiltrado linfocítico denso", "Células caliciformes intestinales", "Hiperplasia de capa basal", "Células escamosas atípicas"],
+        answer: 1,
+        justification: "Justificación: El potencial preneoplásico de la enfermedad por reflujo se consolida cuando la mucosa de revestimiento altera su fenotipo y adquiere propiedades de barrera absortiva y secretora. De acuerdo al libro de Principios de Cirugía, la confirmación de la verdadera metaplasia 'especializada' descansa absolutamente en el hallazgo tintorial de mucina caliciforme.<br><br>Perla Quirúrgica: La característica distintiva de la metaplasia intestinal es la presencia de células caliciformes intestinales.<br><br>Análisis de Distractores: La opción A indica respuesta inmune inflamatoria crónica genérica. La opción C es el marcador histológico temprano de la esofagitis péptica por acidez prolongada, sin indicar metaplasia. La opción D representa cambios morfológicos que orientan hacia displasia o carcinoma epidermoide en mucosa proximal.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Enfermedad por reflujo gastroesofágico, Página 51."
+    },
+    {
+        id: 9,
+        question: "En el protocolo manométrico de un paciente con disfagia, ¿qué porcentaje mínimo de contracciones simultáneas se requiere para diagnosticar el Espasmo Esofágico Difuso?",
+        options: ["Mayor al 50 %", "Menor al 5 %", "Mayor al 20 %", "Exactamente 100 %"],
+        answer: 2,
+        justification: "Justificación: El espasmo difuso es una alteración motora primaria caracterizada por despolarización desordenada de la musculatura lisa del cuerpo esofágico. De acuerdo al libro de Principios de Cirugía, no todas las ondas son anómalas; la presencia de ondas peristálticas sanas intercaladas es lo que lo diferencia funcional y terapéuticamente de la acalasia.<br><br>Perla Quirúrgica: Espasmo esofágico difuso: contracciones simultáneas (not peristálticas) en más del 20 % de las degluciones húmedas.<br><br>Análisis de Distractores: La opción A excede el criterio diagnóstico establecido, requiriendo un porcentaje menor para iniciar tratamiento. La opción B representa fluctuaciones de baja relevancia clínica. La opción D corresponde al patrón motor de la acalasia clásica, donde se pierde absolutamente la peristalsis primaria.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Trastornos de motilidad, Página 70."
+    },
+    {
+        id: 10,
+        question: "En el espectro de los trastornos motores, ¿qué amplitud máxima de la peristalsis esofágica define formalmente al trastorno de motilidad esofágica ineficaz?",
+        options: ["Mayor a 26 mmHg", "Menor a 6 mmHg", "Mayor a 180 mmHg", "Menor a 30 mmHg"],
+        answer: 3,
+        justification: "Justificación: Una depuración o 'aclaramiento' esofágico ineficaz expone de forma crónica a la mucosa distal a la acidez, lo que agrava la lesión por reflujo. De acuerdo al libro de Principios de Cirugía, la presión contráctil que falla en empujar adecuadamente el bolo hacia el estómago establece el límite del trastorno ineficaz.<br><br>Perla Quirúrgica: Trastornos de motilidad ineficaz: amplitud disminuida o ausente de la peristalsis esofágica menor a 30 mmHg.<br><br>Análisis de Distractores: La opción A determina el umbral inferior diagnóstico para esfínter inferior hipertenso. La opción B evalúa incompetencia absoluta del esfínter basal, mas no la amplitud contráctil propulsiva. La opción C establece el extremo de hipercontractilidad que define al esófago en cascanueces.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Trastornos de motilidad, Página 70."
+    },
+    {
+        id: 11,
+        question: "En el abordaje quirúrgico estandarizado para una hernia paraesofágica gigante sintomática, ¿cuál es la técnica operatoria primaria de elección actual?",
+        options: ["Esofagectomía transhiatal radical", "Dilatación neumática fluoroscópica", "Reparación laparoscópica con funduplicatura", "Miotomía de Heller modificada"],
+        answer: 2,
+        justification: "Justificación: Las hernias que causan retención intratorácica masiva exigen corrección anatómica para prevenir vólvulo gástrico y estrangulación. La fijación del órgano al abdomen mediante un anclaje antirreflujo previene recaídas y resuelve complicaciones crónicas. De acuerdo al libro de Principios de Cirugía, la vía mínimamente invasiva es hoy en día el estándar de oro.<br><br>Perla Quirúrgica: La hernia hiatal gigante debe repararse... La reparación laparoscópica de la hernia con funduplicatura es el abordaje más común.<br><br>Análisis de Distractores: La opción A es un tratamiento extremo para displasia grave o invasión no resecable endoscópicamente, no para alteraciones de la continencia anatómica. La opción B está diseñada para distender esfínteres miopáticos cerrados (acalasia). La opción D secciona las fibras musculares circulares del esfínter inferior, lo cual agravaría una herniación existente.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Puntos Clave, Página 11."
+    },
+    {
+        id: 12,
+        question: "Durante la evaluación posoperatoria de un paciente con Acalasia tratado con dilatación neumática, ¿qué presión residual del esfínter inferior asegura una respuesta clínica exitosa?",
+        options: ["Menor a 10 mmHg", "Entre 15 y 20 mmHg", "Mayor a 26 mmHg", "Menor a 30 mmHg"],
+        answer: 0,
+        justification: "Justificación: El desgarro controlado o la ablación de la musculatura busca abolir la resistencia fisiológica al vaciamiento esofágico producida por gravedad. Las cifras manométricas residuales fungen como un marcador pronóstico directo. De acuerdo al libro de Principios de Cirugía, no descender suficientemente el tono presagia recurrencia a corto plazo.<br><br>Perla Quirúrgica: La presión del esfínter posdilatación menor a 10 mmHg predice una buena respuesta.<br><br>Análisis de Distractores: La opción B asocia tasas de remisión a largo plazo subóptimas y alta recidiva clínica por alivio incompleto del espasmo. La opción C es el criterio manométrico per se del estado hipertenso basal de la acalasia. La opción D corresponde al límite normal de amplitud contráctil o de incompetencia motora.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Operaciones para trastornos motores, Página 83."
+    },
+    {
+        id: 13,
+        question: "En el seguimiento de un Esófago de Barrett cuyo reporte inicial indica displasia indeterminada, ¿cuál es la conducta médica inmediata para diferenciarla de cambios reactivos?",
+        options: ["Miotomía de Heller laparoscópica", "Supresión ácida en dosis altas", "Ablación por radiofrecuencia mucosa", "Esofagectomía transhiatal profiláctica"],
+        answer: 1,
+        justification: "Justificación: La agresión corrosiva del medio intraluminal genera atipia nuclear y celular reparativa en el epitelio esofágico inferior, que el patólogo no puede aislar morfológicamente de la verdadera neoplasia incipiente. De acuerdo al libro de Principios de Cirugía, neutralizar el entorno inflamatorio agudo es el primer paso diagnóstico.<br><br>Perla Quirúrgica: Si la displasia se reporta como baja o indeterminada, los cambios inflamatorios... deben suprimirse con un ciclo de terapia de supresión de ácido en dosis altas por 2 a 3 meses.<br><br>Análisis de Distractores: La opción A aborda mecánicamente fallos contráctiles primarios distales, irrelevantes para transformación epitelial preneoplásica. La opción C está indicada como erradicación resolutiva cuando la displasia está confirmada invariablemente. La opción D se emplea sólo en presencia de adenocarcinoma in situ multifocal irreversible.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Reoperación, Página 51."
+    },
+    {
+        id: 14,
+        question: "En la evaluación manométrica de un paciente con Esclerodermia y disfagia crónica, ¿cuál es la alteración motora anatómica localizada en los dos tercios distales del esófago?",
+        options: ["Contracciones simultáneas de gran amplitud", "Peristalsis normal con esfínter hipertenso", "Espasmos segmentarios esofágicos intermitentes", "Aperistalsis con esfínter esofágico hipotenso"],
+        answer: 3,
+        justification: "Justificación: La invasión de tejido fibroconectivo destruye e invalida progresivamente el músculo liso en la esclerodermia sistémica, volviendo al órgano una tubería pasiva disfuncional. Esta afección no compromete el músculo estriado superior. De acuerdo al libro de Principios de Cirugía, la destrucción simultánea del cardias favorece reflujo catastrófico hacia un esófago desprotegido del aclaramiento natural.<br><br>Perla Quirúrgica: El diagnóstico de esclerodermia se puede hacer manométricamente al observar... aperistalsis en la porción distal del músculo liso. La presión del esfínter inferior se debilita progresivamente.<br><br>Análisis de Distractores: La opción A establece la característica primordial espástica del esófago en cascanueces de alta contractilidad. La opción B delinea el cuadro de un de un esfínter inferior hipertenso aislado. La opción C se presenta de forma parcial en desórdenes motores segmentarios funcionales reversibles.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, El anillo de Schatzki, Página 32."
+    },
+    {
+        id: 15,
+        question: "En la endoscopia superior de un paciente con disfagia intermitente a sólidos, ¿en qué límite anatómico específico se forma clásicamente el anillo mucoso de Schatzki?",
+        options: ["Esfínter esofágico superior", "Músculo cricofaríngeo estriado", "Unión escamocilíndrica esofagogástrica", "Fondo gástrico superior proximal"],
+        answer: 2,
+        justification: "Justificación: La proliferación reactiva membranosa circunferencial ocurre como respuesta al traumatismo repetitivo por reflujo y acidez o alteraciones de estiramiento. Como se indica de acuerdo a la GPC para patología estructural, ocurre en el margen preciso de transición de mucosa. De acuerdo al libro de Principios de Cirugía, su formación estrecha pasivamente el lumen predisponiendo al bloqueo de bolo alimenticio sólido.<br><br>Perla Quirúrgica: El anillo de Schatzki es un delgado anillo circunferencial submucoso en la porción inferior del esófago, a nivel de la unión escamocilíndrica.<br><br>Análisis de Distractores: La opción A es el epicentro patológico del divertículo de Zenker por incoordinación deglutoria. La opción B conforma el esfínter esofágico superior, donde ocurre la acalasia cricofaríngea extrínseca. La opción D se relaciona con hernias del fondo anatómico dislocado o pólipos intraluminales cardiales gástricos.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, El anillo de Schatzki, Página 32."
+    },
+    {
+        id: 16,
+        question: "En la progresión tumoral del Carcinoma Esofágico, ¿qué porcentaje de la luz debe estar físicamente infiltrado y ocluido para desencadenar disfagia clínica en el paciente?",
+        options: ["Más del 60 %", "Menos del 20 %", "Exactamente el 40 %", "Más del 90 %"],
+        answer: 0,
+        justification: "Justificación: El esófago es un órgano muscular distensible sin recubrimiento seroso circunferencial verdadero en el tórax. Esta compliancia le permite acomodar grandes masas extrínsecas e intrínsecas temporalmente sin manifestar síntomas obstructivos tempranos. De acuerdo al libro de Principios de Cirugía, cuando ocurre disfagia, la extensión local de la enfermedad ya es severa y frecuentemente irresecable.<br><br>Perla Quirúrgica: La disfagia se vuelve lo suficientemente grave como para buscar atención médica solo cuando más del 60 % de la circunferencia esofágica está infiltrada.<br><br>Análisis de Distractores: La opción B representa etapas in situ T1 que son virtualmente asintomáticas a la deglución. La opción C no causa restricción severa demostrable por la capacidad pasiva de sobredistensión de la pared. La opción D denota un colapso terminal, comúnmente acompañado ya de fístulas traqueobronquiales con afonía.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Carcinoma del esófago, Página 71."
+    },
+    {
+        id: 17,
+        question: "En la etiología de los síndromes eméticos severos, ¿qué porcentaje de los episodios de hemorragia digestiva alta masiva son provocados por el síndrome de Mallory-Weiss?",
+        options: ["Menos del 2 %", "Hasta el 15 %", "Más del 50 %", "Aproximadamente el 80 %"],
+        answer: 1,
+        justification: "Justificación: El estrés mecánico explosivo secundario a una hiperpresión intraabdominal contra un esfínter cerrado origina desgarros agudos de la mucosa de la unión cardial. De acuerdo al libro de Principios de Cirugía, estos desgarros autolimitados son un factor muy representativo y recurrente en el escenario de urgencias en pacientes con arcadas incoercibles.<br><br>Perla Quirúrgica: El síndrome de Mallory-Weiss se considera la causa de hasta el 15 % de todas las hemorragias graves de tubo digestivo alto.<br><br>Análisis de Distractores: La opción A subestima significativamente el impacto epidemiológico endoscópico del cuadro sangrante agudo no variceal. La opción C clasificaría el síndrome por encima de las úlceras pépticas (gástricas y duodenales), que son históricamente las causas dominantes. La opción D denotaría una exclusividad ficticia ajena al predominio real de la patología venosa portal.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Síndrome de Mallory-Weiss, Página 78."
+    },
+    {
+        id: 18,
+        question: "En la incidencia epidemiológica de los trastornos espásticos primarios, ¿cuál es la proporción de diagnóstico clínico del Espasmo Esofágico Difuso en relación con la Acalasia?",
+        options: ["Diez veces más frecuente", "Poseen la misma incidencia", "Dos veces más frecuente", "Cinco veces menos frecuente"],
+        answer: 3,
+        justification: "Justificación: La contracción hiperactiva disonante sin defecto basal inhibitorio verdadero en el tracto de salida se constata raras veces de forma primaria. A pesar del dolor clínico alarmante semejante al infarto miocárdico, los hallazgos manométricos lo separan de la acalasia y su degenaración neuronal global. De acuerdo al libro de Principios de Cirugía, la mayor proporción de consultas por dolor retroesternal espástico obedece a esofagitis péptica por acidez en lugar de espasmo primario.<br><br>Perla Quirúrgica: El verdadero espasmo esofágico difuso sintomático es una condición rara, que ocurre aproximadamente cinco veces menos frecuente que la acalasia.<br><br>Análisis de Distractores: La opción A invierte incorrectamente el predominio epidemiológico entre el fallo inhibitorio y la motilidad discinética primaria. La opción B sugiere una equivalencia patogénica inexistente. La opción C refleja la incidencia relativa errónea del esófago en cascanueces como evento aislado.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Trastornos de motilidad, Página 50."
+    },
+    {
+        id: 19,
+        question: "Dentro de la etiología del neumomediastino agudo, ¿qué porcentaje de todas las perforaciones esofágicas corresponde al Síndrome de Boerhaave o ruptura espontánea?",
+        options: ["Más del 80 %", "Menos del 2 %", "El 15 %", "Exactamente el 50 %"],
+        answer: 2,
+        justification: "Justificación: La disrupción transmural brusca secundaria a barotrauma por vómito incontrolado resulta en derrame intratorácico devastador (sepsis mediastínica veloz). No obstante, es un evento minoritario frente a las causadas por intervenciones médicas endoscópicas. De acuerdo al libro de Principios de Cirugía, la instrumentación yatrogénica lidera en frecuencia las rupturas.<br><br>Perla Quirúrgica: La perforación espontánea, conocida como síndrome de Boerhaave, representa solo el 15 % de los casos de perforación esofágica.<br><br>Análisis de Distractores: La opción A representa el estimado estadístico que corresponde a perforaciones producidas de forma iatrogénica por el endoscopista o cirujano. La opción B describe eventos casuísticos inusuales como erosión directa por cáncer primario sin manipulación invasiva. La opción D sobredimensiona el impacto clínico del barotrauma emético.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Perforación esofágica, Página 77."
+    },
+    {
+        id: 20,
+        question: "En la clasificación etiológica de los divertículos esofágicos verdaderos, ¿cuál es la alteración anatómica primaria externa responsable de originar los divertículos por tracción?",
+        options: ["Relajación esfinteriana incompleta", "Procesos inflamatorios adyacentes", "Trastornos motores primarios", "Hipertensión del esfínter inferior"],
+        answer: 1,
+        justification: "Justificación: Los sacos mesoesofágicos externos surgen por retracción tisular mediastínica, particularmente cicatrización y granulomas en ganglios linfáticos periesofágicos (ej. subcarinales en tuberculosis), que traccionan exofíticamente toda la pared del esófago. De acuerdo al libro de Principios de Cirugía, no guardan relación primaria con aumentos focales del tono propulsivo (pulsión) como se reporta en las variantes epifrénicas.<br><br>Perla Quirúrgica: Los divertículos esofágicos asociados a trastornos motores se denominan divertículos por pulsión y aquellos asociados a afecciones inflamatorias se denominan divertículos por tracción.<br><br>Análisis de Distractores: La opción A es responsable de la dilatación del cuerpo o acalasia, y predispone a hernias de Zenker. La opción C es la base patológica subyacente responsable de los divertículos epifrénicos de pulsión intraluminales. La opción D agrava espasmos distales de retención pero no jala la adventicia extrínseca circundante.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Trastornos de motilidad, Página 55."
+    },
+    {
+        id: 21,
+        question: "En el seguimiento longitudinal de la metaplasia intestinal esofágica, ¿cuál es la tasa de incidencia anual estimada para la progresión hacia un adenocarcinoma invasivo?",
+        options: ["5.0 % a 10.0 %", "1.0 % a 2.0 %", "0.2 % a 0.5 %", "Menor a 0.1 %"],
+        answer: 2,
+        justification: "Justificación: El epitelio de Barrett representa una respuesta adaptativa a la acidez, pero confiere inestabilidad genómica. A pesar de aumentar el riesgo global de neoplasia drásticamente frente a la población sana, la tasa de conversión en un solo año para un individuo es relativamente pequeña, lo que justifica los intervalos de vigilancia endoscópica periódica. De acuerdo al libro de Principios de Cirugía, la mutación no es inmediata.<br><br>Perla Quirúrgica: La incidencia de que el epitelio metaplásico de Barrett se vuelva displásico y progrese a adenocarcinoma es de aproximadamente 0.2 % a 0.5 % por año.<br><br>Análisis de Distractores: La opción A sobreestima catastróficamente la progresión, lo que implicaría esofagectomías profilácticas rutinarias. La opción B representa tasas que se alcanzan solo cuando ya existe displasia de bajo grado confirmada, no en metaplasia simple. La opción D minimiza el riesgo, asemejándolo a alteraciones sin potencial maligno como la mucosa gástrica ectópica.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Complicaciones asociadas con la enfermedad por reflujo, Página 38."
+    },
+    {
+        id: 22,
+        question: "En la evaluación anatómica funcional de un esfínter esofágico inferior competente en sujetos sanos, ¿cuál es el valor promedio de la presión basal de reposo?",
+        options: ["26.0 mmHg", "6.0 mmHg", "30.5 mmHg", "13.8 mmHg"],
+        answer: 3,
+        justification: "Justificación: El tono miogénico y el control neurogénico intrínseco mantienen cerrado el esfínter inferior para evitar el paso del quimo gástrico hacia el epitelio escamoso. El límite exacto que define a la normalidad presiona lo suficiente para ser barrera sin dificultar el vaciamiento. De acuerdo al libro de Principios de Cirugía, existe un rango fisiológico validado en poblaciones sanas.<br><br>Perla Quirúrgica: Valores manométricos normales del esfínter esofágico distal: Presión media de 13.8 mmHg.<br><br>Análisis de Distractores: La opción A define el umbral a partir del cual el esfínter se considera clínicamente hipertenso, clásico de la acalasia. La opción B representa un esfínter severamente defectuoso o incompetente, predictor de reflujo masivo. La opción C es una cifra obstructiva espástica que se relaciona con dificultad para la relajación deglutoria.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Evaluación de la función, Tabla 25-1, Página 20."
+    },
+    {
+        id: 23,
+        question: "En la clasificación endoscópica de la unión esofagogástrica, ¿qué sistema de medición se emplea para graduar el deterioro estructural de la válvula antirreflujo mediante la maniobra de retroflexión?",
+        options: ["Grados de la válvula de Hill", "Clasificación de Los Ángeles", "Clasificación de Savary-Miller", "Criterios anatómicos de Cameron"],
+        answer: 0,
+        justification: "Justificación: La visualización intragástrica hacia el hiato permite observar el colgajo tisular que forma la barrera mecánica fisiológica (ángulo de His). La pérdida de este pliegue predispone directamente al reflujo. De acuerdo al libro de Principios de Cirugía, la envoltura normal se aplana progresivamente hasta desaparecer por completo en la hernia hiatal, dividiéndose en cuatro estadios precisos.<br><br>Perla Quirúrgica: Las anomalías de la válvula gastroesofágica pueden visualizarse mediante la retroflexión del endoscopio. Hill ha clasificado la apariencia de la válvula del I al IV según el grado de deterioro.<br><br>Análisis de Distractores: La opción B gradúa exclusivamente la longitud y confluencia de las erosiones mucosas de la esofagitis, no el defecto de la válvula. La opción C es un sistema antiguo para clasificar la severidad del daño péptico ulcerativo y fibrótico de la mucosa. La opción D hace referencia al epónimo de las úlceras isquémicas que asientan dentro del saco de una hernia paraesofágica gigante.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Evaluación de la función, Página 18."
+    },
+    {
+        id: 24,
+        question: "En el modelo mecánico fisiológico de la deglución y el vaciamiento faríngeo, ¿cuáles son las tres estructuras anatómicas que conforman las válvulas de contención del cilindro proximal?",
+        options: ["Paladar blando, epiglotis y músculo cricofaríngeo", "Úvula, constrictor faríngeo medio y esfínter inferior", "Lengua, cartílago tiroides y constrictor superior", "Cuerdas vocales falsas, esfínter superior y valécula"],
+        answer: 0,
+        justification: "Justificación: La fase orofaríngea requiere una presurización veloz y potente que impulse el bolo hacia un esófago de presión negativa, impidiendo el escape hacia la vía aérea o las fosas nasales. Para entender las fallas motoras superiores de acuerdo al libro de Principios de Cirugía, se modela a la faringe como una bomba de pistón sellada por compuertas anatómicas críticas.<br><br>Perla Quirúrgica: Las tres válvulas en el cilindro faríngeo son el paladar blando, la epiglotis y el cricofaríngeo.<br><br>Análisis de Distractores: La opción B incluye al esfínter esofágico inferior, que es la única válvula de la 'bomba esofágica' distal, no de la faringe. La opción C menciona estructuras cartilaginosas y linguales que actúan como pistón propulsor o soporte de la vía aérea, no como válvulas de sello hermético direccional. La opción D nombra repliegues laríngeos e indentaciones pasivas (valéculas) que carecen de función valvular.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Fisiología de la deglución, Página 14."
+    },
+    {
+        id: 25,
+        question: "En el diagnóstico clínico diferencial de los síndromes eméticos, ¿cuál es el mecanismo biofísico exacto responsable de originar el Síndrome de Mallory-Weiss?",
+        options: ["Relajación incompleta esfinteriana con espasmo secundario distal", "Isquemia subepitelial aguda por estiramiento de hernias tipo III", "Aumento agudo de presión intraabdominal contra glotis cerrada", "Tracción fibrosa transmural por inflamación de ganglios mediastinales"],
+        answer: 2,
+        justification: "Justificación: Las arcadas vigorosas obligan a los músculos abdominales a contraerse violentamente. Si el tracto de salida faríngeo está cerrado, el diferencial de presión desgarra la mucosa en la unión de transición tisular (unión cardial). Este mecanismo explosivo y repentino se describe clásicamente de acuerdo al libro de Principios de Cirugía como una falla en el gradiente de evacuación controlada.<br><br>Perla Quirúrgica: El mecanismo es similar a la perforación esofágica espontánea: un aumento agudo de la presión intraabdominal contra una glotis cerrada en un paciente con hernia hiatal.<br><br>Análisis de Distractores: La opción A describe el fallo motor de retención característico de la acalasia y su degeneración neuronal mientérica. La opción B define el mecanismo patogénico crónico subyacente que forma las úlceras de Cameron en grandes hernias por rodamiento. La opción D representa el origen de los divertículos medioesofágicos de tracción.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Síndrome de Mallory-Weiss, Página 78."
+    },
+    {
+        id: 26,
+        question: "En la esclerodermia sistémica severa con esofagitis refractaria al tratamiento médico, ¿cuál es la técnica quirúrgica de elección para evitar empeorar la disfagia aperistáltica?",
+        options: ["Funduplicatura total de Nissen laparoscópica", "Resección de la unión esofagogástrica con ascenso gástrico total", "Dilatación neumática repetida con abordaje fluoroscópico", "Funduplicatura parcial anterior o posterior laparoscópica"],
+        answer: 3,
+        justification: "Justificación: El esófago afectado por depósito de colágena pierde todo el peristaltismo liso propulsivo, convirtiéndose en una tubería de baja resistencia. Construir un manguito de alta presión de 360 grados crearía un bloqueo irreversible por falta de fuerza impulsora. La modificación parcial de la envoltura se posiciona de acuerdo al libro de Principios de Cirugía como el equilibrio ideal entre control del ácido y prevención de impactación funcional.<br><br>Perla Quirúrgica: El tratamiento quirúrgico es controvertido, pero la opinión mayoritaria sugiere que una funduplicatura parcial (anterior o posterior) laparoscópica es el procedimiento de elección.<br><br>Análisis de Distractores: La opción A está estrictamente contraindicada ante un trastorno de depuración esofágica nula por su altísima morbilidad obstructiva. La opción B representa un tratamiento radical de rescate oncológico, no la cirugía antirreflujo inicial. La opción C interviene sobre esfínteres hipertónicos, mientras que el paciente con esclerodermia cursa típicamente con un esfínter hipotenso.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Trastornos secundarios, Página 76."
+    },
+    {
+        id: 27,
+        question: "En el algoritmo de atención del paciente pediátrico o adulto con ingesta aguda accidental de un agente cáustico, ¿cuál es la intervención diagnóstica que debe realizarse en las primeras 12 horas?",
+        options: ["Esofagograma con material de contraste baritado denso", "Esofagoscopia temprana para estadificación del daño mucoso", "Laparotomía exploradora urgente de rescate hemostático", "Manometría de alta resolución para medir amplitud espástica"],
+        answer: 1,
+        justification: "Justificación: El proóstico de supervivencia y estenosis tardía depende de la profundidad de necrosis en las mucosas orofaríngea, esofágica y gástrica. Se precisa inspección visual directa urgente sin sobreinsuflación para mapear las quemaduras y guiar el manejo. Esta premisa se consolida de acuerdo al libro de Principios de Cirugía para toda causticación antes de la aparición de tejido de granulación friable.<br><br>Perla Quirúrgica: Algoritmo: Ingestión de agente cáustico -> Esofagoscopia (Dentro de las primeras 12 horas).<br><br>Análisis de Distractores: La opción A oscurece permanentemente la visión de un futuro abordaje endoscópico, arriesgando además broncoaspiración o fuga mediastínica por perforación aguda. La opción C se indica empíricamente sólo ante perforación franca clínica. La opción D carece de utilidad en el evento agudo corrosivo, pues el dolor y el espasmo reactivo invalidarían cualquier trazo fisiológico.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Lesión cáustica, Algoritmo 25-78, Página 118."
+    },
+    {
+        id: 28,
+        question: "En el paciente con cáncer de esófago que presenta síntomas clínicos invasivos, ¿qué indicador tomográfico u oncológico obliga a derivarlo exclusivamente a un manejo paliativo no resecable?",
+        options: ["Crecimiento neoplásico que abarque 40 % de la circunferencia esofágica", "Parálisis del nervio laríngeo recurrente o fístula broncoesofágica", "Disfagia intermitente para alimentos sólidos secos", "Ausencia total de ganglios periesofágicos aumentados de tamaño"],
+        answer: 1,
+        justification: "Justificación: La curabilidad quirúrgica del carcinoma esofágico exige resección con bordes libres (R0). Cuando el tumor penetra la adventicia e infiltra el árbol traqueobronquial o las vainas nerviosas mayores locales (ronquera, aspiración), la ventana de rescate se ha cerrado biológicamente. La futilidad de una disección agresiva se dictamina de acuerdo al libro de Principios de Cirugía basándose en una morbilidad prohibitiva y nula sobrevida.<br><br>Perla Quirúrgica: Algoritmo de Estadificación Clínica: Paliación si hay parálisis del nervio recurrente, síndrome de Horner, formación de fístula o derrame pleural maligno.<br><br>Análisis de Distractores: La opción A describe un tumor que, aunque es oclusivo focal, sigue considerándose confinado y técnicamente manejable con terapia neoadyuvante inicial. La opción C es el dato pivote más precoz de oclusión luminal que exige etapificación, no el criterio de exclusión. La opción D denota un tumor local temprano favorable para intento curativo quirúrgico con esofagectomía.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Algoritmo Carcinoma, Página 101."
+    },
+    {
+        id: 29,
+        question: "En la fisiopatología obstructiva endémica del esófago, ¿qué característica clínica distingue rotundamente al paciente con Esofagitis Eosinofílica frente a la Enfermedad por Reflujo Gastroesofágico?",
+        options: ["Disfagia progresiva secundaria a crecimiento tumoral escamoso intraepitelial", "Alivio sostenido e inmediato del dolor tras la dilatación neumática del esfínter", "Falta de respuesta terapéutica al ensayo clínico con inhibidores de bomba de protones", "Resolución permanente de las quejas tras una funduplicatura parcial de Toupet"],
+        answer: 2,
+        justification: "Justificación: La inflamación eosinofílica densa de la pared esofágica genera un proceso alérgico fibrótico que reduce la compliance luminal sin asociarse a reflujo de ácido clorhídrico nocivo. Comparten fenotipo doloroso por espasmos reactivos. Este hecho farmaco-biológico subraya de acuerdo al libro de Principios de Cirugía la importancia de no catalogar toda disfagia dolorosa como daño péptico automático.<br><br>Perla Quirúrgica: Debido a que la disfagia y el dolor torácico son característicos de la ERGE, la Esofagitis Eosinofílica a menudo se confunde con esta; sin embargo, no responde a los inhibidores de la bomba de protones.<br><br>Análisis de Distractores: La opción A relata la historia natural morfológica del carcinoma escamoso no inflamatorio, ajeno al infiltrado inmune. La opción B desencadena paradójicamente perforaciones en la esofagitis eosinofílica debido a la pared rígida y profundamente friable en comparación con la acalasia. La opción D corresponde al rescate mecánico quirúrgico por hipotonía valvular cardial, inútil para la inflamación alérgica.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Esofagitis eosinofílica, Página 62."
+    },
+    {
+        id: 30,
+        question: "En el diagnóstico y conducta invasiva de la Esofagitis Eosinofílica confirmada, ¿qué riesgo letal advierte la literatura al intentar dilatar rígidamente este tipo de esófago?",
+        options: ["Laceración del esfínter inferior con reflujo biliar catastrófico", "Hemorragia intraluminal exanguinante masiva por várices encubiertas", "Perforación esofágica o desgarro tisular de espesor total franco", "Vólvulo gástrico por luxación aguda transhiatal del fondo gástrico"],
+        answer: 2,
+        justification: "Justificación: El proceso inmunoalérgico mural engrosa y vuelve inelástica la submucosa, formando anillos traquealizados rígidos ('esófago felino'). El paso de bujías sobre un diámetro inelástico propicia disrupciones incontrolables del tubo digestivo. Los cirujanos deben evitar ser agresivos empíricamente y limitar sus fuerzas, guiados por precauciones severas de acuerdo al libro de Principios de Cirugía sobre su fragilidad tisular.<br><br>Perla Quirúrgica: Se debe tener gran cuidado, ya que la mucosa se desgarra fácilmente y se ha informado de perforación esofágica (laceración de espesor total) con la dilatación.<br><br>Análisis de Distractores: La opción A sugiere una destrucción funcional intencional típica del post-operatorio temprano de dilataciones fallidas. La opción B advierte sobre la injuria endoscópica en hipertensión portal descompensada no advertida, carente de asociación con el depósito eosinofílico. La opción D ocurre secundario a defectos estructurales primarios de los pilares crurales ensanchados (hernias tipo III gigantes).",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Esofagitis eosinofílica, Página 63."
+    },
+    {
+        id: 31,
+        question: "En la historia natural evolutiva de una hernia hiatal pura, ¿cuál es el movimiento anatómico cardinal que tipifica o establece el defecto como tipo III o mixta?",
+        options: ["Migración solitaria del cardias mientras el ángulo de His es competente intraabdominal", "Ascenso torácico de vísceras colónicas excluyendo rotación gástrica", "Desplazamiento superior o dislocación tanto del cardias como del fondo gástrico", "Formación de una membrana supradiafragmática con impactación crónica"],
+        answer: 2,
+        justification: "Justificación: La amalgama de fuerzas vectoriales toracoabdominales negativas induce eventualmente un fallo total del hiato muscular. Esta etapa combina el defecto axial rectilíneo deslizado con el componente lateral del rodamiento fúndico sobrepasando la membrana frenoesofágica por múltiples frentes. Su confirmación pronostica severidad progresiva según clasifica de acuerdo al libro de Principios de Cirugía al aumentar drásticamente el espacio muerto mediastinal.<br><br>Perla Quirúrgica: La hernia mixta o de deslizamiento-rodamiento, tipo III, se caracteriza por una dislocación hacia arriba tanto del cardias como del fondo gástrico.<br><br>Análisis de Distractores: La opción A diagnostica la fase más precoz o hernia de deslizamiento concéntrica pura (Tipo I). La opción B describe el criterio inclusivo definitorio para clasificar el defecto complejo más grave multivisceral por adición peritoneal (Tipo IV). La opción D se refiere al pliegue submucoso circular reactivo de Schatzki.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Hernias diafragmáticas gigantes, Página 55."
+    },
+    {
+        id: 32,
+        question: "En la práctica de una evaluación posquirúrgica o endoscópica por sospecha de patología hiatal, ¿qué técnica de abordaje visual confirma invariablemente la topografía herniaria interna?",
+        options: ["Medición directa en extensión de la amplitud del pliegue gástrico longitudinal", "Insuflación esofágica continua sin sobrepasar la unión escamocilíndrica basal", "Retroflexión intragástrica u observación con endoscopio en maniobra de J", "Trazado manométrico computarizado continuo hasta el hiato diafragmático crural"],
+        answer: 2,
+        justification: "Justificación: La arquitectura tridimensional fúndica y del cardias, incluyendo los márgenes de los pilares del diafragma de sujeción (impresión respiratoria extrínseca), no se evidencia frontalmente. Invertir la punta del lente expone el saco aberrante formándose cráneo-cefálicamente. Identificar el grado de apertura y dislocación gástrica se fundamenta visualmente, de acuerdo al libro de Principios de Cirugía, en excluir invaginaciones o lesiones mucosas camufladas periesofágicamente.<br><br>Perla Quirúrgica: Una hernia se demuestra mejor con el estómago completamente insuflado y la unión gastroesofágica observada con un endoscopio retroflexionado (maniobra en J).<br><br>Análisis de Distractores: La opción A denota apreciación morfológica superficial no confirmatoria de migración del complejo esfinteriano completo a través de la crura. La opción B subestima la entrada gástrica requerida para el descarte forzoso de lesiones fúndicas (ej. úlceras isquémicas en anillo). La opción D no corresponde a imagen endoscópica real, sino al apoyo fisiológico de presiones para inferir indirectamente acortamientos.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Evaluación endoscópica, Página 19."
+    },
+    {
+        id: 33,
+        question: "En la evaluación epidemiológica de urgencias quirúrgicas, ¿qué porcentaje aproximado de las perforaciones esofágicas corresponde a un Síndrome de Boerhaave clásico?",
+        options: ["El 80 % de todas las perforaciones", "Solo el 15 % de las perforaciones totales", "Más del 50 % de los ingresos de choque mediastínico", "Menor al 2 % de la patología no litiásica"],
+        answer: 1,
+        justification: "Justificación: El barotrauma por vómito incontrolado induce disrupciones longitudinales letales masivas orientadas en el tercio distal izquierdo del esófago (triángulo de debilidad). A pesar de su catastrofismo clínico mediático o popularidad diagnóstica por su asociación a excesos etílicos, su ocurrencia estadística es reducida en comparación con eventos causados por manipulación médica iatrogénica en zonas pre-estenosadas. De acuerdo al libro de Principios de Cirugía, esta urgencia sigue liderando la morbilidad espontánea.<br><br>Perla Quirúrgica: La perforación espontánea, conocida como síndrome de Boerhaave, representa solo el 15 % de los casos de perforación esofágica.<br><br>Análisis de Distractores: La opción A representa el estimado estadístico que corresponde a perforaciones producidas de forma iatrogénica por el endoscopista o cirujano. La opción C atribuye al vómito una dominancia que no corresponde a la casuística universal realística. La opción D lo minimiza a un reporte de caso fortuito o enfermedad rara, lo cual ignora su presentación consistente en servicios de emergencia.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Perforación esofágica, Página 77."
+    },
+    {
+        id: 34,
+        question: "En la génesis tumoral esofágica, ¿cuál de las siguientes neoplasias sólidas constituye la gran mayoría de los hallazgos intramurales benignos?",
+        options: ["Lipoma submucoso encapsulado", "Leiomioma de fibras de músculo liso", "Fibromioma neuroendocrino atípico", "Osteocondroma condral ectópico esofágico"],
+        answer: 1,
+        justification: "Justificación: La capa muscular propia en sus dos tercios distales está compuesta abrumadoramente por músculo liso. La hiperplasia nodular reactiva localizada de esta capa miofibrosa produce lesiones abombadas, recubiertas por mucosa íntegra. Son extirpadas por enucleación extramucosa. La prevalencia tisular muscular dicta su predominio histológico natural de acuerdo al libro de Principios de Cirugía de patología benigna esofágica.<br><br>Perla Quirúrgica: Las lesiones intramurales son tumores sólidos o quistes, y la gran mayoría son leiomiomas.<br><br>Análisis de Distractores: La opción A representa una proliferación inusual en un órgano con escaso tejido adiposo intrínseco en sus capas medias e internas. La opción C hace alusión a estirpes mesenquimales-neurales que originan GIST o tumores raros aislados esporádicos gástricos o del intestino delgado, muy poco frecuentes en esófago. La opción D califica como rareza anecdótica cartilaginosa no reportada de forma habitual.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Tumores y quistes benignos, Página 42."
+    },
+    {
+        id: 35,
+        question: "En un paciente posoperado por reconstrucción esofágica con ascenso gástrico total, ¿qué defecto gástrico posquirúrgico predecible obliga frecuentemente a añadir un procedimiento de drenaje como la piloroplastia?",
+        options: ["Retraso del vaciamiento gástrico secundario a vagotomía troncal obligada", "Fístula linfática masiva por rotura yatrógena del conducto torácico", "Ulceración necrótica de la curvatura mayor dependiente de la gastroepiploica", "Reflujo biliar alcalino incesante por alteración mecánica hiatal"],
+        answer: 0,
+        justification: "Justificación: La resección en bloque del esófago oncológico o por fallo terminal incluye inevitablemente la extirpación radical conjunta de los troncos vagales anterior y posterior a su paso por el mediastino distal. El estómago transpuesto, ahora paralizado, experimenta estasis mecánica pasiva de líquidos. Facilitar el flujo hacia el duodeno se vuelve mandatorio morfológicamente, lo que subraya la recomendación de drenar o abrir el tracto de salida pilórico de acuerdo al libro de Principios de Cirugía.<br><br>Perla Quirúrgica: La reconstrucción se ve afectada por complicaciones de la estasis en el tubo digestivo superior... Se deben considerar procedimientos de drenaje (piloroplastia).<br><br>Análisis de Distractores: La opción B es un riesgo de la disección intratorácica supra-aórtica y el daño del conducto torácico que causa quilotórax, pero no requiere piloroplastia para tratarse. La opción C relata el desastre por desvascularización agresiva errónea por ligadura alta, lo cual resulta en necrosis y dehiscencia de la anastomosis, no alteración de vaciamiento gástrico funcional aislada. La opción D ocurre en abordajes y resecciones distales parciales o piloroplastias excesivas sin Y de Roux.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Reconstrucción esofágica, Página 60."
+    },
+    {
+        id: 36,
+        question: "En el abordaje terapéutico de la disfagia dolorosa, ¿qué síntoma primario aislado NO justifica bajo ninguna circunstancia realizar una miotomía esofágica laparoscópica?",
+        options: ["Regurgitación no ácida persistente o severa progresiva", "Dificultad para líquidos fríos y dolor retroesternal asociado a disfagia masiva", "Dolor torácico aislado en ausencia clínica de disfagia real asociada", "Impactación repetitiva con hospitalización recurrente por deshidratación e inanición"],
+        answer: 2,
+        justification: "Justificación: Los dolores espásticos no cardíacos pueden originarse por estrés hipercinético primario distal o por reflujo no erosivo ácido silencioso subyacente estimulando terminales nociceptivas. Una destrucción mecánica y seccional invasiva de fibras contráctiles (miotomía de Heller) fracasará clínicamente en aliviar neuralgias si el paso pasivo del bolo nunca estuvo en realidad obstaculizado o estancado. De acuerdo al libro de Principios de Cirugía, la selección del paciente basa el éxito exclusivamente en liberar retenciones funcionales anatómicas comprobables.<br><br>Perla Quirúrgica: El síntoma de dolor torácico por sí solo no es una indicación para un procedimiento quirúrgico.<br><br>Análisis de Distractores: La opción A obliga quirúrgicamente al cirujano al representar falla de depuración total por espasmo muscular mientérico obstructivo o acalasia descompensada en progresión clásica. La opción B combina objetivamente el fracaso peristáltico (disfagia mecánica al paso del agua por obstrucción esofágica) con dolor consecuente crónico por distensión de cámara estancada, un indicador clásico. La opción D refleja el demerito nutricional severo que exige alivio definitivo.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Operaciones para trastornos motores, Página 37."
+    },
+    {
+        id: 37,
+        question: "Al diagnosticar y tratar quirúrgicamente los divertículos esofágicos epifrénicos o medioesofágicos dolorosos, ¿qué procedimiento técnico adyuvante es obligatorio asociar invariablemente a la diverticulectomía anatómica primaria?",
+        options: ["Extirpación circunferencial ganglionar del mediastino superior y subcarinal", "Miotomía esofágica larga extendida por debajo de las anomalías motoras documentadas", "Miotomía transversal cervical alta acoplada a una funduplicatura total intratorácica", "Resección del segmento de esófago inferior dilatado con preservación vagal troncal"],
+        answer: 1,
+        justification: "Justificación: Los sacos mesoesofágicos herniarios epifrénicos de pulsión surgen como secuela de una hipertensión de salida subyacente. Resecar el globo o saco focal sin extinguir y abolir la hiperpresión hipercinética intraluminal provocará una fuga irremediable fulminante por las suturas o una recaída a los meses en la capa debilitada. De acuerdo al libro de Principios de Cirugía, la cura real trata el fallo de propulsión causal subyacente manométrico.<br><br>Perla Quirúrgica: Si se documenta una anomalía motora, se debe realizar una miotomía... indicada para la disfagia causada por cualquier trastorno motor caracterizado por ondas focales asociadas a un divertículo.<br><br>Análisis de Distractores: La opción A reseca focos causales externos fibróticos de los divertículos asintomáticos por tracción mediastinal pero no revierte el trastorno intrínseco de motilidad patológica severo que originó divertículos de pulsión epifrénicos. La opción C interviene inútilmente el cricofaríngeo para patología suprahiatal lejana sin resolver el factor distensible de propulsión baja hipertrófica. La opción D reseca inmensas zonas redundantes terminales oclusivas o desvitalizadas, no el espasmo manométrico específico segmentario tratable.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Operaciones para divertículos, Página 36."
+    },
+    {
+        id: 38,
+        question: "En la evaluación clínica y quirúrgica de la disfagia esofágica intermitente, ¿qué parámetro de la historia médica permite diferenciar mejor el demerito y la necesidad de intervención agresiva?",
+        options: ["La intensidad en decibelios de la afonía al intentar reanudar la plática social", "El compromiso metabólico asociado a alteraciones o ajustes forzosos de la dieta diaria", "El dolor retroesternal urente progresivo aislado posprandial no ácido", "La edad superior a 75 años sin comorbilidad hepática grave reportada"],
+        answer: 1,
+        justification: "Justificación: El cuerpo humano modula la consistencia de los alimentos que consume al detectar obstrucciones progresivas no reconocidas. Requerir beber agua constantemente para 'empujar' un bocado, o procesar los alimentos en puré denota de acuerdo al libro de Principios de Cirugía una deficiencia mecánica faríngea o de retención estructural sumamente grave predispuesta a desnutrición clínica severa a corto plazo, la cual debe motivar celeridad para evitar complicaciones.<br><br>Perla Quirúrgica: Estas evaluaciones, además de la valoración del estado nutricional del paciente, ayudan a determinar cuán grave es la disfagia y a juzgar la necesidad de intervención quirúrgica... el equilibrio entre la gravedad y el ajuste que hace el paciente en sus hábitos alimentarios.<br><br>Análisis de Distractores: La opción A valora de manera informal parálisis cordal o parálisis de nervio laríngeo en cáncer torácico terminal inoperable, no el grado sintomático de disfagia primaria inicial. La opción C define al síntoma pirosis característico de enfermedad por reflujo clásica, distinto del bloqueo mecánico real sintomático disfágico motor faringo-esofágico por espasmo puro. La opción D constituye un factor puramente estadístico de longevidad, excluyendo la capacidad real individual funcional deglutoria.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Trastornos de la motilidad, Página 27."
+    },
+    {
+        id: 39,
+        question: "En un paciente cursando con patología en los músculos estriados cervicales primarios por asimetría obstructiva en la relajación del cricofaríngeo superior, ¿cuál es la complicación evitable típica de estas altas presiones de tracción y falla mecánica?",
+        options: ["Desarrollo fisiopatológico degenerativo obstructivo a Esófago de Barrett displásico distal", "Desplazamiento circunferencial agudo formador de un anillo simétrico fibroso de Schatzki", "Formación y herniación de un divertículo faringoesofágico verdadero o de Zenker", "Vólvulo organoaxial intratorácico total de rotación completa masiva gástrica aguda"],
+        answer: 2,
+        justification: "Justificación: La asincronía en el esfínter esofágico superior estriado origina un cuello de botella. Cuando la contracción peristáltica de la base de la faringe choca sistemáticamente con un músculo cricofaríngeo no relajado espástico y fibrótico, de acuerdo al libro de Principios de Cirugía, la mucosa subyacente 'explota' crónicamente por la debilidad posterior en el triángulo de Killian cervical, formando una bolsa extra-tubular anatómica compresiva (falso divertículo superior).<br><br>Perla Quirúrgica: El divertículo faríngeo (de Zenker) es un trastorno de la apertura del esfínter esofágico superior.<br><br>Análisis de Distractores: La opción A detalla la consecuencia mucosa inferior exclusiva de una agresión tóxica intraluminal ácida de años sin relación con espasmo cervical estriado alto superior. La opción B nombra el pliegue reaccional circunferencial estenósico liso de las estenosis hiatales no faríngeas por desplazamiento. La opción D ilustra el final morfológico catastrófico de los hiatos ensanchados diafragmáticos distales del hemiabdomen donde prolapsa completamente la curvatura gástrica anatómica abdominal.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Fisiologíaesfinteriana superior, Página 57."
+    },
+    {
+        id: 40,
+        question: "Tras documentar fracaso completo en una operación antirreflujo tipo Nissen por fibrosis, recurrencia anatómica intratable y estenosis que cursan simultáneamente con vaciamiento gástrico retardado persistente, ¿cuál es la técnica de reparación quirúrgica paliativa idónea?",
+        options: ["Esofagectomía transhiatal con sustitución colónica ascendente y anastomosis faríngea", "Resección del esfínter gástrico superior asociada con gastroyeyunostomía en Y de Roux", "Inserción endoscópica de una malla metálica recubierta expandible tipo 'stent' cardial", "Re-funduplicatura laparoscópica de Toupet reducida sobre sonda de calibración blanda"],
+        answer: 1,
+        justification: "Justificación: La distensión masiva con atonía del muñón de la cirugía, secundaria a injurias nerviosas del nervio vago y múltiples operaciones inflamatorias previas repetitivas fibrosas, inhabilita totalmente a ese segmento disfuncional cardial de servir como receptáculo anatómico natural. De acuerdo al libro de Principios de Cirugía, resecarlo focalmente y derivar el pasaje digestivo excluyendo el esfínter duodenal de vaciamiento enlentecido resuelve definitivamente el cuadro terminal en estenosis gástricas graves irremediables.<br><br>Perla Quirúrgica: Si la esofagitis es severa, o ha habido un procedimiento antirreflujo fallido previo y la enfermedad está asociada con un vaciamiento gástrico retrasado, una resección gástrica con gastroyeyunostomía en Y de Roux ha demostrado ser la mejor opción.<br><br>Análisis de Distractores: La opción A representa una interposición anatómica compleja supra-clavicular diseñada como sustituto digestivo total ante carcinomas avanzados postradiación severos estriados irresecables o ingesta corrosiva fulminante panesofágica generalizada y gástrica letal simultánea. La opción C ejerce un paliativo de control luminal en metástasis oclusivas proximales de inminente taponamiento pero con altísima recurrencia sintomática gástrica en lesiones funcionales no malignas oclusivas y estasis ácida. La opción D repetirá incesantemente los fracasos estenósicos anteriores, dado que la musculatura local redundante ha perdido irremediablemente toda su viabilidad contráctil compliante o funcionalidad dinámica inhibitoria.",
+        source: "Capítulo 25. Esófago y hernia diafragmática, Trastornos secundarios quirúrgicos, Página 24."
+    }
+
+        ];
+
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('hiatoschartrsLastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('hiatoschartrsProgress');
+                localStorage.removeItem('hiatoschartrsLastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-blue-500 shadow-md z-10 border-blue-500 dark:border-blue-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-blue-600 hover:to-cyan-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-blue-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-cyan-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! Schwartz" : "Schwartz";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "Esófago y hernia diafragmática";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus respuestas correctas/incorrectas en el tablero." 
+                : "Capítulo 25. Esófago y hernia diafragmática";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="login.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-blue-100 dark:border-blue-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-400 dark:has-[:checked]:bg-blue-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-blue-600 dark:hover:bg-blue-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('hiatoschartrsProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('hiatoschartrsLastQId', currentQuestionId);
+                else localStorage.removeItem('hiatoschartrsLastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('hiatoschartrsProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+
+</body>
+</html>

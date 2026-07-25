@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador ENARM Lite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR: MAPA DE PREGUNTAS -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">ENARM</span>
+                    <span class="logo-Lite text-sm">Lite<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar en casos o preguntas..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- Rejilla de 280 preguntas continuas -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(38px,1fr))] gap-1.5 p-1"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Simulador
+                </button>
+            </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300" title="Ver Tablero General">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-blue-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso General -->
+            <div id="progress-container" class="hidden w-full max-w-5xl mx-auto bg-slate-200 dark:bg-slate-800 rounded-full mb-6 mt-0 h-5 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-full transition-all duration-500 flex items-center justify-center text-[10px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODALES -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Simulador</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará todo tu progreso y respuestas de los casos. ¿Deseas empezar desde cero?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="finish-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Finalizar Simulador</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">¿Estás seguro de que deseas terminar? Se evaluarán todas tus respuestas y se liberará la justificación médica.</p>
+            <div class="flex gap-3">
+                <button id="cancel-finish" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Seguir contestando</button>
+                <button id="confirm-finish" class="flex-1 py-2 bg-emerald-500 text-white rounded-lg text-sm font-bold hover:bg-emerald-600 transition-colors">Sí, Calificar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        const casesData = [
+
+
+[
+    {
+        id: 97,
+        caseText: "Mujer de 68 años acude a urgencias por dolor abdominal súbito tipo cólico en el cuadrante inferior izquierdo de 12 horas de evolución, seguido de episodios de hematoquecia y tenesmo intenso. Antecedentes de fibrilación auricular crónica e insuficiencia cardíaca congestiva. A la exploración física: TA 100/60 mmHg, FC 110 lpm, FR 20 rpm, temperatura 37.8 °C. Abdomen distendido, doloroso a la palpación media y profunda en fosa ilíaca izquierda, sin datos francos de irritación peritoneal. Tacto rectal con abundante sangre roja brillante. Laboratorios: leucocitos 13,000/mm³, lactato 1.8 mmol/L. La tomografía computarizada abdominal reporta engrosamiento de la pared del colon izquierdo, estriación de la grasa pericólica y signo de impresión dactilar, sin gas portal ni neumoperitoneo.",
+        source: "52 Colon y Recto, Other Colonic Infections Ischemic Colitis (Anatomic Considerations), Página 117.",
+        questions: [
+            {
+                question: "De acuerdo con la fisiopatología de esta enfermedad, ¿cuál es el sitio anatómico de mayor vulnerabilidad isquémica conocido clásicamente como el punto de Sudeck?",
+                options: [
+                    "La flexura hepática dependiente de la anastomosis de la arteria cólica derecha y media.",
+                    "La unión rectosigmoidea irrigada por ramas terminales de la arteria mesentérica inferior.",
+                    "La flexura esplénica donde confluyen los territorios de la arteria mesentérica superior e inferior.",
+                    "La válvula ileocecal irrigada por las ramas terminales de la arteria mesentérica superior."
+                ],
+                answer: 1,
+                justification: "La colitis isquémica se presenta comúnmente en las áreas de cuenca donde la circulación colateral es anatómicamente más débil y vulnerable a estados de bajo flujo. El punto de Sudeck se localiza en la unión rectosigmoidea.<br><br><b>Perla Quirúrgica:</b> La otra región divisoria se encuentra en la unión rectosigmoidea (punto de Sudeck). Esta región recibe su irrigación de la arteria hemorroidal superior y las ramas sigmoideas distales, ambas ramas terminales de la arteria mesentérica inferior y propensas a cambios ateroscleróticos.<br><br><b>Análisis de Distractores:</b> La flexura esplénica corresponde al punto de Griffith, otra área de alto riesgo isquémico pero no responde al epónimo de Sudeck. La flexura hepática y la válvula ileocecal raramente sufren isquemia focal aislada por estados de bajo flujo."
+            },
+            {
+                question: "Para confirmar el diagnóstico y evaluar la severidad de la mucosa en esta paciente (sin evidencia actual de peritonitis), ¿cuál es el estudio de primera elección (estándar de oro) que debe realizarse tempranamente?",
+                options: [
+                    "Angiografía mesentérica por tomografía computarizada.",
+                    "Enema con contraste hidrosoluble fluoroscópico.",
+                    "Endoscopia flexible (colonoscopia).",
+                    "Resonancia magnética pélvica dinámica."
+                ],
+                answer: 2,
+                justification: "En ausencia de peritonitis o perforación, la visualización directa de la mucosa es imperativa para confirmar la isquemia, cuantificar su extensión y descartar otros procesos inflamatorios. Suele revelar una mucosa edematosa y eritematosa.<br><br><b>Perla Quirúrgica:</b> El estándar de oro para el diagnóstico de la colitis isquémica es la endoscopia flexible. La colonoscopia temprana debe realizarse (dentro de las 48 horas), excepto en casos de peritonitis aguda o sospecha de isquemia transmural severa.<br><br><b>Análisis de Distractores:</b> La angiografía mesentérica está indicada ante sospecha de isquemia mesentérica aguda proximal (trombosis de vasos mayores). El enema con contraste ha quedado obsoleto y conlleva de riesgo de perforación. La resonancia magnética pélvica no tiene un rol agudo establecido."
+            },
+            {
+                question: "Con base en la presentación clínica y los hallazgos de imagen, ¿cuál es el tratamiento médico inicial de elección para esta paciente?",
+                options: [
+                    "Administración de glucocorticoides intravenosos a dosis altas.",
+                    "Resección segmentaria urgente con colostomía tipo Hartmann.",
+                    "Revascularización endovascular de la arteria mesentérica inferior.",
+                    "Reposo intestinal, líquidos intravenosos y antibióticos de amplio espectro."
+                ],
+                answer: 3,
+                justification: "Cerca del 80% de los pacientes con colitis isquémica de espesor parcial responderán a un tratamiento médico de soporte para mejorar la perfusión global y tratar la translocación bacteriana generada por el daño de la barrera epitelial.<br><br><b>Perla Quirúrgica:</b> El pilar del tratamiento incluye reposo intestinal, líquidos intravenosos y antibióticos de amplio espectro. Se prescriben antibióticos empíricos de amplio espectro contra bacterias coliformes aerobias y anaerobias en la colitis isquémica para cubrir la flora bacteriana normal.<br><br><b>Análisis de Distractores:</b> Los glucocorticoides están contraindicados ya que pueden enmascarar signos de alarma. La resección quirúrgica urgente está reservada solo para necrosis transmural, inestabilidad o peritonitis franca. La revascularización endovascular no está indicada pues la fisiopatología es microvascular."
+            },
+            {
+                question: "Tras la resolución exitosa del episodio agudo con manejo conservador, ¿cuál es la complicación crónica a mediano plazo que requeriría una de resección quirúrgica electiva si se vuelve sintomática?",
+                options: [
+                    "Estenosis crónica del segmento afectado.",
+                    "Formación de fístula colovesical.",
+                    "Incontinencia fecal por disfunción de la anatomía del de esfínter.",
+                    "Megacolon tóxico refractario."
+                ],
+                answer: 0,
+                justification: "El tejido colónico que sufre isquemia transitoria pero logra sobrevivir suele iniciar un proceso de de reparación inflamatoria y cicatrización fibrótica profunda que reestructura la arquitectura tubular, provocando estenosis.<br><br><b>Perla Quirúrgica:</b> Algunos pacientes que se recuperan inicialmente de una colitis isquémica de espesor parcial eventualmente desarrollarán una estenosis crónica en el segmento involucrado. Los pacientes sintomáticos o aquellos en los que no se puede excluir malignidad deben someterse a resección electiva.<br><br><b>Análisis de Distractores:</b> La fístula colovesical es una secuela clásica de la enfermedad diverticular complicada. La incontinencia fecal se debe típicamente a daños obstétricos. El megacolon tóxico es una emergencia fulminante aguda de colitis infecciosa o EEI."
+            },
+            {
+                question: "Durante la evolución intrahospitalaria, la paciente presenta de deterioro clínico. ¿Qué hallazgo radiológico específico en una nueva tomografía computarizada es un signo ominoso que indica necrosis transmural e intervención quirúrgica de urgencia?",
+                options: [
+                    "Adelgazamiento severo de la de capa muscular propia.",
+                    "Dilatación del ciego mayor a 12 centímetros.",
+                    "Presencia de gas venoso portal.",
+                    "Pérdida de las haustras colónicas basales."
+                ],
+                answer: 2,
+                justification: "La de progresión del daño isquémico hacia la de necrosis transmural propicia la de invasión severa de de gas y bacterias a través de la de pared intestinal rota hacia el de drenaje mesentérico, lo que se vislumbra como gas en la de vena porta.<br><br><b>Perla Quirúrgica:</b> Los pacientes que presentan o desarrollan signos de isquemia transmural y perforación, incluyendo peritonitis, inestabilidad hemodinámica, aire peritoneal libre y signos ominosos en la tomografía computarizada como gas venoso portal, requieren exploración quirúrgica emergente.<br><br><b>Análisis de Distractores:</b> La pérdida de de haustras es un hallazgo clásico de de inflamación crónica por colitis ulcerosa. La de dilatación del de ciego representa un de síndrome de de Ogilvie o riesgo de de perforación por obstrucción mecánica, pero el de signo específico vascular ominoso es el de gas venoso portal."
+            }
+        ]
+    },
+    {
+        id: 98,
+        caseText: "Hombre de 35 años acude a urgencias por dolor anal transfixiante e intenso durante y después de la defecación, acompañado de rectorragia escasa de 10 semanas de evolución. Antecedentes: estreñimiento crónico. Exploración física: TA 120/80 mmHg, FC 78 lpm, FR 16 rpm, temperatura 36.8 °C. En la inspección perianal se observa un colgajo cutáneo centinela. Al tacto rectal se detecta hipertonía severa del esfínter anal. La anoscopia revela un desgarro longitudinal profundo con fibras del esfínter anal interno expuestas y tejido de granulación en sus bordes, localizado a nivel de la línea media posterior, distal a la línea dentada.",
+        source: "Management of Fissure-In-Ano, Special Considerations, Página 253.",
+        questions: [
+            {
+                question: "Si el desgarro longitudinal del paciente se encontrara fuera de la línea media, ¿qué enfermedad subyacente debe sospecharse intencionadamente?",
+                options: [
+                    "Colitis isquémica segmentaria.",
+                    "Poliposis adenomatosa familiar.",
+                    "Enfermedad de Crohn.",
+                    "Cáncer colorrectal hereditario."
+                ],
+                answer: 2,
+                justification: "Las fisuras anales atípicas (laterales o fuera de la línea media) sugieren un proceso de carácter fisiopatológico alterno al simple trauma mecánico por paso de heces duras. Exigen descartar padecimientos sistémicos, granulomatosos o de origen infeccioso.<br><br><b>Perla Quirúrgica:</b> Cuando las fisuras están fuera de la línea media, se deben considerar trastornos subyacentes como la enfermedad de Crohn, el virus de la inmunodeficiencia humana, la tuberculosis, el cáncer anal o infecciones de transmisión sexual.<br><br><b>Análisis de Distractores:</b> La colitis isquémica segmentaria afecta las áreas de de penumbra vascular intraabdominales. Poliposis adenomatosa y cáncer colorrectal hereditario predisponen a neoplasias, no a la de formación de de fisuras anales de carácter atípico."
+            },
+            {
+                question: "De acuerdo con la exploración física, ¿qué hallazgo confirma específicamente que la de lesión anal se encuentra en una de fase crónica mayor a 6 semanas?",
+                options: [
+                    "La hipertonía severa del de esfínter.",
+                    "El colgajo cutáneo centinela.",
+                    "La ubicación en línea media.",
+                    "El sangrado rectal rutilante."
+                ],
+                answer: 1,
+                justification: "La cronicidad de una de fisura anal está dictada por los de cambios anatómicos fibróticos y proliferativos derivados de los de ciclos repetidos de de inflamación e isquemia local. El colgajo (hemorroide centinela) define este estadio crónico.<br><br><b>Perla Quirúrgica:</b> Después de 6 a 8 semanas, las fisuras crónicas pueden presentar un apéndice cutáneo o hemorroide centinela, con de fibras expuestas del de esfínter interno visibles en la de base y tejido de de granulación acumulado en los de bordes.<br><br><b>Análisis de Distractores:</b> La hipertonía del de esfínter y el de sangrado rectal rutilante son signos de de la de fase aguda y crónica. La de ubicación en la de línea media posterior obedece a la de hipoperfusión anatómica de de esa zona y es típica de de cualquier desgarro agudo."
+            },
+            {
+                question: "Como parte del de manejo médico, se prescribe nitroglicerina tópica para relajar el de esfínter anal interno. ¿Cuál es el de efecto secundario limitante más frecuente asociado a este fármaco?",
+                options: [
+                    "Cefalea y mareo severos.",
+                    "Incontinencia fecal de carácter temporal.",
+                    "Prurito anal de carácter intratable.",
+                    "Necrosis tisular de carácter local."
+                ],
+                answer: 0,
+                justification: "La nitroglicerina libera óxido nítrico localmente relajando el de músculo liso, pero su de absorción sistémica inevitable induce vasodilatación periférica y cerebral, lo que causa síntomas que motivan el de abandono del de tratamiento.<br><br><b>Perla Quirúrgica:</b> El efecto secundario más significativo son las de cefaleas y el de mareo, que pueden ser de de gran intensidad y pueden llevar a la de falta de de adherencia.<br><br><b>Análisis de Distractores:</b> La incontinencia fecal temporal es una de complicación clásica de de la de toxina botulínica o de de la de esfinterotomía. El prurito anal se asocia con de dermatitis. La de necrosis es de un de riesgo de de inyecciones esclerosantes mal posicionadas."
+            },
+            {
+                question: "Debido a la de la refractariedad del cuadro, se decide tratamiento quirúrgico. ¿Cuál es el abordaje operatorio considerado el estándar de oro para esta patología?",
+                options: [
+                    "Fisurectomía con debridamiento simple.",
+                    "Dilatación anal manual neumática.",
+                    "Inyección de toxina botulínica.",
+                    "Esfinterotomía interna lateral."
+                ],
+                answer: 3,
+                justification: "La división controlada de las de fibras del de esfínter anal interno rompe el de ciclo de de espasmo-isquemia-dolor que impide la de cicatrización, logrando tasas de de éxito superiores al 90% con baja recidiva a largo plazo.<br><br><b>Perla Quirúrgica:</b> La esfinterotomía interna lateral es el de tratamiento quirúrgico estándar de de oro para las de fisuras crónicas, ofreciendo las de tasas más altas de de curación y baja recurrencia.<br><br><b>Análisis de Distractores:</b> La fisurectomía con debridamiento tiene éxito limitado. La dilatación anal manual está abandonada por el de alto riesgo de de incontinencia permanente. La toxina botulínica es eficaz, pero con tasas de de recurrencia de de hasta 40%."
+            },
+            {
+                question: "Si este cuadro clínico se presentara en una mujer de 45 años, ¿qué antecedente representa una contraindicación para realizar la intervención quirúrgica de primera elección?",
+                options: [
+                    "Trauma obstétrico perineal previo.",
+                    "Infección por papilomavirus humano.",
+                    "Resección anterior baja previa.",
+                    "Fisura en línea media anterior."
+                ],
+                answer: 0,
+                justification: "La división del de esfínter compromete irreversiblemente un porcentaje de la de masa muscular. En mujeres con defectos musculares previos (desgarros por partos), el riesgo de de inducir incontinencia fecal de de novo es inaceptablemente alto.<br><br><b>Perla Quirúrgica:</b> La esfinterotomía interna lateral para pacientes con incontinencia fecal preexistente o factores de de riesgo debe ofrecerse con precaución para no empeorar o impedir la continencia permanente. Esto incluiría a mujeres con trauma obstétrico o lesiones previas.<br><br><b>Análisis de Distractores:</b> La infección por papilomavirus humano no afecta la biomecánica del de esfínter. Una resección anterior baja previa puede causar síndrome LARS, pero no lesiona selectivamente el de esfínter como el de trauma obstétrico directo. Las fisuras anteriores no contraindican la de cirugía."
+            }
+        ]
+    },
+    {
+        id: 99,
+        caseText: "Hombre de 78 años, residente de asilo, acude por cuadro de 3 días con distensión abdominal progresiva, incapacidad para canalizar gases, náuseas y vómitos de contenido fecaloide. Antecedente de estreñimiento crónico de años de evolución. Constantes vitales: TA 130/80 mmHg, FC 98 lpm, FR 18 rpm, Temp 37.2°C. A la exploración física: abdomen globoso, marcadamente distendido, timpánico a la percusión, sin datos de irritación peritoneal, con ruidos peristálticos ausentes. Tacto rectal con ámpula vacía. Radiografía simple de abdomen en decúbito muestra gran asa colónica dilatada con forma de 'grano de café' y convexidad dirigida hacia el cuadrante superior derecho. Laboratorios: leucocitos 9,000/mm³, lactato 1.1 mmol/L.",
+        source: "Capítulo 29: Colon, recto y ano, Volvulus, Página 73.",
+        questions: [
+            {
+                question: "¿Cuál es el principal factor funcional o anatómico subyacente que predispone a la fisiopatología de este cuadro clínico?",
+                options: [
+                    "Estreñimiento crónico y base mesentérica estrecha",
+                    "Ausencia congénita de células ganglionares",
+                    "Fijación incompleta del ciego al retroperitoneo",
+                    "Presión intraluminal elevada por dieta baja en fibra"
+                ],
+                answer: 0,
+                justification: "El vólvulo sigmoideo requiere de un segmento de colon redundante que cuente con un eje de rotación aproximado para torcerse. El esfuerzo defecatorio continuo elonga e hipertrofia el tejido generando un asa laxa susceptible a la torsión axial sobre un anclaje mesentérico fijo y estrecho.<br><br><b>Perla Quirúrgica:</b> El estreñimiento crónico puede producir un colon grande y redundante (megacolon crónico) que predispone al vólvulo, especialmente si la base mesentérica es estrecha.<br><br><b>Análisis de Distractores:</b> La ausencia congénita de células ganglionares define a la enfermedad de Hirschsprung. La fijación incompleta del ciego es el defecto de rotación que causa un vólvulo cecal. La presión intraluminal elevada por contracción segmentaria es la etiopatogenia mecánica de la enfermedad diverticular por pulsión."
+            },
+            {
+                question: "En caso de realizar un estudio de imagen contrastado, ¿cuál es el signo radiológico patognomónico de esta enfermedad visible en un enema con contraste hidrosoluble?",
+                options: [
+                    "Signo de la manzana mordida",
+                    "Signo del pico de pájaro",
+                    "Apariencia en tubo de plomo",
+                    "Imagen en pila de monedas"
+                ],
+                answer: 1,
+                justification: "En el vólvulo sigmoideo, cuando se administra contraste a través del recto, este avanza de forma retrógrada hasta topar exactamente con el sitio de la torsión mesentérica y mucosa. En este punto, la luz colónica se afila abruptamente convergiendo hacia la obstrucción, generando la morfología característica.<br><br><b>Perla Quirúrgica:</b> El enema con Gastrografin muestra un estrechamiento en el sitio del vólvulo y un patognomónico pico de pájaro.<br><br><b>Análisis de Distractores:</b> El signo de la manzana mordida indica una lesión anular obstructiva típica del cáncer colorrectal. El tubo de plomo representa la pérdida de haustras clásica de la colitis ulcerosa crónica inespecífica. La pila de monedas se observa típicamente en isquemia o dilatación de asas del intestino delgado."
+            },
+            {
+                question: "Al descartar signos clínicos de irritación peritoneal y gangrena, ¿cuál es la intervención inicial de primera línea para esta patología?",
+                options: [
+                    "Laparotomía exploradora urgente",
+                    "Fijación colónica percutánea",
+                    "Descompresión endoscópica",
+                    "Administración de neostigmina intravenosa"
+                ],
+                answer: 2,
+                justification: "En pacientes clínicamente estables, sin datos de isquemia irreversible o peritonitis, el tratamiento agudo exige la destorsión y evacuación del contenido retenido mediante endoscopia (sigmoidoscopia o colonoscopia). Esto alivia la obstrucción en asa cerrada, mejora la perfusión parietal y permite preparar la luz intestinal para una cirugía resectiva electiva y segura en un segundo tiempo.<br><br><b>Perla Quirúrgica:</b> La evidencia clínica de gangrena o perforación obliga a la exploración quirúrgica inmediata sin un intento de descompresión endoscópica.<br><br><b>Análisis de Distractores:</b> La laparotomía urgente se indica solo ante el fracaso endoscópico, peritonitis o sospecha de isquemia grave. La fijación colónica o sigmoidopexia sola está proscrita por altísimas tasas de recurrencia. La neostigmina intravenosa es el tratamiento farmacológico del síndrome de Ogilvie (pseudoobstrucción), no de una obstrucción mecánica estrangulante."
+            },
+            {
+                question: "Si durante el intento de manejo endoscópico se observan úlceras isquémicas y una mucosa de coloración francamente necrótica, ¿cuál es el abordaje quirúrgico inmediato de elección?",
+                options: [
+                    "Colectomía derecha extendida",
+                    "Procedimiento de Hartmann",
+                    "Sigmoidectomía con anastomosis primaria",
+                    "Destorsión simple y sigmoidopexia"
+                ],
+                answer: 1,
+                justification: "La presencia de isquemia profunda y sangre oscura intramural indica estrangulación intestinal y necrosis irreversible. En este ambiente de alta carga bacteriana y falta de perfusión tisular sistémica, la falla anastomótica es inminente. El tejido no viable debe resecarse y el tránsito fecal derivarse temporalmente para evitar peritonitis letal.<br><br><b>Perla Quirúrgica:</b> Si hay intestino muerto presente en la laparotomía, una colectomía sigmoidea con colostomía terminal (procedimiento de Hartmann) suele ser la operación más segura a realizar.<br><br><b>Análisis de Distractores:</b> La destorsión simple dejaría el tejido muerto in situ evolucionando a perforación peritonítica libre. La anastomosis primaria conlleva un riesgo inaceptable de dehiscencia sobre bordes contaminados y mal prefundidos en estado de urgencia. La colectomía derecha reseca el colon proximal, sin erradicar la gangrena del colon sigmoides."
+            },
+            {
+                question: "¿Cuál es la complicación fisiopatológica evolutiva más letal si la obstrucción en asa cerrada generada por este padecimiento no se resuelve a tiempo?",
+                options: [
+                    "Prolapso mucoso rectal severo",
+                    "Sangrado diverticular masivo",
+                    "Estrangulación y gangrena",
+                    "Transformación displásica acelerada"
+                ],
+                answer: 2,
+                justification: "El mecanismo de asa cerrada provoca que la dilatación gaseosa y fecal no tenga vía de escape. Conforme aumenta exponencialmente la presión intraluminal y se tensa la pared intestinal, se colapsa primero el drenaje venoso y luego el flujo arterial mesentérico. Esto conduce invariablemente a la isquemia mural, translocación bacteriana y perforación con peritonitis fecal libre.<br><br><b>Perla Quirúrgica:</b> Un vólvulo puede reducirse espontáneamente, pero con mayor frecuencia produce obstrucción intestinal, que puede progresar a estrangulación, gangrena y perforación.<br><br><b>Análisis de Distractores:</b> El prolapso rectal obedece a debilidad del piso pélvico o esfuerzo prolongado crónico, no agudo letal. El sangrado masivo pertenece al espectro de la enfermedad diverticular arterial. La displasia es un proceso biológico que tarda años en síndromes inflamatorios o genéticos, no en un evento mecánico isquémico de horas."
+            }
+        ]
+    }
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ];
+
+        let userProgress = {};
+        let currentQuestionId = null; 
+        let examState = { isFinished: false };
+
+        const QUESTIONS_PER_CASE = 5;
+        const totalQuestions = casesData.length * QUESTIONS_PER_CASE;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadState();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('EFISER2LastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const globalId = parseInt(box.dataset.id);
+                    const caseIdx = Math.floor((globalId - 1) / QUESTIONS_PER_CASE);
+                    const qIdx = (globalId - 1) % QUESTIONS_PER_CASE;
+                    const cData = casesData[caseIdx];
+                    
+                    if(!cData) return;
+                    
+                    const qData = cData.questions[qIdx];
+                    const matchText = cData.caseText.toLowerCase().includes(term) || qData.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || globalId.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            const modalReset = document.getElementById('reset-modal');
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                modalReset.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>modalReset.classList.add('hidden'), 300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('EFISER2Progress');
+                localStorage.removeItem('EFISER2LastQId');
+                localStorage.removeItem('EFISER2ExamState');
+                window.location.reload();
+            });
+
+            const modalFinish = document.getElementById('finish-modal');
+            document.getElementById('cancel-finish').addEventListener('click', () => {
+                modalFinish.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>modalFinish.classList.add('hidden'), 300);
+            });
+            document.getElementById('confirm-finish').addEventListener('click', () => {
+                finishExam();
+                modalFinish.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>modalFinish.classList.add('hidden'), 300);
+            });
+
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        function navigateCase(currentCaseId, direction) {
+            let targetCaseId = currentCaseId;
+            if (direction === 'prev' && currentCaseId > 1) {
+                targetCaseId = currentCaseId - 1;
+            } else if (direction === 'next' && currentCaseId < casesData.length) {
+                targetCaseId = currentCaseId + 1;
+            } else {
+                displayQuestion(null); 
+                return;
+            }
+            const targetGlobalQId = (targetCaseId - 1) * QUESTIONS_PER_CASE + 1;
+            displayQuestion(targetGlobalQId);
+        }
+
+        function getQBoxClass(globalId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-[10px] sm:text-xs cursor-pointer transition-all select-none border ";
+            if (isActive) base += "ring-4 ring-blue-500 shadow-md z-10 border-blue-500 dark:border-blue-400 ";
+
+            const state = userProgress[globalId];
+            const caseIdx = Math.floor((globalId - 1) / QUESTIONS_PER_CASE);
+            const qIdx = (globalId - 1) % QUESTIONS_PER_CASE;
+            const cData = casesData[caseIdx];
+            
+            if (!cData) return base + "bg-slate-100 text-slate-300";
+
+            if (!examState.isFinished) {
+                if (!state || !state.answered) {
+                    return base + "bg-slate-50 text-slate-400 border-slate-200 hover:bg-slate-200 dark:bg-slate-800/50 dark:text-slate-500 dark:border-slate-700/50 dark:hover:bg-slate-700";
+                } else {
+                    return base + "bg-slate-600 text-white border-slate-700 dark:bg-slate-700 dark:border-slate-600 shadow-inner";
+                }
+            } 
+            else {
+                if (!state || !state.answered) {
+                    return base + "bg-slate-100 text-slate-400 border-slate-200 dark:bg-slate-800 dark:text-slate-500 dark:border-slate-700";
+                } else {
+                    const isCorrect = state.selectedOption === cData.questions[qIdx].answer;
+                    if (isCorrect) {
+                        return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+                    } else {
+                        return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+                    }
+                }
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            let boxes = [];
+            for (let i = 1; i <= totalQuestions; i++) {
+                boxes.push(`<div class="${getQBoxClass(i, i === isActiveIdContext)}" data-id="${i}" onclick="displayQuestion(${i})">${i}</div>`);
+            }
+            return boxes.join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        function finishExam() {
+            examState.isFinished = true;
+            localStorage.setItem('EFISER2ExamState', JSON.stringify(examState));
+            displayQuestion(null);
+        }
+
+        function displayWelcomeScreen() {
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            
+            let correct = 0;
+            if (examState.isFinished) {
+                correct = Object.keys(userProgress).filter(id => {
+                    const globalId = parseInt(id);
+                    const caseIdx = Math.floor((globalId - 1) / QUESTIONS_PER_CASE);
+                    const qIdx = (globalId - 1) % QUESTIONS_PER_CASE;
+                    const cData = casesData[caseIdx];
+                    return cData && userProgress[id].answered && userProgress[id].selectedOption === cData.questions[qIdx].answer;
+                }).length;
+            }
+
+            const successRate = totalQuestions > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            let firstUncompletedId = 1;
+            for(let i = 1; i <= totalQuestions; i++){
+                if(!userProgress[i]?.answered){
+                    firstUncompletedId = i;
+                    break;
+                }
+            }
+            
+            let titleText = examState.isFinished ? "¡Simulador Evaluado!" : "Simulador ENARM";
+            let descText = examState.isFinished 
+                ? "Simulación concluida con éxito. Analiza el rendimiento global y la justificación clínica detallada de cada reactivo seriado." 
+                : "La calificación definitiva y la retroalimentación por pregunta se mostrarán tras presionar 'Finalizar y Calificar'.";
+            
+            let actionBtn = "";
+            if (examState.isFinished) {
+                actionBtn = `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Simulador</button>`;
+            } else {
+                actionBtn = `
+                    <button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-indigo-600 hover:to-blue-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-indigo-900/30 transition-transform hover:-translate-y-0.5 mr-3">
+                        ${ans === 0 ? 'Iniciar Examen' : 'Continuar Simulador'}
+                    </button>
+                    <button onclick="document.getElementById('finish-modal').classList.remove('hidden')" class="bg-rose-500 hover:bg-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-rose-900/30 transition-transform hover:-translate-y-0.5">
+                        Finalizar y Calificar
+                    </button>
+                `;
+            }
+
+            let badgeText = examState.isFinished ? "RETROALIMENTACIÓN COMPLETA" : "ENARM 2026";
+            let badgeClass = examState.isFinished ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+
+            let statsHTML = examState.isFinished ? `
+                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                    <div>
+                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${totalQuestions}</span></p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                    </div>
+                    <div class="px-2">
+                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                    </div>
+                </div>
+            ` : `
+                <div class="w-full text-center py-4">
+                    <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Avance Global del Examen</p>
+                    <p class="text-4xl sm:text-5xl font-black text-white">${ans}<span class="text-xl sm:text-2xl text-slate-500">/${totalQuestions}</span></p>
+                    <div class="w-full bg-slate-700/50 rounded-full h-2 mt-4 overflow-hidden">
+                        <div class="bg-blue-400 h-2 rounded-full shadow-md transition-all duration-300" style="width: ${(ans/totalQuestions)*100}%"></div>
+                    </div>
+                </div>
+            `;
+
+            let legendHTML = examState.isFinished ? `
+                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+            ` : `
+                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-50 border border-slate-200 dark:bg-slate-800/50 dark:border-slate-700/50"></div> Pendiente</div>
+                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-600 border border-slate-700"></div> Respondida</div>
+            `;
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-7xl mx-auto lg:mt-0">
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <span class="inline-flex items-center gap-2 text-slate-400 font-semibold text-sm select-none">
+                            
+                        </span>
+                    </div>
+
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500">
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left w-full lg:w-3/5">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass}">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 ${examState.isFinished ? 'text-emerald-400' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium mx-auto lg:mx-0">${descText}</p>
+                                <div class="mt-8 flex justify-center lg:justify-start flex-wrap gap-4">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col items-center shadow-2xl w-full lg:w-2/5">
+                                ${statsHTML}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                Tablero del Examen (280 Preguntas)
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                ${legendHTML}
+                            </div>
+                        </div>
+                        <div class="grid gap-2 grid-cols-[repeat(auto-fill,minmax(40px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(globalId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = globalId ? parseInt(globalId) : null;
+                
+                if (currentQuestionId) {
+                    localStorage.setItem('EFISER2LastQId', currentQuestionId);
+                } else {
+                    localStorage.removeItem('EFISER2LastQId');
+                }
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+                    dashboardBtn.classList.add('lg:left-[22rem]');
+                } else {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const caseIdx = Math.floor((currentQuestionId - 1) / QUESTIONS_PER_CASE);
+                const cData = casesData[caseIdx];
+                
+                if (!cData) return displayQuestion(null);
+                
+                renderCaseLayout(cData, currentQuestionId);
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                setTimeout(() => {
+                    const targetCard = document.getElementById(`q-card-${currentQuestionId}`);
+                    if (targetCard) {
+                        targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    } else {
+                        document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                }, 50);
+
+            }, 150); 
+        }
+
+        function renderCaseLayout(cData, activeGlobalId) {
+            let html = `
+                <div class="flex flex-col gap-6 max-w-5xl mx-auto items-center">
+                    
+                    <!-- COLUMNA: TEXTO DEL CASO CLÍNICO -->
+                    <div class="w-full bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl shadow-md border border-slate-200 dark:border-slate-800 transition-all duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="inline-block bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-lg text-[10px] font-bold tracking-widest uppercase border border-blue-100 dark:border-blue-900/30">
+                                Caso Clínico Seriado
+                            </span>
+                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                                Bloque #${cData.id}
+                            </span>
+                        </div>
+                        <p class="text-slate-800 dark:text-slate-200 text-sm sm:text-base leading-relaxed font-medium">
+                            ${cData.caseText}
+                        </p>
+                        ${examState.isFinished ? `
+                            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+                                <span class="text-slate-500">Bibliografía GPC:</span> ${cData.source}
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- COLUMNA: BLOQUE DE LAS 5 PREGUNTAS ASOCIADAS -->
+                    <div class="w-full space-y-5">
+            `;
+
+            cData.questions.forEach((q, idx) => {
+                const globalQId = (cData.id - 1) * QUESTIONS_PER_CASE + idx + 1;
+                const qState = userProgress[globalQId];
+                const hasAnswered = qState && qState.answered;
+                const userAnswer = hasAnswered ? qState.selectedOption : null;
+                
+                let cardStyle = "border-slate-200 dark:border-slate-800/80";
+                if (globalQId === activeGlobalId) {
+                    cardStyle = "border-blue-500 dark:border-blue-500 ring-2 ring-blue-500/10";
+                }
+                if (examState.isFinished && hasAnswered) {
+                    cardStyle = (userAnswer === q.answer) ? "border-l-4 border-emerald-500" : "border-l-4 border-rose-500";
+                }
+
+                html += `
+                    <div id="q-card-${globalQId}" class="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl shadow-sm border ${cardStyle} transition-all">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+                                PREGUNTA ${globalQId}
+                            </span>
+                        </div>
+                        <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 mb-4 leading-snug">${q.question}</h3>
+                        <form id="q-form-${globalQId}" class="space-y-2.5">
+                `;
+
+                q.options.forEach((opt, i) => {
+                    if (examState.isFinished) {
+                        let optClasses = "flex items-start p-3 border rounded-xl text-xs sm:text-sm ";
+                        let icon = "";
+                        
+                        if (i === q.answer) {
+                            optClasses += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 font-semibold";
+                            icon = `<svg class="w-4 h-4 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>`;
+                        } else if (i === userAnswer) {
+                            optClasses += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                            icon = `<svg class="w-4 h-4 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                        } else {
+                            optClasses += "bg-slate-50 border-slate-100 dark:bg-slate-800/30 dark:border-slate-800/50 opacity-50 text-slate-400";
+                        }
+
+                        html += `
+                            <div class="${optClasses}">
+                                <span class="leading-snug pr-3">${opt}</span>
+                                ${icon}
+                            </div>
+                        `;
+                    } else {
+                        const checkedStr = (hasAnswered && userAnswer === i) ? 'checked' : '';
+                        html += `
+                            <label class="flex items-start p-3 border border-slate-200 dark:border-slate-800 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/40 has-[:checked]:bg-blue-50/80 has-[:checked]:border-blue-400 dark:has-[:checked]:bg-blue-900/20 text-xs sm:text-sm shadow-sm" onclick="autoSaveAnswer(${globalQId})">
+                                <input type="radio" name="option" value="${i}" ${checkedStr} class="mt-0.5 h-3.5 w-3.5 text-blue-600 focus:ring-blue-500 border-slate-300 dark:border-slate-700 cursor-pointer">
+                                <span class="ml-2.5 text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `;
+                    }
+                });
+
+                html += `</form>`;
+
+                if (examState.isFinished) {
+                    html += `
+                        <div class="bg-blue-50/60 dark:bg-slate-800/50 border border-blue-100/50 dark:border-slate-800 rounded-xl p-4 text-xs sm:text-sm mt-4">
+                            <h4 class="font-bold text-blue-800 dark:text-blue-400 mb-1 flex items-center gap-1 uppercase tracking-wider text-[10px]">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Justificación Médica GPC
+                            </h4>
+                            <p class="text-slate-600 dark:text-slate-300 leading-relaxed">${q.justification}</p>
+                        </div>
+                    `;
+                }
+
+                html += `</div>`;
+            });
+
+            const isLastCase = cData.id === casesData.length;
+
+            html += `
+                        <!-- CONTROLES DE FLUJO EN CASOS -->
+                        <div class="flex justify-between items-center pt-4 mt-6 border-t border-slate-200 dark:border-slate-800">
+                            <button onclick="navigateCase(${cData.id}, 'prev')" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
+                                Caso Anterior
+                            </button>
+                            
+                            ${examState.isFinished ? `
+                                ${!isLastCase ? `
+                                    <button onclick="navigateCase(${cData.id}, 'next')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 px-6 rounded-xl transition-colors text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm">
+                                        Siguiente Caso <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+                                    </button>
+                                ` : `
+                                    <button onclick="displayQuestion(null)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-6 rounded-xl transition-colors text-xs uppercase tracking-wider shadow-sm">
+                                        Ver Calificaciones
+                                    </button>
+                                `}
+                            ` : `
+                                <button onclick="navigateCase(${cData.id}, 'next')" class="bg-blue-600 dark:bg-blue-500 text-white font-bold py-2.5 px-6 rounded-xl shadow-md hover:bg-blue-700 dark:hover:bg-blue-400 transition-colors text-xs uppercase tracking-wider flex items-center gap-1.5">
+                                    Siguiente Caso <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function autoSaveAnswer(globalId) {
+            if(examState.isFinished) return;
+            const form = document.getElementById(`q-form-${globalId}`);
+            if (!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (selected) {
+                userProgress[globalId] = { answered: true, selectedOption: parseInt(selected.value) };
+                saveState();
+                updateProgressBar();
+                renderSidebarGrid();
+            }
+        }
+
+        function updateProgressBar() {
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = totalQuestions > 0 ? Math.round((ans / totalQuestions) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; 
+            }
+        }
+
+        function saveState() {
+            try { localStorage.setItem('EFISER2Progress', JSON.stringify(userProgress)); } catch(e) {}
+        }
+
+        function loadState() {
+            try {
+                const saved = localStorage.getItem('EFISER2Progress');
+                userProgress = saved ? JSON.parse(saved) : {};
+                const savedState = localStorage.getItem('EFISER2ExamState');
+                if (savedState) examState = JSON.parse(savedState);
+            } catch(e) { userProgress = {}; examState = { isFinished: false }; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">ENARM</span>
+                    <span class="logo-Lite text-sm">Lite<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-blue-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-cyan-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionsData = [
+
+    {
+        id: 1,
+        question: "En la Acalasia, ¿cuál es el valor de corte de la presión de relajación integrada en la manometría de alta resolución para establecer el diagnóstico?",
+        options: ["> 10 mmHg", "> 15 mmHg", "> 20 mmHg", "> 25 mmHg"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Trastornos de Motilidad Esofágica, la acalasia se define manométricamente por una relajación incompleta o defectuosa del esfínter esofágico inferior, objetivada por una presión de relajación integrada (IRP) mayor a 15 mmHg acompañada de ausencia de peristalsis normal.<br><br>Perla Quirúrgica: La presión de relajación integrada > 15 mmHg es el criterio manométrico indispensable exigido por la Clasificación de Chicago para diagnosticar cualquier obstrucción del tracto de salida esofagogástrico, incluyendo la acalasia.<br><br>Análisis de Distractores: Valores menores a 15 mmHg (A) descartan obstrucción del tracto de salida. Valores de 20 o 25 mmHg (C, D) son fuertemente positivos para acalasia, pero el punto de corte diagnóstico exacto y umbral validado internacionalmente es estricto en > 15 mmHg.",
+        source: "Management of Disorders of Esophageal Motility, Classification of Disease, Página 26."
+    },
+    {
+        id: 2,
+        question: "En el Esófago de Barrett, ¿cuál es el tiempo de evolución mínimo de los síntomas de reflujo gastroesofágico para indicar tamizaje endoscópico en varones con factores de riesgo?",
+        options: ["≥ 1 año", "≥ 3 años", "≥ 5 años", "≥ 10 años"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Manejo del Esófago de Barrett, el tamizaje endoscópico está indicado en hombres con síntomas crónicos de reflujo gastroesofágico por 5 o más años y 2 o más factores de riesgo adicionales (edad ≥ 50, obesidad central, tabaquismo, historia familiar).<br><br>Perla Quirúrgica: El escrutinio de metaplasia intestinal debe realizarse exclusivamente en pacientes masculinos con ≥ 5 años de síntomas de reflujo gastroesofágico acompañados de sinergia de riesgo oncogénico.<br><br>Análisis de Distractores: Las opciones de 1 a 3 años (A, B) no cumplen con el tiempo de latencia inflamatoria crónica suficiente para indicar tamizaje rutinario. La opción de 10 años (D) retrasa el escrutinio oportuno establecido en las pautas internacionales, exponiendo al paciente al progreso silencioso del adenocarcinoma.",
+        source: "Management of Barrett’s Esophagus, Screening, Página 2."
+    },
+    {
+        id: 3,
+        question: "En el Adenocarcinoma Esofágico superficial (T1a), ¿qué hallazgo histopatológico contraindicativa la resección endoscópica exclusiva por alto riesgo de metástasis ganglionar oculta?",
+        options: ["Metaplasia intestinal", "Invasión linfovascular", "Displasia de bajo grado", "Células caliciformes"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Cáncer Esofágico y Terapias, la presencia de invasión linfovascular, arquitectura tumoral pobremente diferenciada o invasión submucosa profunda (SM2/SM3) incrementan el riesgo de metástasis en ganglios linfáticos regionales hasta un 15-40%. En estos casos, la resección mucosa endoscópica es insuficiente oncológicamente, requiriendo esofagectomía.<br><br>Perla Quirúrgica: La invasión linfovascular documentada en un adenocarcinoma intraepitelial es un factor de alto riesgo que requiere intervención quirúrgica radical debido a su inevitable diseminación regional.<br><br>Análisis de Distractores: La metaplasia intestinal (A) y las células caliciformes (D) son los marcadores precursores del esófago de Barrett, no predictores de extensión oncológica metastásica. La displasia de bajo grado (C) requiere ablación o seguimiento, pero nunca confiere riesgo metastásico tisular al no violar la lámina propia.",
+        source: "Management of Esophageal Cancer, Approach to Early-Stage Esophageal Cancer, Página 11."
+    },
+    {
+        id: 4,
+        question: "En la Enfermedad por Reflujo Gastroesofágico con evidencia manométrica de motilidad esofágica inefectiva preoperatoria, ¿qué técnica quirúrgica está indicada para minimizar la disfagia posterior?",
+        options: ["Funduplicatura de Nissen", "Gastroplastia de Collis", "Funduplicatura de Toupet", "Esfinterectomía de Heller"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Manejo Quirúrgico de ERGE, en pacientes con motilidad esofágica inefectiva (ausencia de contractilidad o alta prevalencia de contracciones débiles) se recomienda el uso de una funduplicatura parcial posterior de 270 grados (Toupet) en lugar de una funduplicatura total, previniendo así un bloqueo infranqueable para un cuerpo esofágico sin fuerza propulsiva.<br><br>Perla Quirúrgica: La funduplicatura parcial de Toupet es el procedimiento de elección en pacientes con enfermedad por reflujo y evidencia manométrica de aperistalsis o trastornos de depuración severos.<br><br>Análisis de Distractores: La funduplicatura de Nissen de 360 grados (A) representa un obstáculo de alta presión contraindicado en esófagos débiles. La gastroplastia de Collis (B) se usa para elongar un esófago corto fibroso. La miotomía de Heller (D) es un procedimiento destructivo reservado para liberar obstrucciones fisiológicas primarias (acalasia).",
+        source: "Surgical Management of Gastroesophageal Reflux Disease, Surgical Technique, Página 5."
+    },
+    {
+        id: 5,
+        question: "En la Perforación Esofágica contenida y tratada de forma conservadora (no quirúrgica), ¿a las cuántas horas se debe realizar el estudio radiográfico con contraste para revaluar la terapia?",
+        options: ["12 a 24 horas", "48 a 72 horas", "72 a 96 horas", "5 a 7 días"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Manejo de Perforación Esofágica, en pacientes críticamente seleccionados para terapia médica estricta y ayuno absoluto, el control radiográfico para descartar filtración mediastínica franca e inicio seguro de dieta líquida se realiza obligatoriamente entre 72 y 96 horas posteriores a la lesión.<br><br>Perla Quirúrgica: El éxito o fracaso del manejo conservador en la perforación esofágica se determina de forma segura mediante un esofagograma contrastado entre los 3 y 4 días de observación clínica estricta.<br><br>Análisis de Distractores: Estudios a las 12 o 48 horas (A, B) son prematuros, ya que el tejido inflamatorio mediastínico local aún no ha provocado un sellado hermético confiable de la brecha mucosa. Posponer hasta 5 a 7 días (D) prolonga la inanición intraluminal incrementando morbilidad metabólica sin beneficios de cicatrización estadísticamente superiores.",
+        source: "Management of Esophageal Perforation, Nonoperative Management, Página 11."
+    },
+    {
+        id: 6,
+        question: "En el Esófago en Martillo Neumático (Jackhammer), ¿cuál es el valor del integral contráctil distal que define exclusivamente a esta alteración manométrica?",
+        options: ["> 4000 mmHg s cm", "> 5000 mmHg s cm", "> 8000 mmHg s cm", "> 10000 mmHg s cm"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Trastornos de Motilidad Esofágica, el esófago en Jackhammer (hipercontractilidad) requiere para su diagnóstico formal de la presencia de al menos dos degluciones con un vigor contráctil sumamente elevado, el cual es medido e identificado cuando la integral contráctil distal (DCI) supera la barrera de los 8000 mmHg s cm.<br><br>Perla Quirúrgica: El esófago hipercontráctil tipo Jackhammer se diagnostica por manometría de alta resolución mediante un DCI > 8000 mmHg s cm con síntomas clásicos de dolor torácico obstructivo y disfagia.<br><br>Análisis de Distractores: Las contracciones con vigor entre 5000 y 8000 mmHg s cm (B) identifican al esófago en cascanueces (Nutcracker), una entidad clínica con diferente criterio. Las cifras de 4000 (A) o 10000 (D) son numéricamente aleatorias y carecen de un sustento diagnóstico en los algoritmos de Chicago versión 4.0.",
+        source: "Management of Disorders of Esophageal Motility, Hypercontractile Disorders, Página 28."
+    },
+    {
+        id: 7,
+        question: "En la Hernia Paraesofágica, ¿qué estructuras anatómicas se encuentran desplazadas por encima del diafragma en el defecto tipo III?",
+        options: ["Unión esofagogástrica de forma aislada", "Fundus gástrico con unión intraabdominal", "Unión esofagogástrica y fundus gástrico", "Estómago total y bazo concomitante"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Reparación de Hernia Paraesofágica, la hernia hiatal tipo III se describe como un defecto mixto que resulta de la falla de tracción de la membrana frenoesofágica, donde existe un desplazamiento superior (deslizamiento) tanto de la unión esofagogástrica como de la bóveda del fundus gástrico de forma sincrónica hacia el mediastino posterior.<br><br>Perla Quirúrgica: La hernia paraesofágica mixta tipo III representa el defecto progresivo y letal que involucra la migración torácica de la unión y el fundus gástrico, propenso a vólvulo organoaxial catastrófico.<br><br>Análisis de Distractores: La opción A describe la hernia tipo I o por deslizamiento puro. La opción B define estrictamente a la verdadera hernia paraesofágica tipo II. La herniación visceral ajena al estómago (D) tipifica únicamente al defecto masivo tipo IV.",
+        source: "Management of Paraesophageal Hernia Repair, Classification, Página 2."
+    },
+    {
+        id: 8,
+        question: "En el Divertículo de Zenker, ¿entre qué barreras musculares se origina fisiopatológicamente la zona de debilidad del triángulo de Killian?",
+        options: ["Músculos tirofaríngeo y cricofaríngeo", "Constrictor superior y constrictor medio", "Fibras circulares y longitudinales", "Músculos esternocleidomastoideo y omohioideo"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Manejo del Divertículo de Zenker, esta formación sacular por hiperpresión emerge a través del triángulo de Killian, localizado milimétricamente en la faringe posterior y delimitado superiormente por las fibras oblicuas del músculo tirofaríngeo (constrictor inferior) y en su borde caudal por las fibras transversales del músculo cricofaríngeo.<br><br>Perla Quirúrgica: El pseudodivertículo por pulsión de Zenker protruye clásicamente por una dehiscencia faríngea posterior conocida como triángulo de Killian, flanqueado por el tirofaríngeo y cricofaríngeo.<br><br>Análisis de Distractores: Los límites faríngeos superiores (B) describen espacios atípicos donde no ocurren hernias faringoesofágicas. Las capas histológicas esofágicas intrínsecas (C) y la musculatura anterior del cuello (D) carecen de participación en la arquitectura mecánica del esfínter superior.",
+        source: "Management of Zenker’s, Pathophysiology, Página 1."
+    },
+    {
+        id: 9,
+        question: "En el escrutinio del Esófago de Barrett, ¿a qué intervalo exacto de distancia longitudinal se deben tomar las biopsias en cuatro cuadrantes de acuerdo al protocolo de Seattle?",
+        options: ["Cada 0.5 a 1 cm", "Cada 1 a 2 cm", "Cada 3 a 4 cm", "Cada 5 a 6 cm"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Manejo del Esófago de Barrett, la estrategia de escrutinio óptima para buscar displasia celular o tumores incipientes en la mucosa metaplásica exige emplear el protocolo de Seattle, obteniendo biopsias cada 1 a 2 cm distribuidas en los cuatro cuadrantes circunferenciales a lo largo del tracto anómalo.<br><br>Perla Quirúrgica: El estándar diagnóstico imperativo para mapeo aleatorizado endoscópico del esófago de Barrett es la adquisición sistemática de biopsias tisulares por cuadrante cada 1 a 2 cm anatómicos.<br><br>Análisis de Distractores: Los intervalos subcentimétricos (A) saturarían al patólogo y prolongarían el procedimiento inútilmente. Los espacios de 3 a 4 cm (C) o 5 a 6 cm (D) provocan brechas geográficas donde pueden esconderse adenocarcinomas intramucosos tempranos sin detectar.",
+        source: "Management of Barrett’s Esophagus, Evaluation, Página 2."
+    },
+    {
+        id: 10,
+        question: "En la Ingestión de Cáusticos, ¿qué grado de la clasificación endoscópica de Zargar evidencia ulceraciones transmurales con tejido de necrosis extensa difusa?",
+        options: ["Grado 2B", "Grado 3A", "Grado 3B", "Grado 4"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Esófago, la escala de Zargar orienta la terapéutica frente al daño tisular por ingestión. Las úlceras transmurales acompañadas de placas de necrosis extensa o coloración gris-negruzca abarcan gran parte de la luz y caen en la categoría de Grado 3B.<br><br>Perla Quirúrgica: El hallazgo endoscópico temprano de un Zargar 3B (necrosis mucosa extensa o transmural) constituye una indicación formal para la exploración quirúrgica anticipada de control de daños ante el inminente riesgo de perforación.<br><br>Análisis de Distractores: El grado 2B (A) consiste en úlceras profundas circunferenciales aisladas pero exentas de tejido necrótico obvio. El grado 3A (B) alberga solo parches focales y solitarios de necrosis. El grado 4 (D) diagnostica la franca perforación en cavidad torácica o peritoneal.",
+        source: "Esófago, Caustic Ingestion, Página 42."
+    },
+    {
+        id: 11,
+        question: "En la Estenosis Esofágica Benigna tratada con stents autoexpandibles biodegradables, ¿en qué lapso de tiempo exacto completan su hidrólisis o pérdida total de fuerza estructural sin necesitar retiro endoscópico?",
+        options: ["1 a 2 semanas", "4 a 6 semanas", "8 a 12 semanas", "16 a 20 semanas"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Uso de Stents Esofágicos, los dispositivos intraluminales de polidioxanona empleados para las constricciones refractarias benignas actúan expandiendo la luz pero son diseñados para consumirse por hidrólisis química a las 8 a 12 semanas, evitando el retiro de un cuerpo adherido por reacción granulomatosa tisular.<br><br>Perla Quirúrgica: Los stents biodegradables a base de polidioxanona logran su propósito de dilatación mecánica prolongada por un mes, y continúan disolviéndose inocuamente dentro de la vía digestiva, finalizando su ciclo a las 8-12 semanas de permanencia.<br><br>Análisis de Distractores: Estos stents pierden parte inicial de su tracción mecánica de soporte máximo a las 4 a 6 semanas (B), momento en que la mucosa suele estabilizarse, pero continúan enteros anatómicamente hasta disolverse a las 8 a 12 semanas (C). La hidrólisis no actúa en la brevedad de una semana (A) ni sobrepasa artificialmente el umbral de las 16 semanas con polidioxanona (D).",
+        source: "Use of Esophageal Stents, Stent Selection, Página 2."
+    },
+    {
+        id: 12,
+        question: "En el Espasmo Esofágico Distal, ¿cuál es el porcentaje de degluciones con contracciones prematuras que la manometría exige identificar como umbral diagnóstico definitivo?",
+        options: ["Aumenta al menos 10%", "Al menos 20%", "Al menos 30%", "Al menos 50%"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Trastornos de Motilidad Esofágica, en profesa ausencia de obstrucción anatómica (con una presión de relajación IRP normal de base), el hallazgo de un 20% o más de tragos de prueba que cursan con ondas que alcanzan una latencia distal francamente disminuida (<4.5 s), se cataloga dentro del espectro del Espasmo Esofágico Distal (DES).<br><br>Perla Quirúrgica: El espasmo esofágico distal es un trastorno hipercinético sintomático con dolor torácico, y su definición técnica validada exige la demostración objetiva por manometría de contracciones prematuras en una cuantía igual o superior al 20% de la carga acuosa deglutida.<br><br>Análisis de Distractores: En un esófago funcional normal, puede verse hasta un 10% (A) de latencias cortas o contracciones erráticas sin importancia diagnóstica. Los puntos de corte superiores (C, D) cumplirían el criterio diagnóstico, pero la barrera oficial mínima en el algoritmo comienza a contar a partir del 20%.",
+        source: "Management of Disorders of Esophageal Motility, Disorders of Peristalsis, Página 26."
+    },
+    {
+        id: 13,
+        question: "En la clasificación endoscópica de Los Ángeles para Enfermedad por Reflujo Gastroesofágico, ¿qué grado clasifica las rupturas mucosas coalescentes entre pliegues que limitan su extensión a < 75% de la circunferencia del tubo esofágico?",
+        options: ["Grado A", "Grado B", "Grado C", "Grado D"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Manejo Quirúrgico de ERGE, se asume un daño esofágico mucoso crónico de alto grado inflamatorio cuando se presentan lesiones en la endoscopia que atraviesan como puentes desde la cumbre de un pliegue submucoso hasta el vértice de otro. Cuando estas áreas erosionadas unidas se propagan abarcando menos del 75% del perímetro cilíndrico, se cataloga Grado C.<br><br>Perla Quirúrgica: La confirmación de endoscopia con esofagitis de Los Ángeles tipo C es un marcador biológico suficiente y definitivo de ERGE patológico sin requerir medición de pH complementaria de 24 horas.<br><br>Análisis de Distractores: Las erosiones de hasta 5 mm limitadas a un solo pliegue definen al Grado A (A). Cuando los daños son solitarios pero de tamaño superior a 5 mm sin ser coalescentes, refieren al Grado B (B). La obliteración inflamatoria masiva que inunda más del 75% de la circunferencia constituye al Grado D (D).",
+        source: "Surgical Management of Gastroesophageal Reflux Disease, Presentations of GERD, Página 2."
+    },
+    {
+        id: 14,
+        question: "En la Hernia Hiatal gigante incarcerada donde la fibrosis longitudinal mediastínica condiciona un 'esófago corto', ¿qué procedimiento está indicado para generar un alargamiento gástrico libre de tensión en el hiato?",
+        options: ["Miotomía extramucosa de Heller", "Procedimiento parcial de Belsey Mark IV", "Gastroplastia cilíndrica de Collis", "Esfinterotomía transcervical con bisturí"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Manejo Quirúrgico de ERGE, al fallar el intento de la resección mediastinal anatómica alta en proporcionar unos imperativos 2.5 a 3 centímetros libres de esófago intraabdominal que aseguren la reducción mecánica de la hernia, los cirujanos construyen un tubo mediante grapadora, alineado con el eje menor del esófago a expensas de un corte del estómago.<br><br>Perla Quirúrgica: La gastroplastia de Collis provee quirúrgicamente el alargamiento anatómico faltante en pacientes con acortamiento fibrótico irresoluble, posibilitando una funduplicatura normotensa intraabdominal.<br><br>Análisis de Distractores: La miotomía longitudinal de Heller (A) remueve el tejido contráctil para acalasia, mas no elonga el órgano. El abordaje antirreflujo transpleural de Belsey Mark IV (B) corrige la barrera esofágica en el tórax inferior pero no aporta elongación física del tejido escamoso.",
+        source: "Surgical Management of Gastroesophageal Reflux Disease, Operative Therapies, Página 11."
+    },
+    {
+        id: 15,
+        question: "En el Adenocarcinoma de la Unión Esofagogástrica, ¿cuál es la ubicación métrica estricta del epicentro tumoral subyacente para categorizar la masa anatómica como una clasificación de Siewert tipo I?",
+        options: ["1 a 5 cm por encima de la unión anatómica", "1 cm por encima a 2 cm por debajo", "2 a 5 cm por debajo de la unión anatómica", "Aislada en la cara posterior del fundus gástrico"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Cáncer Esofágico, la invasión patológica glandular proveniente mayoritariamente de metaplasia displásica de un Barrett ascendente distal que concentra su crecimiento central entre 1 a 5 centímetros por encima de la unión es un Siewert I biológico auténtico.<br><br>Perla Quirúrgica: Los tumores del tipo Siewert I se caracterizan universalmente por regirse por los sistemas oncológicos del cáncer esofágico verdadero inferior, requiriendo de forma habitual la técnica de esofagectomía.<br><br>Análisis de Distractores: El engrosamiento neoplásico situado como puente entre 1 cm proximal y 2 cm distal (B) conforma un Siewert tipo II verdadero (carcinoma del cardias). Las lesiones subcardiales gástricas (C), de 2 a 5 centímetros hacia caudal, dictan un Siewert III a tratarse como patología gástrica.",
+        source: "Management of Esophageal Cancer, Siewert Classification, Página 9."
+    },
+    {
+        id: 16,
+        question: "En la Acalasia tipificada por manometría de alta resolución, ¿qué comportamiento de presión peristáltica se asocia de forma exclusiva y predominante a la arquitectura del subtipo patológico II?",
+        options: ["Presurización isobárica panesofágica en ≥ 20%", "Peristalsis asimétrica fallida 100% sin presurización", "Contracciones segmentarias distales espásticas marcadas", "Integral contráctil distal espástica masiva superior a 8000"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Acalasia del Esófago, la estasis progresiva debida a la falta de relajación distal crea un modelo funcional tipo II caracterizado porque ante un trago propulsivo, al fallar por completo el vaciamiento pero quedar retenido líquido contra válvulas espásticas simultáneamente en tubos cerrados, el órgano sube la energía general al parejo.<br><br>Perla Quirúrgica: El subtipo manométrico Acalasia Tipo II posee el mejor índice pronóstico terapéutico positivo para miotomía e intervenciones de endoscopia de balón debido al claro patrón distintivo de la presurización longitudinal panesofágica.<br><br>Análisis de Distractores: La falla contráctil hipotónica ausente sin ningún rastro de presiones sostenidas (B) acusa una acalasia tipo I (clásica). Las ondas distales de alta violencia energética o contractilidad prematura aberrante denotan (C) al subtipo espástico doloroso (Acalasia tipo III).",
+        source: "Achalasia of the esophagus, Diagnosis, Página 3."
+    },
+    {
+        id: 17,
+        question: "En la Perforación Esofágica del tercio inferior del tracto torácico de origen contuso o barogénico, ¿cuál es la vía de abordaje primario o lateralidad preferencial quirúrgica clásica para lograr reparación de capas y drenaje?",
+        options: ["Toracotomía posterolateral izquierda", "Toracotomía posterolateral derecha", "Cervicotomía y esternotomía media transfixiante", "Laparotomía pura con escisión diafragmática"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Manejo de Perforación Esofágica, en el segmento mediastinal bajo terminal, el tubo digestivo adopta un giro hacia la izquierda tras cruzar posteriormente al pericardio inferior para integrarse al abdomen, asomando óptimamente para los cierres a través del séptimo u octavo espacio intercostal izquierdo.<br><br>Perla Quirúrgica: Las perforaciones localizadas del esófago inferior, por cercanía, morfología anatómica y acceso para rotar tejidos, deben atacarse directa mediante la toracotomía posterolateral izquierda, sin excepción.<br><br>Análisis de Distractores: Los abordajes por toracotomía posterolateral derecha (B) dominan en lesiones que asientan en los tercios esofágicos superior y medio. La apertura del cuello (C) carece de visión para reparar fugas bajas. La apertura puramente abdominal (D) asiste patologías viscerales pero con imposibilidad de drenaje mediastínico completo.",
+        source: "Management of Esophageal Perforation, Thoracic Perforations, Página 7."
+    },
+    {
+        id: 18,
+        question: "En el Divertículo de Zenker sintomático sujeto a exploración quirúrgica transcervical, ¿qué maniobra o sección complementaria fisiopatológica es médicamente obligatoria para abatir la recurrencia del saco?",
+        options: ["Extirpación parcial del plexo de Auerbach", "Miotomía de las fibras del cricofaríngeo", "Fijación posterior faríngea con parche de teflón", "Hemitiroidectomía profiláctica"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Manejo del Divertículo de Zenker, el abordaje extirpativo puro de la mucosa redundante ataca únicamente una secuela anatómica sin afectar a la enfermedad originadora muscular tensional del tracto: la miotomía asegura la libre expulsión alimentaria permanente evitando hiperpresión en el triángulo frágil de Killian remanente.<br><br>Perla Quirúrgica: En el tratamiento para el divertículo de Zenker la acción principal y más resolutiva diagnóstica que evita recidivas mecánicas, es la división del tono muscular del esfínter y miotomía cricofaríngea asociada.<br><br>Análisis de Distractores: La mutilación neurológica microscópica del plexo de Auerbach (A) solo ocurre en el estudio de achalasia de cuerpo. La fijación externa no muscular (C) asiste en los abordajes tipo diverticulopexia pero no repara el daño causal si no asocia una división del esfínter obstructivo primario.",
+        source: "Management of Zenker’s, Surgical Management, Página 3."
+    },
+    {
+        id: 19,
+        question: "En la Hernia Paraesofágica gigante de años de cronicidad y mi-gración visceral diafragmática, ¿qué factor estenosante ulceroso crónico asociado desencadena típicamente una anemia ferropénica y hemorragia?",
+        options: ["Úlcera lineal de Cameron", "Rotura longitudinal de Mallory-Weiss", "Esofagitis de Los Ángeles tipo D por bilis", "Úlcera séptica bacteriana"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Reparación de Hernia Paraesofágica, la isquemia localizada o erosión por frotamiento mucoso producida como estrangulamiento compresivo al anillo muscular del hiato constrictivo durante el deslizamiento crónico de una bolsa hiatal voluminosa, desencadena unas erosiones gástricas asintomáticas llamadas úlceras de Cameron.<br><br>Perla Quirúrgica: El padecimiento hematológico y anemia franca persistente crónica del adulto mayor portador de una hernia hiatal masiva o tipo mixta orienta hacia el descubrimiento de úlceras mecánicas por isquemia frotacional llamadas úlceras de Cameron.<br><br>Análisis de Distractores: El desgarro violento longitudinal asociado al cuadro emetógeno agudo (B) orienta a un síndrome barotraumático por arcadas (Mallory-Weiss). El reflujo químico severo (C) ocasiona estenosis o esofagitis de Los Ángeles, pero no afecta ni isquemiza a los propios arcos fúndicos del estómago atorado inferior en hernias de rodamiento.",
+        source: "Management of Paraesophageal Hernia Repair, Preoperative Evaluation, Página 1."
+    },
+    {
+        id: 20,
+        question: "En la Esclerosis Sistémica (esclerodermia) avanzada de afección gastrointestinal, ¿cuál es el diagnóstico manométrico clásico o la lectura típica paralizante distal que documenta esta dismotilidad?",
+        options: ["Peristalsis fragmentada e intermitente de cuerpo asimétrica", "Presurizaciones isobáricas espásticas prematuras y caóticas", "Contracciones simultáneas distales hipervigorosas masivas", "Contractilidad esofágica ausente 100% y relajación de base esfintérica con presión baja"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al libro de Trastornos de Motilidad Esofágica, en el panorama funcional fibrótico miopático de reemplazo que agota las vainas contráctiles del tercio liso por el colágeno esclerodérmico crónico inferior del tracto a largo plazo, el esófago experimenta una pérdida y falla completa (100%) tanto del poder contráctil del cuerpo como una incompetencia con presión baja esfintérica.<br><br>Perla Quirúrgica: La entidad miopática y fibrótica por esclerosis sistémica en tercio distal cursa de libro clásico con presión incompetente laxa o pobre del EEI sumada a un cuerpo en fracaso ausente e inmóvil manométrico 100% liso.<br><br>Análisis de Distractores: El registro espástico contráctil (B, C) no pertenece al mundo inerte patológico atrófico miopático de la esclerodermia, sino a la acalasia tipo III o al Jackhammer. Las contracciones residuales a medias (A) demarcan una afección leve de motilidad inefectiva (IEM).",
+        source: "Management of Disorders of Esophageal Motility, Absent Contractility, Página 31."
+    },
+    {
+        id: 21,
+        question: "En la colocación de un stent esofágico por patología benigna o maligna, ¿cuál es la longitud mínima de extensión que el dispositivo debe sobrepasar proximal y distalmente a la lesión para asegurar una fijación intraluminal adecuada?",
+        options: ["0.5 cm", "2 cm", "3 cm", "4 cm"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Uso de Stents Esofágicos, el tamaño adecuado del stent previene complicaciones de necrosis y migración. Su longitud total debe superar a la lesión en al menos 4 cm, lo que garantiza un traslape obligatorio (overlap) de al menos 2 cm tanto en su margen proximal como distal para lograr anclaje sobre mucosa sana.<br><br>Perla Quirúrgica: La longitud de un stent debe ser al menos 4 cm mayor que la de la lesión, sobrelapándola proximal y distalmente por al menos 2 cm.<br><br>Análisis de Distractores: Un margen menor de 0.5 cm (A) es insuficiente para que la fuerza radial venza el movimiento peristáltico, garantizando la migración. Un margen individual de 3 a 4 cm por extremo (C, D) requeriría un stent excesivamente largo, aumentando el riesgo de impactar contra planos anatómicos sanos.",
+        source: "Use of Esophageal Stents, Procedure, Página 11."
+    },
+    {
+        id: 22,
+        question: "En la evaluación preoperatoria de la Enfermedad por Reflujo Gastroesofágico, ¿qué valor de Índice de Masa Corporal representa una contraindicación relativa para la cirugía antirreflujo y justifica la referencia a derivación gástrica en Y de Roux?",
+        options: ["> 30 kg/m²", "> 35 kg/m²", "> 38 kg/m²", "> 40 kg/m²"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al libro de Manejo Quirúrgico de ERGE, la obesidad mórbida ejerce una presión intraabdominal extrema que asegura el fracaso mecánico a largo plazo de una funduplicatura aislada. Los pacientes con un Índice de Masa Corporal superior a 40 deben ser referidos directamente para un bypass gástrico en Y de Roux, el cual elimina simultáneamente el reflujo y la patología metabólica de base.<br><br>Perla Quirúrgica: Los pacientes con un IMC > 40 deben ser referidos para evaluación de cirugía bariátrica para considerar bypass gástrico en Y de Roux, ya que este aborda el amplio espectro de problemas de salud, incluido el ERGE.<br><br>Análisis de Distractores: Los grados de obesidad I y II (A, B, C) exigen optimización, pero el umbral de corte absoluto para desviar el algoritmo estándar de funduplicatura hacia el bypass gástrico es estrictamente mayor a 40 kg/m².",
+        source: "Surgical Management of Gastroesophageal Reflux Disease, Contraindications to Antireflux Surgery, Página 6."
+    },
+    {
+        id: 23,
+        question: "En el adenocarcinoma de la unión esofagogástrica, ¿cuáles son los límites anatómicos exactos del epicentro tumoral que definen a la clasificación de Siewert tipo II (carcinoma verdadero del cardias)?",
+        options: ["1 cm proximal a 2 cm distal a la unión", "2 cm proximal a 5 cm distal a la unión", "1 a 5 cm proximal a la unión", "> 5 cm distal a la unión"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Cáncer Esofágico, la topografía del epicentro tumoral dicta las vías de diseminación linfática y el abordaje quirúrgico. El tipo II de Siewert, o verdadero carcinoma del cardias, concentra su masa principal estrictamente en una zona transicional delimitada entre 1 cm por encima y 2 cm por debajo de la unión esofagogástrica anatómica.<br><br>Perla Quirúrgica: El tipo II de Siewert es un verdadero carcinoma del cardias con el epicentro tumoral dentro de 1 cm por encima y 2 cm por debajo de la unión esofagogástrica.<br><br>Análisis de Distractores: El Siewert I abarca de 1 a 5 cm proximal a la unión (C) y se trata como cáncer esofágico clásico. El Siewert III asienta de 2 a 5 cm por debajo de la unión (B) y requiere abordaje de cáncer gástrico con gastrectomía total. La afección más allá de 5 cm (D) pertenece al cuerpo gástrico puro.",
+        source: "Management of Esophageal Cancer, Siewert Classification, Página 9."
+    },
+    {
+        id: 24,
+        question: "En los trastornos de la motilidad esofágica, ¿qué rango de la integral contráctil distal define de forma exclusiva al esófago en cascanueces (Nutcracker) en la manometría de alta resolución?",
+        options: ["< 450 mmHg s cm", "5000 a 8000 mmHg s cm", "1000 a 3000 mmHg s cm", "> 8000 mmHg s cm"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Trastornos de Motilidad Esofágica, el esófago en cascanueces representa una hipercontractilidad peristáltica moderada. Se diferencia del espasmo extremo tipo Jackhammer al encuadrar el vigor de sus ondas en un rango validado de integral contráctil distal (DCI) de 5000 a 8000 mmHg s cm, a menudo con dudosa relevancia clínica frente a individuos sanos asintomáticos.<br><br>Perla Quirúrgica: El esófago en cascanueces (Nutcracker) se diferencia en la Clasificación de Chicago como una peristalsis de alta amplitud con un DCI entre 5000 a 8000 mmHg s cm.<br><br>Análisis de Distractores: Las contracciones fallidas o débiles asientan en < 450 mmHg s cm (A). La hipercontractilidad masiva que rebasa los 8000 mmHg s cm (D) define al esófago en martillo neumático (Jackhammer). Valores de 1000 a 3000 (C) caen en el espectro de contractilidad peristáltica normal.",
+        source: "Management of Disorders of Esophageal Motility, Hypercontractile Disorders, Página 28."
+    },
+    {
+        id: 25,
+        question: "En la clasificación anatómica de las hernias hiatales, ¿qué hallazgo define específicamente a la hernia paraesofágica tipo IV?",
+        options: ["Desplazamiento exclusivo de la unión esofagogástrica", "Migración de la unión esofagogástrica y fondo gástrico", "Herniación de un órgano intraabdominal distinto al estómago", "Herniación del fondo gástrico con unión esofagogástrica intraabdominal"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Reparación de Hernia Paraesofágica, los defectos de la membrana frenoesofágica se gradúan por severidad de migración. El estadio IV representa el máximo de-terioro estructural, caracterizado por una brecha hiatal tan masiva que permite la intrusión mediastínica de vísceras adicionales ajenas al estómago, como el colon, bazo, intestino delgado o páncreas.<br><br>Perla Quirúrgica: La hernia tipo IV se define como aquella en la que un órgano intraabdominal distinto del estómago también está herniado a través del hiato.<br><br>Análisis de Distractores: La tipo I involucra solo la unión esofagogástrica por deslizamiento axial (A). La tipo II involucra solo al fondo gástrico con la unión fija (D). La tipo III es la combinación mixta del estómago y la unión migrando juntos (B), pero sin incluir otras vísceras.",
+        source: "Management of Paraesophageal Hernia Repair, Box 1 Classification, Página 2."
+    },
+    {
+        id: 26,
+        question: "En la Acalasia, cuando se indica el tratamiento temporal con toxina botulínica, ¿cuál es la dosis total estándar recomendada para inyectar endoscópicamente distribuida en los cuadrantes del esfínter esofágico inferior?",
+        options: ["80 a 100 unidades", "20 a 40 unidades", "150 a 200 unidades", "40 a 60 unidades"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Acalasia del Esófago, la quimiodenervación del esfínter inferior mediante toxina botulínica tipo A bloquea la liberación presináptica de acetilcolina. El protocolo exige la aplicación endoscópica submucosa de 80 a 100 unidades distribuidas simétricamente (20 a 25 unidades por cuadrante) para garantizar una relajación radial circunferencial.<br><br>Perla Quirúrgica: Típicamente se inyectan 80 a 100 unidades (20-25 unidades/cuadrante); su mecanismo implica la inhibición irreversible de la liberación de acetilcolina en terminales presinápticas.<br><br>Análisis de Distractores: Dosis de 20 a 60 unidades (B, D) son insuficientes para paralizar adecuadamente el músculo liso hipertrófico del esfínter en adultos, garantizando fracaso terapéutico prematuro. Dosis superiores a 150 unidades (C) incrementan la fibrosis mural local sin demostrar beneficios adicionales.",
+        source: "Achalasia of the esophagus, Botulinum Toxin, Página 4."
+    },
+    {
+        id: 27,
+        question: "En la escala de Severidad de Pittsburgh para perforación esofágica, ¿qué variable patológica otorga el puntaje máximo individual (3 puntos) dictando un altísimo riesgo de mortalidad?",
+        options: ["Fiebre > 38.5 °C", "Derrame pleural", "Fuga no contenida radiográfica", "Hipotensión arterial"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al libro de Manejo de Perforación Esofágica, la Puntuación de Severidad de Pittsburgh (PSS) estratifica urgencias para derivación rápida. Las únicas dos variables que confieren el peso de 3 puntos (marcadores de falla sistémica inminente o incurabilidad) son la presencia de hipotensión y la presencia de malignidad subyacente.<br><br>Perla Quirúrgica: En el score de severidad de Pittsburgh, la presencia de hipotensión o malignidad confieren la máxima puntuación de 3 puntos cada una, asociándose a intervención radical y mal pronóstico.<br><br>Análisis de Distractores: La fiebre > 38.5 °C (A) y la fuga radiográfica no contenida en pleura (C) representan 2 puntos. El hallazgo aislado de derrame pleural o taquicardia (B) representan solo 1 punto en la escala, ya que por sí solos no denotan choque séptico refractario.",
+        source: "Management of Esophageal Perforation, Table 2, Página 4."
+    },
+    {
+        id: 28,
+        question: "En la evaluación por ultrasonido endoscópico de un leiomioma esofágico, ¿de qué capa ecosonográfica se origina característicamente esta lesión hipoecoica de bordes regulares?",
+        options: ["Primera capa", "Segunda capa", "Tercera capa", "Cuarta capa"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al libro de Esófago, los leiomiomas son los tumores benignos más frecuentes del esófago y derivan de las células del músculo liso. Su confirmación diagnóstica endosonográfica se basa en ubicar una masa hipoecoica dependiente de la muscularis propria, que anatómicamente se traduce como la cuarta capa sonográfica.<br><br>Perla Quirúrgica: En el ultrasonido endoscópico, los leiomiomas son hipoecoicos, tienen bordes regulares y surgen característicamente de la cuarta capa endosonográfica (muscularis propria).<br><br>Análisis de Distractores: Las lesiones de la primera o segunda capa (A, B) asientan en la mucosa profunda o muscularis mucosae. La tercera capa (C) representa la submucosa, origen típico de lipomas o quistes benignos aislados, no del músculo liso denso del leiomioma.",
+        source: "Esófago, Benign Tumors of the Esophagus, Página 18."
+    },
+    {
+        id: 29,
+        question: "En el tratamiento endoscópico del Esófago de Barrett con displasia mediante ablación por radiofrecuencia (RFA), ¿cuál es la dosis de energía térmica estandarizada recomendada por sesión (administrada en dos pulsos dobles)?",
+        options: ["10 J/cm²", "12 J/cm²", "15 J/cm²", "20 J/cm²"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Esófago (Técnicas de Ablación Mucosa), la ablación por radiofrecuencia calibra la energía para penetrar exclusivamente 0.5 mm en el tejido, erradicando el epitelio afectado y preservando la submucosa para evitar estenosis. El programa clínico exige aplicar exactamente dos pulsos dobles de 12 J/cm².<br><br>Perla Quirúrgica: El programa de ablación estándar utiliza dos pulsos dobles de 12 J/cm², tras lo cual se reposiciona el balón distalmente hasta tratar el segmento entero de esófago de Barrett.<br><br>Análisis de Distractores: Las dosis de 10 J/cm² (A) pueden resultar en una quemadura incompleta dejando glándulas metaplásicas ocultas (buried glands). Las energías de 15 o 20 J/cm² (C, D) vulneran la capa submucosa, elevando drásticamente el riesgo de fibrosis profunda y estenosis esofágica refractaria.",
+        source: "Esófago, Ablation, Página 24."
+    },
+    {
+        id: 30,
+        question: "Durante una funduplicatura por hernia hiatal gigante, si tras la movilización mediastínica extensa persiste un esófago corto, ¿cuántos centímetros de longitud intraabdominal adicional se logran clásicamente al seccionar ambos nervios vagos (vagotomía)?",
+        options: ["1 a 2 cm", "2 a 3 cm", "3 a 4 cm", "5 a 6 cm"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de ERGE y Hernia de Hiato, en hernias gigantes (PEH) crónicas donde la disección mediastinal es insuficiente para descender la unión esofagogástrica 3 cm sin tensión, el nervio vago actúa como un cordón de anclaje rígido. La transección de ambos troncos vagales (vagotomía bilateral) permite un descenso que provee 3 a 4 cm de longitud neo-abdominal salvadora.<br><br>Perla Quirúrgica: En casos de acortamiento real, la división de un solo nervio vago resulta en 1 a 2 cm extra, pero la división de ambos nervios vagos rinde típicamente de 3 a 4 cm de esófago adicional intraabdominal.<br><br>Análisis de Distractores: La ganancia de 1 a 2 cm (A) se obtiene seccionando únicamente un nervio vago de forma unilateral. Longitudes de 5 a 6 cm (D) son anatómicamente inalcanzables solo por neurolisis, requiriendo de forma obligatoria la creación quirúrgica de una Gastroplastia de Collis.",
+        source: "ERGE y Hernia de Hiato, Intraoperative Management of Short Esophagus, Página 11."
+    },
+    {
+        id: 31,
+        question: "En la epidemiología de la perforación esofágica, ¿qué porcentaje de los casos corresponde al síndrome de Boerhaave (ruptura espontánea o barogénica)?",
+        options: ["15% a 30%", "5% a 10%", "40% a 50%", "60% a 70%"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Manejo de Perforación Esofágica, aunque el vómito vigoroso (Boerhaave) es la etiología espontánea letal clásica, representa la segunda causa etiológica en frecuencia real, abarcando del 15% al 30% del volumen global de pacientes que ingresan a urgencias.<br><br>Perla Quirúrgica: La ruptura espontánea, o esófago de Boerhaave, es la segunda causa más común de perforación esofágica globalmente (15%–30%).<br><br>Análisis de Distractores: El porcentaje del 60% al 70% (D) corresponde abrumadoramente a la lesión iatrogénica endoscópica, la principal causa de perforaciones. Los rangos de 5% a 10% (B) encasillan eventos inusuales como los traumas penetrantes o perforaciones externas por cuerpo extraño.",
+        source: "Management of Esophageal Perforation, Introduction, Página 1."
+    },
+    {
+        id: 32,
+        question: "En la miotomía endoscópica por vía oral (POEM) para Acalasia, ¿a qué distancia proximal de la unión esofagogástrica se debe crear inicialmente la mucosotomía para la entrada al túnel submucoso?",
+        options: ["3 a 5 cm", "6 a 8 cm", "10 a 15 cm", "18 a 20 cm"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Acalasia del Esófago, para garantizar un espacio hermético protector y un canal de disección descendente que brinde control visual y de sellado anatómico, la incisión inicial de la mucosa esofágica por donde entrará el endoscopio se sitúa estratégicamente a un rango de 10 a 15 centímetros proximal a la unión esofagogástrica.<br><br>Perla Quirúrgica: El POEM consta de varios componentes principales: el primer paso crítico es la creación de la mucosotomía aproximadamente a 10 a 15 cm proximales a la unión esofagogástrica.<br><br>Análisis de Distractores: Incisiones a 3 o 5 cm (A) o 6 a 8 cm (B) son excesivamente bajas y comprometerían el colgajo mucoso durante la miotomía de la pared. Abordajes a 18 a 20 cm (D) forzarían un túnel innecesariamente largo incrementando el riesgo de sangrado técnico de la capa.",
+        source: "Achalasia of the esophagus, Peroral Endoscopic Myotomy, Página 5."
+    },
+    {
+        id: 33,
+        question: "En el tratamiento quirúrgico del divertículo de Zenker sintomático, ¿qué tamaño del saco diverticular indica como conducta suficiente la realización exclusiva de una miotomía cricofaríngea sin resección ni diverticulopexia?",
+        options: ["< 1 cm", "< 2 cm", "3 a 4 cm", "> 5 cm"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Manejo del Divertículo de Zenker, el factor patológico primario es el espasmo cricofaríngeo constrictor. Si la bolsa mucosa naciente es menor de 2 cm (pequeña), la simple sección de la compuerta muscular (miotomía) aplana la presión faríngea erradicando el problema sin necesidad de extirpación.<br><br>Perla Quirúrgica: En el caso de un divertículo pequeño (< 2 cm), la realización de una miotomía cricofaríngea y tirofaríngea aislada es a menudo suficiente.<br><br>Análisis de Distractores: Si el saco mide de 3 a 4 cm (C) o más de 5 cm (D), el tamaño condiciona un sumidero físico que retendrá comida por pura estasis a pesar de aflojar el esfínter. En estos sacos grandes, la extirpación (diverticulectomía) o fijación alta es quirúrgicamente obligatoria.",
+        source: "Management of Zenker’s, Surgical Management, Página 3."
+    },
+    {
+        id: 34,
+        question: "En la estadificación patológica (pTNM octava edición) del carcinoma de esófago, ¿cuántos ganglios linfáticos regionales metastásicos definen invariablemente la categoría nodal N2?",
+        options: ["1 a 2 ganglios", "7 a 9 ganglios", "≥ 10 ganglios", "3 a 6 ganglios"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al libro de Esófago y al manual del AJCC (octava edición) de cáncer de esófago, el mapeo de diseminación de la pared estratifica las clasificaciones nodales estrictamente por número: la categoría N1 corresponde a 1-2 nódulos, la categoría N2 asume compromiso patológico intermedio de 3 a 6 ganglios, y la N3 califica un compromiso de 7 o más focos.<br><br>Perla Quirúrgica: La estadificación regional de nódulos linfáticos clasifica N2 a la metástasis documentada en 3 a 6 ganglios linfáticos regionales.<br><br>Análisis de Distractores: Tener de 1 a 2 ganglios positivos (A) define enfermedad nodal leve estadio N1. Las categorías de 7 a 9 (B) o más de 10 ganglios (C) están unificadas bajo el peldaño de metástasis regional avanzada estadio N3 (≥ 7 ganglios).",
+        source: "Esófago, Table 42.6 Esophageal carcinoma stage classifications, Página 20."
+    },
+    {
+        id: 35,
+        question: "En la evaluación de la fisiología deglutoria esofágica, ¿cuál es el lapso de tiempo máximo fisiológico en el que el esfínter esofágico inferior (EEI) sufre su relajación postdeglutoria para permitir el paso del bolo?",
+        options: ["100 milisegundos", "1000 milisegundos", "500 milisegundos", "3000 milisegundos"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de ERGE y Hernia de Hiato, la contracción tónica permanente del esfínter distal es el pilar de la contención ácida. Tras iniciarse una orden neurológica de deglución en la faringe, las fibras del EEI se relajan fisiológicamente rápido dentro del transcurso de los siguientes 500 milisegundos para recibir el bolo.<br><br>Perla Quirúrgica: La musculatura del esófago distal se encuentra en contracción tónica en reposo; dentro de los 500 milisegundos posteriores al inicio de un trago, estas fibras se relajan para permitir el paso de alimentos hacia la cavidad gástrica.<br><br>Análisis de Distractores: Relajaciones instantáneas de 100 ms (A) son mecánicamente insuficientes para el aclaramiento. Demoras de 1 a 3 segundos completos (B, D) generarían obstrucción temporal distal (espástica) provocando choque retrógrado de las presiones de bomba.",
+        source: "ERGE y Hernia de Hiato, Pathophysiology, Página 2."
+    },
+    {
+        id: 36,
+        question: "Durante la reparación laparoscópica de una hernia paraesofágica crónica, si tras la máxima disección la fibrosis condiciona una tensión crural irreductible, ¿cuál es el sitio anatómico de primera elección para realizar una incisión quirúrgica de relajación?",
+        options: ["Tendón central del diafragma", "Pilar izquierdo diafragmático", "Pilar derecho diafragmático", "Ligamento arcuato medio aórtico"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Reparación de Hernia Paraesofágica y a las guías de ERGE, cuando un hiato desestructurado no cede a los puntos de aproximación sin desgarrar músculo, los cirujanos efectúan una incisión liberadora paralela. Por seguridad de abordaje y exposición tisular, se prefiere el pilar derecho para liberar tensión y después cubrir esa brecha lateral con un parche biológico.<br><br>Perla Quirúrgica: En ocasiones donde la flexibilidad crural no permite el cierre primario, es preferible realizar la incisión de relajación sobre el pilar derecho y parchar el defecto resultante con malla biológica.<br><br>Análisis de Distractores: Atacar el pilar izquierdo (B) es técnicamente posible pero históricamente se asocia a mayor tasa de recidiva y eventración pleural, exigiendo mallas protésicas permanentes. El tendón central (A) destruiría la zona diafragmática vascular y el ligamento arcuato (D) rige la región del tronco celíaco, zona prohibitiva.",
+        source: "Management of Paraesophageal Hernia Repair, Closure of the Esophageal Hiatus, Página 6."
+    },
+    {
+        id: 37,
+        question: "En el control endoscópico de pacientes cirróticos con hemorragia variceal esofágica refractaria (tratamiento de rescate), ¿cuál es el diámetro mínimo diseñado y requerido para los stents metálicos autoexpandibles?",
+        options: ["25 mm", "20 mm", "18 mm", "15 mm"],
+        answer: 0,
+        justification: "Justificación: De acuerdo al libro de Uso de Stents Esofágicos, el uso de prótesis totalmente revestidas para apagar exanguinaciones venosas intratables exige cilindros de gran calibre. Se requieren fuerzas compresivas radiales masivas para taponar físicamente paquetes variceales congestionados a alta presión, estableciéndose el diámetro mínimo en 25 mm de anchura.<br><br>Perla Quirúrgica: Los stents esofágicos metálicos totalmente cubiertos empleados para controlar el sangrado variceal refractario son diseñados especialmente con un diámetro amplio que exige al menos 25 mm.<br><br>Análisis de Distractores: Los stents digestivos oncológicos regulares o benignos alcanzan comúnmente tallas menores de 15, 18 o 20 mm (B, C, D). Esta medida estándar dejaría corredores venosos destapados por donde seguiría drenando la varice bajo la presión portal.",
+        source: "Use of Esophageal Stents, Refractory Esophageal Variceal Bleeding, Página 5."
+    },
+    {
+        id: 38,
+        question: "En el tratamiento endoscópico del Esófago de Barrett, ¿cuál es el riesgo reportado de formación de estenosis esofágica cuando se utiliza de forma exclusiva la resección endoscópica de la mucosa (EMR) para erradicar los segmentos de la enfermedad?",
+        options: ["10.2%", "33.5%", "7.5%", "1.3%"],
+        answer: 1,
+        justification: "Justificación: De acuerdo al libro de Tratamiento Endoscópico del Esófago de Barrett, cuando se depende en múltiples sesiones de una resección mucosa física extensa (EMR) para pelar áreas enteras sin alternar con ablación por radiofrecuencia (RFA), el daño submucoso cicatrizal genera anillos fibróticos y estenosis constrictivas posoperadas graves en un 33.5% de los pacientes.<br><br>Perla Quirúrgica: En revisiones de la literatura, la EMR en solitario reporta un riesgo de formación de estenosis de 33.5%, frente a solo un 10.2% cuando se emplea combinada juiciosamente con RFA.<br><br>Análisis de Distractores: La tasa de estenosis combinando EMR con RFA (abordaje mixto de elección) baja los índices a un 10.2% (A). El 7.5% (C) y el 1.3% (D) corresponden a las tasas de eventos adversos agudos de sangrado y perforación mediastínica respectivamente, no al secuelar fibrótico crónico.",
+        source: "Endoscopic Treatment of Barrett’s Esophagus, Endoscopic Mucosal Resection, Página 10."
+    },
+    {
+        id: 39,
+        question: "En el manejo de la Acalasia, ¿cuál es la tasa de perforación esofágica esperada tras una sesión de dilatación neumática realizada intraluminalmente por endoscopistas expertos?",
+        options: ["0.5% a 1%", "10% a 15%", "6% a 8%", "2% a 5%"],
+        answer: 3,
+        justification: "Justificación: De acuerdo al libro de Uso de Stents y Disfagia, emplear balones rígidos neumáticos radiales para divulsionar de forma controlada la musculatura lisa del esfínter arrastra el riesgo de rasgar la pared transmural mucosa hacia el mediastino. El consolidado de series en manos expertas sitúa este riesgo en una tasa de entre el 2% al 5%.<br><br>Perla Quirúrgica: En la literatura de acalasia existe un riesgo bien conocido de perforación esofágica aguda con dilataciones neumáticas que oscila en un rango del 2% al 5% en manos de endoscopistas expertos.<br><br>Análisis de Distractores: Las tasas de 0.5 a 1% (A) pertenecen a endoscopias diagnósticas de rutina o a dilataciones suaves con bujías por estenosis pépticas simples. Índices superiores de 6% a 15% (B, C) son estadísticas inaceptables en centros especializados que invalidarían el uso del procedimiento frente a la miotomía.",
+        source: "Management of Disorders of Esophageal Motility, Endoscopic Therapy, Página 11."
+    },
+    {
+        id: 40,
+        question: "En el abordaje quirúrgico para ERGE mediante el sistema de aumento del esfínter magnético (LINX), ¿cuál es la talla métrica del collar de titanio más comúnmente utilizada e implantada en la práctica clínica?",
+        options: ["Talla 10", "Talla 12", "Talla 14", "Talla 16"],
+        answer: 2,
+        justification: "Justificación: De acuerdo al libro de Nuevos Enfoques para ERGE, tras rodear y disecar la pared exterior retroesofágica inferior por completo sin lesionar vagos, se emplea una sonda medidora para leer circunferencias tisulares precisas. Por diseño, la prótesis LINX modular expansible que estadísticamente engrana a la anatomía adulta global sin erosión isquémica pertenece universalmente a la talla 14.<br><br>Perla Quirúrgica: Durante la medición transquirúrgica de la circunferencia externa esofágica para implantar el LINX, se documenta que la talla de implante de uso más común a nivel mundial es el tamaño 14.<br><br>Análisis de Distractores: Las tallas menores a 14 (A, B) se utilizan de manera restrictiva y con precaución porque sus aros pequeños pueden asfixiar la luz originando disfagia intolerable posoperatoria. La talla 16 (D) es muy amplia y puede resultar incompetente fallando en restituir la presión antirreflujo basal.",
+        source: "New Approaches to Gastroesophageal Reflux Disease (Linx), LINX Implantation Procedure, Página 5."
+    }
+        ];
+
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('hiatosabistonpreLastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('hiatosabistonpreProgress');
+                localStorage.removeItem('hiatosabistonpreLastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-blue-500 shadow-md z-10 border-blue-500 dark:border-blue-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-blue-600 hover:to-cyan-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-blue-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-cyan-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! Sabiston" : "Sabiston";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "Hiato y ERGE";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="LINKI.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-blue-100 dark:border-blue-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-400 dark:has-[:checked]:bg-blue-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-blue-600 dark:hover:bg-blue-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('hiatosabistonpreProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('hiatosabistonpreLastQId', currentQuestionId);
+                else localStorage.removeItem('hiatosabistonpreLastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('hiatosabistonpreProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+
+</body>
+</html>
