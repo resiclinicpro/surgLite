@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">UMAE</span>
+                    <span class="logo-Lite text-sm">25<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // =========================================================
+        const questionsData = [
+
+// BLOQUE 1: Anatomía, Fisiología y Patología del Sistema Biliar (1-20)
+    {
+        id: 1, 
+        question: "En Anatomía Biliar, ¿cuál es la capacidad promedio de la vesícula biliar en condiciones normales de ayuno?", 
+        options: ["10 a 20 mL", "150 a 200 mL", "30 a 50 mL", "80 a 100 mL"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la vesícula biliar es un saco en forma de pera con una capacidad promedio de 30 a 50 mL. De acuerdo a la GPC, en condiciones obstructivas o patológicas, este órgano posee una alta distensibilidad y puede acumular hasta 300 mL de líquido.<br><br>Perla Quirúrgica: \"La vesícula biliar es un saco en forma de pera que mide de 7 a 10 cm de longitud, con una capacidad promedio de 30 a 50 mL.\"<br><br>Análisis de Distractores: La opción A representa un volumen biliar insuficiente para el promedio de almacenamiento fisiológico de ayuno. La opción B entra en el espectro de distensión patológica por obstrucción del conducto cístico. La opción D excede de manera significativa el rango de capacidad promedio fisiológica del adulto sano en ayuno.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Anatomía de la vesícula biliar, Página 2." 
+    },
+    {
+        id: 2, 
+        question: "En Anatomía Hepática, ¿cuál es la característica que diferencia al conducto hepático izquierdo del conducto hepático derecho al salir del hígado?", 
+        options: ["Menor longitud biliar", "Menor diámetro luminal", "Mayor bifurcación intrahepática", "Mayor propensión a dilatarse"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo a la GPC y al análisis anatómico del árbol biliar extrahepático en el libro de Schwartz Principios de Cirugía, al salir del hígado, el conducto hepático izquierdo es físicamente más largo que el derecho. Esto le confiere una mayor elasticidad y una propensión superior a la dilatación luminal como consecuencia de cualquier proceso obstructivo biliar distal.<br><br>Perla Quirúrgica: \"Al salir del hígado, el conducto hepático izquierdo es más largo que el derecho y tiene una mayor propensión a la dilatación como consecuencia de una obstrucción distal.\"<br><br>Análisis de Distractores: La opción A es incorrecta pues el conducto hepático izquierdo es más largo que el derecho. La opción B no representa una característica de distinción anatómica ni fisiológica clave según el texto. La opción C es falsa pues ambos conductos emergen tras la unión de ramas lobares de primer orden sin diferencias basales de bifurcación descritas en este contexto.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Anatomía de los conductos biliares, Página 2." 
+    },
+    {
+        id: 3, 
+        question: "En Anatomía Biliar Extrahepática, ¿en qué porcentaje de los pacientes se presenta la variante anatómica de una arteria hepática derecha reemplazada originada de la arteria mesentérica superior?", 
+        options: ["5%", "20%", "50%", "80%"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la anatomía arterial biliar presenta una gran variabilidad, describiéndose que hasta el 20% de los pacientes cursan con una arteria hepática derecha reemplazada que proviene directamente de la arteria mesentérica superior. De acuerdo a la GPC, identificar estas variaciones evita la isquemia hepática segmentaria accidental.<br><br>Perla Quirúrgica: \"Aunque la arteria hepática derecha suele originarse de la rama hepática propia del tronco celíaco, hasta el 20% de los pacientes tendrá una arteria hepática derecha reemplazada que proviene de la arteria mesentérica superior.\"<br><br>Análisis de Distractores: La opción A corresponde a la frecuencia aproximada de presentación de una arteria hepática derecha accesoria (no reemplazada). La opción C representa la incidencia acumulada de cualquier tipo de anomalía arterial que afecte a la arteria hepática o cística de manera global. La opción D es el porcentaje en el cual la arteria cística se origina de su fuente común, la arteria hepática derecha.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Variantes anatómicas arteriales, Página 4." 
+    },
+    {
+        id: 4, 
+        question: "En Fisiología Biliar, ¿qué porcentaje de la reserva corporal (pool) total de ácidos biliares es reabsorbido de forma fisiológica a través de la circulación enterohepática?", 
+        options: ["5%", "50%", "80%", "95%"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la circulación enterohepática es sumamente eficiente y permite que aproximadamente el 95% de la reserva o pool de ácidos biliares totales sea reabsorbida para volver al hígado. De acuerdo a la GPC, este mecanismo de reciclaje evita que el hepatocito deba sintetizar de novo todo el volumen de ácidos biliares diarios requeridos para la emulsificación de lípidos.<br><br>Perla Quirúrgica: \"Finalmente, se reabsorbe alrededor del 95% del pool de ácidos biliares, la llamada circulación enterohepática.\"<br><br>Análisis de Distractores: La opción A es el porcentaje aproximado de ácidos biliares que se pierde diariamente por excreción fecal en las heces. La opción B representa una cifra arbitraria sin correlación con los índices de absorción o síntesis hepática biliar descritos. La opción C es la fracción porcentual de ácidos biliares conjugados secretados que se absorben exclusivamente en el íleon terminal de forma activa antes de llegar al colon.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Formación y composición de la bilis, Página 6." 
+    },
+    {
+        id: 5, 
+        question: "En Fisiología Vesicular, ¿qué porcentaje del contenido biliar almacenable vacía la vesícula biliar en un lapso de 30 a 40 minutos bajo el estímulo fisiológico de la colecistocinina?", 
+        options: ["50% a 70%", "30% a 40%", "10% a 20%", "80% a 90%"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo a la GPC, en respuesta a la ingestión de alimentos, la colecistocinina es liberada por las células enteroendocrinas del duodeno. De acuerdo al libro de Schwartz Principios de Cirugía, este estímulo hormonal induce una contracción coordinada del músculo liso vesicular que vacía entre el 50% y el 70% de su volumen en un período de 30 a 40 minutos.<br><br>Perla Quirúrgica: \"Cuando se estimula al comer, la vesícula biliar vacía del 50% al 70% de su contenido en un lapso de 30 a 40 minutos.\"<br><br>Análisis de Distractores: La opción B representa el rango de tiempo en minutos en el que ocurre la contracción, no el porcentaje del volumen vaciado. La opción C es el volumen de vaciamiento biliar fásico y repetitivo que ocurre espontáneamente durante el ayuno o fase II del complejo motor migratorio. La opción D es un porcentaje excesivamente alto que no refleja el promedio fisiológico normal de vaciamiento de un solo bolo alimentario.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Actividad motora vesicular, Página 7." 
+    },
+    {
+        id: 6, 
+        question: "En Fisiología del Esfínter de Oddi, ¿cuál es el valor de la presión basal en reposo por encima de la presión intraduodenal?", 
+        options: ["4 mmHg", "40 mmHg", "13 mmHg", "120 mmHg"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, el esfínter de Oddi es una estructura compleja e independiente que genera una zona de alta presión para evitar el reflujo duodenal y regular el drenaje biliar, con una presión basal en reposo de 13 mmHg por encima de la presión del duodeno. De acuerdo a la GPC, la alteración en esta presión basal fundamenta el diagnóstico de disfunción del esfínter de Oddi.<br><br>Perla Quirúrgica: \"El esfínter de Oddi abarca aproximadamente de 4 a 6 mm de longitud y tiene una presión de reposo basal de unos 13 mmHg por encima de la presión duodenal.\"<br><br>Análisis de Distractores: La opción A representa la frecuencia promedio de contracciones fásicas espontáneas por minuto de la zona del esfínter de Oddi. La opción B es la presión que se alcanza solo en condiciones de obstrucción biliar aguda o espasmo tónico patológico sostenido del esfínter. La opción D es el límite superior de la amplitud de las contracciones fásicas intermitentes que se registran por manometría biliar directa.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Fisiología del esfínter de Oddi, Página 7." 
+    },
+    {
+        id: 7, 
+        question: "En Coledocolitiasis, ¿cuál es la composición histoquímica de los cálculos que se forman de manera primaria dentro del conducto colédoco asociados a estasis biliar e infección bacteriana?", 
+        options: ["Pigmento negro", "Colesterol puro", "Colesterol mixto", "Pigmento marrón"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo a la GPC, los cálculos biliares impactados se clasifican según su origen. De acuerdo al libro de Schwartz Principios de Cirugía, los cálculos de colesterol o mixtos (secundarios) provienen de la vesícula biliar y migran al colédoco, mientras que los cálculos primarios se forman in situ en el colédoco por estasis e infección biliar, y corresponden característicamente a la variedad de pigmento marrón.<br><br>Perla Quirúrgica: \"Los cálculos secundarios suelen ser cálculos de colesterol, mientras que los cálculos primarios suelen ser del tipo de pigmento marrón.\"<br><br>Análisis de Distractores: La opción A es una variedad de cálculos que se forman de manera estéril en la vesícula biliar secundarios a trastornos de hemólisis crónica. La opción B son cálculos únicos y radiolúcidos formados de forma exclusiva en la vesícula biliar por sobresaturación de colesterol sin infección. La opción C es el tipo de cálculo secundario más común que se origina en la vesícula biliar antes de migrar al conducto común.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Coledocolitiasis, Página 21." 
+    },
+    {
+        id: 8, 
+        question: "En Discinesia Biliar, ¿cuál es el porcentaje de fracción de eyección vesicular en la gammagrafía hepatobiliar considerado diagnóstico de esta patología en pacientes con sintomatología dolorosa?", 
+        options: ["<20%", "<35%", "<50%", "<65%"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, en pacientes que cursan con cólico biliar típico pero sin evidencia de litiasis o lodo biliar por ultrasonografía, de acuerdo a la GPC, se confirma el diagnóstico de discinesia biliar al documentar una fracción de eyección biliar menor al 35% durante el estudio de gammagrafía con ácido iminodiacético hepatobiliar.<br><br>Perla Quirúrgica: \"Una disminución de la fracción de eyección de la vesícula biliar en la gammagrafía HIDA (<35%) se considera diagnóstica de discinesia biliar.\"<br><br>Análisis de Distractores: La opción A corresponde al límite de la fracción de eyección cardíaca para contraindicar de forma segura el neumoperitoneo con CO2. La opción C representa el límite inferior normal para algunas pruebas funcionales comerciales, pero no es el punto de corte diagnóstico validado de discinesia biliar. La opción D es la fracción de expulsión normal esperada en pacientes con adecuada motilidad vesicular bajo estímulo de colecistocinina sintética.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Discinesia biliar, Página 34." 
+    },
+    {
+        id: 9, 
+        question: "En Colecistitis Crónica, ¿cómo se denominan las invaginaciones patológicas del epitelio de la mucosa a través de la capa muscular de la vesícula biliar?", 
+        options: ["Senos de Rokitansky-Aschoff", "Criptas de Lieberkühn", "Corpúsculos de Pacini", "Glándulas de Brunner"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la inflamación crónica recidivante y la elevación de la presión transmural provocan que la mucosa vesicular se atrofie e introduzca fascículos epiteliales en la muscular, dando origen a los senos de Rokitansky-Aschoff. De acuerdo a la GPC, estas formaciones diverticulares son marcadores histopatológicos de cronicidad inflamatoria avanzada.<br><br>Perla Quirúrgica: \"La mucosa está inicialmente normal o hipertrofiada, pero más tarde se atrofia, con el epitelio protruyendo en la capa muscular, lo que conduce a la formación de los llamados senos de Aschoff-Rokitansky.\"<br><br>Análisis de Distractores: La opción B son glándulas tubulares simples e invaginaciones epiteliales normales situadas en la mucosa del intestino delgado y grueso. La opción C son receptores de presión y vibración de localización subcutánea profunda, sin relación con el tracto biliar. La opción D son estructuras glandulares mucosas especializadas que se localizan en la submucosa del duodeno proximal.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Colecistitis crónica y litiasis biliar sintomática, Página 17." 
+    },
+    {
+        id: 10, 
+        question: "En la Vesícula Biliar, ¿cuál es la alteración histológica benigna caracterizada por la acumulación excesiva de ésteres de colesterol dentro de los macrófagos de la lámina propia?", 
+        options: ["Adenomiomatosis", "Colesterolosis", "Pólipo granulomatoso", "Colecistitis acalculosa"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la colesterolosis es un hallazgo histológico común ocasionado por depósitos de colesterol en los macrófagos de la lámina propia vesicular. De acuerdo a la GPC, esto produce depósitos amarillentos sobreelevados sobre la mucosa rojiza hiperémica, generando el aspecto macroscópico clásico de \"vesícula en fresa\".<br><br>Perla Quirúrgica: \"La colesterolosis se produce por la acumulación de colesterol en los macrófagos de la lámina propia de la vesícula biliar, ya sea de forma local o como pólipos. Produce la apariencia macroscópica tachonada clásica de una 'vesícula en fresa'.\"<br><br>Análisis de Distractores: La opción A se define histológicamente por hipertrofia de la capa muscular y la formación de invaginaciones epiteliales profundas (senos). La opción C es una tumoración luminal de carácter inflamatorio celular benigno localizada típicamente en la porción de fondo del órgano. La opción D es un cuadro inflamatorio agudo necrosante de la pared vesicular sin presencia de litiasis, típico de pacientes críticos en UCI.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Colesterolosis vesicular, Página 18." 
+    },
+    {
+        id: 11, 
+        question: "Durante la Colecistectomía Laparoscópica, ¿cuál es uno de los pasos obligatorios para establecer de forma segura la visión crítica de seguridad?", 
+        options: ["Cortar el conducto cístico proximal antes de disecar el triángulo", "Ligar la rama derecha accesoria de la arteria hepática", "Realizar una colangiografía transoperatoria diagnóstica", "Separar el tercio inferior de la vesícula biliar de la placa cística"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la prevención de la lesión de la vía biliar radica en una correcta disección quirúrgica. De acuerdo a la GPC, la visión crítica de seguridad exige: 1) limpiar completamente de grasa y tejido fibroso el triángulo hepatocístico; 2) movilizar el tercio inferior de la vesícula biliar despegándola de la placa cística para exponerla; y 3) asegurar que solo dos estructuras entren directamente a la vesícula biliar.<br><br>Perla Quirúrgica: \"En este punto, se debe obtener una visión crítica de seguridad. Esto requiere que el triángulo hepatocístico esté libre de grasa y tejido fibroso, que el tercio inferior de la vesícula biliar se separe de la placa cística y que haya dos y solo dos estructuras que entren en la vesícula biliar: el conducto cístico y la arteria cística.\"<br><br>Análisis de Distractores: La opción A constituye una falta técnica grave que propicia la sección accidental de la vía biliar común. La opción B puede condicionar isquemia o necrosis biliar y hepática segmentaria severa. La opción C es un método auxiliar de imagen útil, pero no es parte de los criterios anatómicos directos para la visión crítica de seguridad.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Colecistectomía laparoscópica y visión crítica de seguridad, Página 32." 
+    },
+    {
+        id: 12, 
+        question: "En Colecistectomía Laparoscópica, ¿cuál de las siguientes condiciones se considera una contraindicación absoluta para iniciar el procedimiento por esta vía de abordaje?", 
+        options: ["Embarazo activo durante el segundo trimestre", "Cirrosis hepática infantil compensada", "Inestabilidad hemodinámica grave", "Presencia de fístula colecistoentérica documentada"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, existen muy pocas contraindicaciones absolutas para el abordaje laparoscópico. De acuerdo a la GPC, la inestabilidad hemodinámica persistente, la coagulopatía grave refractaria o la peritonitis generalizada severa obligan a un abordaje abierto inicial para evitar el colapso hemodinámico inducido por la presión intrabdominal del neumoperitoneo.<br><br>Perla Quirúrgica: \"Existen pocas contraindicaciones absolutas para la colecistectomía laparoscópica, pero estas incluyen inestabilidad hemodinámica, coagulopatía no controlada o peritonitis franca.\"<br><br>Análisis de Distractores: La opción A es la etapa gestacional más segura para resolver de forma quirúrgica una colelitiasis sintomática si falla el manejo dietético. La opción B es un factor que eleva la dificultad técnica pero no representa una contraindicación absoluta. La opción D se asocia a mayor tasa de conversión a abierta, pero se puede intentar de manera inicial segura por laparoscopia.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Contraindicaciones de colecistectomía laparoscópica, Página 28." 
+    },
+    {
+        id: 13, 
+        question: "En la clasificación de los Quistes de Colédoco, ¿cuál es el tipo que corresponde específicamente a la presencia de un divertículo sacular en la vía biliar extrahepática?", 
+        options: ["Tipo II", "Tipo I", "Tipo III", "Tipo V"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, los quistes de colédoco se dividen en cinco tipos anatómicos según la clasificación establecida. De acuerdo a la GPC, el Tipo II corresponde a una evaginación biliar diverticular sacular extrahepática, la cual representa menos del 5% de la totalidad de las anomalías congénitas de las vías biliares.<br><br>Perla Quirúrgica: \"Tipo II, divertículo sacular de un conducto biliar extrahepático. Raro, <5% de los quistes de colédoco.\"<br><br>Análisis de Distractores: La opción B corresponde a la dilatación fusiforme o quística común de la vía biliar extrahepática (>50% de los casos). La opción C se define como choledococele, que es la dilatación de la porción distal o intraduodenal de la vía biliar. La opción D es conocida como Enfermedad de Caroli, caracterizada por múltiples dilataciones quísticas restringidas al árbol biliar intrahepático.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Clasificación de los quistes de colédoco, Página 34." 
+    },
+    {
+        id: 14, 
+        question: "En los Quistes de Colédoco, ¿cuál es la anomalía de la confluencia pancreatobiliar que se documenta como causa fisiopatológica en más del 90% de los casos?", 
+        options: ["Ausencia de drenaje biliar terminal", "Canal biliar común largo >1.5 cm", "Estenosis de la papila menor", "Páncreas divisum completo"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo a la GPC, los quistes de colédoco se asocian a reflujo enzimático crónico. De acuerdo al libro de Schwartz Principios de Cirugía, en más del 90% de los casos se identifica una unión anómala donde el conducto pancreático y el colédoco confluyen fuera de la pared duodenal, originando un canal biliar común anormalmente largo de más de 1.5 cm de longitud.<br><br>Perla Quirúrgica: \"Más del 90% de los pacientes tienen una unión anómala del conducto pancreatobiliar, con el conducto pancreático uniéndose al conducto colédoco fuera de la pared duodenal, creando un canal común largo (>1.5 cm).\"<br><br>Análisis de Distractores: La opción A es una condición incompatible con la vida biliar intra y extrahepática a menos que se trate de una atresia biliar corregida. La opción C es una condición del páncreas que afecta el drenaje accesorio pero no la confluencia distal del conducto biliar común. La opción D es una variante anatómica congénita pancreática común donde los conductos de Santorini y Wirsung no se fusionan, careciendo de relación con quistes biliares.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Patogenia de los quistes biliares congénitos, Página 34." 
+    },
+    {
+        id: 15, 
+        question: "En Colangitis Esclerosante Primaria, ¿cuál de los siguientes haplotipos de antígeno leucocitario humano se asocia de forma significativa con la patogenia inmunomediada de la enfermedad?", 
+        options: ["HLA-DR4", "HLA-B27", "HLA-DR3", "HLA-A2"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la colangitis esclerosante primaria muestra una fuerte asociación hereditaria autoinmune. De acuerdo a la GPC, la presencia de los alelos HLA-B8, DR3, DQ2 y DRw52A se correlaciona estadísticamente de forma estrecha con la susceptibilidad inmunogenética a desarrollar estenosis cicatrizales biliares múltiples en comparación con la población sana.<br><br>Perla Quirúrgica: \"Los haplotipos de antígeno leucocitario humano HLA-B8, DR3, DQ2 y DRw52A, que se encuentran comúnmente en pacientes con enfermedades autoinmunes, también se observan con mayor frecuencia en pacientes con colangitis esclerosante primaria que en los controles.\"<br><br>Análisis de Distractores: La opción A es un alelo asociado comúnmente a susceptibilidad de artritis reumatoide o diabetes tipo I, mas no a colangitis esclerosante. La opción B es un marcador genético fuertemente vinculado a espondiloartropatías seronegativas como la espondilitis anquilosante. La opción D es un antígeno del locus clásico clase I de histocompatibilidad que no guarda relación selectiva con esta colangiopatía progresiva.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Colangitis esclerosante primaria, Página 34." 
+    },
+    {
+        id: 16, 
+        question: "En Colangitis Esclerosante Primaria, ¿cuál es la enfermedad inflamatoria intestinal crónicamente asociada en aproximadamente dos tercios de los pacientes?", 
+        options: ["Colitis ulcerosa", "Enfermedad de Crohn", "Colitis linfocítica", "Colitis amebiana"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la colangitis esclerosante primaria exhibe una comorbilidad autoinmune sistémica marcada, destacando de acuerdo a la GPC que aproximadamente el 66% de estos pacientes presentan de manera simultánea colitis ulcerosa activa o latente.<br><br>Perla Quirúrgica: \"La colangitis esclerosante primaria se asocia comúnmente con otras enfermedades autoinmunes, incluida la colitis ulcerosa en aproximadamente dos tercios de los pacientes, la tiroiditis de Riedel y la fibrosis retroperitoneal.\"<br><br>Análisis de Distractores: La opción B representa una patología donde, aunque puede coexistir, la tasa de asociación sistémica es marcadamente menor en comparación con la colitis ulcerosa. La opción C es un trastorno diarreico histológico crónico benigno (colitis microscópica) que no tiene asociación inmunológica demostrada con estenosis biliar. La opción D es una patología infecciosa destructiva aguda parasitaria sin relación genética ni epidemiológica longitudinal con procesos esclerosantes.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Asociaciones sistémicas de la colangitis esclerosante primaria, Página 34." 
+    },
+    {
+        id: 17, 
+        question: "En Colangitis Aguda obstructiva grave, ¿cuál de las siguientes opciones clínicas completa la Péntada de Reynolds?", 
+        options: ["Insuficiencia renal aguda", "Hemorragia biliar luminal", "Acidosis láctica persistente", "Alteración del estado mental"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la tríada clásica de Charcot incluye fiebre, ictericia y dolor en hipocondrio derecho. De acuerdo a la GPC, en casos sépticos graves la progresión hemodinámica rápida del paciente condiciona choque séptico y alteración de las funciones del estado mental de alerta, completando de esta forma la péntada de Reynolds.<br><br>Perla Quirúrgica: \"La enfermedad puede progresar rápidamente con el desarrollo de choque y alteración del estado mental, lo que se conoce como la péntada de Reynolds (fiebre, ictericia, dolor en el cuadrante superior derecho, choque séptico y cambios en el estado mental).\"<br><br>Análisis de Distractores: La opción A representa una disfunción de órgano inducida por sepsis y choque generalizado, pero no forma parte de la categorización diagnóstica semiológica tradicional. La opción B es conocida como hemobilia, siendo una complicación anatómica y no un marcador diagnóstico de colangitis aguda purulenta. La opción C es un marcador metabólico de mala perfusión celular generalizada, no clasificado dentro de los descriptores clásicos de la péntada.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Presentación clínica de la colangitis, Página 25." 
+    },
+    {
+        id: 18, 
+        question: "En la Enfermedad de Cálculos Biliares, ¿qué porcentaje de los cálculos corresponden a la variedad de pigmento negro en los países occidentales?", 
+        options: ["<10%", "15% a 20%", "50% a 60%", ">80%"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, los cálculos se clasifican ampliamente por su proporción de colesterol. De acuerdo a la GPC, en países de occidente aproximadamente el 80% son cálculos de colesterol y entre el 15% y el 20% corresponden a litiasis biliar de pigmento negro de carácter no infeccioso, siendo la variedad de pigmento marrón muy infrecuente.<br><br>Perla Quirúrgica: \"En los países occidentales, alrededor del 80% de los cálculos biliares son cálculos de colesterol y entre el 15% y el 20% son cálculos de pigmento negro.\"<br><br>Análisis de Distractores: La opción A representa de forma específica la prevalencia estimada de cálculos biliares compuestos en su totalidad por colesterol puro cristalizado. La opción C no se corresponde con ningún subgrupo epidemiológico biliar relevante en las sociedades occidentales. La opción D es el porcentaje asignado al volumen de cálculos compuestos predominantemente por colesterol (cálculos de colesterol puros y mixtos combinados).", 
+        source: "Schwartz 11ª edición, Capítulo 32: Clasificación de cálculos biliares, Página 15." 
+    },
+    {
+        id: 19, 
+        question: "Durante la Colecistectomía Laparoscópica, ¿en qué porcentaje disminuye el riesgo de lesión iatrogénica de la vía biliar común al realizar de forma correcta una colangiografía intraoperatoria?", 
+        options: ["50%", "10%", "30%", "90%"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la colangiografía transoperatoria sigue siendo controversial en cuanto a su uso universal versus selectivo. No obstante, de acuerdo a la GPC, la evidencia objetiva demuestra que realizar un estudio radiográfico biliar contrastado intraoperatorio reduce la frecuencia final de lesiones graves del conducto colédoco en un 50%.<br><br>Perla Quirúrgica: \"No obstante, la frecuencia de lesiones de la vía biliar se reduce en un 50% cuando se realiza una colangiografía intraoperatoria.\"<br><br>Análisis de Distractores: La opción B es un porcentaje de disminución excesivamente bajo que no refleja la eficacia real preventiva documentada para este procedimiento. La opción C es una cifra de reducción de eventos que se sitúa por debajo del impacto preventivo real que se logra tras el contraste biliar selectivo o rutinario. La opción D es una cifra irreal que no elimina la totalidad de los errores anatómicos cognitivos graves, ya que estos se relacionan también con la mala interpretación técnica del estudio de imagen.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Técnicas para evitar lesiones de vía biliar, Página 38." 
+    },
+    {
+        id: 20, 
+        question: "De acuerdo a la clasificación de Bismuth-Corlette para colangiocarcinomas perihilares (Klatskin), ¿cuál es el subtipo tumoral que compromete la confluencia biliar y de manera bilateral a ambos conductos hepáticos secundarios?", 
+        options: ["Tipo II", "Tipo IIIa", "Tipo IIIb", "Tipo IV"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, el colangiocarcinoma perihilar se estadifica mediante la clasificación de Bismuth-Corlette. De acuerdo a la GPC, el Tipo IV corresponde a lesiones que bloquean la bifurcación biliar y se extienden comprometiendo selectivamente tanto a los conductos hepáticos secundarios de segundo orden de ambos lados de forma simultánea.<br><br>Perla Quirúrgica: \"Los tumores tipo IV afectan tanto a los conductos intrahepáticos secundarios derechos como izquierdos.\"<br><br>Análisis de Distractores: La opción A compromete la bifurcación biliar hepática principal común pero sin invadir los conductos hepáticos de segundo orden o secundarios. La opción B representa una extensión anatómica que compromete la confluencia y se propaga invadiendo los conductos hepáticos secundarios únicamente de la porción lobar derecha. La opción C es una lesión obstructiva que invade de forma preferencial la confluencia biliar y propaga estenosis hacia las ramas secundarias izquierdas únicamente.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Clasificación de Bismuth-Corlette, Página 45." 
+    },
+
+    // BLOQUE 2: Anatomía, Fisiología y Patología del Sistema Biliar (21-40)
+    {
+        id: 21, 
+        question: "En Anatomía Hepática, ¿cuál es la estructura anatómica posterior que sirve como punto de referencia final para trazar la línea de Cantlie?", 
+        options: ["Vena cava inferior", "Vena porta principal", "Conducto colédoco distal", "Arteria hepática propia"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la línea de Cantlie es un plano vertical imaginario que divide funcional y anatómicamente el hígado en lóbulos derecho e izquierdo. De acuerdo a la GPC, este plano se traza desde la fosa de la vesícula biliar en la región anterior hasta la vena cava inferior en el extremo posterior de la glándula.<br><br>Perla Quirúrgica: \"La línea de Cantlie, un plano vertical que va desde la fosa de la vesícula biliar en la porción anterior hasta la vena cava inferior (VCI) en la porción posterior, divide el hígado en lóbulos derecho e izquierdo.\"<br><br>Análisis de Distractores: La opción B no constituye el límite posterior del plano divisor hepático principal. La opción C es una estructura extraparenquimatosa biliar baja que no guarda relación con la proyección segmentaria lobar superior o posterior. La opción D es un vaso aferente del hilio portal anterior que no se asocia al plano divisorio anatómico longitudinal.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Anatomía de la vesícula biliar, Página 2." 
+    },
+    {
+        id: 22, 
+        question: "En Histología de la Vesícula Biliar, ¿cuáles son las capas histológicas del tracto gastrointestinal ausentes de forma fisiológica en la pared de este órgano?", 
+        options: ["Epitelio y adventicia", "Serosa y muscular", "Lámina propia y epitelio", "Muscularis mucosa y submucosa"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la vesícula biliar posee una estructura histológica única en comparación con el resto del canal alimentario. De acuerdo a la GPC, este órgano carece de capa muscular de la mucosa (muscularis mucosa) y de tejido submucoso, contando únicamente con epitelio, lámina propia, una capa muscular sin estratificación definida y serosa/adventicia.<br><br>Perla Quirúrgica: \"La vesícula biliar difiere histológicamente del resto del tracto gastrointestinal (GI) en que carece de muscularis mucosa y submucosa.\"<br><br>Análisis de Distractores: La opción A indica capas presentes de forma normal en la superficie mucosa y de fijación hepática vesicular. La opción B constituye capas estructurales fundamentales presentes en la porción libre y contráctil de la pared biliar. La opción C representa componentes basales redundantes de la mucosa vesicular que permiten la concentración de solutos.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Anatomía de la vesícula biliar, Página 2." 
+    },
+    {
+        id: 23, 
+        question: "En Fisiología Biliar, ¿cuál es el volumen biliar promedio que produce un adulto sano bajo un régimen alimentario estándar en un día?", 
+        options: ["100 a 300 mL", "500 a 1000 mL", "1500 a 2000 mL", "3000 a 4000 mL"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, el hígado secreta bilis hacia los canalículos hepáticos de forma ininterrumpida. De acuerdo a la GPC, en condiciones fisiológicas normales con una dieta promedio, un adulto produce de manera diaria entre 500 y 1000 mL de líquido biliar.<br><br>Perla Quirúrgica: \"El adulto normal que consume una dieta promedio produce de 500 a 1000 mL de bilis al día.\"<br><br>Análisis de Distractores: La opción A representa un rango de volumen biliar que se asocia únicamente al almacenamiento residual en el lecho vesicular durante condiciones de ayuno. La opción C excede el rango de producción biliar extrahepática diaria promedio en humanos, acercándose a volúmenes patológicos de fístula de alto gasto. La opción D es una cifra excesiva sin fundamento fisiológico biliar en el organismo del adulto en condiciones basales.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Fisiología biliar, Página 5." 
+    },
+    {
+        id: 24, 
+        question: "En Fisiología Vesicular, ¿qué porcentaje de la bilis secretada de forma continua por el hígado se desvía y almacena dentro de la vesícula biliar durante el estado de ayuno?", 
+        options: ["20%", "50%", "80%", "95%"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la resistencia tónica basal del esfínter de Oddi durante el ayuno evita el vaciamiento duodenal espontáneo continuo. De acuerdo a la GPC, esta resistencia genera un gradiente de presiones que desvía de forma selectiva aproximadamente el 80% del pool de bilis secretada por el hepatocito hacia la luz de la vesícula biliar para su almacenamiento.<br><br>Perla Quirúrgica: \"En el estado de ayuno, aproximadamente el 80% de la bilis secretada por el hígado se almacena en la vesícula biliar.\"<br><br>Análisis de Distractores: La opción A es el porcentaje de bilis que fluye libremente hacia el duodeno en periodos interdigestivos tardíos o durante la fase II del complejo motor migratorio. La opción B representa una fracción menor al volumen de almacenamiento fásico biliar real en ayuno continuo. La opción D corresponde al porcentaje de ácidos biliares que regresan al hígado tras ser reabsorbidos por la circulación enterohepática, no al almacenamiento vesicular primario.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Función de la vesícula biliar, Página 6." 
+    },
+    {
+        id: 25, 
+        question: "En Fisiología del Esfínter de Oddi, ¿cuál es el tipo celular responsable de regular marcapasos tónicos y contracciones fásicas espontáneas de esta estructura?", 
+        options: ["Células intersticiales de Cajal", "Células endoteliales sinusoidales", "Células S duodenales", "Células enteroendocrinas I"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la motilidad espontánea del esfínter de Oddi es independiente de las capas musculares del duodeno circular adyacente. De acuerdo a la GPC, su coordinación contráctil tónica y fásica está regulada intrínsecamente por una red de células intersticiales de Cajal a través de impulsos integrados.<br><br>Perla Quirúrgica: \"La motilidad espontánea del esfínter de Oddi está regulada por las células intersticiales de Cajal a través de entradas intrínsecas y extrínsecas de hormonas y neuronas que actúan sobre las células de músculo liso.\"<br><br>Análisis de Distractores: La opción B son células del endotelio hepático sin propiedades de despolarización ni contractilidad en el árbol biliar. La opción C son células enteroendocrinas que secretan secretina bajo estímulo ácido, pero sin función marcapasos muscular intrínseca. La opción D son glándulas mucosas digestivas del duodeno y yeyuno que producen colecistocinina sistémica de acción hormonal.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Esfínter de Oddi, Página 7." 
+    },
+    {
+        id: 26, 
+        question: "En Hidropesía Vesicular, ¿en qué porciones de la vesícula biliar se localizan de forma exclusiva las glándulas tubuloalveolares secretoras de moco responsables de producir la \"bilis blanca\"?", 
+        options: ["Cuerpo y fondo", "Fondo e infundíbulo", "Cuerpo y cuello", "Infundíbulo y cuello"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la bilis clara y mucosa (\"bilis blanca\") de la hidropesía vesicular se produce de manera exclusiva por la secreción de glucoproteínas glandulares en ausencia de pigmento biliar por obstrucción del conducto cístico. De acuerdo a la GPC, las glándulas tubuloalveolares secretoras de moco se encuentran confinadas a la mucosa del infundíbulo y del cuello, estando ausentes en el cuerpo y el fondo.<br><br>Perla Quirúrgica: \"El moco secretado en la vesícula biliar se origina en las glándulas tubuloalveolares que se encuentran en el revestimiento mucoso del infundíbulo y el cuello de la vesícula biliar, pero que están ausentes en el cuerpo y el fondo.\"<br><br>Análisis de Distractores: La opción A indica porciones vesiculares ricas en tejido elástico y muscular de almacenamiento que carecen por completo de glándulas mucosecretoras. La opción B incluye la porción de fondo que carece de glándulas productoras de moco glucoproteico protector. La opción C incluye el cuerpo que carece de glándulas tubuloalveolares en su lámina propia.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Anatomía de la vesícula biliar, Página 2." 
+    },
+    {
+        id: 27, 
+        question: "En Anatomía Biliar, ¿cuál es la estructura anatómica vascular sobre la cual descansa habitualmente el ganglio linfático centinela de Mascagni o Lund?", 
+        options: ["Vena porta principal", "Arteria cística", "Arteria hepática propia", "Arteria gastroduodenal"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, el ganglio linfático de Lund o Mascagni (ganglio de Calot) sirve como punto de referencia centinela crucial durante la colecistectomía para evitar la desorientación anatómica. De acuerdo a la GPC, este ganglio descansa de manera típica suprayacente al sitio donde la arteria cística se inserta o transcurre hacia la pared vesicular.<br><br>Perla Quirúrgica: \"Con frecuencia, un ganglio linfático visible (ganglio de Lund o de Mascagni, a menudo denominado ganglio de Calot) se superpone a la inserción de la arteria cística en la pared de la vesícula biliar.\"<br><br>Análisis de Distractores: La opción A discurre en la porción posterior y profunda del ligamento hepatoduodenal, alejada del ganglio centinela anterior. La opción C es un vaso de origen lobar que se sitúa a la izquierda del conducto colédoco común, no sobre el plano del triángulo hepatocístico directo. La opción D discurre detrás de la primera porción del duodeno, caudal al triángulo hepatocístico y la fosa de Calot.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Anatomía de la vesícula biliar, Página 2." 
+    },
+    {
+        id: 28, 
+        question: "En Fisiología Biliar, ¿cuáles son los ácidos biliares catalogados como secundarios que se forman en el colon por deconjugación y deshidroxilación bacteriana?", 
+        options: ["Deoxycholate y lithocholate", "Ursodeoxycholate y cholate", "Cholate y chenodeoxycholate", "Chenodeoxycholate y lithocholate"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, los ácidos biliares primarios secretados ingresan al intestino. De acuerdo a la GPC, el 5% que escapa a la absorción activa en el íleon terminal es deconjugado y deshidroxilado por las bacterias del colon, dando origen de forma exclusiva a los ácidos biliares deoxicolato y litocolato, que se absorben o excretan.<br><br>Perla Quirúrgica: \"El resto es deshidroxilado (deconjugado) por las bacterias intestinales, formando los ácidos biliares secundarios deoxicolato y litocolato.\"<br><br>Análisis de Distractores: La opción B contiene al colato que es un ácido biliar primario sintetizado directamente por el hepatocito a partir de colesterol. La opción C constituye la pareja de ácidos biliares primarios principales de síntesis hepática antes de su conjugación con taurina o glicina. La opción D incluye al chenodeoxicolato que representa un compuesto biliar primario y no secundario derivado de bacterias colonicas.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Formación y composición de la bilis, Página 6." 
+    },
+    {
+        id: 29, 
+        question: "En Fisiología Vesicular, ¿cuál es el tiempo correspondiente a la vida media plasmática de la hormona colecistocinina?", 
+        options: ["20 a 30 minutos", "2 a 3 minutos", "12 a 15 minutos", "60 a 90 minutos"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la colecistocinina estimula de forma directa los receptores de la pared muscular lisa vesicular. De acuerdo a la GPC, este potente estímulo contráctil postprandial se caracteriza por una hormona de vida media sistémica extremadamente breve de 2 a 3 minutos antes de ser degradada por hígado y riñón.<br><br>Perla Quirúrgica: \"La CCK tiene una vida media plasmática de 2 a 3 minutos y es metabolizada tanto por el hígado como por los riñones.\"<br><br>Análisis de Distractores: La opción A es una vida media demasiado prolongada que causaría contracción vesicular patológica sostenida con isquemia de pared posterior. La opción C es el rango de aclaramiento sistémico de hormonas peptídicas de mayor tamaño o depuradas de manera lenta, ajenas a la CCK. La opción D representa el tiempo requerido para que la vesícula biliar se rellene de forma gradual tras la caída de los niveles de colecistocinina.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Regulación neurohormonal, Página 7." 
+    },
+    {
+        id: 30, 
+        question: "En Estudios de Gammagrafía Hepatobiliar (HIDA), ¿cuál de las siguientes situaciones metabólicas o sistémicas se asocia a la presencia de un falso positivo para el diagnóstico de Colecistitis Aguda?", 
+        options: ["Coledocolitiasis silente", "Hiperbilirrubinemia obstructiva", "Páncreas divisum completo", "Nutrición parenteral total"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, el diagnóstico de colecistitis aguda por gammagrafía HIDA se basa en la no visualización de la vesícula biliar con llenado rápido de la vía extrahepática. De acuerdo a la GPC, la nutrición parenteral total prolongada, el ayuno extremo o el abuso de alcohol inducen estasis biliar refractaria que bloquea la entrada del radionucleótido a la vesícula, simulando falsamente una obstrucción litiásica.<br><br>Perla Quirúrgica: \"Los resultados falsos positivos pueden ocurrir en pacientes en estado de no ayuno, en aquellos que reciben nutrición parenteral, o en el contexto de estasis de la vesícula biliar, uso reciente de narcóticos o alcoholismo.\"<br><br>Análisis de Distractores: La opción A puede causar retraso en el tránsito intestinal biliar generalizado mas no bloquea la entrada selectiva del trazador a la vesícula biliar sana. La opción B eleva el fondo sistémico pero no bloquea mecánicamente la fosa vesicular si el cístico permanece permeable. La opción C es una variante de confluencia pancreática distal sin impacto en la permeabilidad de la fosa o el conducto cístico de la vesícula.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Gammagrafía hepatobiliar, Página 11." 
+    },
+    {
+        id: 31, 
+        question: "En Coledocolitiasis, ¿cuál es el diámetro luminal del conducto colédoco determinado por ultrasonografía transabdominal que se considera altamente sugestivo de obstrucción litiásica?", 
+        options: [">3 mm", ">5 mm", ">8 mm", ">15 mm"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, los litos impactados migran con frecuencia a la porción retroduodenal del conducto biliar común. De acuerdo a la GPC, si bien el ultrasonido presenta limitaciones para visualizar el colédoco distal, documentar un conducto colédoco dilatado con un diámetro superior a 8 mm en un paciente con ictericia y dolor cólico confirma la sospecha de coledocolitiasis obstructiva.<br><br>Perla Quirúrgica: \"Un conducto colédoco dilatado (>8 mm de diámetro) en la ecografía de un paciente con cálculos biliares, ictericia y dolor biliar es altamente sugestivo de cálculos en el conducto biliar común.\"<br><br>Análisis de Distractores: La opción A representa un espesor de pared vesicular de sospecha neoplásica, no un diámetro luminal coledociano patológico. La opción B es un rango luminal normal o limítrofe en pacientes colecistectomizados sanos sin patología obstructiva biliar en evolución. La opción D indica una dilatación biliar extrema y masiva sugestiva de compresión intrínseca tumoral o quística maligna avanzada, no común de cálculos agudos.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Coledocolitiasis diagnóstica, Página 24." 
+    },
+    {
+        id: 32, 
+        question: "En Colecistitis Aguda, ¿cuál es el punto de corte en la cifra de leucocitos séricos totales que sugiere de forma significativa la presencia de una complicación gangrenosa o perforación de la vesícula?", 
+        options: [">20,000 células/mm3", ">10,000 células/mm3", ">12,000 células/mm3", ">15,000 células/mm3"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la colecistitis aguda simple cursa con leucocitosis leve a moderada de 12,000 a 15,000 células/mm3. De acuerdo a la GPC, un recuento leucocitario superior a 20,000 células/mm3 constituye un foco rojo clínico de alta sospecha de gangrena transmural, necrosis focal de pared, empiema supurado o perforación contenida/libre.<br><br>Perla Quirúrgica: \"Un recuento de glóbulos blancos inusualmente alto (>20,000 células/mm3) sugiere una forma complicada de colecistitis, como colecistitis gangrenosa, perforación o colangitis asociada.\"<br><br>Análisis de Distractores: La opción B es el límite superior del rango leucocitario sérico normal que puede verse en colelitiasis con cólicos biliares simples repetitivos. La opción C es el rango de elevación leucocitaria inicial habitual de una inflamación aguda calculosa de vesícula no complicada. La opción D es el límite superior promedio de la leucocitosis simple de la colecistitis sin necrosis o perforación de pared.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Manifestaciones clínicas de la colecistitis, Página 20." 
+    },
+    {
+        id: 33, 
+        question: "En Colangitis Aguda, ¿cuál es la razón por la cual los pacientes con un stent biliar permanente permeable raramente cursan con ictericia clínica al desarrollar este proceso infeccioso?", 
+        options: ["Ausencia de bacterias Gram-negativas en la bilis", "Menor producción hepática de bilirrubina conjugada", "Inmunosupresión celular localizada del conducto biliar", "Preservación del flujo libre de bilis extrahepática"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la presencia de stents es un factor predisponente mayor para la colonización ascendente y bacteriemia recurrente. De acuerdo a la GPC, dado que el stent biliar endoscópico se mantiene permeable y evita la estasis de líquido de la vía principal, el paciente desarrolla sepsis biliar sin acumular ictericia al no haber aumento de la presión biliar de reflujo.<br><br>Perla Quirúrgica: \"Los pacientes con endoprótesis internas corren un riesgo especialmente alto de colangitis, aunque rara vez presentan ictericia, ya que una endoprótesis permeable evitará la obstrucción del flujo biliar.\"<br><br>Análisis de Distractores: La opción A es falsa pues la bilis está altamente colonizada por bacilos Gram-negativos en estos pacientes. La opción B es incorrecta porque el aclaramiento hepatocelular de la hemoglobina rota prosigue normal durante el proceso séptico agudo. La opción C es falsa pues la presencia del cuerpo extraño genera inflamación crónica sin inhibición biliar inmune.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Manifestaciones clínicas de la colangitis, Página 25." 
+    },
+    {
+        id: 34, 
+        question: "En Íleo Biliar, ¿cuál es el sitio anatómico de impactación del cálculo que define de manera específica al Síndrome de Bouveret?", 
+        options: ["Confluencia de conductos hepáticos", "Píloro o duodeno proximal", "Confluencia ileocecal distal", "Ángulo de Treitz yeyunal"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, los cálculos biliares masivos erosionan el fondo de la vesícula biliar hacia la pared intestinal por fístula colecistoduodenal. De acuerdo a la GPC, si el lito de gran tamaño se aloja y obstruye el píloro o la porción proximal del duodeno, genera un cuadro oclusivo alto gástrico denominado Síndrome de Bouveret.<br><br>Perla Quirúrgica: \"Los cálculos proximales pueden impactarse en el píloro o en el duodeno proximal, provocando una obstrucción del vaciamiento gástrico (síndrome de Bouveret).\"<br><br>Análisis de Distractores: La opción A indica el sitio de impactación de cálculos del conducto biliar común en la patogenia mecánica del Síndrome de Mirizzi. La opción C es la localización clásica más común del íleo biliar ordinario de intestino delgado distal. La opción D es un sitio infrecuente de obstrucción que no define morfológicamente el síndrome gástrico alto de Bouveret.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Íleo biliar, Página 26." 
+    },
+    {
+        id: 35, 
+        question: "En los Quistes de Colédoco, ¿cuántas veces es superior el riesgo de desarrollar colangiocarcinoma en estos pacientes en comparación con la población general?", 
+        options: ["20 a 30 veces", "2 a 5 veces", "10 a 15 veces", "80 a 100 veces"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la dilatación quística biliar intra y extrahepática congénita condiciona reflujo crónico de enzimas y estasis metabólica. De acuerdo a la GPC, esta inflamación mutagénica crónica eleva el riesgo relativo de presentar colangiocarcinoma entre 20 y 30 veces por encima de los controles de la población general de igual edad.<br><br>Perla Quirúrgica: \"El riesgo de colangiocarcinoma en pacientes con quistes de colédoco es de 20 a 30 veces mayor que en la población general y varía con la edad del paciente y el tipo de quiste.\"<br><br>Análisis de Distractores: La opción B representa un aumento de riesgo relativo demasiado bajo para la severidad oncológica biliar de la anomalía ductal. La opción C es una cifra subestimada que no se corresponde con los rangos acumulados epidemiológicos descritos en la patología quística. La opción D excede los límites diagnósticos promedio del riesgo carcinogénico reportado en la literatura de referencia.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Quistes de colédoco, Página 34." 
+    },
+    {
+        id: 36, 
+        question: "En los Quistes de Colédoco, ¿cuál es el subtipo anatómico que se asocia con el menor riesgo de degeneración maligna (~2%)?", 
+        options: ["Tipo I", "Tipo III", "Tipo IVa", "Tipo V"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, los quistes se clasifican en cinco tipos que alteran el árbol extrahepático o intrahepático. De acuerdo a la GPC, el quiste de colédoco Tipo III (choledococele) se localiza en la pared intraduodenal y se asocia con una tasa de riesgo oncológico biliar mínima de apenas el 2%, por lo cual se prefiere la esfinterotomía con vigilancia y biopsia endoscópica de control.<br><br>Perla Quirúrgica: \"En el tipo III (coledococeles), que tiene el riesgo de malignidad más bajo de todos los quistes de colédoco (~2%), generalmente se recomienda la esfinterotomía y la vigilancia sobre la escisión formal.\"<br><br>Análisis de Distractores: La opción A es una dilatación fusiforme extrahepática biliar con riesgo de colangiocarcinoma significativamente elevado que exige resección hepática y biliar. La opción C representa múltiples quistes con compromiso intrahepático que asocian isquemia e infecciones crónicas de alta degeneración maligna. La opción D es la Enfermedad de Caroli caracterizada por quistes intrahepáticos generalizados con alto potencial de cirrosis biliar secundaria y colangiocarcinoma.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Tratamiento quirúrgico de los quistes, Página 34." 
+    },
+    {
+        id: 37, 
+        question: "En Colangitis Esclerosante Primaria, ¿cuál es el hallazgo morfológico en la colangiopancreatografía retrógrada endoscópica que confirma de forma definitiva el diagnóstico?", 
+        options: ["Dilatación quística segmentaria aislada", "Estenosis biliar en \"cáscara de huevo\"", "Patrón de arrosariamiento o cuentas (beading)", "Fístula bilioentérica perihilar espontánea"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, en fases tempranas, la biopsia hepática en cuña puede mostrar solo inflamación periductal leve no concluyente. De acuerdo a la GPC, el diagnóstico de confirmación absoluto de colangitis esclerosante primaria se establece mediante colangiografía contrastada al visualizar dilataciones y estenosis alternas difusas intra y extrahepáticas en cuentas de rosario (\"arrosariamiento\" o beading).<br><br>Perla Quirúrgica: \"Aunque la presentación clínica y los resultados de laboratorio pueden sugerir la CEP, la CPRE que revela múltiples dilataciones y estenosis (arrosariamiento) del árbol biliar intra y extrahepático confirma el diagnóstico.\"<br><br>Análisis de Distractores: La opción A es la manifestación anatómica de anomalías congénitas quísticas de colédoco o de obstrucción focal tumoral. La opción B representa la calcificación crónica de la pared de la vesícula biliar (vesícula en porcelana), no de la vía común. La opción D es una complicación traumática o ulcerosa grave de cálculos impactados o neoplasias invasoras, ajena a la CEP.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Diagnóstico de CEP, Página 34." 
+    },
+    {
+        id: 38, 
+        question: "En Colangitis Esclerosante Primaria, ¿cuál es el porcentaje de los pacientes que desarrollarán colangiocarcinoma de forma secundaria a lo largo de la evolución natural de la enfermedad?", 
+        options: ["1% a 2%", "10% a 15%", "40% a 50%", ">80%"], 
+        answer: 1, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la colangitis esclerosante primaria cursa con daño inflamatorio crónico progresivo sobre los colangiocitos intra y extrahepáticos. De acuerdo a la GPC, esta irritación inmunomediada masiva propicia que entre el 10% y el 15% de estos pacientes evolucionen de manera irreversible hacia un colangiocarcinoma ductal primario segmentario.<br><br>Perla Quirúrgica: \"De los pacientes con colangitis esclerosante, del 10% al 15% desarrollarán colangiocarcinoma...\"<br><br>Análisis de Distractores: La opción A representa una tasa de prevalencia oncológica muy baja para el curso destructivo de esta colangiopatía autoinmune. La opción C es un porcentaje excesivamente alto que no refleja la incidencia real acumulada documentada de transformación neoplásica. La opción D es una incidencia errónea no correlacionada con los reportes de sobrevida o de requerimiento de trasplante hepático ortotópico por CEP.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Pronóstico de CEP, Página 34." 
+    },
+    {
+        id: 39, 
+        question: "En Carcinoma de Vesícula Biliar, ¿cuál es el espesor mínimo de la pared vesicular medido por ultrasonido transabdominal asociado a irregularidad luminal que debe despertar sospecha de malignidad?", 
+        options: [">1 mm", ">2 mm", ">5 mm", ">3 mm"], 
+        answer: 3, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, el cáncer de vesícula biliar suele ser diagnosticado de forma tardía debido a que simula un cuadro de colecistitis crónica litiásica simple. De acuerdo a la GPC, el estudio ecográfico es altamente sensible si documenta una pared de vesícula biliar irregular o nodular con un espesor patológico superior a 3 mm con hipervascularidad al doppler color.<br><br>Perla Quirúrgica: \"La ecografía a menudo revela una pared de la vesícula biliar engrosada e irregular (>3 mm) con hipervascularidad o una masa que reemplaza la vesícula biliar.\"<br><br>Análisis de Distractores: La opción A es el espesor ecográfico normal, plano y fisiológico de la mucosa vesicular del adulto sano en ayuno. La opción B representa un espesor considerado normal y biliar, sin datos de sospecha inflamatoria o neoplásica maligna incipiente. La opción C es un rango que se correlaciona con edema tisular agudo e hiperemia reactiva secundaria a colecistitis aguda o insuficiencia cardíaca, no el límite de sospecha tumoral inicial.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Diagnóstico de cáncer vesicular, Página 41." 
+    },
+    {
+        id: 40, 
+        question: "En el diagnóstico de Colangiocarcinoma, ¿cuál es el nivel sérico de corte del marcador tumoral CA 19-9 que confiere una especificidad del 98%?", 
+        options: [">37 U/mL", ">100 U/mL", ">129 U/mL", ">500 U/mL"], 
+        answer: 2, 
+        justification: "Justificación: De acuerdo al libro de Schwartz Principios de Cirugía, la especificidad diagnóstica de los marcadores tradicionales como CA 125 o CEA es sumamente limitada en neoplasias biliares. De acuerdo a la GPC, el CA 19-9 destaca como herramienta de seguimiento, documentando que valores superiores a 129 U/mL aseguran una especificidad final para colangiocarcinoma del 98%.<br><br>Perla Quirúrgica: \"El marcador tumoral más comúnmente utilizado para ayudar en el diagnóstico de colangiocarcinoma es el CA 19-9, que tiene una sensibilidad de 79% y una especificidad de 98% si el valor sérico es >129 U/mL.\"<br><br>Análisis de Distractores: La opción A es el límite normal de corte basal estándar del antígeno glucoproteico sérico en sujetos sanos sin colestasis. La opción B es una cifra que se eleva de manera inespecífica en patología biliar inflamatoria benigna obstructiva como coledocolitiasis. La opción D indica sospecha de tumor pancreático irresecable avanzado o metástasis masiva, pero no el punto de corte biliar del 98% de especificidad.", 
+        source: "Schwartz 11ª edición, Capítulo 32: Tumores biliares malignos, Página 46." 
+    }
+
+
+
+
+        ];
+
+        // ==========================================
+        // ==========================================
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('gyoALastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('gyoAProgress');
+                localStorage.removeItem('gyoALastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-pink-500 shadow-md z-10 border-pink-500 dark:border-pink-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-pink-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-rose-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! UMAE 25 - 2026" : "R4 - UMAE 25 - 2026";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "Gallbladder and the Extrahepatic Biliary System, Schwartz 11 edición";
+            let descText = isAllCompleted 
+                ? "" 
+                : "Gallbladder and the Extrahepatic Biliary System, Schwartz 11 edición";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="BS06308GYOE.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-pink-100 dark:border-pink-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-pink-50 has-[:checked]:border-pink-400 dark:has-[:checked]:bg-pink-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-pink-600 focus:ring-pink-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-600 dark:hover:bg-pink-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('gyoAProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('gyoALastQId', currentQuestionId);
+                else localStorage.removeItem('gyoALastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('gyoAProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB26PT8kuB-0fxyUYgGk51yC1rAsW0dYj0",
+        authDomain: "enarm-lite.firebaseapp.com",
+        projectId: "enarm-lite",
+        storageBucket: "enarm-lite.firebasestorage.app",
+        messagingSenderId: "767032952477",
+        appId: "1:767032952477:web:84347320ed3d376f7e7674",
+        measurementId: "G-PVR3RBVNSV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    //document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "usuarios_autorizados", user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            
+            if(userDocSnap.exists()) {
+                document.body.style.opacity = '1';
+            } else {
+                //window.location.href = "index.html"; 
+            }
+        } else {
+            //window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>
