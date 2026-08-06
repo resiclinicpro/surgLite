@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">UMAE</span>
+                    <span class="logo-Lite text-sm">25<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // =========================================================
+        const questionsData = [
+
+    // BLOQUE 1: Anatomía, Fisiología y Patología del Sistema Biliar / Apéndice (1-20)
+    {
+        id: 1, 
+        question: "En Epidemiología, ¿cuál es la incidencia acumulada de apendicitis aguda a lo largo de la vida en hombres de acuerdo a la GPC?", 
+        options: ["8.6%", "6.7%", "12.1%", "5.3%"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al libro de Principios de Cirugía de Schwartz, la apendicitis aguda es una de las emergencias abdominales más comunes a nivel mundial. Presenta diferencias epidemiológicas claras por sexo; tiene una incidencia acumulada a lo largo de la vida del 8.6% en hombres y de 6.7% en mujeres. La mayor tasa de presentación ocurre en la segunda y tercera décadas de la vida.<br><br>Perla Quirúrgica: La inflamación del apéndice es un problema importante de salud pública con una incidencia a lo largo de la vida del 8.6% en hombres y del 6.7% en mujeres, con la mayor incidencia en la segunda y tercera década de la vida.<br><br>Análisis de Distractores: La opción B representa la incidencia acumulada a lo largo de la vida en el sexo femenino, no en el masculino. Las opciones C y D son porcentajes ficticios no descritos en la epidemiología clásica de la GPC.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 1." 
+    },
+    {
+        id: 2, 
+        question: "En Embriología, ¿en qué semana de la gestación aparece por primera vez el apéndice cecal de acuerdo a la GPC?", 
+        options: ["Semana 8", "Semana 4", "Semana 12", "Semana 6"], 
+        answer: 0, 
+        justification: "Justificación: El apéndice cecal se origina del intestino medio embrionario, junto con el íleon y el colon. De acuerdo al libro de Principios de Cirugía de Schwartz, el esbozo apendicular aparece por primera vez a la semana 8 de gestación. Conforme ocurre la rotación medial del intestino, el ciego se fija en el cuadrante inferior derecho, determinando la ubicación anatómica final del órgano.<br><br>Perla Quirúrgica: El apéndice, junto con el íleon y el colon, se desarrolla a partir del intestino medio y aparece por primera vez a las 8 semanas de gestación.<br><br>Análisis de Distractores: La opción B es incorrecta pues en la semana 4 solo se ha delimitado el tubo intestinal primitivo. La opción C es falsa, a la semana 12 ya se completó el retorno del asa herniada. La opción D corresponde al inicio de la herniación fisiológica del intestino medio.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 1." 
+    },
+    {
+        id: 3, 
+        question: "En Anatomía, ¿cuál es la longitud promedio habitual del apéndice cecal en el paciente adulto de acuerdo a la GPC?", 
+        options: ["6 a 9 cm", "2 a 5 cm", "10 a 15 cm", "12 a 18 cm"], 
+        answer: 0, 
+        justification: "Justificación: El apéndice cecal es un verdadero divertículo del ciego que posee todas las capas histológicas colónicas. De acuerdo al libro de Principios de Cirugía de Schwartz, el apéndice cecal adulto normal mide en promedio de 6 a 9 cm de longitud.<br><br>Perla Quirúrgica: El apéndice promedio mide de 6 a 9 cm y deriva su suministro de sangre de la rama apendicular de la arteria ileocólica.<br><br>Análisis de Distractores: La opción B corresponde a un órgano anormalmente hipoplásico o corto. Las opciones C y D representan longitudes que exceden el rango promedio del apéndice, clasificándose como dolicoapéndices.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 1." 
+    },
+    {
+        id: 4, 
+        question: "En Anatomía, ¿de qué rama arterial deriva directamente el suministro vascular del apéndice cecal de acuerdo a la GPC?", 
+        options: ["Arteria ileocólica", "Arteria cólica derecha", "Arteria mesentérica inferior", "Arteria cólica media"], 
+        answer: 0, 
+        justification: "Justificación: La irrigación arterial apendicular corre a cargo de la arteria apendicular. De acuerdo al libro de Principios de Cirugía de Schwartz, esta arteria es una rama directa de la arteria ileocólica, la cual proviene de la arteria mesentérica superior (eje del intestino medio).<br><br>Perla Quirúrgica: El apéndice promedio mide de 6 a 9 cm y deriva su suministro de sangre de la rama apendicular de la arteria ileocólica.<br><br>Análisis de Distractores: La opción B irriga el colon ascendente y no emite la arteria apendicular. La opción C irriga el colon izquierdo, derivado del intestino posterior. La opción D irriga el colon transverso y carece de relación anatómica directa con el apéndice.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 1." 
+    },
+    {
+        id: 5, 
+        question: "En Anatomía, ¿cuál es el porcentaje de localización retroperitoneal que puede presentar el apéndice cecal de acuerdo a la GPC?", 
+        options: ["7%", "30%", "65%", "12%"], 
+        answer: 0, 
+        justification: "Justificación: El apéndice es un órgano con múltiples variaciones de posición debido a la fijación incompleta del ciego. De acuerdo al libro de Principios de Cirugía de Schwartz, aunque lo más frecuente es que sea intraperitoneal y retrocecal, presenta una localización pélvica en el 30% de los casos y una localización retroperitoneal fija en el 7% de los pacientes.<br><br>Perla Quirúrgica: El apéndice es intraperitoneal y retrocecal en ubicación, pero puede ser pélvico (30%) y retroperitoneal (7%).<br><br>Análisis de Distractores: La opción B es la frecuencia de localización pélvica. La opción C es un valor estadístico que algunas series clásicas atribuyen a la posición retrocecal libre, pero no a la retroperitoneal estricta. La opción D representa un distractor plausible sin correlación con la evidencia del libro de texto.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 1." 
+    },
+    {
+        id: 6, 
+        question: "En Inmunología, ¿cuál es el mecanismo inmunológico que explica la protección de una apendicectomía temprana contra el desarrollo de Colitis Ulcerosa de acuerdo a la GPC?", 
+        options: ["Liberación de dímeros de IgA y respuesta Th2 mediada por IL-13", "Supresión de células secretoras de IgG y respuesta Th1", "Aumento local de IL-10 y respuesta de memoria Th17", "Producción sistémica de dímeros de IgM y respuesta por IL-4"], 
+        answer: 0, 
+        justification: "Justificación: El apéndice participa en la maduración del tejido linfoide asociado al intestino (GALT). De acuerdo al libro de Principios de Cirugía de Schwartz, se ha propuesto que la extirpación apendicular temprana altera favorablemente la inmunidad mucosa intestinal contra la colitis ulcerosa. Este efecto protector se asocia a la liberación de formas diméricas de IgA de las células plasmáticas B y una respuesta inmunitaria regulada tipo Th2, mediada por la citocina IL-13 de células T asesinas naturales.<br><br>Perla Quirúrgica: El efecto protector de una apendicectomía temprana contra el desarrollo de colitis ulcerosa se ha propuesto que está mecánicamente ligado a la liberación de formas diméricas de IgA de las células plasmáticas B y la respuesta Th2 mediada por células T asesinas naturales productoras de IL-13.<br><br>Análisis de Distractores: La opción B es incorrecta ya que la interrelación con el apéndice no se explica por la supresión de IgG ni respuesta Th1. Las opciones C y D involucran citocinas y mediadores (IL-10, Th17, IgM) ajenos a la vía fisiopatológica apéndice-colitis ulcerosa descrita en Schwartz.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Páginas 1-2." 
+    },
+    {
+        id: 7, 
+        question: "En Fisiopatología, ¿cuál es la causa principal de obstrucción de la luz apendicular en la población pediátrica de acuerdo a la GPC?", 
+        options: ["Hiperplasia linfoide", "Coprolitos o fecalitos", "Parásitos intestinales", "Fibrosis de la pared"], 
+        answer: 0, 
+        justification: "Justificación: La fisiopatología de la apendicitis aguda inicia con la oclusión del lumen apendicular. De acuerdo al libro de Principios de Cirugía de Schwartz, la etiología de la obstrucción varía según el grupo etario; la hiperplasia linfoide submucosa es la causa principal en pacientes pediátricos, mientras que los fecalitos dominan en los adultos.<br><br>Perla Quirúrgica: La etiología de la apendicitis se debe quizás a la obstrucción luminal que ocurre como resultado de la hiperplasia linfoide en poblaciones pediátricas; en adultos, puede deberse a fecalitos, fibrosis, cuerpos extraños o neoplasia.<br><br>Análisis de Distractores: La opción B constituye la causa más común de obstrucción luminal en adultos, no en niños. Las opciones C y D son causas descritas con menor frecuencia, inapropiadas como respuesta principal en pediatría.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 1." 
+    },
+    {
+        id: 8, 
+        question: "En Microbiología, ¿cuáles son las bacterias aerobia y anaerobia más comúnmente aisladas en los casos de Apendicitis Aguda perforada de acuerdo a la GPC?", 
+        options: ["Escherichia coli y Bacteroides fragilis", "Pseudomonas aeruginosa y Clostridium perfringens", "Klebsiella pneumoniae e Fusobacterium nucleatum", "Streptococcus viridans y Peptostreptococcus micros"], 
+        answer: 0, 
+        justification: "Justificación: El estasis luminal favorece el sobrecrecimiento bacteriano rápido. De acuerdo al libro de Principios de Cirugía de Schwartz, conforme la isquemia progresa a gangrena y perforación, se aísla una flora bacteriana mixta. Los microorganismos más comunes aislados de forma consistente en procesos perforados son Escherichia coli (aerobio) y Bacteroides fragilis (anaerobio).<br><br>Perla Quirúrgica: Escherichia coli y Bacteroides fragilis son las bacterias aeróbicas y anaeróbicas más comúnmente aisladas en la apendicitis perforada.<br><br>Análisis de Distractores: Las opciones B, C y D representan bacterias pertenecientes a la microbiota gastrointestinal o patógenos que pueden colonizar la cavidad abdominal en infecciones polimicrobianas, pero son superados en frecuencia de aislamiento por la combinación de E. coli y B. fragilis.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 2." 
+    },
+    {
+        id: 9, 
+        question: "En Diagnóstico Clínico, ¿cuál es el epónimo del signo físico caracterizado por dolor en el cuadrante inferior derecho inducido por la rotación interna pasiva de la cadera derecha flexionada de acuerdo a la GPC?", 
+        options: ["Signo del obturador", "Signo de Rovsing", "Signo del psoas", "Signo de Dunphy"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al libro de Principios de Cirugía de Schwartz, el examen físico minucioso permite sugerir la ubicación anatómica del apéndice. El signo del obturador (dolor a la rotación interna pasiva de la cadera derecha) denota un apéndice localizado en la región pélvica, debido al contacto inflamatorio con el músculo obturador interno.<br><br>Perla Quirúrgica: Ciertos signos físicos con sus respectivos epónimos pueden ser útiles para discernir la ubicación del apéndice: Rovsing, dolor en el cuadrante inferior derecho después de liberar presión en el cuadrante inferior izquierdo; Dunphy, dolor al toser (retrocecal); obturador, dolor con la rotación interna de la cadera (pélvico); iliopsoas, dolor con la flexión/extensión de la cadera (retrocecal).<br><br>Análisis de Distractores: La opción B se caracteriza por dolor en fosa iliaca derecha al ejercer presión o descompresión en fosa iliaca izquierda. La opción C consiste en dolor en fosa iliaca derecha al realizar la extensión pasiva o flexión activa de la cadera contra resistencia. La opción D es el dolor agudo en fosa iliaca derecha desencadenado específicamente por la tos.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 3." 
+    },
+    {
+        id: 10, 
+        question: "En Diagnóstico por Imagen, ¿cuáles son los valores promedio de sensibilidad y especificidad reportados para la tomografía computarizada contrastada en Apendicitis Aguda de acuerdo a la GPC?", 
+        options: ["Sensibilidad de 0.96 y especificidad de 0.96", "Sensibilidad de 0.85 y especificidad de 0.90", "Sensibilidad de 0.94 y especificidad de 0.81", "Sensibilidad de 0.91 y especificidad de 0.83"], 
+        answer: 0, 
+        justification: "Justificación: De acuerdo al libro de Principios de Cirugía de Schwartz, la tomografía computarizada (TC) contrastada es la modalidad de elección para resolver dilemas diagnósticos por su alto rendimiento. Presenta una sensibilidad de 0.96 (IC del 95%: 0.95-0.97) y una especificidad de 0.96 (IC del 95%: 0.93-0.97).<br><br>Perla Quirúrgica: Una tomografía computarizada con contraste tiene una sensibilidad de 0.96 (intervalo de confianza del 95% [IC] 0.95–0.97) y una especificidad de 0.96 (IC 95% 0.93–0.97) en el diagnóstico de apendicitis aguda.<br><br>Análisis de Distractores: La opción B corresponde a valores del ultrasonido con compresión graduada, operador dependiente. Las opciones C y D representan datos de sensibilidad y especificidad de ultrasonido reportados en metaanálisis específicos citados en el texto, incorrectos para TC.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 3." 
+    },
+    {
+        id: 11, 
+        question: "En Diagnóstico por Imagen, ¿cuál es el diámetro apendicular ultrasonográfico que, al correlacionarse con una pared fácilmente compresible, generalmente descarta el diagnóstico de Apendicitis Aguda de acuerdo a la GPC?", 
+        options: ["< 5 mm", "≥ 6 mm", "≥ 8 mm", "< 7 mm"], 
+        answer: 0, 
+        justification: "Justificación: El ultrasonido evalúa el diámetro del apéndice y su compresibilidad. De acuerdo al libro de Principios de Cirugía de Schwartz, un apéndice con un diámetro anteroposterior menor a 5 mm (< 5 mm) y que sea fácilmente compresible descarta de forma confiable la patología obstructiva-inflamatoria.<br><br>Perla Quirúrgica: La ultrasonografía de compresión graduada se utiliza para identificar el diámetro anteroposterior del apéndice. Un apéndice fácilmente compresible de <5 mm de diámetro generalmente descarta apendicitis.<br><br>Análisis de Distractores: La opción B es el umbral para sospechar y diagnosticar apendicitis aguda si se asocia a dolor a la compresión e hiperemia. La opción C es un diámetro patológico francamente positivo para apendicitis. La opción D es un distractor plausible, pero el libro de texto sitúa el límite exacto de descarte con compresibilidad en menos de 5 mm.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 4." 
+    },
+    {
+        id: 12, 
+        question: "En Tratamiento de Apendicitis, ¿cuál es la tasa de pacientes sometidos a manejo conservador no quirúrgico por Apendicitis Aguda no complicada que requiere apendicectomía quirúrgica a 1 año de acuerdo a la GPC?", 
+        options: ["26.5%", "10.2%", "38.4%", "15.0%"], 
+        answer: 0, 
+        justification: "Justificación: El manejo exclusivamente médico de la apendicitis no complicada ha sido evaluado en ensayos clínicos recientes. De acuerdo al libro de Principios de Cirugía de Schwartz, aunque los pacientes con apendicitis aguda no complicada pueden ser tratados inicialmente con antibioterapia, el metaanálisis de ensayos clínicos aleatorizados demuestra que el 26.5% de los pacientes en el grupo conservador requiere una apendicectomía dentro del primer año de seguimiento debido a recurrencia.<br><br>Perla Quirúrgica: El metaanálisis de los datos publicados encontró que el 26.5% de los pacientes en el grupo no quirúrgico requirieron una apendicectomía dentro de 1 año.<br><br>Análisis de Distractores: La opción B representa la tasa aproximada de fracaso terapéutico agudo intrahospitalario, no la tasa de recurrencia acumulada al año. Las opciones C y D son distractores numéricos que no representan las cifras de recurrencia acumulada a 12 meses reportadas en la literatura de referencia.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 6." 
+    },
+    {
+        id: 13, 
+        question: "En Tratamiento Quirúrgico, ¿cuál es el tiempo de retraso de la cirugía considerado aceptable y seguro en pacientes con Apendicitis Aguda no complicada y corta evolución de síntomas de acuerdo a la GPC?", 
+        options: ["< 12 horas", "< 24 horas", "< 6 horas", "< 48 horas"], 
+        answer: 0, 
+        justification: "Justificación: La apendicectomía inmediata se ha reevaluado en pacientes estables que reciben antibioterapia al ingreso. De acuerdo al libro de Principios de Cirugía de Schwartz, un retraso quirúrgico menor a 12 horas (< 12 horas) es clínicamente seguro en pacientes con apendicitis no complicada con evolución sintomática breve (menos de 48 horas de inicio), sin incrementar la tasa de perforación.<br><br>Perla Quirúrgica: El retraso de la cirugía por menos de 12 horas es aceptable en pacientes con corta duración de los síntomas (menos de 48 horas) y en apendicitis no perforada y no gangrenosa.<br><br>Análisis de Distractores: La opción B representa un retraso prolongado que puede elevar las tasas de perforación libre o peritonitis localizada. La opción C es el enfoque de emergencia clásica que ya no se considera imperativo en el paciente hemodinámicamente estable. La opción D es el límite temporal de los síntomas previos al ingreso para considerarla apendicitis no complicada.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 6." 
+    },
+    {
+        id: 14, 
+        question: "En Tratamiento Integral, ¿cuál es el abordaje inicial de elección para un paciente clínicamente estable con Apendicitis Aguda complicada de larga evolución asociada a plastrón o absceso apendicular delimitado de acuerdo a la GPC?", 
+        options: ["Drenaje percutáneo guiado por imagen y antibióticos intravenosos", "Apendicectomía laparoscópica de urgencia inmediata", "Laparotomía exploradora urgente con lavado peritoneal", "Hemicolectomía derecha urgente con anastomosis primaria"], 
+        answer: 0, 
+        justification: "Justificación: La cirugía inmediata en plastrones densos se asocia a alta morbilidad. De acuerdo al libro de Principios de Cirugía de Schwartz, el abordaje inicial óptimo para el paciente estable con un absceso apendicular delimitado consiste en antibioterapia intravenosa combinada con drenaje percutáneo guiado por imagen (TC o US), lo cual tiene éxito en el 79% de los casos.<br><br>Perla Quirúrgica: Los pacientes con perforación de larga evolución se tratan mejor con un drenaje percutáneo adecuado guiado por imagen. Esta estrategia tiene éxito en el 79% de los pacientes que logran la resolución completa.<br><br>Análisis de Distractores: La opción B triplica la tasa de abscesos residuales y riesgo de fístula enterocutánea por inflamación de asas adyacentes. La opción C se asocia con excesiva morbilidad y pérdida de la integridad de la pared abdominal. La opción D es una resección oncológica desproporcionada como primera elección para plastrones infecciosos benignos estables.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Páginas 6-7." 
+    },
+    {
+        id: 15, 
+        question: "En Tratamiento Farmacológico, ¿cuál es uno de los esquemas antibióticos profilácticos preoperatorios recomendados de primera línea en un paciente con Apendicitis Aguda no complicada de acuerdo a la GPC?", 
+        options: ["Cefoxitina en monoterapia", "Ceftriaxona más metronidazol", "Ampicilina más clindamicina", "Imipenem en monoterapia"], 
+        answer: 0, 
+        justification: "Justificación: La antibioterapia preoperatoria profiláctica debe ofrecer cobertura contra gramnegativos y anaerobios. De acuerdo al libro de Principios de Cirugía de Schwartz, la administración de cefoxitina en monoterapia, ampicilina/sulbactam, o cefazolina combinada con metronidazol de 30 a 60 minutos antes de la incisión cutánea es el estándar profiláctico de primera línea en casos no complicados.<br><br>Perla Quirúrgica: Los antibióticos preoperatorios deben administrarse al menos 30 a 60 minutos antes de la incisión cutánea. La elección de antibióticos incluye cefoxitina, ampicilina/sulbactam y cefazolina más metronidazol para la apendicitis no complicada.<br><br>Análisis de Distractores: La opción B es una excelente opción terapéutica, pero se reserva para casos complicados o perforados, no como profilaxis simple preoperatoria de primera elección en Schwartz. La opción C resulta en una cobertura deficiente para bacilos gramnegativos entéricos anaerobios. La opción D es un carbapenémico reservado para infecciones intraabdominales refractarias o shock séptico.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 7." 
+    },
+    {
+        id: 16, 
+        question: "En Tratamiento Farmacológico, ¿cuál es la duración recomendada de la antibioterapia postoperatoria para pacientes con Apendicitis Aguda perforada en quienes se logró un control quirúrgico completo de la fuente infecciosa de acuerdo a la GPC?", 
+        options: ["< 4 días", "7 a 10 días", "10 a 14 días", "1 a 2 días"], 
+        answer: 0, 
+        justification: "Justificación: Basado en el ensayo clínico STOP-IT, el uso de antibióticos posterior al control de la fuente infecciosa no disminuye las complicaciones a largo plazo. De acuerdo al libro de Principios de Cirugía de Schwartz, para pacientes con apendicitis complicada perforada con control quirúrgico óptimo del foco infeccioso (fuente controlada), la antibioterapia postoperatoria debe limitarse a menos de 4 días (< 4 días).<br><br>Perla Quirúrgica: En pacientes con apendicitis perforada sometidos a intervención quirúrgica, los antibióticos preoperatorios son necesarios para cubrir bacterias gramnegativas y anaerobios... La duración de los antibióticos postoperatorios es generalmente de menos de 4 días una vez que se ha logrado un control completo de la fuente (ensayo STOP-IT).<br><br>Análisis de Distractores: Las opciones B y C son esquemas postoperatorios prolongados innecesarios que elevan el riesgo de resistencia bacteriana y sobreinfección mucosa sin proveer beneficio clínico. La opción D es insuficiente para resolver procesos con peritonitis localizada o gangrena documentada bajo los estándares tradicionales.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 7." 
+    },
+    {
+        id: 17, 
+        question: "En el abordaje quirúrgico laparoscópico de Apendicitis Aguda en pacientes embarazadas, ¿cuál es la presión de insuflación intraabdominal recomendada de acuerdo a la GPC para disminuir el riesgo de desencadenar trabajo de parto prematuro?", 
+        options: ["10 a 12 mmHg", "14 a 15 mmHg", "8 a 9 mmHg", "16 a 18 mmHg"], 
+        answer: 0, 
+        justification: "Justificación: El neumoperitoneo genera repercusiones hemodinámicas sobre el flujo sanguíneo uteroplacentario y el retorno venoso materno. De acuerdo al libro de Principios de Cirugía de Schwartz, el abordaje laparoscópico en la paciente embarazada requiere mantener presiones de insuflación intraabdominal bajas, idealmente entre 10 a 12 mmHg, para atenuar este riesgo y reducir la incidencia de parto pretérmino.<br><br>Perla Quirúrgica: Presiones intraabdominales más bajas (10–12 mmHg) durante la insuflación se han sugerido para reducir el parto prematuro.<br><br>Análisis de Distractores: La opción B es el nivel de insuflación habitual utilizado en adultos sanos no gestantes, pero puede comprometer la perfusión del útero en la gestante. La opción C es una presión insuficiente para garantizar una exposición visual adecuada. La opción D es una presión muy elevada y peligrosa, asociada a hipoperfusión fetal y acidosis respiratoria materna.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 10." 
+    },
+    {
+        id: 18, 
+        question: "En Escenarios Especiales, ¿cuál es el puntaje mínimo de la Escala de Apendicitis Pediátrica (PAS) que indica una alta probabilidad (78% a 96%) de cursar con Apendicitis Aguda de acuerdo a la GPC?", 
+        options: ["≥ 7 puntos", "≥ 5 puntos", "≥ 9 puntos", "≥ 6 puntos"], 
+        answer: 0, 
+        justification: "Justificación: La Escala de Apendicitis Pediátrica (PAS) facilita el tamizaje y la detección oportuna en niños. De acuerdo al libro de Principios de Cirugía de Schwartz, esta escala califica parámetros clínicos sobre un puntaje total de 10; un resultado de 7 o mayor (≥ 7 puntos) clasifica al paciente con una alta probabilidad diagnóstica (78% al 96%) de apendicitis aguda.<br><br>Perla Quirúrgica: La Escala de Apendicitis Pediátrica se puntúa sobre 10 puntos, con peso máximo (2 puntos cada uno) para la sensibilidad en cuadrante inferior derecho y el dolor con la tos, percusión o salto. Un puntaje de 7 o mayor indica que el paciente tiene una alta probabilidad de tener apendicitis (78%–96% por ciento).<br><br>Análisis de Distractores: Las opciones B y D corresponden a zonas de riesgo intermedio o moderado (zona gris), donde se recomienda observación clínica estrecha o estudios de imagen complementarios. La opción C es un valor de certeza diagnóstica casi absoluto, pero el límite a partir del cual se reporta formalmente la alta probabilidad en Schwartz es de 7 puntos.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Páginas 9-10." 
+    },
+    {
+        id: 19, 
+        question: "En Complicaciones Posquirúrgicas, ¿cuál es la longitud mínima del muñón apendicular residual que se asocia con el desarrollo de Apendicitis del Muñón de acuerdo a la GPC?", 
+        options: ["> 0.5 cm", "> 1.0 cm", "> 0.2 cm", "> 1.5 cm"], 
+        answer: 0, 
+        justification: "Justificación: La apendicitis del muñón es una complicación rara secundaria a la extirpación incompleta del apéndice. De acuerdo al libro de Principios de Cirugía de Schwartz, la persistencia de un muñón apendicular residual con una longitud mayor a 0.5 cm (> 0.5 cm) favorece la retención de moco, formación de fecalitos y obstrucción subsecuente, desencadenando un cuadro idéntico de apendicitis aguda.<br><br>Perla Quirúrgica: Una complicación poco común después de la cirugía es el desarrollo de apendicitis en un muñón apendiceal incompletamente extirpado (longitud del muñón mayor de 0.5 cm). El manejo óptimo requiere la reextirpación de la base apendiceal.<br><br>Análisis de Distractores: Las opciones B, C y D son longitudes inexactas de muñón residual; no representan el umbral anatómico formalmente reportado en la literatura de Schwartz para definir el riesgo de apendicitis del muñón.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 11." 
+    },
+    {
+        id: 20, 
+        question: "En Neoplasias Apendiculares, ¿cuál es el abordaje quirúrgico definitivo de elección de acuerdo a la GPC al documentar de forma incidental un tumor neuroendocrino (GEP-NET) del apéndice con un diámetro de 2 cm o mayor?", 
+        options: ["Hemicolectomía derecha formal", "Apendicectomía con márgenes negativos únicamente", "Resección segmentaria del ciego (cecectomía)", "Quimioterapia sistémica adyuvante con mitomicina"], 
+        answer: 0, 
+        justification: "Justificación: Los tumores neuroendocrinos apendiculares se tratan quirúrgicamente de acuerdo con su diámetro. De acuerdo al libro de Principios de Cirugía de Schwartz, los tumores menores de 1 cm con márgenes negativos se resuelven con apendicectomía simple; no obstante, aquellos con un tamaño de 2 cm o mayor presentan un riesgo elevado de invasión ganglionar en el pedículo ileocólico, por lo que requieren de forma absoluta una hemicolectomía derecha formal para control oncológico.<br><br>Perla Quirúrgica: Para lesiones que son menores de 1 cm (95% de todas las lesiones), una apendicectomía con margen negativo es adecuada. Para tumores de 2 cm o más grandes, se recomienda una hemicolectomía derecha.<br><br>Análisis de Distractores: La opción B es el tratamiento definitivo solo en tumores menores de 1 cm de diámetro. La opción C no realiza la linfadenectomía requerida a lo largo del pedículo ileocólico. La opción D está reservada para pseudomixoma peritoneal derivado de tumores mucinosos diseminados, no para tumores neuroendocrinos localizados.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 13." 
+    },
+    {
+        id: 21, 
+        question: "En Apendicectomía, ¿cuál es la infección bacteriana oportunista cuya incidencia se ha sugerido que aumenta posterior a la extirpación del órgano de acuerdo a la GPC?", 
+        options: ["Clostridium difficile", "Salmonella enteritidis", "Campylobacter jejuni", "Escherichia coli"], 
+        answer: 0, 
+        justification: "Justificación: El apéndice cecal juega un papel importante en la conservación de la microbiota y la inmunidad mucosa asociada al intestino. De acuerdo al libro de Cirugía de Schwartz, se ha sugerido que la alteración ecológica microbiana consecutiva a la apendicectomía incrementa significativamente la susceptibilidad del hospedero a cursar con infecciones por Clostridium difficile.<br><br>Perla Quirúrgica: Se ha sugerido que la apendicectomía se asocia con un aumento de las infecciones por Clostridium difficile y un aumento de cáncer posterior (colon, esófago) como resultado de la alteración microbiana, aunque actualmente esto no está probado.<br><br>Análisis de Distractores: Las opciones B y C son patógenos invasivos que causan gastroenteritis agudas comunes, pero no se asocian con sobrecrecimiento microbiano secundario específico a la apendicectomía. La opción D es un colonizador comensal normal cuyo número y patogenicidad oportunista intraluminal no se incrementa característicamente tras la pérdida de la función inmunológica apendicular.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 1." 
+    },
+    {
+        id: 22, 
+        question: "En Apendicitis Aguda, ¿cuál es la razón de verosimilitud positiva de cursar con dolor migratorio de acuerdo a la GPC?", 
+        options: ["1.27", "1.63", "2.06", "2.86"], 
+        answer: 2, 
+        justification: "Justificación: La migración del dolor es el signo clínico clásico de mayor correlación fisiopatológica en el proceso apendicular inflamatorio. De acuerdo al libro de Cirugía de Schwartz, el dolor migratorio (del epigastrio o región periumbilical a la fosa iliaca derecha) posee una razón de verosimilitud positiva de 2.06 (IC del 95%: 1.63-2.60), consolidándose como uno de los hallazgos semiológicos con mayor poder discriminativo.<br><br>Perla Quirúrgica: La inflamación del peritoneo visceral suele progresar al peritoneo parietal, presentándose con dolor migratorio, que es un signo clásico de apendicitis (razón de verosimilitud+, 2.06 [1.63–2.60]).<br><br>Análisis de Distractores: La opción A (1.27) representa la razón de verosimilitud positiva para la anorexia. La opción B (1.63) corresponde a la razón de verosimilitud positiva para el vómito. La opción D (2.86) es la razón de verosimilitud positiva del dolor desencadenado por la percusión abdominal.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 2." 
+    },
+    {
+        id: 23, 
+        question: "En Apendicitis Aguda, ¿cuál es la razón de verosimilitud positiva para el diagnóstico de la enfermedad cuando el recuento leucocitario es igual o mayor a 15,000 células/mm3 de acuerdo a la GPC?", 
+        options: ["4.20", "7.20", "2.39", "1.97"], 
+        answer: 1, 
+        justification: "Justificación: El hemograma apoya fuertemente la sospecha diagnóstica según el nivel de leucocitosis. De acuerdo al libro de Cirugía de Schwartz, un recuento de leucocitos igual o mayor a 15,000 células/mm3 (o 15 × 10^9/L) eleva drásticamente la sospecha diagnóstica al poseer una razón de verosimilitud positiva de 7.20, asociándose comúnmente a necrosis celular o perforación apendicular.<br><br>Perla Quirúrgica: Ciertos valores de laboratorio poseen una elevada razón de verosimilitud; leucocitos ≥ 15 (10^9/L) tienen una razón de verosimilitud positiva de 7.20 (intervalo de confianza del 95%: 4.31–12.00).<br><br>Análisis de Distractores: La opción A (4.20) es la razón de verosimilitud positiva para una leucocitosis más discreta, de corte igual o mayor a 10,000 células/mm3. La opción C (2.39) es la razón de verosimilitud positiva de una proteína C reactiva mayor a 20 mg/L. La opción D (1.97) representa la razón de verosimilitud positiva para una proteína C reactiva mayor a 10 mg/L.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 3." 
+    },
+    {
+        id: 24, 
+        question: "En Apendicitis Aguda, ¿cuál es el promedio de leucocitos típicamente observado en pacientes con enfermedad en fase gangrenosa o perforada de acuerdo a la GPC?", 
+        options: ["~10,000 células/mm3", "~12,000 células/mm3", "~24,000 células/mm3", "~17,000 células/mm3"], 
+        answer: 3, 
+        justification: "Justificación: El recuento de glóbulos blancos es proporcional a la extensión de la inflamación. De acuerdo al libro de Cirugía de Schwartz, los pacientes con apendicitis aguda catarral cursan con una leucocitosis promedio de ~10,000 células/mm3; sin embargo, al progresar a compromiso isquémico con gangrena de la pared o perforación libre, el valor asciende típicamente a un promedio de ~17,000 células/mm3.<br><br>Perla Quirúrgica: Los pacientes con apendicitis usualmente tienen leucocitosis de 10,000 células/mm3, con una leucocitosis más alta asociada con apendicitis gangrenosa y perforada (~17,000 células/mm3).<br><br>Análisis de Distractores: La opción A (~10,000 células/mm3) representa la media observada en etapas iniciales o no complicadas de apendicitis. Las opciones B y C son cifras plausibles en procesos sépticos peritoneales, pero no se corresponden con el promedio clínico estadístico reportado en la GPC.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 3." 
+    },
+    {
+        id: 25, 
+        question: "En Apendicitis Aguda en pacientes embarazadas, ¿cuál es el rango de sensibilidad reportado para el ultrasonido obstétrico de acuerdo a la GPC?", 
+        options: ["67% a 100%", "50% a 75%", "85% a 95%", "40% a 60%"], 
+        answer: 0, 
+        justification: "Justificación: El ultrasonido con compresión graduada es el estudio de tamizaje preferido en la gestante por su seguridad biológica. De acuerdo al libro de Cirugía de Schwartz, el desplazamiento apendicular cecal secundario al útero gestante limita la visualización del órgano, resultando en un rango de sensibilidad amplio del 67% al 100% y una especificidad del 93% al 96%.<br><br>Perla Quirúrgica: La ultrasonografía es la modalidad de imagen preferida, aunque puede ocurrir la no visualización. La sensibilidad puede variar de 67% a 100%, y la especificidad varía de 93% a 96%.<br><br>Análisis de Distractores: Las opciones B y D son rangos imprecisos que subestiman la utilidad del ultrasonido obstétrico en manos experimentadas. La opción C representa la sensibilidad promedio del ultrasonido en pacientes adultos sanos no gestantes, donde no hay distorsión de la anatomía pélvica.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 10." 
+    },
+    {
+        id: 26, 
+        question: "En Apendicitis Aguda en pacientes embarazadas, ¿cuál es el valor exacto de especificidad de la resonancia magnética de abdomen de acuerdo a la GPC?", 
+        options: ["94%", "91%", "85%", "97%"], 
+        answer: 3, 
+        justification: "Justificación: Cuando el ultrasonido es inconcluso, se recurre a la resonancia magnética para evitar riesgos por radiación ionizante. De acuerdo al libro de Cirugía de Schwartz, esta modalidad de imagen posee un rendimiento óptimo durante el embarazo, demostrando una sensibilidad del 94% y una especificidad de 97% para identificar la inflamación apendicular.<br><br>Perla Quirúrgica: Una modalidad de imagen alternativa es la resonancia magnética, con una sensibilidad de 94% y especificidad de 97%.<br><br>Análisis de Distractores: La opción A (94%) representa el valor de sensibilidad para la resonancia magnética, no de especificidad. Las opciones B y C son valores que corresponden a sensibilidad o especificidad de otras modalidades como la tomografía de dosis baja o el ultrasonido convencional triportal.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 10." 
+    },
+    {
+        id: 27, 
+        question: "En Apendicitis Aguda, ¿cuál es la dosis de exposición de radiación ionizante típica generada por una tomografía computarizada de baja dosis de acuerdo a la GPC?", 
+        options: ["5 a 8 mSv", "2 a 4 mSv", "10 a 12 mSv", "0.5 a 1.5 mSv"], 
+        answer: 1, 
+        justification: "Justificación: La tomografía computarizada es la prueba de mayor rendimiento diagnóstico en apendicitis. De acuerdo al libro de Cirugía de Schwartz, para atenuar la exposición acumulada a radiación ionizante se emplean tomografías de baja dosis, las cuales emiten únicamente entre 2 a 4 mSv sin sacrificar la calidad ni alterar los desenlaces clínicos del paciente.<br><br>Perla Quirúrgica: Si bien sigue existiendo preocupación por la exposición a la radiación ionizante con una tomografía computarizada, las tomografías computarizadas típicas de baja dosis resultan en una exposición de 2 a 4 mSv, que no es significativamente mayor que la radiación de fondo (3.1 mSv).<br><br>Análisis de Distractores: Las opciones A y C corresponden a dosis elevadas que pertenecen a tomografías convencionales de alta resolución de abdomen y pelvis. La opción D representa niveles de radiación subóptimos que no logran una resolución de imagen suficiente para evaluar adecuadamente la fosa iliaca derecha.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 4." 
+    },
+    {
+        id: 28, 
+        question: "Al realizar una laparoscopia por sospecha de Apendicitis Aguda, ¿cuál es el manejo de elección al identificar de forma incidental diverticulitis de Meckel de acuerdo a la GPC?", 
+        options: ["Diverticulectomía simple con engrapadora lineal", "Observación conservadora sin resección intestinal", "Resección de intestino delgado segmentaria con anastomosis primaria", "Invaginación del divertículo con sutura invaginante"], 
+        answer: 2, 
+        justification: "Justificación: El hallazgo incidental de un divertículo de Meckel con inflamación activa mimetiza la apendicitis aguda. De acuerdo al libro de Cirugía de Schwartz, para garantizar la curación y evitar recurrencias de sangrado u oclusión por tejido ectópico en la base, el abordaje indicado es la resección de intestino delgado segmentaria con anastomosis primaria.<br><br>Perla Quirúrgica: El manejo intraoperatorio de hallazgos que simulan apendicitis se resume así: diverticulitis de Meckel se trata con resección segmentaria de intestino delgado y anastomosis primaria.<br><br>Análisis de Distractores: La opción A puede dejar mucosa gástrica o pancreática ectópica en la base implantada, condicionando úlceras pépticas ileales recurrentes. La opción B conlleva un riesgo elevado de perforación y peritonitis. La opción D es técnicamente inapropiada y genera una masa intraluminal que puede provocar intususcepción u oclusión intestinal.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 9." 
+    },
+    {
+        id: 29, 
+        question: "Al realizar una laparoscopia por sospecha de Apendicitis Aguda, ¿cuál es el manejo de elección al identificar de forma incidental una torsión ovárica de acuerdo a la GPC?", 
+        options: ["Tratamiento conservador con detorsión y ooforopexia", "Salpingooforectomía unilateral de urgencia inmediata", "Aspiración por aguja de quistes ováricos visibles", "Resección en cuña del ovario afectado"], 
+        answer: 0, 
+        justification: "Justificación: El dolor ginecológico por torsión de anexos representa un diagnóstico diferencial crítico de apendicitis. De acuerdo al libro de Cirugía de Schwartz, el principio rector transoperatorio en pacientes en edad fértil es la preservación gonadal mediante detorsión manual y ooforopexia del ovario viable, evitando resecciones innecesarias.<br><br>Perla Quirúrgica: El manejo intraoperatorio de hallazgos que simulan apendicitis se resume así: torsión ovárica se trata con manejo conservador con detorsión y ooforopexia.<br><br>Análisis de Distractores: La opción B es un tratamiento radical excesivo; solo se justifica en necrosis ovárica macroscópica completa e irreversible. La opción C es insuficiente, ya que no corrige la oclusión venosa ni la torsión física. La opción D debilita la integridad anatómica de la corteza ovárica y no restaura el flujo sanguíneo del anexo.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 9." 
+    },
+    {
+        id: 30, 
+        question: "En pacientes con Enfermedad de Crohn que cursan con un ciego sano, ¿cuál es la conducta recomendada respecto al apéndice cecal incidentalmente sano de acuerdo a la GPC?", 
+        options: ["Biopsia por aspiración con aguja del muñón", "Invaginación profiláctica del apéndice cecal", "Evitar strictly la extirpación apendicular", "Realizar apendicectomía incidental"], 
+        answer: 3, 
+        justification: "Justificación: La conducta ante un apéndice sano en presencia de Crohn depende del estado cecal. De acuerdo al libro de Cirugía de Schwartz, si el ciego no está afectado por la enfermedad inflamatoria, se debe realizar la apendicectomía incidental para eliminar la fosa iliaca derecha como origen de futuros dilemas diagnósticos de dolor.<br><br>Perla Quirúrgica: La práctica de la apendicectomía profiláctica se realiza de rutina en niños sometidos a quimioterapia, huéspedes comprometidos, pacientes con enfermedad de Crohn con ciego normal, personas que viajan a lugares remotos y pacientes sometidos a operaciones citorreductoras por neoplasias malignas de ovario.<br><br>Análisis de Distractores: La opción A es un procedimiento inexistente en el algoritmo quirúrgico normal. La opción B no previene el desarrollo de inflamación y puede condicionar intususección cecal. La opción C es la conducta adecuada únicamente si el ciego está activamente inflamado o con fístulas por Crohn, debido al riesgo de fístula postoperatoria del muñón.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 9." 
+    },
+    {
+        id: 31, 
+        question: "En Apendicectomía, ¿cuál es la tasa máxima aceptable de exploración negativa en pacientes del sexo femenino de acuerdo a la GPC?", 
+        options: ["< 10%", "< 20%", "< 30%", "< 5%"], 
+        answer: 1, 
+        justification: "Justificación: El diagnóstico de dolor abdominal en fosa iliaca derecha es un reto semiológico en mujeres debido a causas ginecológicas. De acuerdo al libro de Cirugía de Schwartz, es por esto que se permite una tasa de apendicectomía negativa aceptable de hasta el 20% (<20%) en el sexo femenino, margen que se reduce a menos del 10% (<10%) en el sexo masculino.<br><br>Perla Quirúrgica: Las imágenes a menudo se utilizan para confirmar el diagnóstico de apendicitis porque una tasa de operación negativa es aceptable en <10% de los pacientes masculinos y <20% de las pacientes femeninas.<br><br>Análisis de Distractores: La opción A representa el umbral de exploración negativa estándar para hombres. La opción C es un valor elevado que refleja un uso deficiente de las herramientas diagnósticas contemporáneas. La opción D es una tasa de error demasiado optimista que no refleja la variabilidad de la práctica clínico-quirúrgica general.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 3." 
+    },
+    {
+        id: 32, 
+        question: "En Apendicectomía, ¿cuál es la complicación postoperatoria que se reporta con mayor frecuencia al utilizar el abordaje laparoscópico de puerto único en comparación con el triportal convencional de acuerdo a la GPC?", 
+        options: ["Absceso intraabdominal", "Sangrado de pared abdominal", "Hernia incisional", "Infección de sitio quirúrgico superficial"], 
+        answer: 2, 
+        justification: "Justificación: El abordaje laparoscópico de puerto único umbilical (SILS) no ha demostrado superioridad clínica clara sobre la técnica convencional. De acuerdo al libro de Cirugía de Schwartz, la necesidad de realizar una incisión umbilical fascial de mayor diámetro para el trócar de puerto múltiple condiciona una debilidad parietal residual con un aumento significativo en la tasa de hernia incisional.<br><br>Perla Quirúrgica: No se ha demostrado que la apendicectomía de incisión única mejore los resultados, incluidos los resultados cosméticos... y se ha sugerido que tiene una mayor tasa de hernia incisional.<br><br>Análisis de Distractores: Las opciones A, B y D son complicaciones de la técnica, pero no han mostrado diferencias estadísticas desfavorables específicas contra el abordaje convencional triportal.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 1." 
+    },
+    {
+        id: 33, 
+        question: "En Apendicitis Aguda en el paciente pediátrico, ¿cuál es la tasa de perforación apendicular esperada al momento de la presentación clínica en lactantes y niños pequeños de acuerdo a la GPC?", 
+        options: ["51% a 100%", "20% a 35%", "10% a 15%", "36% a 50%"], 
+        answer: 0, 
+        justification: "Justificación: La escasez de epiplón mayor en niños pequeños favorece la peritonitis libre. De acuerdo al libro de Cirugía de Schwartz, debido a la vaguedad clínica en menores de 5 años y lactantes, el diagnóstico se retrasa de forma rutinaria, provocando que la tasa de apéndice perforado al momento del diagnóstico se sitúe entre un alarmante 51% a 100%.<br><br>Perla Quirúrgica: Casi 1 de cada 8 niños se somete a un estudio para el diagnóstico de apendicitis. De ellos, los bebés y niños pequeños tienen más probabilidades de presentar enfermedad perforada (51%–100%).<br><br>Análisis de Distractores: Las opciones B, C y D son rangos que representan a la población escolar, preadolescente o adolescente, quienes logran focalizar y describir la cronología del dolor de manera temprana, reduciendo la incidencia de perforaciones en el preoperatorio.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 10." 
+    },
+    {
+        id: 34, 
+        question: "En Apendicitis Aguda en pacientes embarazadas, ¿cuál es el porcentaje máximo que puede alcanzar la pérdida fetal en caso de ocurrir perforación apendicular de acuerdo a la GPC?", 
+        options: ["15%", "36%", "7%", "20%"], 
+        answer: 1, 
+        justification: "Justificación: La inflamación apendicular rota asocia sepsis y una elevación crítica de citocinas inflamatorias locales. De acuerdo al libro de Cirugía de Schwartz, la presencia de perforación apendicular durante la gestación incrementa de manera sustancial la mortalidad fetal, reportando tasas de pérdida del binomio de hasta el 36%.<br><br>Perla Quirúrgica: Al discutir las opciones con el paciente y su familia, es importante señalar que el riesgo de pérdida fetal es de hasta el 36% si ocurre perforación apendicular.<br><br>Análisis de Distractores: Las opciones A y D son tasas de pérdida fetal que no reflejan la gravedad del escenario de perforación de la pared apendicular. La opción C corresponde a la tasa promedio de pérdida fetal asociada de forma aislada a la realización del procedimiento de apendicectomía laparoscópica en gestantes con apéndice sano o inflamación no complicada.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 10." 
+    },
+    {
+        id: 35, 
+        question: "En Apendicitis Aguda en pacientes embarazadas, ¿cuál es el porcentaje de exploración negativa considerado aceptable con el fin de evitar la perforación del órgano de acuerdo a la GPC?", 
+        options: ["10%", "20%", "50%", "30%"], 
+        answer: 3, 
+        justification: "Justificación: El riesgo de pérdida fetal secundaria a perforación obliga a mantener una alta sospecha y sospecha activa. De acuerdo al libro de Cirugía de Schwartz, el cirujano mantiene un umbral bajo de sospecha que se traduce en una tasa de exploración negativa aceptable de hasta el 30% en la gestante, minimizando así la ventana de progresión a necrosis libre del apéndice.<br><br>Perla Quirúrgica: Existe un umbral más bajo para operar en tales pacientes, con una tasa de exploración negativa aceptable de hasta un 30%.<br><br>Análisis de Distractores: La opción A representa la tasa de apendicectomía en blanco aceptada para la población masculina adulta general. La opción B es la tasa permitida en pacientes del sexo femenino no gestantes. La opción C es un valor excesivo que denotaría un error sistemático en la valoración preoperatoria o falta de apoyo por imagenología de fosa iliaca.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 10." 
+    },
+    {
+        id: 36, 
+        question: "En Neoplasias Apendiculares, ¿cuál es el tratamiento estándar definitivo de elección para el abordaje del Síndrome de Pseudomixoma Peritoneal de acuerdo a la GPC?", 
+        options: ["Apendicectomía e instilación de quimioterapia sistémica intravenosa", "Resección de colon segmentaria y radioterapia pélvica externa", "Cirugía citorreductora e HIPEC", "Lavado peritoneal terapéutico seriado por laparotomía"], 
+        answer: 2, 
+        justification: "Justificación: La siembra peritoneal mucinosa de origen apendicular origina el síndrome de pseudomixoma peritoneal (PMP). De acuerdo al libro de Cirugía de Schwartz, el estándar terapéutico consolidado con intención curativa es la cirugía citorreductora (peritonectomías parietal y visceral) más quimioterapia intraperitoneal hipertérmica (HIPEC) con mitomicina a 42 °C en el transoperatorio para eliminar los depósitos celulares microscópicos mucosecretores.<br><br>Perla Quirúrgica: La cirugía citorreductora y la quimioterapia intraperitoneal hipertérmica (HIPEC) se consideran el estándar de atención para pacientes con síndrome de pseudomixoma peritoneal de origen primario apendicular.<br><br>Análisis de Distractores: La opción A es insuficiente dado que los quimioterápicos endovenosos no logran concentraciones terapéuticas adecuadas a través de la barrera peritoneal mucinosa. La opción B no tiene indicación oncológica demostrada para el tratamiento del moco acelular o las células caliciformes diseminadas. La opción D solo realiza un barrido mecánico transitorio del moco, sin afectar los implantes epiteliales productores del mismo.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Páginas 14-15." 
+    },
+    {
+        id: 37, 
+        question: "En Apendicectomía Laparoscópica, ¿en qué posición horaria se debe posicionar la taenia coli/libera para lograr la \"visión crítica apendicular\" de acuerdo a la GPC?", 
+        options: ["3 en punto", "10 en punto", "6 en punto", "12 en punto"], 
+        answer: 0, 
+        justification: "Justificación: La identificación inequívoca del nacimiento apendicular previene dejar un muñón excesivo propiciando apendicitis del muñón. De acuerdo al libro de Cirugía de Schwartz, se debe configurar sistemáticamente la \"visión crítica apendicular\" tridimensional colocando el apéndice a las 10, la taenia coli/libera a las 3 y el íleon terminal a las 6 en punto antes de realizar el engrapado o ligadura del muñón.<br><br>Perla Quirúrgica: El uso de la \"visión crítica apendicular\" (apéndice colocado a las 10 en punto, taenia coli/libera a las 3 en punto e íleon terminal a las 6 en punto) e identificación de dónde se fusionan y desaparecen las taeniae coli es primordial para identificar y ligar la base del apéndice durante la operación inicial.<br><br>Análisis de Distractores: La opción B es la orientación espacial recomendada para la punta y cuerpo del apéndice cecal en este plano. La opción C corresponde a la localización y tracción distal sugerida para el íleon terminal. La opción D no es una posición anatómica descrita en Schwartz como referencia para establecer la visión crítica segura de la base cecal.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 11." 
+    },
+    {
+        id: 38, 
+        question: "En Neoplasias Apendiculares, ¿cuál es el procedimiento quirúrgico estándar recomendado en el Carcinoma de Células Caliciformes en ausencia de metástasis a distancia de acuerdo a la GPC?", 
+        options: ["Apendicectomía con margen negativo únicamente", "Hemicolectomía derecha formal", "Resección del polo cecal con engrapadora", "Colectomía subtotal con ileoanastomosis"], 
+        answer: 1, 
+        justification: "Justificación: El carcinoma de células caliciformes presenta un comportamiento oncológico agresivo con alta propensión a invasión linfovascular e implantes peritoneales. De acuerdo al libro de Cirugía de Schwartz, debido a su biología tumoral desvaída, la apendicectomía simple resulta insuficiente; en consecuencia, el estándar en ausencia de metástasis francas es realizar de forma sistemática una hemicolectomía derecha formal.<br><br>Perla Quirúrgica: En ausencia de enfermedad metastásica, una hemicolectomía derecha es generalmente apropiada para los carcinomas de células caliciformes del apéndice cecal.<br><br>Análisis de Distractores: La opción A se reserva para tumores neuroendocrinos típicos (indolentes) menores a 1 cm de diámetro. La opción C no proporciona el vaciamiento de la cuenca ganglionar regional a lo largo del pedículo ileocólico, resultando en subetapificación y recurrencia. La opción D es un abordaje quirúrgico extendido inapropiado que se reserva para patologías colónicas sincrónicas multicéntricas.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 13." 
+    },
+    {
+        id: 39, 
+        question: "En Apendicitis Aguda, ¿cuáles son las raíces espinales que brindan inervación visceral transmitiendo el dolor referido periumbilical inicial de acuerdo a la GPC?", 
+        options: ["T5-T9", "T11-T12", "L2-L4", "T10-L1"], 
+        answer: 3, 
+        justification: "Justificación: El dolor sordo inicial de localización periumbilical es de origen puramente visceral, originado por distensión de la serosa apendicular. De acuerdo al libro de Cirugía de Schwartz, las aferencias dolorosas viajan por el sistema simpático acompañando a los vasos arteriales hasta integrarse en las astas dorsales de la médula espinal a nivel de los metámeras T10-L1, proyectándose como dolor referido al dermatoma T10 periumbilical.<br><br>Perla Quirúrgica: El apéndice promedio mide de 6 a 9 cm y deriva su suministro de sangre de la rama apendicular de la arteria ileocólica. La inervación visceral ocurre a lo largo del plexo mesentérico superior (T10–L1) y los nervios vagos.<br><br>Análisis de Distractores: La opción A provee la inervación nociceptiva visceral del intestino anterior (estómago, duodeno), refiriendo dolor característicamente a la región epigástrica. Las opciones B y C corresponden a raíces implicadas en la inervación de la pared abdominal posterior y pélvico-genital, no vinculadas al dolor referido apendicular clásico.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 1." 
+    },
+    {
+        id: 40, 
+        question: "En Apendicitis Aguda neonatal, ¿cuáles son las manifestaciones clínicas sistémicas y abdominales predominantes adicionales al dolor de acuerdo a la GPC?", 
+        options: ["Estreñimiento pertinaz y melena", "Masa palpable y rectorragia", "Distensión abdominal y letargia", "Evacuaciones en jalea de grosella"], 
+        answer: 2, 
+        justification: "Justificación: El diagnóstico de apendicitis en recién nacidos se dificulta debido a la presentación atípica e inespecífica. De acuerdo al libro de Cirugía de Schwartz, el neonato es incapaz de manifestar el dolor localizado, por lo que el cuadro suele caracterizarse predominantemente por distensión abdominal y datos sistémicos de compromiso como letargia o irritabilidad, culminando con rapidez en perforación libre y sepsis.<br><br>Perla Quirúrgica: Si bien la mayoría de los grupos de edad demuestran los mismos síntomas descritos anteriormente en adultos, los recién nacidos también pueden presentar distensión abdominal y letargia o irritabilidad.<br><br>Análisis de Distractores: La opción A no forma parte de las manifestaciones cardinales descritas de apendicitis neonatal, orientando a estenosis o vólvulos. La opción B sugiere duplicación intestinal o malformaciones vasculares. La opción D es la manifestación patognomónica de la intususcepción intestinal aguda en lactantes, no de apendicitis.", 
+        source: "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice, Página 10." 
+    }
+
+
+
+        ];
+
+        // ==========================================
+        // ==========================================
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('SchwartapendiceLastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('SchwartapendiceProgress');
+                localStorage.removeItem('SchwartapendiceLastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-pink-500 shadow-md z-10 border-pink-500 dark:border-pink-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-pink-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-rose-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! UMAE 25 - 2026" : "R4 - UMAE 25 - 2026";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "Schwartz Principios de Cirugía, 11.ª edición, 2019, Capítulo 30: El Apéndice";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus las respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="BS06308GYOE.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-pink-100 dark:border-pink-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-pink-50 has-[:checked]:border-pink-400 dark:has-[:checked]:bg-pink-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-pink-600 focus:ring-pink-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-600 dark:hover:bg-pink-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('SchwartapendiceProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('SchwartapendiceLastQId', currentQuestionId);
+                else localStorage.removeItem('SchwartapendiceLastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('SchwartapendiceProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB26PT8kuB-0fxyUYgGk51yC1rAsW0dYj0",
+        authDomain: "enarm-lite.firebaseapp.com",
+        projectId: "enarm-lite",
+        storageBucket: "enarm-lite.firebasestorage.app",
+        messagingSenderId: "767032952477",
+        appId: "1:767032952477:web:84347320ed3d376f7e7674",
+        measurementId: "G-PVR3RBVNSV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    //document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "usuarios_autorizados", user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            
+            if(userDocSnap.exists()) {
+                document.body.style.opacity = '1';
+            } else {
+                //window.location.href = "index.html"; 
+            }
+        } else {
+            //window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>
