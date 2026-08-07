@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        .logo-enarm {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: #004c8c;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .logo-Lite {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #70b93d;
+        }
+        .logo-Lite sup { font-size: 0.6em; top: -0.4em; position: relative; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 h-[100dvh] overflow-hidden">
+
+    <div id="app-container" class="relative h-full lg:flex">
+        
+        <!-- SIDEBAR NAVEGADOR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 w-80 p-5 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] border-r border-slate-200 dark:border-slate-800">
+            
+            <div class="flex justify-center mb-6 pt-2">
+                <div class="flex items-baseline gap-1 bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                    <span class="logo-enarm text-base">UMAE</span>
+                    <span class="logo-Lite text-sm">25<sup>®</sup></span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 custom-scrollbar pr-1">
+                <div class="mb-4 relative">
+                    <input type="text" id="module-search" placeholder="Buscar número o texto..." class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute right-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+
+                <!-- GRID LATERAL -->
+                <div id="sidebar-q-grid" class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2 p-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-2 space-y-3">
+                <button id="dark-mode-toggle" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg id="sun-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    Alternar Tema
+                </button>
+
+                <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 font-semibold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reiniciar Examen
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (Scrollable) -->
+        <main id="main-content" class="flex-1 h-[100dvh] overflow-y-auto overscroll-y-contain p-4 sm:p-6 lg:p-8 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+            
+            <!-- Botón Grid (Tablero) a la Izquierda (Oculto en Inicio) -->
+            <button id="dashboard-button" onclick="displayQuestion(null)" class="hidden fixed top-4 left-4 lg:left-[22rem] bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300" title="Ver Tablero de Preguntas">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+
+            <!-- Botón Menú a la Derecha (Oculto en Inicio, visible en desktop y móvil) -->
+            <button id="menu-toggle" class="hidden fixed top-4 right-4 lg:right-8 bg-white dark:bg-slate-800 p-2.5 rounded-full shadow-md border border-slate-200 dark:border-slate-700 z-40 text-slate-500 hover:text-pink-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+
+            <!-- Barra de Progreso Limpia (Gruesa y sin marca de agua de fondo) -->
+            <div id="progress-container" class="hidden w-full max-w-4xl mx-auto bg-slate-200 dark:bg-slate-700 rounded-full mb-4 mt-0 h-6 shadow-inner overflow-hidden relative">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-white leading-none relative z-10" style="width:0%">0%</div>
+            </div>
+            
+            <div id="module-display" class="transition-opacity duration-300 pb-12"></div>
+        </main>
+        
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-900/40 z-20 backdrop-blur-sm"></div>
+    </div>
+    
+    <!-- MODAL REINICIAR -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Reiniciar Examen</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 mb-6">Se borrará tu progreso actual. ¿Deseas continuar?</p>
+            <div class="flex gap-3">
+                <button id="cancel-reset" class="flex-1 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancelar</button>
+                <button id="confirm-reset" class="flex-1 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 transition-colors">Sí, Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // =========================================================
+        const questionsData = [
+
+    {
+        id: 1, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cuál es el riesgo estimado de presentar esta patología a lo largo de la vida en hombres y mujeres, respectivamente?", 
+        options: ["27% y 3%", "15% y 5%", "40% y 10%", "50% y 15%"], 
+        answer: 0, 
+        justification: "Justificación: El riesgo a lo largo de la vida de desarrollar una hernia inguinal difiere ampliamente entre géneros debido a factores anatómicos de la pelvis. De acuerdo al libro de Schwartz Principios de Cirugía, la debilidad inherente de la ingle masculina resulta en que el 27% de los hombres la presentará en su vida frente a solo el 3% de las mujeres, justificando que el 90% de las cirugías se realicen en varones.<br><br>Perla Quirúrgica: Aproximadamente el 75% de las hernias de la pared abdominal ocurren en la ingle. De las reparaciones de hernia inguinal, el 90% se realizan en hombres y el 10% en mujeres. Se piensa que esto se debe a que el riesgo de hernia inguinal a lo largo de la vida es del 27% en hombres y del 3% en mujeres.<br><br>Análisis de Distractores: Las opciones B, C y D proponen cifras estimadas de prevalencia incorrectas que no corresponden con la epidemiología documentada en los textos de referencia.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 3." 
+    },
+    {
+        id: 2, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cuál es la longitud promedio aproximada del conducto inguinal en un paciente adulto?", 
+        options: ["2 a 3 cm", "4 a 6 cm", "8 a 10 cm", "11 a 12 cm"], 
+        answer: 1, 
+        justification: "Justificación: El conducto inguinal es un espacio que conecta la cavidad peritoneal con el exterior de la cavidad abdominal. De acuerdo al libro de Schwartz Principios de Cirugía, su trayecto se extiende en sentido oblicuo por una longitud de 4 a 6 cm, albergando el cordón espermático en el hombre o el ligamento redondo en la mujer.<br><br>Perla Quirúrgica: El conducto inguinal es una región con forma de cono de aproximadamente 4 a 6 cm de largo situada en la porción anterior de la pelvis.<br><br>Análisis de Distractores: Las opciones A, C y D sugieren longitudes que subestiman o sobreestiman significativamente las dimensiones anatómicas normales de este trayecto en la población adulta.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 3." 
+    },
+    {
+        id: 3, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿qué estructura anatómica constituye el límite anterior del conducto inguinal?", 
+        options: ["Fascia transversalis", "Músculo oblicuo interno", "Aponeurosis del oblicuo externo", "Ligamento inguinal"], 
+        answer: 2, 
+        justification: "Justificación: La anatomía del conducto inguinal se define por límites precisos en sus cuatro paredes. De acuerdo al libro de Schwartz Principios de Cirugía, la aponeurosis del músculo oblicuo externo forma la pared anterior en toda su extensión, proporcionando la principal cobertura superficial a este espacio.<br><br>Perla Quirúrgica: Los límites del conducto inguinal son la aponeurosis del oblicuo externo en la parte anterior, el músculo oblicuo interno en la parte lateral, la fascia transversalis y el músculo transverso del abdomen en la parte posterior, el músculo oblicuo interno y el transverso del abdomen en la parte superior, y el ligamento inguinal (de Poupart) en la parte inferior.<br><br>Análisis de Distractores: La opción A es el límite posterior, B constituye la pared superior y lateral, y D forma la pared inferior o piso del conducto.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 3." 
+    },
+    {
+        id: 4, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cuál es el límite superolateral del triángulo de Hesselbach?", 
+        options: ["Borde lateral del músculo recto del abdomen", "Vasos epigástricos inferiores", "Ligamento inguinal", "Tracto iliopúbico"], 
+        answer: 1, 
+        justification: "Justificación: El triángulo de Hesselbach es la zona de debilidad anatómica por donde protruyen las hernias directas. De acuerdo al libro de Schwartz Principios de Cirugía, el límite superololateral está determinado por los vasos epigástricos inferiores, los cuales separan el espacio medial (directo) del lateral (indirecto).<br><br>Perla Quirúrgica: Los límites del triángulo son el ligamento inguinal en la parte inferior, el borde lateral de la vaina del recto en la parte medial y los vasos epigástricos inferiores en la parte superolateral.<br><br>Análisis de Distractores: La opción A define la frontera medial del triángulo, C representa el límite inferior del mismo, y D no forma parte de las fronteras anatómicas clásicas de este espacio.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 3." 
+    },
+    {
+        id: 5, 
+        question: "De acuerdo a la GPC, en la clasificación de Nyhus para Hernia Inguinal, ¿cuál es la categoría correspondiente a una hernia indirecta con anillo interno dilatado, sin compromiso del piso inguinal y que no desciende al escroto?", 
+        options: ["Tipo I", "Tipo II", "Tipo IIIA", "Tipo IIIB"], 
+        answer: 1, 
+        justification: "Justificación: La clasificación de Nyhus define los defectos inguinales según su localización y tamaño. De acuerdo al libro de Schwartz Principios de Cirugía, el Tipo II describe específicamente a las hernias indirectas donde el anillo inguinal profundo ya se encuentra agrandado, pero la pared posterior permanece intacta y no hay extensión escrotal.<br><br>Perla Quirúrgica: Tipo II: Hernia indirecta; anillo abdominal interno agrandado sin invasión del piso del conducto inguinal; no se extiende al escroto.<br><br>Análisis de Distractores: La opción A representa hernias indirectas con anillo interno normal (típicamente pediátricas), C corresponde a hernias directas de cualquier tamaño, y D a hernias indirectas que destruyen la pared posterior (deslizantes, en pantalón o escrotales).", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 3." 
+    },
+    {
+        id: 6, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cómo se denomina a la porción más medial del espacio preperitoneal localizada directamente superior a la vejiga?", 
+        options: ["Espacio de Bogros", "Orificio de Fruchaud", "Espacio de Retzius", "Triángulo de Doom"], 
+        answer: 2, 
+        justification: "Justificación: En los abordajes posteriores laparoscópicos, el espacio preperitoneal se subdivide para una disección ordenada. De acuerdo al libro de Schwartz Principios de Cirugía, el área medial que yace directamente sobre la vejiga urinaria se conoce como espacio de Retzius, la cual debe disecarse para exponer la sínfisis del pubis.<br><br>Perla Quirúrgica: El aspecto más medial del espacio preperitoneal, aquel que se encuentra superior a la vejiga, se conoce como espacio de Retzius.<br><br>Análisis de Distractores: La opción A es la porción lateral del espacio preperitoneal, B es el orificio miopectíneo global, y D es la zona delimitada por el conducto deferente y vasos gonadales que contiene vasos iliacos.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 3." 
+    },
+    {
+        id: 7, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cuál es el límite medial del triángulo del desastre (Triangle of Doom) durante un abordaje posterior laparoscópico?", 
+        options: ["Vasos gonadales", "Tracto iliopúbico", "Vasos iliacos externos", "Conducto deferente"], 
+        answer: 3, 
+        justification: "Justificación: El triángulo del desastre contiene vasos de gran calibre y requiere una fijación de malla extremadamente cuidadosa para evitar hemorragias graves. De acuerdo al libro de Schwartz Principios de Cirugía, este triángulo se delimita medialmente por el conducto deferente (en el varón) y lateralmente por los vasos gonadales.<br><br>Perla Quirúrgica: El triángulo del desastre está limitado medialmente por el conducto deferente y lateralmente por los vasos del cordón espermático.<br><br>Análisis de Distractores: La opción A es el límite lateral de este triángulo, B delimita el límite superior del triángulo del dolor, y C constituye el contenido vascular crítico del triángulo del desastre, mas no su límite.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 7." 
+    },
+    {
+        id: 8, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cuál de los siguientes nervios se localiza dentro del triángulo del dolor (Triangle of Pain)?", 
+        options: ["Nervio ilioinguinal", "Nervio iliohipogástrico", "Nervio cutáneo femoral lateral", "Nervio obturador"], 
+        answer: 2, 
+        justification: "Justificación: El triángulo del dolor es un espacio delimitado por el tracto iliopúbico y los vasos gonadales. De acuerdo al libro de Schwartz Principios de Cirugía, en esta zona transcurren nervios sensitivos mayores como el cutáneo femoral lateral, el nervio femoral y la rama femoral del genitofemoral, por lo que está prohibido colocar tachuelas mecánicas en este sitio para prevenir atrapamientos postoperatorios.<br><br>Perla Quirúrgica: El triángulo del dolor es una región bordeada por el tracto iliopúbico y los vasos gonadales, y abarca los nervios cutáneo femoral lateral, la rama femoral del genitofemoral y el nervio femoral.<br><br>Análisis de Distractores: Las opciones A y B discurren en el plano anterior de la pared abdominal (por encima del oblicuo interno); D transcurre profundo por el canal obturador, alejado del triángulo de dolor posterior.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 7." 
+    },
+    {
+        id: 9, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿qué signo clínico durante la maniobra de oclusión inguinal es sugestivo del diagnóstico de una hernia inguinal directa?", 
+        options: ["Control completo del impulso al toser", "Persistencia de la herniación al toser", "Impulso palpable en la punta del dedo evaluador", "Reducción espontánea en decúbito lateral"], 
+        answer: 1, 
+        justification: "Justificación: La prueba de oclusión diferencia el origen del saco herniario. De acuerdo al libro de Schwartz Principios de Cirugía, al bloquear el anillo inguinal interno con el dedo, si el saco continúa protruyendo con la maniobra de Valsalva, se clasifica como directa (ya que emerge medial al anillo interno, a través de la pared posterior del triángulo de Hesselbach).<br><br>Perla Quirúrgica: La prueba de oclusión inguinal consiste en que el examinador bloquee el anillo inguinal interno con un dedo mientras se le pide al paciente que tosa. Un impulso controlado sugiere una hernia indirecta, mientras que la herniación persistente sugiere una hernia directa.<br><br>Análisis de Distractores: Las opciones A y C son características de hernias inguinales indirectas; D no es un hallazgo específico que diferencie hernias directas de indirectas clínicamente.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 15." 
+    },
+    {
+        id: 10, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal asintomática, ¿cuál es el porcentaje acumulado de pacientes bajo vigilancia estrecha que presentará síntomas y requerirá cirugía en un seguimiento a 7.5 años?", 
+        options: ["25%", "50%", "72%", "90%"], 
+        answer: 2, 
+        justification: "Justificación: El manejo conservador (watchful waiting) es seguro en asintomáticos, pero tiene una tasa de conversión quirúrgica significativa a mediano plazo. De acuerdo al libro de Schwartz Principios de Cirugía, un 72% de los pacientes que inicialmente eligen vigilancia desarrollarán dolor o molestias que justificarán la reparación electiva a los 7.5 años de seguimiento.<br><br>Perla Quirúrgica: Una revisión de 2012 encontró que el 72% de los pacientes con hernia inguinal asintomática desarrollaron síntomas y se sometieron a reparación quirúrgica dentro de los 7.5 años posteriores al diagnóstico.<br><br>Análisis de Distractores: Las opciones A, B y D son porcentajes que no reflejan la tasa real de conversión de manejo médico a quirúrgico reportada en el seguimiento longitudinal.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 15." 
+    },
+    {
+        id: 11, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿qué estructura nerviosa se divide intencionadamente de forma rutinaria durante la disección del cordón en la técnica de Shouldice?", 
+        options: ["Rama genital del genitofemoral", "Nervio cutáneo femoral lateral", "Nervio iliohipogástrico", "Rama femoral del genitofemoral"], 
+        answer: 0, 
+        justification: "Justificación: La reparación tisular imbricada de Shouldice requiere una movilización extensa del cordón espermático. De acuerdo al libro de Schwartz Principios de Cirugía, la sección rutinaria de la rama genital del genitofemoral facilita esta movilización, provocando anestesia o hipoestesia residual en el escroto o labios mayores ipsolaterales.<br><br>Perla Quirúrgica: Durante la disección del cordón, la rama genital del nervio genitofemoral se divide de manera rutinaria, lo que resulta en la pérdida ipsolateral de sensibilidad en el escroto en hombres o en el monte de Venus y el labio mayor en mujeres.<br><br>Análisis de Distractores: La opción B se encuentra en el espacio preperitoneal lateral y no se toca; C se sitúa en el plano anterior sobre el oblicuo interno; D inerva el triángulo femoral y no se diseca en esta técnica.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 15." 
+    },
+    {
+        id: 12, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿en qué estructura de la pared abdominal se realiza la incisión de relajación para disminuir la tensión de la sutura hacia el ligamento de Cooper en la técnica de McVay?", 
+        options: ["Aponeurosis del oblicuo externo", "Hoja anterior de la vaina del recto del abdomen", "Fascia transversalis", "Hoja posterior de la vaina del recto del abdomen"], 
+        answer: 1, 
+        justification: "Justificación: Al aproximar el tendón conjunto al ligamento de Cooper, la tensión puede provocar dehiscencias o dolor excesivo. De acuerdo al libro de Schwartz Principios de Cirugía, la realización de una incisión de relajación vertical de 2 a 4 cm en la vaina anterior del recto es un paso obligatorio y crítico para el éxito del procedimiento de McVay.<br><br>Perla Quirúrgica: Se realiza una incisión de relajación de 2 a 4 cm en la vaina anterior del recto verticalmente desde el tubérculo púbico. Esta incisión es esencial para reducir la tensión en la reparación...<br><br>Análisis de Distractores: La opción A es la capa superficial abierta al inicio; C es la fascia transversalis que se abre para entrar al espacio preperitoneal; D no se incide debido al riesgo de eventración o daño a estructuras profundas.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 15." 
+    },
+    {
+        id: 13, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cuál es el tejido autólogo utilizado para reconstruir la pared posterior del conducto inguinal en la técnica mesh-free de Desarda?", 
+        options: ["Colgajo de fascia transversalis", "Músculo oblicuo interno", "Tendón conjunto", "Tira de la aponeurosis del oblicuo externo"], 
+        answer: 3, 
+        justification: "Justificación: La reparación de Desarda es una alternativa tisular fisiológica. De acuerdo al libro de Schwartz Principios de Cirugía, utiliza una tira de la porción medial de la aponeurosis del oblicuo externo (sin separarla por completo) que se sutura al ligamento inguinal para formar una nueva pared posterior libre de tensión en el conducto inguinal.<br><br>Perla Quirúrgica: La reparación de hernia de Desarda se describió recientemente en 2001 y consiste en una reparación libre de malla que utiliza una tira de la aponeurosis del oblicuo externo.<br><br>Análisis de Distractores: Las opciones A, B y C son estructuras musculofasciales utilizadas en las técnicas de Bassini o Shouldice, pero no constituyen la tira de la aponeurosis característica de la técnica de Desarda.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 15." 
+    },
+    {
+        id: 14, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cuánto debe sobrepasar la malla medialmente respecto al tubérculo púbico en la técnica de Lichtenstein?", 
+        options: ["0.5 a 1 cm", "1.5 a 2 cm", "3 a 4 cm", "4.5 a 5 cm"], 
+        answer: 1, 
+        justification: "Justificación: La colocación inadecuada de la malla es una de las causas más frecuentes de recurrencia. De acuerdo al libro de Schwartz Principios de Cirugía, el borde medial de la prótesis debe fijarse cruzando y sobrepasando el tubérculo púbico por 1.5 a 2 cm para prevenir la falla medial ante el aumento de la presión intraabdominal.<br><br>Perla Quirúrgica: El borde medial de la malla se fija a la vaina anterior del recto de tal manera que se superponga al tubérculo púbico de 1.5 a 2 cm. Este refinamiento de la técnica original de Lichtenstein minimiza la recurrencia medial.<br><br>Análisis de Distractores: La opción A propone una distancia insuficiente que eleva el riesgo de recidivas mediales; C y D implican un exceso de material protésico innecesario que puede causar molestias postoperatorias y dolor crónico.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 15." 
+    },
+    {
+        id: 15, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cuál es el nivel de presión de neumoperitoneo (en mmHg) recomendado para realizar el abordaje laparoscópico transabdominal preperitoneal (TAPP)?", 
+        options: ["8 mmHg", "12 mmHg", "15 mmHg", "20 mmHg"], 
+        answer: 2, 
+        justification: "Justificación: El espacio preperitoneal se manipula tras acceder a la cavidad abdominal. De acuerdo al libro de Schwartz Principios de Cirugía, se debe insuflar la cavidad peritoneal a un nivel de 15 mmHg para garantizar un campo de trabajo visual idóneo y seguro antes de incidir el peritoneo parietal.<br><br>Perla Quirúrgica: Se logra un neumoperitoneo a un nivel de 15 mmHg. Se colocan dos trocares de 5 mm laterales y ligeramente inferiores al trocar umbilical...<br><br>Análisis de Distractores: Las opciones A y B proveen un neumoperitoneo insuficiente para una visualización pélvica laparoscópica segura; D representa un nivel de presión críticamente elevado que puede desencadenar compromiso cardiorrespiratorio en el paciente.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 15." 
+    },
+    {
+        id: 16, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cuál es la conducta inmediata indicada para recuperar la visualización cuando ocurre una ruptura peritoneal incidental durante una técnica totalmente extraperitoneal (TEP)?", 
+        options: ["Colocar una aguja de Veress en el cuadrante superior izquierdo", "Convertir de inmediato a reparación abierta de Lichtenstein", "Incrementar la presión del neumopreperitoneo a 20 mmHg", "Realizar conversión inmediata a técnica TAPP"], 
+        answer: 0, 
+        justification: "Justificación: El escape de gas hacia la cavidad abdominal colapsa el espacio extraperitoneal de trabajo. De acuerdo al libro de Schwartz Principios de Cirugía, la descompresión inmediata mediante la colocación de un catéter o aguja de Veress en el hipocondrio izquierdo libera la tensión intraperitoneal y restaura instantáneamente la visión del cirujano.<br><br>Perla Quirúrgica: Si se viola el peritoneo durante la insuflación del balón de disección y el subsiguiente neumoperitoneo, la visualización puede verse comprometida. Para abordar esto, se puede colocar una aguja de Veress o un angiocatéter en el cuadrante superior izquierdo, lo que permitirá la desinsuflación del peritoneo y restaurará la visualización.<br><br>Análisis de Distractores: Las opciones B y D son conductas definitivas factibles pero innecesarias de primera intención si se puede corregir la pérdida visual con descompresión simple; C agrava la fuga y el colapso del espacio preperitoneal de trabajo.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 15." 
+    },
+    {
+        id: 17, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cuál es el impacto clínico del uso de mallas ligeras versus mallas pesadas respecto a la aparición de inguinodinia crónica posoperatoria?", 
+        options: ["Incrementa el riesgo relativo a 1.20", "Disminuye el riesgo relativo a 0.61", "Carece de impacto estadísticamente significativo", "Reduce la recidiva con un riesgo relativo de 0.35"], 
+        answer: 1, 
+        justification: "Justificación: Las mallas pesadas inducen una respuesta inflamatoria y cicatrización fibrótica densa. De acuerdo al libro de Schwartz Principios de Cirugía, la adopción de mallas ligeras disminuye la incidencia de dolor crónico post-reparación (RR 0.61) sin comprometer las tasas de recurrencia a largo plazo en pacientes operados.<br><br>Perla Quirúrgica: Un metaanálisis de 2012 de 2310 pacientes sometidos a reparaciones de hernia abierta o laparoscópica encontró una menor incidencia de dolor crónico (riesgo relativo [RR] 0.61, IC 0.50–0.74) tras el uso de malla ligera frente a malla pesada, y ninguna diferencia significativa en las tasas de recurrencia.<br><br>Análisis de Distractores: La opción A proponer un aumento del riesgo contradice la evidencia clínica; C niega los beneficios demostrados por metaanálisis; D confunde el dolor crónico con el porcentaje de recidivas, el cual no varía entre ambos tipos de mallas.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 31." 
+    },
+    {
+        id: 18, 
+        question: "De acuerdo a la GPC, en la fijación laparoscópica de la malla en Hernia Inguinal, ¿cuál es el riesgo relativo aproximado de dolor crónico posoperatorio de la fijación mecánica con tachuelas comparado con el uso de adhesivo de fibrina?", 
+        options: ["1.5", "2.2", "4.6", "6.1"], 
+        answer: 2, 
+        justification: "Justificación: El uso de fijación penetrante (tacks) incrementa el daño tisular local y la posibilidad de atrapar ramas nerviosas. De acuerdo al libro de Schwartz Principios de Cirugía, la fijación biológica o adhesiva (fibrina) provee una alternativa superior que reduce el dolor crónico posoperatorio de manera drástica con un riesgo relativo de 4.64 a favor del adhesivo.<br><br>Perla Quirúrgica: Los metaanálisis de la reparación de hernia de disco endoscópica determinaron que la incidencia de dolor crónico posoperatorio después de la fijación con tachuelas fue significativamente mayor que después de la fijación con adhesivo de fibrina, y uno de ellos mostró un riesgo relativo de 4.64 (CI 1.9–11.7).<br><br>Análisis de Distractores: Las opciones A, B y D son estimaciones incorrectas del riesgo relativo reportado en la literatura de referencia que apoya el uso de fijación no invasiva.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 31." 
+    },
+    {
+        id: 19, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cuál es el mecanismo fisiopatológico principal que desencadena el dolor de características neuropáticas en la inguinodinia crónica posoperatoria?", 
+        options: ["Traumatismo directo o atrapamiento nervioso", "Inflamación local del tejido muscular", "Lesión de fibras autonómicas simpáticas durante la eyaculación", "Tensión excesiva en la línea de sutura tisular"], 
+        answer: 0, 
+        justification: "Justificación: El dolor neuropático crónico inguinal es una complicación debilitante que difiere del dolor nociceptivo (tisular). De acuerdo al libro de Schwartz Principios de Cirugía, este dolor neuropático se produce directamente por atrapamiento o agresión nerviosa por suturas, tachuelas o fibrosis sobre los troncos principales (ilioinguinal, iliohipogástrico o genitofemoral).<br><br>Perla Quirúrgica: El dolor neuropático ocurre como resultado de daño o atrapamiento nervioso directo. Puede presentarse temprano o tarde, y se manifiesta como una sensación localizada, aguda, urente o de desgarro.<br><br>Análisis de Distractores: La opción B y D causan dolor nociceptivo (somático) de origen muscular o tendinoso; C provoca dolor visceral autolimitado e inespecífico transmitido por fibras autonómicas aferentes pélvicas.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 31." 
+    },
+    {
+        id: 20, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal reparada mediante técnica laparoscópica transabdominal preperitoneal (TAPP), ¿cuál es la causa más común del desarrollo de obstrucción intestinal mecánica posoperatoria?", 
+        options: ["Adherencias a mallas de tipo biológico", "Herniación a través de defectos peritoneales no cerrados", "Migración intraperitoneal de mallas autoadheribles", "Atrapamiento de asas en el espacio de Retzius desuflado"], 
+        answer: 1, 
+        justification: "Justificación: La disección preperitoneal en TAPP requiere un flap de peritoneo que debe cerrarse herméticamente al final de la cirugía. De acuerdo al libro de Schwartz Principios de Cirugía, si existen defectos o brechas peritoneales no afrontadas, las asas de intestino delgado pueden herniarse hacia dicho orificio y contactar directamente con la malla, provocando torsión, atrapamiento y obstrucción mecánica.<br><br>Perla Quirúrgica: En las reparaciones TAPP, la obstrucción ocurre más comúnmente de manera secundaria a la herniación de asas intestinales a través de defectos peritoneales o sitios de inserción de trocares grandes...<br><br>Análisis de Distractores: La opción A no representa una causa común descrita en la técnica; C es una complicación de IPOM pero infrecuente en TAPP; D es anatómicamente inviable ya que el espacio de Retzius no tiene contacto con asas libres si el peritoneo se cierra correctamente.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 31." 
+    },
+    {
+        id: 21, 
+        question: "De acuerdo a la GPC, en Hernia Femoral, ¿cuál es el límite medial del anillo femoral?", 
+        options: ["Tracto iliopúbico", "Ligamento lacunar", "Ligamento de Cooper", "Vena femoral"], 
+        answer: 1, 
+        justification: "Justificación: El anillo femoral es una zona rígida que predispone al desarrollo de hernias femorales y su posterior estrangulamiento. De acuerdo al libro de Schwartz Principios de Cirugía, la frontera de este anillo se define por estructuras ligamentarias y vasculares precisas, situándose el ligamento lacunar (o de Gimbernat) en su porción medial, lo que delimita estrechamente el espacio de protrusión.<br><br>Perla Quirúrgica: Los límites del anillo femoral incluyen el tracto iliopúbico y el ligamento inguinal en la parte anterior, el ligamento de Cooper en la parte posterior, el ligamento lacunar en la parte medial y la vena femoral en la parte lateral.<br><br>Análisis de Distractores: Las opciones A representa el límite anterior, C define el límite posterior y D constituye el límite lateral, por lo que no corresponden a la porción medial del anillo.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 3." 
+    },
+    {
+        id: 22, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal Indirecta, ¿cuál es la anomalía embriológica congénita causante de la persistencia del saco herniario?", 
+        options: ["Defecto primario en la síntesis de colágena", "Cierre tardío del anillo inguinal profundo", "Persistencia del conducto peritoneovaginal permeable", "Atrofia del músculo transverso del abdomen"], 
+        answer: 2, 
+        justification: "Justificación: La patogenia de la hernia indirecta tiene un fuerte componente genético y de desarrollo. De acuerdo al libro de Schwartz Principios de Cirugía, la falta de obliteración del proceso peritoneovaginal durante el descenso testicular deja un saco peritoneal preexistente que facilita la protrusión de vísceras hacia el conducto inguinal bajo condiciones de estrés abdominal.<br><br>Perla Quirúrgica: El cierre defectuoso del conducto peritoneovaginal elimina la apertura peritoneal en el anillo inguinal interno. La falta de cierre del peritoneo resulta en un conducto peritoneovaginal permeable.<br><br>Análisis de Distractores: La opción A se asocia predominantemente con hernias directas o incisionales en adultos; B y D son factores anatómicos contribuyentes secundarios, mas no la anomalía embriológica primaria del desarrollo del saco indirecto.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 11." 
+    },
+    {
+        id: 23, 
+        question: "De acuerdo a la GPC, en la clasificación de Nyhus para Hernia de la Ingle, ¿qué tipo corresponde a la hernia femoral?", 
+        options: ["Tipo I", "Tipo IIIA", "Tipo IIIB", "Tipo IIIC"], 
+        answer: 3, 
+        justification: "Justificación: El sistema de Nyhus agrupa los defectos de la región inguinal y crural de acuerdo con sus características estructurales y localización. De acuerdo al libro de Schwartz Principios de Cirugía, las hernias femorales (o crurales) se aíslan dentro de una subcategoría única catalogada como Tipo IIIC, reconociendo su anatomía y comportamiento quirúrgico diferenciado de las inguinales.<br><br>Perla Quirúrgica: Tipo IIIC: Hernia femoral.<br><br>Análisis de Distractores: La opción A describe hernias indirectas con anillo normal; B agrupa las hernias inguinales directas; C incluye las hernias indirectas con destrucción de la pared posterior (deslizantes, pantalón o gigantes).", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 3." 
+    },
+    {
+        id: 24, 
+        question: "De acuerdo a la GPC, en la epidemiología de las hernias de la ingle, ¿cuál es la variedad de hernia más común tanto en hombres como en mujeres?", 
+        options: ["Hernia inguinal directa", "Hernia inguinal indirecta", "Hernia femoral", "Hernia obturatriz"], 
+        answer: 1, 
+        justification: "Justificación: A pesar de que las hernias femorales se presentan mayormente en el sexo femenino, no representan el subtipo predominante de este género. De acuerdo al libro de Schwartz Principios de Cirugía, la hernia inguinal indirecta se mantiene estadísticamente como la afección herniaria más frecuente en la población general, independientemente del sexo del paciente.<br><br>Perla Quirúrgica: Aproximadamente el 70% de las reparaciones de hernia femoral se realizan en mujeres; sin embargo, el subtipo más común de hernia de la ingle en hombres y mujeres sigue siendo la hernia inguinal indirecta.<br><br>Análisis de Distractores: Las opciones A y C describen patologías menos frecuentes en la estadística global de hernias de la ingle; D constituye una variedad extremadamente rara que no entra en los primeros lugares epidemiológicos.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 3." 
+    },
+    {
+        id: 25, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cuál es el mecanismo principal responsable del dolor referido hacia el escroto, testículo o cara interna del muslo?", 
+        options: ["Compresión de los nervios sensitivos por el saco herniario", "Isquemia transitoria de la pared del conducto", "Distensión del anillo inguinal profundo por asas", "Tracción sostenida del meso del intestino"], 
+        answer: 0, 
+        justification: "Justificación: La presentación clínica del paciente con hernia incluye dolor sordo o de tipo opresivo que a menudo se irradia a zonas adyacentes. De acuerdo al libro de Schwartz Principios de Cirugía, la distensión local producida por el saco herniario y su contenido ejerce una presión directa o un estiramiento de los troncos nerviosos sensitivos que discurren por el conducto inguinal, desencadenando la irradiación dermatómica característica.<br><br>Perla Quirúrgica: Se cree que el dolor se debe a la compresión de los nervios por el saco, lo que provoca presión generalizada, dolor agudo localizado o dolor referido. El dolor referido puede involucrar el escroto, el testículo o la parte interna del muslo.<br><br>Análisis de Distractores: La opción B y C proponen explicaciones mecánicas incorrectas de dolor de tipo nociceptivo; D causa dolor de tipo visceral o cólico generalizado, mas no el dolor de distribución dermatómica específica hacia el testículo o muslo.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 14." 
+    },
+    {
+        id: 26, 
+        question: "De acuerdo a la GPC, en el diagnóstico diferencial de Hernia Femoral, ¿qué hallazgo clínico en un paciente delgado puede simular esta afección y conducir a un diagnóstico erróneo?", 
+        options: ["Quiste del canal de Nuck", "Varice de la safena proximal", "Almohadilla grasa inguinal prominente", "Adenopatía inguinal reactiva"], 
+        answer: 2, 
+        justification: "Justificación: El examen de la región inguinofemoral puede resultar confuso ante variantes anatómicas o acúmulos tisulares no herniarios. De acuerdo al libro de Schwartz Principios de Cirugía, una acumulación localizada de grasa preperitoneal en el canal femoral de un individuo con bajo índice de masa corporal puede palparse como un bulto firme y no reducible, simulando una verdadera hernia crural (fenómeno denominado pseudohernia femoral).<br><br>Perla Quirúrgica: En contraste, una almohadilla de grasa inguinal prominente en un paciente delgado, también conocida como pseudohernia femoral, puede inducir a un diagnóstico erróneo de hernia femoral.<br><br>Análisis de Distractores: Las opciones A y B son diagnósticos diferenciales reales de masa inguinal, pero no se asocian típicamente con el diagnóstico erróneo condicionado específicamente por la delgadez del paciente; D se presenta como masas múltiples o dolorosas de etiología inflamatoria o infecciosa diferente a la pseudohernia de grasa.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 14." 
+    },
+    {
+        id: 27, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal encarcelada sin datos de estrangulación, ¿en qué posición de inclinación corporal debe colocarse al paciente durante la maniobra de taxis?", 
+        options: ["Decúbito prono con elevación pélvica", "Posición de Trendelenburg", "Posición de Fowler modificada", "Decúbito lateral izquierdo"], 
+        answer: 1, 
+        justification: "Justificación: La reducción manual de una hernia encarcelada requiere disminuir la presión hidrostática intraabdominal y favorecer el retorno de las vísceras por gravedad. De acuerdo al libro de Schwartz Principios de Cirugía, tras administrar analgesia y sedación leve, colocar al paciente en posición de Trendelenburg maximiza las posibilidades de una reducción exitosa y segura de los elementos herniados hacia la cavidad peritoneal.<br><br>Perla Quirúrgica: Para realizar el taxis, se administran analgésicos y sedantes leves, y se coloca al paciente en posición de Trendelenburg. El saco herniario se alarga con ambas manos y, mientras se mantiene una ligera contratracción, se intenta la reducción de los contenidos de manera circunferencial...<br><br>Análisis de Distractores: Las opciones A, C y D no ejercen el vector de gravedad de dirección cefálica necesario para relajar el anillo inguinal y facilitar el deslizamiento retrógrado de los órganos atrapados.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 14." 
+    },
+    {
+        id: 28, 
+        question: "De acuerdo a la GPC, en Hernia Inguinal, ¿cuántas veces incrementa la mortalidad por cualquier causa la reparación de urgencia en comparación con la cirugía programada según el Registro Sueco de Hernias?", 
+        options: ["7 veces", "3 veces", "12 veces", "15 veces"], 
+        answer: 0, 
+        justification: "Justificación: La demora en el tratamiento de las hernias de la ingle propicia complicaciones graves que obligan a realizar procedimientos de emergencia en condiciones subóptimas. De acuerdo al libro de Schwartz Principios de Cirugía, la necesidad de una cirugía de urgencia por estrangulación o encarcelamiento intestinal eleva drásticamente el riesgo de muerte perioperatoria en una proporción de siete veces respecto al escenario electivo controlado.<br><br>Perla Quirúrgica: Los datos del Registro Sueco de Hernias demuestran que la operación de urgencia se asocia con un aumento de siete veces en la mortalidad por todas las causas en comparación con la cirugía electiva entre 107,838 reparaciones de hernias de la ingle.<br><br>Análisis de Distractores: Las opciones B, C y D representan proporciones de riesgo de mortalidad incorrectas que no se corresponden con los datos crudos extraídos de los análisis del registro de salud sueco.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 14." 
+    },
+    {
+        id: 29, 
+        question: "De acuerdo a la GPC, en la anatomía laparoscópica de la ingle, ¿qué estructuras vasculares forman el círculo de la muerte?", 
+        options: ["Circunfleja iliaca profunda, epigástrica superficial, femoral profunda y vasos obturadores", "Iliaca común, iliaca interna, obturadora, epigástrica inferior e iliaca externa", "Epigástrica superficial, pudenda interna, circunfleja femoral lateral y vasos rectales superiores", "Hipogástrica, circunfleja iliaca profunda, pudenda externa e epigástrica inferior"], 
+        answer: 1, 
+        justification: "Justificación: El \"círculo de la muerte\" (o círculo vascular anastomosis de corona mortis) es una intrincada red arterial y venosa en el aspecto posterior de la pelvis. De acuerdo al libro de Schwartz Principios de Cirugía, la comunicación directa de estos vasos arteriales y venosos forma un anillo continuo de alto flujo que puede desgarrarse gravemente si se realiza una fijación con grapas o suturas agresivas en la vecindad del ligamento de Cooper.<br><br>Perla Quirúrgica: El círculo de la muerte es una continuación vascular formada por los vasos ilíaco común, ilíaco interno, obturador, epigástrico inferior e ilíaco externo.<br><br>Análisis de Distractores: Las opciones A, C y D proponen asociaciones vasculares que no constituyen la continuidad del circuito pélvico posterior clasificado críticamente con este epónimo quirúrgico.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 7." 
+    },
+    {
+        id: 30, 
+        question: "De acuerdo a la GPC, en la hernioplastia de Hernia Inguinal abierta con técnica de Bassini, ¿cuáles estructuras anatómicas se suturan directamente al borde interno del ligamento inguinal?", 
+        options: ["Músculo oblicuo interno, transverso del abdomen y fascia transversalis", "Aponeurosis del oblicuo externo y vaina anterior del recto", "Tendón conjunto y ligamento pectíneo de Cooper", "Fascia transversalis y tracto iliopúbico"], 
+        answer: 0, 
+        justification: "Justificación: La técnica tisular pionera descrita por Edoardo Bassini revolucionó la cirugía de hernia al proponer una reconstrucción fisiológica en tres planos. De acuerdo al libro de Schwartz Principios de Cirugía, la aproximación del borde inferior de las fibras musculofasciales profundas (oblicuo interno, transverso y fascia transversalis) hacia el ligamento inguinal crea una nueva barrera de contención posterior que sustituye el piso debilitado.<br><br>Perla Quirúrgica: Reparación de Bassini... Reconstrucción de la pared posterior suturando la fascia transversalis, el músculo transverso del abdomen y el músculo oblicuo interno medialmente al ligamento inguinal lateralmente.<br><br>Análisis de Distractores: La opción B involucra capas superficiales que no participan en el plano de reconstrucción posterior; C corresponde al plano de reconstrucción de la técnica de McVay; D representa elementos fasciales preperitoneales posteriores no suturados de forma conjunta en Bassini.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 15." 
+    },
+    {
+        id: 31, 
+        question: "De acuerdo a la GPC, en la hernioplastia de Hernia Inguinal abierta, ¿cuál es la razón de momios de recidiva de la técnica de Shouldice en comparación con las reparaciones que utilizan mallas protésicas?", 
+        options: ["1.50", "2.25", "3.65", "4.80"], 
+        answer: 2, 
+        justification: "Justificación: A pesar de ser la técnica anatómica autóloga más exitosa debido a sus cuatro líneas de imbricación de sutura continua, no iguala los resultados a largo plazo de las técnicas libres de tensión. De acuerdo al libro de Schwartz Principios de Cirugía, la ausencia de una prótesis incrementa de forma significativa el riesgo relativo de recidiva (OR de 3.65) al someter a tensión mecánica a los tejidos nativos suturados.<br><br>Perla Quirúrgica: En comparación con las reparaciones con malla, la técnica de Shouldice se asoció con tasas significativamente más altas de recurrencia (OR 3.65, IC 1.79–7.47); sin embargo, es la reparación basada en tejidos más eficaz cuando la malla no está disponible o está contraindicada.<br><br>Análisis de Distractores: Las opciones A, B y D son razones de momios subestimadas o incorrectas respecto al análisis estadístico formal publicado en los metaanálisis de referencia global de hernias.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 40." 
+    },
+    {
+        id: 32, 
+        question: "De acuerdo a la GPC, en el tratamiento de la Hernia Femoral, además de los escenarios donde el uso de material protésico está contraindicado, ¿en qué otra indicación quirúrgica se prefiere la técnica abierta de McVay?", 
+        options: ["Hernia femoral", "Hernia directa recidivante", "Hernia inguinal indirecta estrangulada", "Hernia inguinal en pantalón gigante"], 
+        answer: 0, 
+        justification: "Justificación: La técnica de McVay asocia el tendón conjunto al ligamento de Cooper, permitiendo cerrar mecánicamente el conducto crural. De acuerdo al libro de Schwartz Principios de Cirugía, esta característica anatómica convierte a la técnica de McVay en la opción tisular clásica de elección para la reparación definitiva de las hernias de tipo femoral sin uso de malla.<br><br>Perla Quirúrgica: La reparación de McVay aborda los defectos tanto del conducto inguinal como del anillo femoral. Esta técnica está indicada para hernias femorales y en casos donde el uso de material protésico está contraindicado.<br><br>Análisis de Distractores: Las opciones B, C y D representan variedades de defectos de la ingle que se benefician de mallas de gran tamaño o abordajes preperitoneales, no teniendo indicación de McVay de primera línea.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 15." 
+    },
+    {
+        id: 33, 
+        question: "De acuerdo a la GPC, en la técnica de Lichtenstein para Hernia Inguinal, ¿qué tipo de sutura se indica para la fijación del borde inferior de la malla a lo largo del ligamento inguinal?", 
+        options: ["Multifilamento absorbible a corto plazo", "Trenzado sintético absorbible a largo plazo", "Monofilamento sintético permanente", "Seda trenzada natural no absorbible"], 
+        answer: 2, 
+        justification: "Justificación: La fijación de la prótesis en el suelo inguinal debe soportar la presión del abdomen de por vida para evitar el colapso medial del material. De acuerdo al libro de Schwartz Principios de Cirugía, la fijación inferior de la malla a la porción reflejada del ligamento inguinal requiere el uso obligatorio de una sutura de monofilamento sintético no absorbible (como el polipropileno) para asegurar una durabilidad tensil permanente.<br><br>Perla Quirúrgica: Para la fijación del margen inferior de la malla, se utiliza una sutura permanente, sintética y monofilamento, teniendo cuidado de evitar colocar suturas directamente en el periostio del tubérculo púbico.<br><br>Análisis de Distractores: Las opciones A y B proponen suturas absorbibles cuya degradación prematura causaría el desprendimiento de la malla y recidiva; D es un material orgánico trenzado que induce una respuesta inflamatoria persistente indeseable sobre el trayecto vascular y nervioso adyacente.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 15." 
+    },
+    {
+        id: 34, 
+        question: "De acuerdo a la GPC, en la técnica de tapón y parche para Hernia Inguinal, ¿quiénes popularizaron esta técnica de reparación?", 
+        options: ["Bassini y Halsted", "Nyhus y Condon", "Shouldice y Glassow", "Rutkow y Robbins"], 
+        answer: 3, 
+        justification: "Justificación: La técnica de Tapón y Parche (Plug and Patch) agilizó los tiempos quirúrgicos al rellenar el defecto del anillo interno directamente. De acuerdo al libro de Schwartz Principios de Cirugía, posterior a la descripción original de Gilbert de una reparación sin sutura, los cirujanos Ira Rutkow y Alan Robbins popularizaron y estandarizaron el uso de tapones tridimensionales de polipropileno preconformados a nivel mundial.<br><br>Perla Quirúrgica: Una modificación de la reparación de Lichtenstein, la técnica de tapón y parche, fue desarrollada por Gilbert y posteriormente popularizada por Rutkow y Robbins.<br><br>Análisis de Distractores: La opción A son pioneros históricos de la reparación abierta anatómica clásica; B son anatomistas y cirujanos que propusieron clasificaciones y abordajes posteriores; C desarrollaron la técnica tisular de Shouldice basada en imbricación de capas.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 15." 
+    },
+    {
+        id: 35, 
+        question: "De acuerdo a la GPC, en la orquitis isquémica postoperatoria secundaria a hernioplastia de Hernia Inguinal, ¿cuál es la lesión anatómica que con mayor frecuencia causa esta complicación?", 
+        options: ["Lesión del plexo pampiniforme", "Transección accidental de la arteria testicular", "Atrapamiento intraaponeurótico del conducto deferente", "Sección del ligamento suspensorio del testículo"], 
+        answer: 0, 
+        justification: "Justificación: La orquitis isquémica es una entidad dolorosa que suele presentarse tras disecciones agresivas o traumatismos directos sobre los elementos del cordón espermático. De acuerdo al libro de Schwartz Principios de Cirugía, la causa fisiopatológica primaria es la trombosis venosa retrógrada originada por lesión del plexo pampiniforme durante la movilización del saco, y no la oclusión de la arteria testicular principal, la cual cuenta con abundante circulación colateral.<br><br>Perla Quirúrgica: La lesión de las estructuras del cordón espermático puede provocar orquitis isquémica o atrofia testicular. La orquitis isquémica es causada con mayor frecuencia por una lesión del plexo pampiniforme y no de la arteria testicular.<br><br>Análisis de Distractores: La opción B causa atrofia testicular a largo plazo pero no necrosis aguda gracias a la irrigación colateral de las arterias cremasteriana y deferencial; C y D lesionan componentes no vasculares del cordón, lo que puede provocar dolor o infertilidad, mas no congestión venosa ni isquemia testicular aguda.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 37." 
+    },
+    {
+        id: 36, 
+        question: "De acuerdo a la GPC, ante la sospecha de orquitis isquémica posterior a la reparación de una Hernia Inguinal, ¿cuál estudio de gabinete se debe solicitar para diferenciar la isquemia de la necrosis testicular?", 
+        options: ["Tomografía computarizada axial de alta resolución", "Ultrasonido Doppler testicular", "Resonancia magnética pélvica contrastada", "Gammagrafía testicular con tecnecio-99m"], 
+        answer: 1, 
+        justification: "Justificación: Diferenciar la inflamación e isquemia congestiva de la necrosis tisular irreversible es vital para evitar cirugías innecesarias de pérdida testicular. De acuerdo al libro de Schwartz Principios de Cirugía, el ultrasonido con análisis de flujo Doppler a color es el estudio de primera elección que documenta con precisión la permeabilidad y perfusión de los vasos testiculares e intraparenquimatosos.<br><br>Perla Quirúrgica: El ultrasonido demostrará el flujo sanguíneo testicular para diferenciar entre isquemia y necrosis. La orquiectomía de urgencia sólo es necesaria en caso de necrosis.<br><br>Análisis de Distractores: Las opciones A y C son costosas, consumen tiempo valioso y no aportan mayor sensibilidad que el Doppler a color a pie de cama; D es un método alternativo de medicina nuclear útil pero poco disponible en la urgencia hospitalaria comparada con el ultrasonido Doppler.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 37." 
+    },
+    {
+        id: 37, 
+        question: "De acuerdo a la GPC, en el tratamiento de la orquitis isquémica secundaria a hernioplastia de Hernia Inguinal, ¿cuál es el manejo de primera línea en ausencia de necrosis testicular comprobada?", 
+        options: ["Orquidopexia urgente transescrotal bilateral", "Orquiectomía radical ipsolateral de urgencia", "Terapia trombolítica local intraarterial", "Medidas de soporte, analgésicos y antiinflamatorios no esteroideos"], 
+        answer: 3, 
+        justification: "Justificación: La gran mayoría de los casos de orquitis isquémica postoperatoria corresponden a procesos congestivos autolimitados secundarios a manipulación del plexo venoso. De acuerdo al libro de Schwartz Principios de Cirugía, cuando el estudio de imagen descarta la necrosis tisular, el tratamiento indicado es sintomático y conservador, basándose en reposo escrotal, suspensorio, hielo local y antiinflamatorios.<br><br>Perla Quirúrgica: El tratamiento para la orquitis isquémica consiste con mayor frecuencia en tranquilidad al paciente, antiinflamatorios no esteroideos y medidas de comodidad.<br><br>Análisis de Distractores: Las opciones A y B son intervenciones quirúrgicas invasivas mutilantes o innecesarias en procesos reversibles; C representa una terapia no validada con alto riesgo de hemorragia pélvica postoperatoria.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 37." 
+    },
+    {
+        id: 38, 
+        question: "De acuerdo a la GPC, la lesión accidental del nervio cutáneo femoral lateral durante una hernioplastia laparoscópica de Hernia Inguinal resulta en ¿cuál de los siguientes síndromes clínicos?", 
+        options: ["Pérdida del reflejo cremasteriano", "Meralgia parestésica", "Osteitis del pubis", "Disfunción eyaculatoria dolorosa"], 
+        answer: 1, 
+        justification: "Justificación: El nervio cutáneo femoral lateral transcurre por el plano preperitoneal lateral en la zona del triángulo del dolor laparoscópico. De acuerdo al libro de Schwartz Principios de Cirugía, la colocación de tacks o grapas sobre este trayecto lesiona el nervio sensitivo, desencadenando parestesias, entumecimiento e hipoestesia dolorosa persistente sobre la cara anterololateral del muslo (cuadro patognomónico de meralgia parestésica).<br><br>Perla Quirúrgica: La lesión del nervio cutáneo femoral lateral produce meralgia parestésica, una afección caracterizada por parestesia persistente en la cara lateral del muslo.<br><br>Análisis de Distractores: La opción A se relaciona con daño a la rama genital del genitofemoral; C se produce por colocación de suturas penetrantes o grapas directamente sobre el periostio del tubérculo púbico; D es secundaria a fibrosis densa peri-conducto deferente.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 37." 
+    },
+    {
+        id: 39, 
+        question: "De acuerdo a la GPC, en el dolor crónico neuropático postoperatorio tras hernioplastia de Hernia Inguinal refractario a antiinflamatorios no esteroideos, ¿cuál es el fármaco de primera línea recomendado?", 
+        options: ["Gabapentina", "Paracetamol", "Ketorolaco", "Naloxona"], 
+        answer: 0, 
+        justification: "Justificación: El dolor crónico neuropático es causado por alteración o daño directo a los nervios cutáneos y no responde a analgésicos nociceptivos ordinarios. De acuerdo al libro de Schwartz Principios de Cirugía, tras el fracaso inicial de los antiinflamatorios convencionales y el reposo, el tratamiento médico específico de primera línea requiere el uso de neuromoduladores como la gabapentina o sus análogos para estabilizar las membranas neuronales sobreexcitadas.<br><br>Perla Quirúrgica: El tratamiento inicial del atrapamiento nervioso consiste en reposo, hielo, antiinflamatorios no esteroideos, fisioterapia y posible inyección local de corticosteroides y anestésicos. Esto puede ser seguido por un ensayo con gabapentina o sus análogos.<br><br>Análisis de Distractores: Las opciones B y C son analgésicos nociceptivos (no neuropáticos) ineficaces en el tratamiento del atrapamiento nervioso crónico; D es un antagonista opioide indicado únicamente para la reversión de intoxicación por narcóticos.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 37." 
+    },
+    {
+        id: 40, 
+        question: "De acuerdo a la GPC, en la técnica de tapón y parche para Hernia Inguinal, ¿cuál es el porcentaje aproximado de casos en los que ocurre migración intraabdominal del tapón protésico o erosión hacia estructuras contiguas?", 
+        options: ["1%", "12%", "6%", "18%"], 
+        answer: 2, 
+        justification: "Justificación: Aunque la técnica de tapón y parche de polipropileno ofrece excelentes resultados a corto plazo, el uso de un volumen masivo y rígido de malla preformada puede asociarse con complicaciones tardías. De acuerdo al libro de Schwartz Principios de Cirugía, aproximadamente un 6% de los pacientes intervenidos con esta técnica presentarán migración intraabdominal del cono o erosión directa del material protésico hacia asas intestinales, vasos sanguíneos de la pelvis o la vejiga.<br><br>Perla Quirúrgica: El metaanálisis no demuestra diferencias significativas en los resultados entre Lichtenstein y la técnica de Tapón y Parche; sin embargo, la migración intraabdominal del tapón y la erosión en estructuras contiguas ocurre en aproximadamente el 6% de los casos.<br><br>Análisis de Distractores: Las opciones A, B y D proponen porcentajes de migración y complicación protésica que no reflejan la incidencia estadística descrita en los metaanálisis comparativos sistemáticos de hernias.", 
+        source: "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales, Página 40." 
+    }
+
+
+
+        ];
+
+        // ==========================================
+        // ==========================================
+        
+        let userProgress = {};
+        let currentQuestionId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadProgress();
+            
+            let lastQId = null;
+            try { lastQId = localStorage.getItem('SchwartaherniaLastQId'); } catch (e) {}
+            displayQuestion(lastQId ? parseInt(lastQId) : null);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('module-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.q-box-item').forEach(box => {
+                    const id = parseInt(box.dataset.id);
+                    const qObj = questionsData.find(q => q.id === id);
+                    if(!qObj) return;
+                    const matchText = qObj.question.toLowerCase().includes(term);
+                    box.style.display = (term === '' || matchText || id.toString() === term) ? 'flex' : 'none';
+                });
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                const m = document.getElementById('reset-modal'); m.querySelector('div').classList.add('scale-95');
+                setTimeout(()=>m.classList.add('hidden'),300);
+            });
+            document.getElementById('confirm-reset').addEventListener('click', () => {
+                localStorage.removeItem('SchwartaherniaProgress');
+                localStorage.removeItem('SchwartaherniaLastQId');
+                window.location.reload();
+            });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const overlay = document.getElementById('sidebar-overlay');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            
+            menuToggle.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.toggle('lg:translate-x-0');
+                    mainContent.classList.toggle('lg:ml-80');
+                    
+                    // Reposicionar el botón del tablero dependiendo de si el sidebar está abierto
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                }
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        // Navegar a pregunta anterior
+        function goToPreviousQuestion(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex > 0) {
+                displayQuestion(questionsData[currentIndex - 1].id);
+            } else {
+                displayQuestion(null);
+            }
+        }
+
+        function getQBoxClass(qId, isActive) {
+            let base = "q-box-item flex items-center justify-center aspect-square rounded-md font-bold text-sm cursor-pointer transition-all select-none border ";
+            
+            if (isActive) base += "ring-4 ring-pink-500 shadow-md z-10 border-pink-500 dark:border-pink-400 ";
+
+            const state = userProgress[qId];
+            if (!state || !state.answered) {
+                return base + "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700";
+            } else if (state.isCorrect) {
+                return base + "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
+            } else {
+                return base + "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
+            }
+        }
+
+        function renderGridHTML(isActiveIdContext = null) {
+            return questionsData.map(q => 
+                `<div class="${getQBoxClass(q.id, q.id === isActiveIdContext)}" data-id="${q.id}" onclick="displayQuestion(${q.id})">${q.id}</div>`
+            ).join('');
+        }
+
+        function renderSidebarGrid() {
+            document.getElementById('sidebar-q-grid').innerHTML = renderGridHTML(currentQuestionId);
+        }
+
+        // --- PANTALLAS ---
+
+        function displayWelcomeScreen() {
+            // Ocultar botones flotantes en la pantalla de inicio
+            document.getElementById('dashboard-button').classList.add('hidden');
+            document.getElementById('menu-toggle').classList.add('hidden');
+            
+            const displayArea = document.getElementById('module-display');
+            const total = questionsData.length;
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const correct = Object.keys(userProgress).filter(id => userProgress[id].isCorrect).length;
+            const successRate = total > 0 && ans > 0 ? Math.round((correct / ans) * 100) : 0;
+            const isAllCompleted = ans === total && total > 0;
+            
+            let firstUncompletedId = questionsData.find(q => !userProgress[q.id]?.answered)?.id;
+            
+            let actionBtn = isAllCompleted 
+                ? `<button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl font-bold transition-colors shadow-sm">Reiniciar Examen</button>`
+                : `<button onclick="displayQuestion(${firstUncompletedId})" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-pink-900/30 transition-transform hover:-translate-y-0.5">Continuar Aprendiendo</button>`;
+
+            // Lógica para cambiar a estado de finalizado
+            let blur1 = isAllCompleted ? "bg-emerald-500/30" : "bg-rose-900/40";
+            let blur2 = isAllCompleted ? "bg-teal-500/30" : "bg-cyan-900/30";
+            let badgeText = isAllCompleted ? "¡100% Completado! UMAE 25 - 2026" : "R4 - UMAE 25 - 2026";
+            let badgeClass = isAllCompleted ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" : "bg-white/10 border-white/10 text-white";
+            let titleText = isAllCompleted ? "¡Examen Finalizado!" : "Schwartz's Principles of Surgery, 11e, 2019, Capítulo 37: Hernias Inguinales";
+            let descText = isAllCompleted 
+                ? "Has completado con éxito todas las preguntas. Revisa tus las respuestas correctas/incorrectas en el tablero." 
+                : "";
+
+            displayArea.innerHTML = `
+                <div class="flex flex-col gap-6 max-w-6xl mx-auto lg:mt-0">
+                    
+                    <!-- BREADCRUMB (Centrado en móvil, no hay botones flotantes interrumpiendo) -->
+                    <div class="flex justify-center sm:justify-start items-center mb-1 mt-4 lg:mt-0">
+                        <a href="login.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 font-semibold transition-colors text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Regresar al Panel
+                        </a>
+                    </div>
+
+                    <!-- HERO DYNAMIC -->
+                    <div class="relative bg-slate-900 dark:bg-slate-950 rounded-[2rem] p-8 md:p-12 shadow-xl text-white overflow-hidden border border-slate-800 transition-colors duration-500 ${isAllCompleted ? 'ring-2 ring-emerald-500/50' : ''}">
+                        <div class="absolute top-0 right-0 w-64 h-64 ${blur1} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-colors duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 ${blur2} rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none transition-colors duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8">
+                            <div class="text-center lg:text-left">
+                                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 border ${badgeClass} transition-colors duration-500">
+                                    ${badgeText}
+                                </span>
+                                <h1 class="text-3xl md:text-4xl lg:text-4xl font-extrabold tracking-tight mb-3 transition-colors duration-500 ${isAllCompleted ? 'text-emerald-400 drop-shadow-md' : ''}">${titleText}</h1>
+                                <p class="text-slate-300 text-base md:text-lg font-medium max-w-lg mx-auto lg:mx-0 transition-colors duration-500">${descText}</p>
+                                
+                                <div class="mt-8 flex justify-center lg:justify-start">
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            
+                            <!-- Tarjeta de Estadísticas Modificada -->
+                            <div class="flex-shrink-0 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center shadow-2xl w-full lg:max-w-md">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/20 w-full text-center">
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Respondidas</p>
+                                        <p class="text-2xl sm:text-3xl font-black">${ans}<span class="text-xs sm:text-sm text-slate-500">/${total}</span></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Correctas</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-emerald-300">${correct}</p>
+                                    </div>
+                                    <div class="px-2">
+                                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-1">Rendimiento</p>
+                                        <p class="text-2xl sm:text-3xl font-black text-yellow-300">${successRate}%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 leading-tight">Aciertos vs Respondidas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLERO VISIBLE Y SCROLLABLE -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200/60 dark:border-slate-800 p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Tablero General
+                            </h2>
+                            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div> Pendiente</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800"></div> Correcta</div>
+                                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800"></div> Incorrecta</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-2 sm:gap-3 grid-cols-[repeat(auto-fill,minmax(42px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(48px,1fr))] p-1">
+                            ${renderGridHTML(null)}
+                        </div>
+                    </div>
+
+                    <!-- SIGUIENTE LINK -->
+                    <div class="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end pb-8">
+                        <a href="BS06308GYOE.html" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                            Siguiente EXAMEN 
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayQuestion(qId) {
+            const displayArea = document.getElementById('module-display');
+            const progressContainer = document.getElementById('progress-container');
+            const dashboardBtn = document.getElementById('dashboard-button');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (!displayArea) return;
+            
+            displayArea.classList.add('opacity-0');
+
+            setTimeout(() => {
+                currentQuestionId = qId ? parseInt(qId) : null;
+                saveProgress();
+
+                if (!currentQuestionId) {
+                    progressContainer.classList.add('hidden');
+                    dashboardBtn.classList.add('hidden');
+                    menuToggle.classList.add('hidden');
+                    
+                    // Asegurar que el sidebar se oculte en la pantalla de inicio en escritorio
+                    sidebar.classList.remove('lg:translate-x-0');
+                    document.getElementById('main-content').classList.remove('lg:ml-80');
+                    
+                    renderSidebarGrid();
+                    displayWelcomeScreen();
+                    displayArea.classList.remove('opacity-0');
+                    document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                
+                // Mostrar botones superiores (Izquierda y Derecha) al entrar a la pregunta
+                dashboardBtn.classList.remove('hidden');
+                menuToggle.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                // Alineación del botón dashboard según si el sidebar está abierto
+                if (window.innerWidth >= 1024) {
+                    // Desplegar automáticamente la barra al entrar a contestar en escritorio
+                    sidebar.classList.add('lg:translate-x-0');
+                    document.getElementById('main-content').classList.add('lg:ml-80');
+
+                    if (sidebar.classList.contains('lg:translate-x-0')) {
+                        dashboardBtn.classList.add('lg:left-[22rem]');
+                        dashboardBtn.classList.remove('lg:left-8');
+                    } else {
+                        dashboardBtn.classList.remove('lg:left-[22rem]');
+                        dashboardBtn.classList.add('lg:left-8');
+                    }
+                } else {
+                    // Ocultar Sidebar en Móvil al entrar a la pregunta
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+                
+                const qData = questionsData.find(q => q.id === currentQuestionId);
+                if (!qData) return displayQuestion(null);
+                
+                const qState = userProgress[currentQuestionId];
+                if (qState && qState.answered) renderAnsweredQuestion(qData, qState);
+                else renderActiveQuestion(qData);
+
+                renderSidebarGrid();
+                displayArea.classList.remove('opacity-0');
+                
+                document.getElementById('main-content').scrollTo(0, 0);
+            }, 150); 
+        }
+
+        function renderActiveQuestion(qData) {
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0">
+                    
+                    <div class="flex mb-4">
+                        <span class="inline-block bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-pink-100 dark:border-pink-800/50">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <form id="q-form-${qData.id}" class="space-y-3">
+                        ${qData.options.map((opt, i) => `
+                            <label class="flex items-start p-3 sm:p-4 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:bg-pink-50 has-[:checked]:border-pink-400 dark:has-[:checked]:bg-pink-900/10 shadow-sm hover:shadow">
+                                <input type="radio" name="option" value="${i}" class="mt-0.5 h-4 w-4 text-pink-600 focus:ring-pink-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                <span class="ml-3 text-sm sm:text-[15px] text-slate-700 dark:text-slate-200 font-medium leading-snug">${opt}</span>
+                            </label>
+                        `).join('')}
+                        
+                        <div class="pt-6 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button type="button" onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                Atrás
+                            </button>
+                            <button type="button" onclick="submitAnswer(${qData.id})" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-600 dark:hover:bg-pink-500 dark:hover:text-white transition-colors text-sm uppercase tracking-wider">
+                                Validar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function renderAnsweredQuestion(qData, qState) {
+            const isCorrect = qState.isCorrect;
+            const userAnswer = qState.selectedOption;
+            const currentIndex = questionsData.findIndex(q => q.id === qData.id);
+            const nextQuestion = currentIndex + 1 < questionsData.length ? questionsData[currentIndex + 1] : null;
+
+            let html = `
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-[1.5rem] shadow-sm border-t-[5px] border-b border-l border-r border-slate-200 dark:border-slate-800 max-w-4xl mx-auto mt-0 ${isCorrect ? '!border-t-emerald-500' : '!border-t-rose-500'}">
+                    
+                    <div class="flex items-start mb-4">
+                        <span class="inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border border-slate-200 dark:border-slate-700">
+                            Pregunta ${qData.id}
+                        </span>
+                    </div>
+
+                    <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 leading-snug">${qData.question}</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        ${qData.options.map((opt, i) => {
+                            let classes = "flex items-start p-3 sm:p-4 border rounded-xl ";
+                            let icon = "";
+                            
+                            if (i === qData.answer) {
+                                classes += "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700 shadow-sm";
+                                icon = `<svg class="w-5 h-5 text-emerald-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                            } else if (i === userAnswer) {
+                                classes += "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 opacity-90";
+                                icon = `<svg class="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                            } else {
+                                classes += "bg-slate-50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 opacity-50";
+                            }
+
+                            return `
+                                <div class="${classes}">
+                                    <span class="text-sm sm:text-[15px] font-medium leading-snug pr-4 ${i === qData.answer ? 'text-emerald-800 dark:text-emerald-200' : (i === userAnswer ? 'text-rose-800 dark:text-rose-200' : 'text-slate-600 dark:text-slate-400')}">${opt}</span>
+                                    ${icon}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- JUSTIFICACIÓN -->
+                    <div class="bg-blue-50 dark:bg-slate-800/80 border border-blue-100 dark:border-slate-700 rounded-xl p-4 sm:p-5 mb-6">
+                        <h4 class="font-bold text-blue-900 dark:text-blue-400 mb-2 text-[11px] uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Justificación Clínica
+                        </h4>
+                        <p class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">${qData.justification}</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest border-t border-blue-200/50 dark:border-slate-700 pt-3">
+                            <span class="font-bold">Fuente:</span> ${qData.source}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-800 mt-6">
+                        <button onclick="goToPreviousQuestion(${qData.id})" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Atrás
+                        </button>
+                        ${nextQuestion ? `
+                            <button onclick="displayQuestion(${nextQuestion.id})" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider flex items-center gap-2">
+                                Siguiente
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        ` : `
+                            <button onclick="displayQuestion(null)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors text-sm uppercase tracking-wider">
+                                Finalizar
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('module-display').innerHTML = html;
+        }
+
+        function submitAnswer(qId) {
+            const form = document.getElementById(`q-form-${qId}`);
+            if(!form) return;
+            const selected = form.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+
+            const val = parseInt(selected.value);
+            const qData = questionsData.find(q => q.id === qId);
+
+            userProgress[qId] = {
+                answered: true,
+                selectedOption: val,
+                isCorrect: val === qData.answer
+            };
+
+            saveProgress();
+            updateProgressBar();
+            renderAnsweredQuestion(qData, userProgress[qId]);
+            renderSidebarGrid();
+            document.getElementById('main-content').scrollTo(0, 0);
+        }
+
+        function updateProgressBar() {
+            const total = questionsData.length; 
+            const ans = Object.keys(userProgress).filter(id => userProgress[id].answered).length;
+            const pct = total > 0 ? Math.round((ans / total) * 100) : 0;
+            const bar = document.getElementById('progress-bar');
+            if (bar) { 
+                bar.style.width = pct + '%'; 
+                bar.textContent = pct > 0 ? pct + '%' : ''; // Solo muestra el número si es mayor a 0
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('SchwartaherniaProgress', JSON.stringify(userProgress));
+                if(currentQuestionId) localStorage.setItem('SchwartaherniaLastQId', currentQuestionId);
+                else localStorage.removeItem('SchwartaherniaLastQId');
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('SchwartaherniaProgress');
+                userProgress = saved ? JSON.parse(saved) : {};
+            } catch(e) { userProgress = {}; }
+            updateProgressBar();
+        }
+
+        function loadTheme() {
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('moon-icon').classList.add('hidden');
+                document.getElementById('sun-icon').classList.remove('hidden');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sun-icon').classList.toggle('hidden');
+            document.getElementById('moon-icon').classList.toggle('hidden');
+        }
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB26PT8kuB-0fxyUYgGk51yC1rAsW0dYj0",
+        authDomain: "enarm-lite.firebaseapp.com",
+        projectId: "enarm-lite",
+        storageBucket: "enarm-lite.firebasestorage.app",
+        messagingSenderId: "767032952477",
+        appId: "1:767032952477:web:84347320ed3d376f7e7674",
+        measurementId: "G-PVR3RBVNSV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    //document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "usuarios_autorizados", user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            
+            if(userDocSnap.exists()) {
+                document.body.style.opacity = '1';
+            } else {
+                //window.location.href = "index.html"; 
+            }
+        } else {
+            //window.location.href = "index.html";
+        }
+    });
+</script>
+</body>
+</html>
